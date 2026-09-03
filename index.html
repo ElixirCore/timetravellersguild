@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NOW — timetravellersguild.com</title>
+<meta name="description" content="A bounded field. Local present against network present 17.04.2033.">
+<meta name="theme-color" content="#f1e4c4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/now.css?v=1951j">
+</head>
+<body>
+<a class="skip" href="#field-list">Field as a list</a>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<header id="mast">
+  <div class="site">TIMETRAVELLERSGUILD.COM</div>
+  <div class="presents">
+    <span>LOCAL PRESENT: <time id="localPresent"><!-- TTG_LOCAL_PRESENT --></time></span>
+    <span>NETWORK PRESENT: 17.04.2033</span>
+  </div>
+</header>
+
+<section id="here" aria-live="polite">
+  <p id="clockLine"><!-- TTG_CLOCK --></p>
+  <p id="position">YOU ARE HERE — <!-- TTG_POSITION --></p>
+</section>
+
+<div id="projections" role="tablist" aria-label="Projection">
+  <button type="button" role="tab" data-proj="TEMPORAL" aria-selected="true">TEMPORAL</button>
+  <button type="button" role="tab" data-proj="SOCIAL" aria-selected="false">SOCIAL</button>
+  <button type="button" role="tab" data-proj="SPATIAL" aria-selected="false">SPATIAL</button>
+  <button type="button" role="tab" data-proj="INSTITUTIONAL" aria-selected="false">INSTITUTIONAL</button>
+  <button type="button" role="tab" data-proj="SYMBOLIC" aria-selected="false">SYMBOLIC</button>
+</div>
+
+  <a href="#jack" id="jackMark">JACK / CLERK</a>
+
+<section id="field-list">
+  <h1 class="sr">NOW</h1>
+  <p class="nogl-only">The same field, listed.</p>
+  <ul id="fallbackList"><!-- TTG_FALLBACK --></ul>
+</section>
+
+<aside id="life" class="sheet" hidden>
+  <button type="button" class="sheet-close" data-close="life" aria-label="Close">×</button>
+  <p class="life-type" id="lifeType"></p>
+  <h2 id="lifeTitle"></h2>
+  <p class="life-status" id="lifeStatus"></p>
+  <ul class="life-facts" id="lifeFacts"></ul>
+  <p class="life-body" id="lifeBody"></p>
+  <div class="life-actions">
+    <button type="button" id="lifeWhy">WHY AM I SEEING THIS?</button>
+    <a id="lifeRecord" href="/n/">the record</a>
+    <a id="lifeCross" href="#" hidden>cross</a>
+  </div>
+  <div id="lifeWhyPanel" hidden>
+    <h3>Evidence</h3>
+    <p id="lifeEvidence"></p>
+    <h3>Interpretation</h3>
+    <p id="lifeInterp" class="interp"></p>
+    <button type="button" id="lifePattern">Would you like to see where this sits in the larger pattern?</button>
+  </div>
+</aside>
+
+<aside id="jack" class="sheet punch-sheet">
+  <button type="button" class="sheet-close" data-close="jack" aria-label="Close">×</button>
+  <div class="punch-face" aria-hidden="true">
+    <div class="punch-clip"></div>
+    <div class="punch-ruler" id="jackRuler"></div>
+    <div class="punch-belt" id="jackBelt"></div>
+  </div>
+  <header class="punch-head">
+    <p class="life-type">JACK / CLERK</p>
+    <p class="punch-batch">IBM 5081 · BATCH <span id="jackBatch">0001</span> · FIELD SLIP</p>
+  </header>
+  <p id="jackGreeting"><!-- TTG_JACK --></p>
+  <div id="jackLog"></div>
+  <div id="jackProcess" hidden>
+    <div class="card-feed" aria-hidden="true">
+      <span class="feed-card"></span>
+      <span class="feed-card"></span>
+      <span class="feed-card"></span>
+    </div>
+    <p id="jackStage" class="punch-stage" aria-live="polite"></p>
+  </div>
+  <form id="jackForm" action="#jack" method="post" enctype="multipart/form-data">
+    <label class="sr" for="jackQ">Address the clerk</label>
+    <textarea id="jackQ" name="q" rows="3" maxlength="100000" autocomplete="off" placeholder="A question for the clerk…"></textarea>
+    <div class="jack-row">
+      <label class="file">Dossier file <input id="jackFile" name="dossier" type="file" accept=".txt,.md,.csv,text/plain"></label>
+      <div class="jack-actions">
+        <button type="button" id="jackTalk">Talk</button>
+        <button type="submit" name="intent" value="ask">Ask</button>
+        <button type="submit" name="intent" value="lodge">Lodge</button>
+      </div>
+    </div>
+    <p class="jack-hint">Enter asks. Shift+Enter makes a line. Lodge only for a dossier. Talk uses the microphone.</p>
+  </form>
+  <audio id="jackAudio" hidden></audio>
+  <div id="jackOps"></div>
+  <p class="jack-desk-link"><a href="/jack">The clerk’s desk</a></p>
+</aside>
+
+<aside id="capture" class="sheet">
+  <button type="button" class="sheet-close" data-close="capture" aria-label="Close">×</button>
+  <form id="captureForm" method="post" action="/now/capture" enctype="multipart/form-data">
+    <input type="hidden" name="csrf" value="<!-- TTG_CSRF -->">
+    <h2>WHAT HAS ENTERED THE FIELD?</h2>
+    <fieldset>
+      <legend class="sr">Type</legend>
+      <div class="types">
+        <label><input type="radio" name="type" value="PERSON"> Person</label>
+        <label><input type="radio" name="type" value="OBJECT"> Object</label>
+        <label><input type="radio" name="type" value="PLACE"> Place</label>
+        <label><input type="radio" name="type" value="MOMENT"> Moment</label>
+        <label><input type="radio" name="type" value="MEDIA"> Media</label>
+        <label><input type="radio" name="type" value="SIGNAL"> Signal</label>
+        <label><input type="radio" name="type" value="UNKNOWN" checked> Unknown</label>
+      </div>
+    </fieldset>
+    <label>Name <input name="title" type="text" required maxlength="120" autocomplete="off"></label>
+    <label>Note <textarea name="body" rows="3" maxlength="2000" placeholder="Photograph it, speak it, or type it."></textarea></label>
+    <label>Where, if known <input name="place" type="text" maxlength="120" autocomplete="off"></label>
+    <div class="capture-row">
+      <label class="file">Photograph it <input id="photo" name="photo" type="file" accept="image/*" capture="environment"></label>
+      <button type="button" id="speakBtn">Speak it</button>
+    </div>
+    <p id="captureStatus" class="capture-status" hidden></p>
+    <button type="submit" class="save">Save</button>
+  </form>
+</aside>
+
+<nav id="dock" aria-label="NOW">
+  <a href="/" aria-current="page">NOW</a>
+  <a href="#capture" id="navPlus">+</a>
+  <a href="/jack" id="navJack">JACK</a>
+  <a href="/signals/">SIGNALS</a>
+  <a href="/people/auth/" id="navYou">YOU</a>
+</nav>
+
+<script>/* TTG_GRAPH */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="/assets/jack-desk.js?v=1951j"></script>
+<script src="/assets/now.js?v=1951j"></script>
+</body>
+</html>

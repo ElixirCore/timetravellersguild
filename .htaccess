@@ -1,0 +1,38 @@
+Options -Indexes
+DirectoryIndex index.php index.html
+RewriteEngine On
+RewriteRule ^\.env - [F,L]
+RewriteRule ^app/ - [F,L]
+RewriteRule ^prompts/ - [F,L]
+RewriteRule ^storage/ - [F,L]
+RewriteRule ^data/jack/ - [F,L]
+RewriteRule ^\.well-known/acme-challenge/ - [L]
+RewriteCond %{HTTP_HOST} ^(?:www\.)?ffilm\.org$ [NC]
+RewriteRule ^(.*)$ https://timetravellersguild.com/$1 [R=301,L,NE]
+RewriteCond %{HTTP_HOST} ^www\.timetravellersguild\.com$ [NC]
+RewriteRule ^(.*)$ https://timetravellersguild.com/$1 [R=301,L,NE]
+RewriteRule ^station/([a-z0-9-]+)/?$ station/index.php?slug=$1 [QSA,L,NC]
+RewriteRule ^index\.html$ /index.php [L]
+RewriteRule ^now/capture/?$ /now/capture.php [L]
+RewriteRule ^now/jack/?$ /now/jack.php [L]
+RewriteRule ^now/?$ /index.php [L]
+RewriteRule ^jack/speak/?$ /jack/speak.php [L]
+RewriteRule ^jack/?$ /jack/index.php [L]
+RewriteRule ^n/?$ n/index.php [L]
+RewriteRule ^n/([A-Za-z0-9_-]+)/?$ n/index.php?id=$1 [L,QSA]
+<FilesMatch "^\.env">
+Require all denied
+</FilesMatch>
+<IfModule LiteSpeed>
+CacheDisable public /
+</IfModule>
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "camera=(self), microphone=(self), geolocation=()"
+<FilesMatch "\.(html|php)$">
+Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+Header always set Pragma "no-cache"
+Header always set Expires "0"
+</FilesMatch>
+</IfModule>

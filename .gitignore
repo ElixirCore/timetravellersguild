@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+graph/pending.json
+graph/pending-edges.json
+graph/inbox/*
+storage/jack/*.json
+!storage/jack/.htaccess
+!graph/inbox/.gitkeep
+!graph/inbox/.htaccess
+*.sqlite
+.DS_Store
+error_log
+**/error_log
