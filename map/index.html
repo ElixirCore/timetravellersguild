@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#d9cb9e">
+<title>Passport Map — Time Travellers Guild</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+:root{
+  --paper:#d9cb9e; --paper-2:#e8dcb6; --ink:#1b1a17; --ink-2:#4a4436; --red:#b3261e; --red-2:#e0483e;
+  --rule:rgba(27,26,23,.28); --f:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font:13px/1.45 var(--f)}
+#map{position:fixed;inset:0}
+.panel{position:fixed;z-index:2;top:12px;left:12px;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 24px);
+  overflow:auto;background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:14px 14px 10px}
+.panel h1{font-size:13px;letter-spacing:.14em;margin:0 0 2px;text-transform:uppercase}
+.panel .sub{color:var(--ink-2);font-size:11px;margin:0 0 12px}
+.panel h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin:14px 0 6px;padding-top:10px;border-top:1px dashed var(--rule)}
+.row{display:flex;align-items:center;gap:8px;margin:5px 0}
+.row label{flex:1;cursor:pointer;display:flex;align-items:center;gap:8px}
+.row input[type=checkbox]{accent-color:var(--red);width:15px;height:15px;margin:0}
+.row input[type=range]{flex:1;accent-color:var(--red)}
+.row .v{min-width:3.2em;text-align:right;color:var(--ink-2)}
+.st{font-size:10px;color:var(--ink-2);margin-left:23px;min-height:1em}
+.st.err{color:var(--red)}
+select,button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:3px 6px}
+button{cursor:pointer}
+button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.stamps{list-style:none;margin:0;padding:0}
+.stamps li{display:grid;grid-template-columns:1.6em 1fr auto;gap:6px;padding:4px 2px;border-bottom:1px dotted var(--rule);cursor:pointer}
+.stamps li:hover{background:rgba(179,38,30,.08)}
+.stamps li.dim{opacity:.35}
+.stamps li .n{color:var(--red);font-weight:600}
+.stamps li .d{color:var(--ink-2);font-size:11px}
+.stamps li small{grid-column:2/4;color:var(--ink-2)}
+.empty{color:var(--ink-2);font-size:12px}
+.foot{font-size:10px;color:var(--ink-2);margin-top:12px;border-top:1px dashed var(--rule);padding-top:8px}
+.toggle{display:none}
+.card{position:fixed;z-index:3;right:12px;bottom:28px;width:min(340px,calc(100vw - 24px));max-height:45dvh;overflow:auto;
+  background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--red);padding:12px 14px;display:none}
+.card h3{margin:0 0 6px;font-size:13px}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px}
+.card dt{color:var(--ink-2)} .card dd{margin:0;word-break:break-word}
+.card pre{white-space:pre-wrap;font:11px/1.4 var(--f);margin:0}
+.card .x{position:absolute;top:6px;right:8px;border:0;background:none;font-size:16px;padding:0 4px}
+.maplibregl-ctrl-group{border-radius:0!important;border:1px solid var(--ink);box-shadow:none!important;background:var(--paper-2)!important}
+.maplibregl-ctrl-attrib{font:10px var(--f);background:rgba(232,220,182,.85)!important}
+.askbtn{position:fixed;z-index:3;top:12px;right:58px;font-weight:600;letter-spacing:.12em;padding:7px 12px;background:var(--red);color:var(--paper-2);border:1px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.ask{position:fixed;z-index:4;top:12px;right:12px;bottom:28px;width:min(380px,calc(100vw - 24px));display:none;flex-direction:column;
+  background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--red)}
+.ask.open{display:flex}
+.ask header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px dashed var(--rule)}
+.ask header h2{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.ask .log{flex:1;overflow:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:92%;padding:8px 10px;border:1px solid var(--rule);white-space:pre-wrap;word-break:break-word}
+.msg.me{align-self:flex-end;background:var(--paper)}
+.msg.ai{align-self:flex-start;background:#f3ead0}
+.msg.tool{align-self:flex-start;border:0;padding:0 2px;color:var(--ink-2);font-size:11px}
+.msg.err{border-color:var(--red);color:var(--red)}
+.ask form{display:flex;gap:6px;padding:10px 12px;border-top:1px dashed var(--rule)}
+.ask textarea{flex:1;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:6px;resize:none;height:3.2em}
+.ask .hint{font-size:10px;color:var(--ink-2);padding:0 12px 8px}
+.ask .sugg{display:flex;flex-wrap:wrap;gap:6px}
+.ask .sugg button{font-size:11px;text-align:left}
+@media (max-width:640px){
+  .askbtn{top:12px;right:56px}
+  .ask{top:8px;right:8px;left:8px;width:auto;bottom:auto;height:62dvh}
+  .panel{top:auto;bottom:0;left:0;width:100%;max-height:55dvh;box-shadow:0 -3px 0 var(--ink);border-width:1px 0 0}
+  .panel.closed>*:not(.toggle){display:none}
+  .toggle{display:block;width:100%;margin-bottom:8px}
+  .card{bottom:auto;top:12px}
+}
+</style>
+</head>
+<body>
+<div id="map" role="application" aria-label="Passport map"></div>
+
+<aside class="panel" id="panel">
+  <button class="toggle" id="toggle" type="button" aria-expanded="true">Layers ▾</button>
+  <h1>Passport Map</h1>
+  <p class="sub" id="holder">Loading record…</p>
+
+  <h2>Topology</h2>
+  <div class="row"><label><input type="checkbox" id="l-terrain" checked> 3D terrain</label></div>
+  <div class="row"><span>Lift</span><input type="range" id="exag" min="1" max="3" step="0.1" value="1.6"><span class="v" id="exag-v">1.6×</span></div>
+  <div class="row"><label><input type="checkbox" id="l-hill" checked> Hillshade</label></div>
+  <div class="row"><label><input type="checkbox" id="l-contour" checked> Contours</label></div>
+  <div class="st" id="st-contour"></div>
+  <div class="seg" style="margin-top:6px">
+    <button type="button" id="b-tilt" aria-pressed="true">Tilted</button>
+    <button type="button" id="b-flat" aria-pressed="false">Flat</button>
+    <button type="button" id="b-spin" aria-pressed="false">Orbit</button>
+  </div>
+
+  <h2>Geology <span style="text-transform:none;letter-spacing:0">(BGS 1:625k)</span></h2>
+  <div class="row"><label><input type="checkbox" id="l-geo"> Show</label>
+    <select id="geo-layer" aria-label="Geology layer">
+      <option value="GBR_BGS_625k_BLS">Bedrock</option>
+      <option value="GBR_BGS_625k_BA">Bedrock age</option>
+      <option value="GBR_BGS_625k_SLT">Superficial</option>
+    </select></div>
+  <div class="row"><span>Ink</span><input type="range" id="geo-op" min="0.1" max="1" step="0.05" value="0.55"><span class="v" id="geo-op-v">55%</span></div>
+  <div class="st" id="st-geo">Tap the map with geology on to identify the rock.</div>
+
+  <h2>Heritage <span style="text-transform:none;letter-spacing:0">(Cadw)</span></h2>
+  <div class="row"><label><input type="checkbox" id="l-sam" checked> Scheduled monuments</label></div>
+  <div class="st" id="st-sam"></div>
+  <div class="row"><label><input type="checkbox" id="l-lb"> Listed buildings</label></div>
+  <div class="st" id="st-lb"></div>
+
+  <h2>Guild</h2>
+  <div class="row"><label><input type="checkbox" id="l-route" checked> Time-lines between stamps</label></div>
+  <div class="row"><label><input type="checkbox" id="l-pods" checked> TimePods</label></div>
+  <div class="st" id="st-pods"></div>
+  <div class="row"><span>Until</span><input type="range" id="t" min="0" max="0" step="1" value="0" aria-label="Show stamps up to"><span class="v" id="t-v">—</span></div>
+  <div class="seg"><button type="button" id="b-play" aria-pressed="false">▶ Replay route</button></div>
+  <ul class="stamps" id="stamps"></ul>
+
+  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
+</aside>
+
+<button class="askbtn" id="askbtn" type="button" aria-expanded="false" aria-controls="ask">ASK</button>
+<section class="ask" id="ask" aria-label="Ask the map">
+  <header><h2>Ask the map</h2><button type="button" id="ask-x" aria-label="Close">×</button></header>
+  <div class="log" id="log" aria-live="polite">
+    <div class="msg ai">Ask about anything on the map: the rock under a spot, how high or steep it is, what monuments are near, or where your stamps have taken you. Tap the map first to ask about that point.
+      <div class="sugg" style="margin-top:8px">
+        <button type="button">What rock is under the point I tapped?</button>
+        <button type="button">Monuments within 2 km of here?</button>
+        <button type="button">Height profile from Abercrave to Cribarth</button>
+        <button type="button">Walk me through my stamps</button>
+      </div></div>
+  </div>
+  <form id="ask-f"><textarea id="ask-q" aria-label="Your question" placeholder="Ask the map…"></textarea><button type="submit" id="ask-go">Send</button></form>
+  <div class="hint">Answers come from an OpenAI model via this site. It sees the map view, the point you tapped and, when it asks, your stamp places and dates.</div>
+</section>
+
+<div class="card" id="card" role="dialog" aria-live="polite"><button class="x" id="card-x" type="button" aria-label="Close">×</button><div id="card-b"></div></div>
+
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/maplibre-contour@0.1.1/dist/index.min.js"></script>
+<script>
+(() => {
+'use strict';
+/* ---------- config (override any of these before this script) ---------- */
+const CFG = Object.assign({
+  record: '/passport/record.json',   // the passport book's record file
+  pods: 'timepods.json',             // [{name, lng, lat, note}]
+  proxy: 'proxy.php',                // same-origin relay for BGS, Cadw and place lookups
+  agent: 'agent.php',                // same-origin relay to OpenAI (holds the key)
+  centre: [-3.70, 51.80],            // Upper Swansea Valley (start view only)
+  zoom: 10.5,
+  dem: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
+  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+  font: ['Open Sans Semibold']
+}, window.TTG_MAP || {});
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const status = (id, txt, err) => { const el = $(id); if (!el) return; el.textContent = txt || ''; el.classList.toggle('err', !!err); };
+const P = (params) => CFG.proxy + '?' + new URLSearchParams(params).toString();
+
+/* ---------- elevation + contours ---------- */
+let dem = null;
+try {
+  dem = new mlcontour.DemSource({ url: CFG.dem, encoding: 'terrarium', maxzoom: 13, worker: true, cacheSize: 120, timeoutMs: 12000 });
+  dem.setupMaplibre(maplibregl);
+} catch (e) { status('st-contour', 'Contours unavailable: ' + e.message, true); }
+
+const demTiles = dem ? [dem.sharedDemProtocolUrl] : [CFG.dem];
+const wms = (layer) => P({ src: 'bgs', SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetMap', LAYERS: layer, STYLES: '',
+  CRS: 'EPSG:3857', WIDTH: 256, HEIGHT: 256, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }) + '&BBOX={bbox-epsg-3857}';
+
+const style = {
+  version: 8,
+  glyphs: CFG.glyphs,
+  sources: {
+    osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' },
+    dem: { type: 'raster-dem', tiles: demTiles, encoding: 'terrarium', tileSize: 256, maxzoom: 13 },
+    hs:  { type: 'raster-dem', tiles: demTiles, encoding: 'terrarium', tileSize: 256, maxzoom: 13 },
+    geo: { type: 'raster', tiles: [wms('GBR_BGS_625k_BLS')], tileSize: 256, attribution: 'Geology © <a href="https://www.bgs.ac.uk/">BGS</a>, UKRI' },
+    sam: { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: 'Heritage: Cadw, OGL v3' },
+    lb:  { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    route: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    stamps: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    pods: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    pins: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
+  },
+  layers: [
+    { id: 'bg', type: 'background', paint: { 'background-color': '#d9cb9e' } },
+    { id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-opacity': 0.62, 'raster-saturation': -0.85, 'raster-contrast': 0.08 } },
+    { id: 'geo', type: 'raster', source: 'geo', layout: { visibility: 'none' }, paint: { 'raster-opacity': 0.55 } },
+    { id: 'hill', type: 'hillshade', source: 'hs', paint: { 'hillshade-shadow-color': '#1b1a17', 'hillshade-highlight-color': '#f4ecd2',
+      'hillshade-accent-color': '#4a4436', 'hillshade-exaggeration': 0.45, 'hillshade-illumination-direction': 315 } },
+    { id: 'sam-fill', type: 'fill-extrusion', source: 'sam', minzoom: 10,
+      paint: { 'fill-extrusion-color': '#b3261e', 'fill-extrusion-opacity': 0.7, 'fill-extrusion-height': 25, 'fill-extrusion-base': 0 } },
+    { id: 'sam-line', type: 'line', source: 'sam', minzoom: 10, paint: { 'line-color': '#7a1712', 'line-width': 1.2 } },
+    { id: 'lb', type: 'circle', source: 'lb', minzoom: 12, layout: { visibility: 'none' },
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 2.5, 16, 6], 'circle-color': '#1b1a17', 'circle-stroke-color': '#e8dcb6', 'circle-stroke-width': 1 } },
+    { id: 'route-glow', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#e0483e', 'line-width': 9, 'line-opacity': 0.25, 'line-blur': 4 } },
+    { id: 'route', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#b3261e', 'line-width': 2.5, 'line-dasharray': [2, 1.5] } },
+    { id: 'pods', type: 'circle', source: 'pods',
+      paint: { 'circle-radius': 7, 'circle-color': '#b3261e', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 2 } },
+    { id: 'pods-label', type: 'symbol', source: 'pods',
+      layout: { 'text-field': ['get', 'name'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top' },
+      paint: { 'text-color': '#7a1712', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.5 } },
+    { id: 'stamps', type: 'circle', source: 'stamps',
+      paint: { 'circle-radius': 9, 'circle-color': '#e8dcb6', 'circle-stroke-color': '#b3261e', 'circle-stroke-width': 3 } },
+    { id: 'stamps-n', type: 'symbol', source: 'stamps',
+      layout: { 'text-field': ['to-string', ['get', 'n']], 'text-font': CFG.font, 'text-size': 11, 'text-allow-overlap': true },
+      paint: { 'text-color': '#b3261e' } },
+    { id: 'stamps-label', type: 'symbol', source: 'stamps',
+      layout: { 'text-field': ['get', 'place'], 'text-font': CFG.font, 'text-size': 12, 'text-offset': [0, 1.4], 'text-anchor': 'top' },
+      paint: { 'text-color': '#1b1a17', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } },
+    { id: 'pins', type: 'circle', source: 'pins',
+      paint: { 'circle-radius': 6, 'circle-color': '#1b1a17', 'circle-stroke-color': '#e0483e', 'circle-stroke-width': 3 } },
+    { id: 'pins-label', type: 'symbol', source: 'pins',
+      layout: { 'text-field': ['get', 'label'], 'text-font': CFG.font, 'text-size': 12, 'text-offset': [0, -1.3], 'text-anchor': 'bottom' },
+      paint: { 'text-color': '#1b1a17', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } }
+  ],
+  terrain: { source: 'dem', exaggeration: 1.6 }
+};
+
+if (dem) {
+  style.sources.contours = { type: 'vector', maxzoom: 15, tiles: [dem.contourProtocolUrl({
+    thresholds: { 10: [100, 500], 11: [50, 250], 12: [20, 100], 13: [10, 50], 14: [10, 50] },
+    contourLayer: 'contours', elevationKey: 'ele', levelKey: 'level', extent: 4096, buffer: 1 })] };
+  const hs = style.layers.findIndex((l) => l.id === 'hill') + 1;
+  style.layers.splice(hs, 0,
+    { id: 'contour', type: 'line', source: 'contours', 'source-layer': 'contours',
+      paint: { 'line-color': '#4a4436', 'line-opacity': 0.55, 'line-width': ['match', ['get', 'level'], 1, 1.1, 0.45] } },
+    { id: 'contour-label', type: 'symbol', source: 'contours', 'source-layer': 'contours', filter: ['>', ['get', 'level'], 0],
+      layout: { 'symbol-placement': 'line', 'text-size': 10, 'text-font': CFG.font, 'text-field': ['concat', ['number-format', ['get', 'ele'], {}], ' m'] },
+      paint: { 'text-color': '#4a4436', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.2 } });
+}
+
+const map = new maplibregl.Map({ container: 'map', style, center: CFG.centre, zoom: CFG.zoom, pitch: 55, bearing: -20, maxPitch: 80, attributionControl: { compact: true } });
+window.ttgMap = map;
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
+
+map.on('error', (e) => {
+  const src = e.sourceId || (e.source && e.source.id) || '';
+  if (src === 'geo') status('st-geo', 'Geology tiles did not load (check proxy.php).', true);
+  else if (src === 'contours') status('st-contour', 'Contours did not load.', true);
+});
+
+/* ---------- controls ---------- */
+const vis = (ids, on) => ids.forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'));
+const exag = () => parseFloat($('exag').value);
+$('l-terrain').onchange = (e) => map.setTerrain(e.target.checked ? { source: 'dem', exaggeration: exag() } : null);
+$('exag').oninput = () => { $('exag-v').textContent = exag().toFixed(1) + '×'; if ($('l-terrain').checked) map.setTerrain({ source: 'dem', exaggeration: exag() }); };
+$('l-hill').onchange = (e) => vis(['hill'], e.target.checked);
+$('l-contour').onchange = (e) => vis(['contour', 'contour-label'], e.target.checked);
+$('l-geo').onchange = (e) => vis(['geo'], e.target.checked);
+$('geo-layer').onchange = (e) => { map.getSource('geo').setTiles([wms(e.target.value)]); };
+$('geo-op').oninput = (e) => { map.setPaintProperty('geo', 'raster-opacity', +e.target.value); $('geo-op-v').textContent = Math.round(e.target.value * 100) + '%'; };
+$('l-sam').onchange = (e) => { vis(['sam-fill', 'sam-line'], e.target.checked); heritage(); };
+$('l-lb').onchange = (e) => { vis(['lb'], e.target.checked); heritage(); };
+$('l-route').onchange = (e) => vis(['route', 'route-glow'], e.target.checked);
+$('l-pods').onchange = (e) => vis(['pods', 'pods-label'], e.target.checked);
+
+const press = (on) => ['b-tilt', 'b-flat'].forEach((id) => $(id).setAttribute('aria-pressed', String(id === on)));
+$('b-tilt').onclick = () => { press('b-tilt'); map.easeTo({ pitch: 60, duration: 900 }); };
+$('b-flat').onclick = () => { press('b-flat'); map.easeTo({ pitch: 0, bearing: 0, duration: 900 }); };
+let spin = 0;
+const orbit = (t0) => { if (!spin) return; map.rotateTo((map.getBearing() + 0.12) % 360, { duration: 0 }); spin = requestAnimationFrame(orbit); };
+$('b-spin').onclick = (e) => { const on = !spin; e.target.setAttribute('aria-pressed', String(on)); if (on) spin = requestAnimationFrame(orbit); else { cancelAnimationFrame(spin); spin = 0; } };
+map.on('dragstart', () => { if (spin) $('b-spin').click(); });
+$('toggle').onclick = () => { const p = $('panel'); const c = p.classList.toggle('closed'); $('toggle').setAttribute('aria-expanded', String(!c)); $('toggle').textContent = c ? 'Layers ▴' : 'Layers ▾'; };
+
+/* ---------- heritage: load in 0.1° cells so the relay can cache them ---------- */
+const CELL = 0.1, loaded = { sam: new Map(), lb: new Map() }, pending = new Set();
+const TYPES = { sam: 'inspire-wg:Cadw_SAM', lb: 'inspire-wg:Cadw_ListedBuildings' };
+const MINZ = { sam: 10, lb: 12 };
+const cellReq = new Map();
+function getCell(kind, cx, cy) {
+  const key = kind + ':' + cx + ':' + cy;
+  if (!cellReq.has(key)) {
+    const b = [cx * CELL, cy * CELL, (cx + 1) * CELL, (cy + 1) * CELL].map((n) => n.toFixed(2));
+    cellReq.set(key, fetch(P({ src: 'cadw', layer: kind, bbox: b.join(',') }))
+      .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then((fc) => fc.features || [])
+      .catch((e) => { cellReq.delete(key); throw e; }));
+  }
+  return cellReq.get(key);
+}
+async function loadCell(kind, cx, cy) {
+  const key = kind + ':' + cx + ':' + cy;
+  if (loaded[kind].has(key) || pending.has(key)) return;
+  pending.add(key);
+  try {
+    loaded[kind].set(key, await getCell(kind, cx, cy));
+    const all = new Map();
+    for (const list of loaded[kind].values()) for (const f of list) all.set(f.id || JSON.stringify(f.properties), f);
+    map.getSource(kind).setData({ type: 'FeatureCollection', features: [...all.values()] });
+    status('st-' + kind, all.size + ' in view so far');
+  } catch (e) {
+    status('st-' + kind, 'Could not load (' + e.message + '). Check proxy.php.', true);
+  } finally { pending.delete(key); }
+}
+function heritage() {
+  const z = map.getZoom(), bb = map.getBounds();
+  for (const kind of ['sam', 'lb']) {
+    if (!$('l-' + kind).checked) continue;
+    if (z < MINZ[kind]) { status('st-' + kind, 'Zoom in to see these (zoom ' + MINZ[kind] + '+).'); continue; }
+    // A tilted view's bounds run to the horizon, so load outward from the centre, capped by zoom.
+    const c = map.getCenter(), R = z >= 13 ? 1 : z >= 11.5 ? 2 : 3;
+    const cx = Math.floor(c.lng / CELL), cy = Math.floor(c.lat / CELL);
+    const x0 = Math.max(cx - R, Math.floor(bb.getWest() / CELL)), x1 = Math.min(cx + R, Math.floor(bb.getEast() / CELL));
+    const y0 = Math.max(cy - R, Math.floor(bb.getSouth() / CELL)), y1 = Math.min(cy + R, Math.floor(bb.getNorth() / CELL));
+    const cells = [];
+    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) cells.push([x, y]);
+    cells.sort((a, b) => Math.hypot(a[0] - cx, a[1] - cy) - Math.hypot(b[0] - cx, b[1] - cy));
+    cells.forEach(([x, y]) => loadCell(kind, x, y));
+  }
+}
+map.on('moveend', heritage);
+
+/* ---------- info card ---------- */
+const card = (html) => { $('card-b').innerHTML = html; $('card').style.display = 'block'; };
+$('card-x').onclick = () => { $('card').style.display = 'none'; };
+const SKIP = /^(geom|the_geom|shape|objectid|fid|easting|northing|.*_cy)$/i;
+const dl = (props, prefer) => {
+  const keys = prefer.filter((k) => props[k] != null && props[k] !== '').concat(Object.keys(props).filter((k) => !prefer.includes(k) && !SKIP.test(k) && props[k] != null && props[k] !== ''));
+  return '<dl>' + keys.map((k) => '<dt>' + esc(k) + '</dt><dd>' + esc(props[k]) + '</dd>').join('') + '</dl>';
+};
+map.on('click', async (e) => {
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['stamps', 'pods', 'sam-fill', 'lb'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  if (hit) {
+    const p = hit.properties || {};
+    if (hit.layer.id === 'stamps') return card('<h3>' + esc(p.n + '. ' + p.place) + '</h3><dl><dt>Line</dt><dd>' + esc(p.line || '—') + '</dd><dt>Inked</dt><dd>' + esc(p.inked || '—') + '</dd>' + (p.approx ? '<dt>Position</dt><dd>looked up from the place name</dd>' : '') + '</dl>');
+    if (hit.layer.id === 'pods') return card('<h3>TimePod · ' + esc(p.name) + '</h3>' + (p.note ? '<p>' + esc(p.note) + '</p>' : ''));
+    if (hit.layer.id === 'sam-fill') return card('<h3>' + esc(p.Name || 'Scheduled monument') + '</h3>' + dl(p, ['SAMNumber', 'Period', 'SiteType', 'BroadClass', 'Community', 'UnitaryAuthority', 'DesignationDate', 'Report']));
+    if (hit.layer.id === 'lb') return card('<h3>Listed building</h3>' + dl(p, []));
+  }
+  if ($('l-geo').checked) {
+    const layer = $('geo-layer').value;
+    card('<h3>Geology</h3><p>Asking the BGS…</p>');
+    try {
+      const g = await geologyAt(e.lngLat.lng, e.lngLat.lat, layer);
+      if (!g) return card('<h3>Geology</h3><p>Nothing recorded here at 1:625k.</p>');
+      const top = g.LEX_D || g.RCS_D || 'Unit';
+      const rest = Object.fromEntries(Object.entries(g).filter(([k]) => k !== 'LEX_D' && !/^(LEX|LEX_RCS|RCS|RCS_X|BED_EQ|MB_EQ|FM_EQ|SUBGP_EQ|GP_EQ|SUPGP_EQ)$/.test(k)));
+      card('<h3>' + esc(top.charAt(0) + top.slice(1).toLowerCase()) + '</h3>' + dl(rest, ['RCS_D', 'RANK', 'MAX_TIME_D', 'MIN_TIME_D']) +
+        '<p style="font-size:10px;color:var(--ink-2);margin:6px 0 0">BGS 1:625k · ' + esc($('geo-layer').selectedOptions[0].textContent) + ' · regional, not site-level</p>');
+    } catch (err) { card('<h3>Geology</h3><p>Could not reach the BGS (' + esc(err.message) + ').</p>'); }
+  }
+});
+map.on('click', (e) => { lastTap = { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }; dropPin(lastTap.lng, lastTap.lat, 'tapped'); });
+
+/* ---------- shared lookups (used by clicks and by the agent) ---------- */
+let lastTap = null;
+const GEO = { bedrock: 'GBR_BGS_625k_BLS', age: 'GBR_BGS_625k_BA', superficial: 'GBR_BGS_625k_SLT' };
+async function geologyAt(lng, lat, layer) {
+  const W = 40075016.68557849, mx = (lng / 360) * W, my = (Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2)) / Math.PI) * (W / 2), h = 500;
+  const r = await fetch(P({ src: 'bgs', SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetFeatureInfo', LAYERS: layer, QUERY_LAYERS: layer, STYLES: '',
+    CRS: 'EPSG:3857', BBOX: [mx - h, my - h, mx + h, my + h].join(','), WIDTH: 101, HEIGHT: 101, I: 50, J: 50, INFO_FORMAT: 'text/plain', FEATURE_COUNT: 1 }));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const t = await r.text(), out = {};
+  for (const m of t.matchAll(/^\s*([A-Z0-9_]+)\s*=\s*'([^']*)'/gm)) if (m[2] !== '' && !(m[1] in out)) out[m[1]] = m[2];
+  return Object.keys(out).length ? out : null;
+}
+const demCache = new Map();
+async function elevationAt(lng, lat) {
+  const z = 12, n = 2 ** z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
+  const tx = Math.floor(xf), ty = Math.floor(yf), key = tx + '/' + ty;
+  if (!demCache.has(key)) demCache.set(key, (async () => {
+    const r = await fetch(CFG.dem.replace('{z}', z).replace('{x}', tx).replace('{y}', ty), { mode: 'cors' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const bmp = await createImageBitmap(await r.blob()), c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(bmp, 0, 0); return g.getImageData(0, 0, c.width, c.height);
+  })().catch((e) => { demCache.delete(key); throw e; }));
+  const img = await demCache.get(key), px = Math.min(img.width - 1, Math.floor((xf - tx) * img.width)), py = Math.min(img.height - 1, Math.floor((yf - ty) * img.height));
+  const i = (py * img.width + px) * 4, d = img.data;
+  return Math.round((d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768) * 10) / 10;
+}
+const kmBetween = (a, b) => { const R = 6371, t = Math.PI / 180, dLat = (b[1] - a[1]) * t, dLng = (b[0] - a[0]) * t;
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(a[1] * t) * Math.cos(b[1] * t) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(s)); };
+const centroid = (g) => { if (!g) return null; if (g.type === 'Point') return g.coordinates;
+  const ring = g.type === 'Polygon' ? g.coordinates[0] : g.type === 'MultiPolygon' ? g.coordinates[0][0] : g.type === 'LineString' ? g.coordinates : g.type === 'MultiLineString' ? g.coordinates[0] : null;
+  if (!ring || !ring.length) return null; let x = 0, y = 0; ring.forEach((c) => { x += c[0]; y += c[1]; }); return [x / ring.length, y / ring.length]; };
+function dropPin(lng, lat, label) {
+  const src = map.getSource('pins'); if (!src) return;
+  src.setData({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [lng, lat] }, properties: { label: label || '' } }] });
+}
+['stamps', 'pods', 'sam-fill', 'lb'].forEach((l) => {
+  map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
+});
+
+/* ---------- the member's record ---------- */
+let STAMPS = [];
+async function geocode(name) {
+  const r = await fetch(P({ src: 'place', q: name }));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  return j && j.lng != null ? [j.lng, j.lat] : null;
+}
+function paint(upto) {
+  const shown = STAMPS.slice(0, upto);
+  map.getSource('stamps').setData({ type: 'FeatureCollection', features: shown.map((s) => ({ type: 'Feature',
+    geometry: { type: 'Point', coordinates: s.ll }, properties: { n: s.n, place: s.place, line: s.line, inked: s.inked, approx: s.approx } })) });
+  map.getSource('route').setData({ type: 'FeatureCollection', features: shown.length > 1 ? [{ type: 'Feature',
+    geometry: { type: 'LineString', coordinates: shown.map((s) => s.ll) }, properties: {} }] : [] });
+  [...$('stamps').children].forEach((li, i) => li.classList.toggle('dim', i >= upto));
+  const last = shown[shown.length - 1];
+  $('t-v').textContent = last ? (last.inked || '#' + last.n) : '—';
+}
+function fit(list) {
+  if (!list.length) return;
+  if (list.length === 1) return map.flyTo({ center: list[0].ll, zoom: 13, pitch: 60, duration: 1400 });
+  const b = new maplibregl.LngLatBounds(list[0].ll, list[0].ll); list.forEach((s) => b.extend(s.ll));
+  map.fitBounds(b, { padding: { top: 60, bottom: 60, left: window.innerWidth > 640 ? 360 : 40, right: 60 }, pitch: 55, duration: 1400, maxZoom: 14 });
+}
+async function loadRecord() {
+  let rec;
+  try {
+    const r = await fetch(CFG.record, { credentials: 'same-origin', cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    rec = await r.json();
+  } catch (e) { $('holder').textContent = 'Could not load your record (' + e.message + ').'; return; }
+  $('holder').textContent = [rec.name, rec.number].filter(Boolean).join(' · ') || 'Passport';
+  const places = (rec.places || []).slice().sort((a, b) => String(a.inked || '').localeCompare(String(b.inked || '')));
+  const ul = $('stamps'); ul.innerHTML = '';
+  if (!places.length) { ul.innerHTML = '<li class="empty" style="display:block;cursor:default">No stamps inked yet.</li>'; return; }
+  const out = [];
+  for (const [i, p] of places.entries()) {
+    let ll = (p.lng != null && p.lat != null) ? [+p.lng, +p.lat] : null, approx = false;
+    if (!ll) { try { ll = await geocode(p.name); approx = !!ll; } catch (e) { ll = null; } }
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="n">' + (i + 1) + '</span><span>' + esc(p.name) + '</span><span class="d">' + esc(p.inked || '') + '</span><small>' + esc(p.line || '') + (ll ? '' : ' · place not found on the map') + '</small>';
+    ul.appendChild(li);
+    if (!ll) continue;
+    const s = { n: i + 1, place: p.name, line: p.line || '', inked: p.inked || '', ll, approx };
+    out.push(s);
+    li.onclick = () => { map.flyTo({ center: s.ll, zoom: 14, pitch: 62, duration: 1300 }); };
+  }
+  STAMPS = out;
+  $('t').max = String(out.length); $('t').value = String(out.length);
+  paint(out.length); fit(out);
+}
+$('t').oninput = (e) => paint(+e.target.value);
+let playing = 0;
+$('b-play').onclick = () => {
+  if (playing) { clearInterval(playing); playing = 0; $('b-play').setAttribute('aria-pressed', 'false'); return; }
+  if (!STAMPS.length) return;
+  let i = 1; $('b-play').setAttribute('aria-pressed', 'true'); paint(1); map.flyTo({ center: STAMPS[0].ll, zoom: 13, duration: 1200 });
+  playing = setInterval(() => {
+    i++; if (i > STAMPS.length) { clearInterval(playing); playing = 0; $('b-play').setAttribute('aria-pressed', 'false'); fit(STAMPS); return; }
+    $('t').value = String(i); paint(i); map.flyTo({ center: STAMPS[i - 1].ll, zoom: 13, duration: 1500 });
+  }, 1900);
+};
+
+async function loadPods() {
+  try {
+    const r = await fetch(CFG.pods, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const pods = (await r.json()).filter((p) => p && p.lng != null && p.lat != null);
+    map.getSource('pods').setData({ type: 'FeatureCollection', features: pods.map((p) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+p.lng, +p.lat] }, properties: { name: p.name || 'TimePod', note: p.note || '' } })) });
+    status('st-pods', pods.length ? pods.length + ' on the network' : 'None listed yet (add them to timepods.json).');
+  } catch (e) { status('st-pods', 'No timepods.json found.', true); }
+}
+
+/* ---------- the agent: OpenAI via agent.php, tools run here ---------- */
+const num = (v, lo, hi) => { const n = Number(v); if (!Number.isFinite(n) || n < lo || n > hi) throw new Error('number out of range'); return n; };
+const LNG = (v) => num(v, -11, 3), LAT = (v) => num(v, 49, 61.5);   // Great Britain and Ireland
+const setBox = (id, on) => { const el = $(id); if (el.checked !== on) { el.checked = on; el.dispatchEvent(new Event('change')); } };
+function view() {
+  const b = map.getBounds(), c = map.getCenter(), on = (id) => $(id).checked;
+  return { centre: { lng: +c.lng.toFixed(5), lat: +c.lat.toFixed(5) }, zoom: +map.getZoom().toFixed(2), pitch: Math.round(map.getPitch()), bearing: Math.round(map.getBearing()),
+    bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map((n) => +n.toFixed(4)), last_tapped: lastTap,
+    layers: { terrain: on('l-terrain'), hillshade: on('l-hill'), contours: on('l-contour'), geology: on('l-geo') ? $('geo-layer').selectedOptions[0].textContent : 'off',
+      monuments: on('l-sam'), listed_buildings: on('l-lb'), routes: on('l-route'), timepods: on('l-pods') }, stamps_loaded: STAMPS.length };
+}
+const TOOLS = {
+  get_view: async () => view(),
+  find_place: async (a) => { const r = await fetch(P({ src: 'place', q: String(a.name || '').slice(0, 80) })); if (!r.ok) throw new Error('HTTP ' + r.status); const j = await r.json(); return j.lng == null ? { found: false } : { found: true, lng: j.lng, lat: j.lat, label: j.label || '' }; },
+  geology_at: async (a) => { const g = await geologyAt(LNG(a.lng), LAT(a.lat), GEO[a.layer] || GEO.bedrock); return g ? { source: 'BGS 1:625k ' + (a.layer || 'bedrock'), fields: g } : { source: 'BGS 1:625k', fields: null, note: 'Nothing recorded at this point.' }; },
+  elevation_at: async (a) => ({ metres: await elevationAt(LNG(a.lng), LAT(a.lat)), source: 'AWS/Mapzen terrain tiles, zoom 12 (about 30 m cells)' }),
+  terrain_profile: async (a) => {
+    const A = [LNG(a.from_lng), LAT(a.from_lat)], B = [LNG(a.to_lng), LAT(a.to_lat)], km = kmBetween(A, B);
+    if (km > 60) throw new Error('line longer than 60 km');
+    const n = 40, pts = [];
+    for (let i = 0; i <= n; i++) { const t = i / n, p = [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t]; pts.push({ km: +(km * t).toFixed(2), m: await elevationAt(p[0], p[1]), lng: +p[0].toFixed(5), lat: +p[1].toFixed(5) }); }
+    let climb = 0, descent = 0; for (let i = 1; i < pts.length; i++) { const d = pts[i].m - pts[i - 1].m; if (d > 0) climb += d; else descent -= d; }
+    const hi = pts.reduce((a, b) => (b.m > a.m ? b : a)), lo = pts.reduce((a, b) => (b.m < a.m ? b : a));
+    map.getSource('route') && drawLine([A, B]);
+    return { distance_km: +km.toFixed(2), highest: hi, lowest: lo, total_climb_m: Math.round(climb), total_descent_m: Math.round(descent), samples: pts.map((p) => [p.km, p.m]), source: 'terrain tiles, straight line, 41 samples' };
+  },
+  heritage_near: async (a) => {
+    const kind = a.kind === 'listed_buildings' ? 'lb' : 'sam', P0 = [LNG(a.lng), LAT(a.lat)], R = num(a.radius_km == null ? 1 : a.radius_km, 0.05, 5);
+    const dLat = R / 111.2, dLng = R / (111.2 * Math.cos(P0[1] * Math.PI / 180)), x0 = Math.floor((P0[0] - dLng) / CELL), x1 = Math.floor((P0[0] + dLng) / CELL), y0 = Math.floor((P0[1] - dLat) / CELL), y1 = Math.floor((P0[1] + dLat) / CELL);
+    const lists = []; for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) lists.push(getCell(kind, x, y));
+    const seen = new Map(); (await Promise.all(lists)).flat().forEach((f) => seen.set(f.id || JSON.stringify(f.properties), f));
+    const near = [...seen.values()].map((f) => { const c = centroid(f.geometry); return c ? { f, c, km: kmBetween(P0, c) } : null; }).filter((x) => x && x.km <= R).sort((a, b) => a.km - b.km);
+    setBox(kind === 'lb' ? 'l-lb' : 'l-sam', true);
+    return { source: 'Cadw ' + (kind === 'lb' ? 'listed buildings' : 'scheduled monuments') + ' (OGL)', count: near.length, radius_km: R,
+      nearest: near.slice(0, 15).map((x) => { const p = Object.fromEntries(Object.entries(x.f.properties || {}).filter(([k, v]) => !SKIP.test(k) && v != null && v !== '').map(([k, v]) => [k, String(v).slice(0, 300)])); return { km: +x.km.toFixed(2), lng: +x.c[0].toFixed(5), lat: +x.c[1].toFixed(5), ...p }; }) };
+  },
+  my_stamps: async () => ({ source: "the viewer's passport record", stamps: STAMPS.map((s) => ({ n: s.n, place: s.place, line: s.line, inked: s.inked, lng: +s.ll[0].toFixed(5), lat: +s.ll[1].toFixed(5), position: s.approx ? 'looked up from the name' : 'from the record' })), not_on_map: Math.max(0, $('stamps').children.length - STAMPS.length) }),
+  fly_to: async (a) => { const lng = LNG(a.lng), lat = LAT(a.lat); map.flyTo({ center: [lng, lat], zoom: a.zoom == null ? 13 : num(a.zoom, 5, 17), duration: 1600 }); dropPin(lng, lat, String(a.label || '').slice(0, 60)); return { ok: true }; },
+  set_layers: async (a) => {
+    const m = { terrain: 'l-terrain', hillshade: 'l-hill', contours: 'l-contour', monuments: 'l-sam', listed_buildings: 'l-lb', routes: 'l-route', timepods: 'l-pods' };
+    for (const [k, id] of Object.entries(m)) if (typeof a[k] === 'boolean') setBox(id, a[k]);
+    if (typeof a.geology === 'string') { if (a.geology === 'off') setBox('l-geo', false); else if (GEO[a.geology]) { $('geo-layer').value = GEO[a.geology]; $('geo-layer').dispatchEvent(new Event('change')); setBox('l-geo', true); } }
+    return { ok: true, layers: view().layers };
+  },
+  set_camera: async (a) => { const o = { duration: 1000 }; if (a.pitch != null) o.pitch = num(a.pitch, 0, 75); if (a.bearing != null) o.bearing = Number(a.bearing) % 360; map.easeTo(o); return { ok: true }; }
+};
+function drawLine(coords) {
+  if (!map.getSource('probe')) {
+    map.addSource('probe', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({ id: 'probe', type: 'line', source: 'probe', paint: { 'line-color': '#1b1a17', 'line-width': 3, 'line-dasharray': [1, 1] } });
+  }
+  map.getSource('probe').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords }, properties: {} });
+}
+const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geology_at: 'asked the BGS about the rock', elevation_at: 'read the height',
+  terrain_profile: 'traced a height profile', heritage_near: 'searched Cadw records', my_stamps: 'read your stamps', fly_to: 'moved the map', set_layers: 'switched layers', set_camera: 'turned the camera' };
+let convo = '', busy = false;
+const log = (cls, text) => { const d = document.createElement('div'); d.className = 'msg ' + cls; d.textContent = text; $('log').appendChild(d); $('log').scrollTop = 1e9; return d; };
+async function post(body) {
+  const r = await fetch(CFG.agent, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  let j = null; try { j = await r.json(); } catch (e) { /* not JSON */ }
+  if (!r.ok || !j || j.error) throw new Error((j && j.error) || ('HTTP ' + r.status));
+  return j;
+}
+async function ask(q) {
+  if (busy || !q.trim()) return;
+  busy = true; $('ask-go').disabled = true; log('me', q.trim());
+  const wait = log('tool', '…');
+  try {
+    let res = await post({ question: q.trim(), context: view(), previous_response_id: convo || undefined });
+    for (let round = 0; ; round++) {
+      convo = res.id || convo;
+      const calls = res.items.filter((i) => i.type === 'call');
+      res.items.filter((i) => i.type === 'text').forEach((i) => log('ai', i.text));
+      if (!calls.length) break;
+      if (round >= 8) { log('tool', 'Stopped after several steps.'); break; }
+      const outputs = [];
+      for (const c of calls) {
+        let out;
+        try { const fn = TOOLS[c.name]; if (!fn) throw new Error('unknown tool'); out = await fn(JSON.parse(c.arguments || '{}')); log('tool', '· ' + (LABEL[c.name] || c.name)); }
+        catch (e) { out = { error: String(e.message || e) }; log('tool', '· ' + (LABEL[c.name] || c.name) + ' — failed: ' + (e.message || e)); }
+        outputs.push({ call_id: c.call_id, output: JSON.stringify(out) });
+      }
+      res = await post({ outputs, previous_response_id: res.id });
+    }
+  } catch (e) {
+    log('ai err', 'The map agent could not answer: ' + e.message);
+  } finally { wait.remove(); busy = false; $('ask-go').disabled = false; }
+}
+const openAsk = (on) => { $('ask').classList.toggle('open', on); $('askbtn').style.display = on ? 'none' : ''; $('askbtn').setAttribute('aria-expanded', String(on)); if (on) $('ask-q').focus(); };
+$('askbtn').onclick = () => openAsk(true);
+$('ask-x').onclick = () => openAsk(false);
+$('ask-f').onsubmit = (e) => { e.preventDefault(); const q = $('ask-q').value; $('ask-q').value = ''; ask(q); };
+$('ask-q').onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('ask-f').requestSubmit(); } };
+document.querySelectorAll('.ask .sugg button').forEach((b) => { b.onclick = () => ask(b.textContent); });
+window.ttgAsk = ask;
+
+map.on('load', () => { loadRecord(); loadPods(); heritage(); });
+
+})();
+</script>
+</body>
+</html>
