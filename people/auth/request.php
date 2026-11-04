@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') ttg_redirect(ttg_base('auth/'));
 ttg_require_csrf();
 
 $email = strtolower(trim((string)($_POST['email'] ?? '')));
+$next = ttg_auth_next((string)($_POST['next'] ?? ''));
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(422);
     exit('Enter a valid email address.');
@@ -52,7 +53,7 @@ set_error_handler(static function (int $severity): never {
     throw new ErrorException('Sign-in delivery failed.', 0, $severity);
 });
 try {
-    $link = ttg_create_magic_link($email);
+    $link = ttg_create_magic_link($email, $next);
     if (!ttg_send_magic_link($email, $link)) {
         error_log('Guild sign-in email delivery failed.');
     }

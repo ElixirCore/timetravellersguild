@@ -84,6 +84,14 @@ function ttg_csrf_token(): string {
     return (string)$_SESSION['csrf'];
 }
 
+/**
+ * Where a sign-in may land afterwards. An allow-list of site paths, so a
+ * `next` value can never become an open redirect. Returns '' if not allowed.
+ */
+function ttg_auth_next(string $next): string {
+    return preg_match('#^/(?:join/\?welcome=1|map/|passport/|people/chat/(?:\?c=\d{1,10})?)$#', $next) === 1 ? $next : '';
+}
+
 function ttg_cookie_secure(): bool
 {
     return !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';

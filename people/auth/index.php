@@ -1,7 +1,8 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../inc/db.php';
-if (ttg_current_user()) ttg_redirect(ttg_base('profile/'));
+$next = ttg_auth_next((string)($_GET['next'] ?? ''));
+if (ttg_current_user()) ttg_redirect($next !== '' ? $next : ttg_base('profile/'));
 $briefNote = ttg_briefing_note(ttg_briefing_read());
 $pageTitle = 'Sign in — Time Travellers Guild';
 require __DIR__ . '/../inc/header.php';
@@ -17,6 +18,7 @@ require __DIR__ . '/../inc/header.php';
     <?php endif; ?>
     <form method="post" action="<?= ttg_h(ttg_base('auth/request.php')) ?>">
       <input type="hidden" name="csrf" value="<?= ttg_h(ttg_csrf_token()) ?>">
+      <?php if ($next !== ''): ?><input type="hidden" name="next" value="<?= ttg_h($next) ?>"><?php endif; ?>
       <label>Email address
         <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
       </label>

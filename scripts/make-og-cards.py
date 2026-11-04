@@ -218,10 +218,11 @@ def card_join() -> None:
     for x in range(40, 1160, 32):
         d.ellipse([x, 28, x + 8, 36], fill=hex_rgb("#1e3a5f"))
     wordmark(d, "TIMETRAVELLERSGUILD.COM", (72, 70), "#b2533e", 22)
-    d.text((72, 120), "A PROGRAMME  ·  NOT A DESTINATION", font=font("cond", 24, 1), fill=hex_rgb("#1e3a5f"))
-    fit_title(d, "JOIN", (72, 190), "#161814", 700, 160)
+    d.text((72, 120), "ONE EMAIL  ·  NO PASSWORD  ·  FREE", font=font("cond", 24, 1), fill=hex_rgb("#1e3a5f"))
+    fit_title(d, "JOIN", (72, 170), "#161814", 700, 150)
+    d.text((72, 360), "CHAT  ·  MAP  ·  PASSPORT", font=font("cond", 52, 1), fill=hex_rgb("#c41e3a"))
     punch_card(d, (780, 150, 1136, 430), "JOIN", cream="#f1e4c4", cols=14)
-    footer(d, "PUNCH YOUR COORDINATES.  POP-UP WORKSHOPS.", "#1e3a5f")
+    footer(d, "TALK TO TRAVELLERS.  WALK THE VALLEY.  STAMP YOUR PASSPORT.", "#1e3a5f")
     save(im, "join")
 
 

@@ -223,7 +223,7 @@ function ttg_slug_exists(string $slug): bool {
     return (bool)$stmt->fetchColumn();
 }
 
-function ttg_create_magic_link(string $email): string {
+function ttg_create_magic_link(string $email, string $next = ''): string {
     $config = ttg_config();
     $token = ttg_random_token(32);
     $hash = hash('sha256', $token);
@@ -231,7 +231,8 @@ function ttg_create_magic_link(string $email): string {
     $briefing = ttg_briefing_json(ttg_briefing_read());
     $stmt = ttg_db()->prepare('INSERT INTO magic_links(email, token_hash, expires_at, created_at, briefing) VALUES(?,?,?,?,?)');
     $stmt->execute([$email, $hash, $expires, time(), $briefing]);
-    return ttg_base('auth/consume.php?token=' . rawurlencode($token));
+    $next = ttg_auth_next($next);
+    return ttg_base('auth/consume.php?token=' . rawurlencode($token) . ($next !== '' ? '&next=' . rawurlencode($next) : ''));
 }
 
 function ttg_consume_magic_link(string $token): ?array {

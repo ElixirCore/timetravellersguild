@@ -16,7 +16,11 @@ $act = (string) file_get_contents($root . '/join/act.php');
 $old = (string) file_get_contents($root . '/join/index.html');
 
 expect(str_contains($page, 'join.css') && !str_contains($page, 'Fraunces'), 'join page is punch-slip, not Fraunces');
-expect(str_contains($page, 'PUNCH THE SLIP') && str_contains($page, 'IBM 5081'), 'join slip uses hopper language');
+expect(str_contains($page, '/people/auth/request.php') && str_contains($page, 'name="next" value="/join/?welcome=1"'), 'join signs up by magic link and returns to /join');
+expect(str_contains($page, "'CHAT'") && str_contains($page, "'MAP'") && str_contains($page, "'PASSPORT'"), 'join explains chat, map and passport before entry');
+expect(str_contains($page, 'ttg_og_head') && str_contains($page, 'rel="canonical"'), 'join has explicit OG meta and a canonical URL');
+$fns = (string) file_get_contents($root . '/people/inc/functions.php');
+expect(str_contains($fns, 'function ttg_auth_next') && !preg_match('#ttg_auth_next[^}]*https?:#', $fns), 'sign-in next is an allow-list of site paths');
 expect(str_contains($page, '/field/') && str_contains($page, '/now') && str_contains($page, '/jack'), 'join opens doors into the rest of the field');
 expect(str_contains($page, 'href="/now">TREE') && str_contains($page, 'ttg_html_navigator_dock'), 'TREE is NOW; the navigator is for Guild folk');
 expect(str_contains($css, '#d9cb9e') && str_contains($css, 'Courier'), 'join stock is manila Courier');

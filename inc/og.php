@@ -55,9 +55,10 @@ function ttg_og_catalog(): array
             'url' => TTG_OG_ORIGIN . '/department/',
         ],
         'join' => [
-            'title' => 'JOIN — Time Travellers Guild',
-            'description' => 'Punch your coordinates. Pop-up workshops. A programme, not a destination.',
-            'image' => $img('join'),
+            'title' => 'Join the Time Travellers Guild — chat, map and passport',
+            'description' => 'Free membership with one email and no password. Talk with other travellers, explore the Upper Swansea Valley in 3D, and keep a passport of the places you stamp.',
+            'image' => $img('join') . '?v=2',
+            'image_alt' => 'JOIN — Chat, Map, Passport. One email, no password, free.',
             'url' => TTG_OG_ORIGIN . '/join/',
         ],
         'signals' => [
@@ -296,12 +297,15 @@ function ttg_og_meta_tags(array $og): string
         '<meta property="og:image" content="' . ttg_og_h($image) . '">',
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
+        '<meta property="og:image:alt" content="' . ttg_og_h((string) ($og['image_alt'] ?? $title)) . '">',
+        '<meta property="og:locale" content="en_GB">',
         '<meta property="og:url" content="' . ttg_og_h($url) . '">',
         '<meta property="og:type" content="' . ttg_og_h($type) . '">',
         '<meta name="twitter:card" content="summary_large_image">',
         '<meta name="twitter:title" content="' . ttg_og_h($title) . '">',
         '<meta name="twitter:description" content="' . ttg_og_h($desc) . '">',
         '<meta name="twitter:image" content="' . ttg_og_h($image) . '">',
+        '<meta name="twitter:image:alt" content="' . ttg_og_h((string) ($og['image_alt'] ?? $title)) . '">',
     ];
     return implode("\n", $lines) . "\n";
 }
