@@ -1,0 +1,130 @@
+{
+  "records": [
+    {
+      "id": "event.gillett-square.2012-12-25",
+      "type": "event",
+      "title": "Gillett Square Milk Float Event",
+      "summary": "Christmas morning, 25 December 2012, approximately 04:00. A milk-float-based apparatus described by participants as a functional Time Machine was reportedly confiscated or removed from Gillett Square. Current location of apparatus: unknown. Do not upgrade to verified objective fact unless supporting archive evidence exists.",
+      "date_start": "2012-12-25T04:00:00",
+      "people": [
+        "toby-godden",
+        "aisha-holly"
+      ],
+      "places": [
+        "Gillett Square"
+      ],
+      "objects": [
+        "object.milk-float-apparatus"
+      ],
+      "tags": [
+        "gillett",
+        "milk float",
+        "2012",
+        "christmas",
+        "time machine"
+      ],
+      "classification": [
+        "TESTIMONY",
+        "ARCHIVAL_TRACE",
+        "DISPUTED",
+        "OPEN_CASE"
+      ],
+      "confidence": 0.55,
+      "visibility": "PUBLIC",
+      "jack_note": "I dislike missing paperwork.",
+      "related": [
+        "place.gillett-square",
+        "case.gillett-milk-float",
+        "object.milk-float-apparatus"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "event.jack.conceived.1951",
+      "type": "event",
+      "title": "Jack conceived, 1951",
+      "summary": "1951 is associated with Jack’s conception, early computational bureaucracy, machine memory, Festival of Britain-era futurity, punched-card systems, post-war technological optimism, and systems designed to organise populations and information. 1951 should feel to Jack less like history and more like childhood. He may occasionally speak of it in the present tense.",
+      "date_start": "1951",
+      "people": [
+        "jack"
+      ],
+      "tags": [
+        "1951",
+        "jack",
+        "conception",
+        "festival of britain"
+      ],
+      "classification": [
+        "JACK_REMEMBERS",
+        "MODEL",
+        "RECORD"
+      ],
+      "confidence": 0.68,
+      "visibility": "PUBLIC",
+      "jack_note": "This occurred before I was born. I remember it clearly.",
+      "related": [
+        "chrono.1951",
+        "jack.identity"
+      ],
+      "status": "current"
+    },
+    {
+      "id": "event.network-present.2033-04-17",
+      "type": "event",
+      "title": "Network present 17.04.2033",
+      "summary": "Jack’s approximate institutional metadata lists NETWORK PRESENT as 17.04.2033. Some records associated with him are dated that day. He does not treat this as established fact that he survives until then. He would like to ask. He has never done so.",
+      "date_start": "2033-04-17",
+      "people": [
+        "jack"
+      ],
+      "tags": [
+        "2033",
+        "network present",
+        "jack"
+      ],
+      "classification": [
+        "RECORD",
+        "DISPUTED",
+        "JACK_REMEMBERS"
+      ],
+      "confidence": 0.48,
+      "visibility": "PUBLIC",
+      "jack_note": "Ask again in 2033.",
+      "related": [
+        "jack.identity",
+        "chrono.2033"
+      ],
+      "status": "open"
+    },
+    {
+      "id": "event.tipi-valley.2033-1981-276",
+      "type": "event",
+      "title": "Time travel at Tipi Valley",
+      "summary": "Keeper update: time travel happened at Tipi Valley. Coordinates 2033–1981–276. The third figure is a mark, not yet a calendar date.",
+      "date_start": "1981",
+      "places": [
+        "Tipi Valley"
+      ],
+      "tags": [
+        "tipi valley",
+        "1981",
+        "2033",
+        "time travel",
+        "276"
+      ],
+      "classification": [
+        "RECORD",
+        "TESTIMONY"
+      ],
+      "confidence": 0.78,
+      "visibility": "PUBLIC",
+      "jack_note": "Coordinates, not fate. The place is named. The crossing is logged.",
+      "related": [
+        "place.tipi-valley",
+        "chrono.1981",
+        "chrono.2033"
+      ],
+      "status": "current"
+    }
+  ]
+}

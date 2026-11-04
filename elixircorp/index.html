@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ElixirCorp</title>
+<meta name="description" content="ElixirCorp supplies resources to practitioners of the time travel craft. Founded 1926. Reincorporated 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;600&family=Spectral:ital,wght@0,400;0,500;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/*
+  Dark-first. Art Deco skeleton — geometric sans, hairline gold ruling, structured registry.
+  2033 note: Space Mono for all data; a single cold teal in the link register.
+*/
+:root {
+  --bg:          #09090F;
+  --surface:     #0E0F1A;
+  --surface-2:   #131421;
+  --fg:          #E2D9C4;
+  --fg-dim:      rgba(226,217,196,0.55);
+  --gold:        #C09848;
+  --gold-bright: #D4AF5A;
+  --gold-line:   rgba(192,152,72,0.22);
+  --gold-rule:   rgba(192,152,72,0.15);
+  --teal:        #28DDB8;
+  --teal-dim:    rgba(40,221,184,0.12);
+  color-scheme:  dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:          #F0EAD8;
+    --surface:     #E6DEC8;
+    --surface-2:   #EBE3CF;
+    --fg:          #0C1120;
+    --fg-dim:      rgba(12,17,32,0.55);
+    --gold:        #8A6820;
+    --gold-bright: #9E7B28;
+    --gold-line:   rgba(138,104,32,0.25);
+    --gold-rule:   rgba(138,104,32,0.15);
+    --teal:        #0A8C70;
+    --teal-dim:    rgba(10,140,112,0.1);
+    color-scheme:  light;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:          #09090F;
+  --surface:     #0E0F1A;
+  --surface-2:   #131421;
+  --fg:          #E2D9C4;
+  --fg-dim:      rgba(226,217,196,0.55);
+  --gold:        #C09848;
+  --gold-bright: #D4AF5A;
+  --gold-line:   rgba(192,152,72,0.22);
+  --gold-rule:   rgba(192,152,72,0.15);
+  --teal:        #28DDB8;
+  --teal-dim:    rgba(40,221,184,0.12);
+  color-scheme:  dark;
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { color: var(--gold-bright); }
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left:  max(28px, env(safe-area-inset-left,  0px));
+  padding-right: max(28px, env(safe-area-inset-right, 0px));
+}
+
+/* ── Typography tokens ── */
+.label {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* ── Ornamental rule ── */
+.rule-deco {
+  position: relative;
+  height: 1px;
+  background: var(--gold-line);
+}
+.rule-deco::after {
+  content: '◆';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 7px;
+  color: var(--gold);
+  background: var(--bg);
+  padding: 0 10px;
+  line-height: 1;
+}
+.rule-plain { height: 1px; background: var(--gold-line); }
+
+/* ── Header ── */
+.site-header {
+  padding-top: 40px;
+  background: var(--bg);
+}
+.header-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 28px;
+}
+.wordmark {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 100;
+  font-size: 28px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.wordmark span {
+  color: var(--gold);
+  font-weight: 300;
+}
+.header-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--fg-dim);
+}
+
+/* ── Hero ── */
+.hero {
+  background: var(--bg);
+  padding-block: 96px 88px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--gold-rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+.hero .inner { position: relative; }
+.hero .label { margin-bottom: 28px; display: block; }
+.hero h1 {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 100;
+  font-size: clamp(36px, 6vw, 76px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.12;
+  max-width: 18ch;
+  text-wrap: balance;
+  color: var(--fg);
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold);
+  font-weight: 300;
+}
+.hero p {
+  margin-top: 40px;
+  max-width: 38em;
+  font-size: 17px;
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+/* ── Properties ── */
+.properties-section {
+  background: var(--surface);
+  padding-block: 80px 80px;
+}
+.properties-section .rule-deco { background: var(--gold-line); }
+.properties-section .rule-deco::after { background: var(--surface); }
+
+.section-head { margin-bottom: 48px; }
+.section-head .label { display: block; margin-bottom: 20px; }
+.section-head h2 {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: clamp(22px, 3.5vw, 34px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: var(--fg);
+  max-width: 28ch;
+}
+
+.registry { width: 100%; border-collapse: collapse; }
+.registry tr { border-top: 1px solid var(--gold-line); }
+.registry tr:last-child { border-bottom: 1px solid var(--gold-line); }
+.registry td {
+  padding: 24px 0;
+  vertical-align: top;
+}
+.registry td:first-child {
+  width: 42%;
+  padding-right: 40px;
+}
+.reg-name {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-bottom: 5px;
+}
+.reg-name a {
+  color: var(--fg);
+  text-decoration: none;
+}
+.reg-name a:hover { color: var(--teal); }
+.reg-url {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.reg-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--fg-dim);
+  padding-top: 2px;
+}
+
+@media (max-width: 580px) {
+  .registry, .registry tbody, .registry tr, .registry td { display: block; }
+  .registry td:first-child { width: 100%; padding-right: 0; padding-bottom: 8px; }
+  .registry td:last-child { padding-top: 0; }
+}
+
+/* ── Structure ── */
+.structure-section {
+  background: var(--bg);
+  padding-block: 88px 80px;
+}
+.structure-section .rule-deco::after { background: var(--bg); }
+
+.two-col { display: flex; flex-wrap: wrap; gap: 64px; margin-top: 48px; }
+.two-col > div { flex: 1 1 300px; min-width: 0; }
+
+.col-head {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+}
+.col-body {
+  font-size: 16px;
+  color: var(--fg-dim);
+  line-height: 1.8;
+}
+.col-body p + p { margin-top: 12px; }
+
+.ceiling-box {
+  margin-top: 28px;
+  border: 1px solid var(--gold-line);
+  padding: 20px 24px;
+  display: inline-block;
+}
+.ceiling-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.ceiling-figure {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ── Contact ── */
+.contact-section {
+  background: var(--surface-2);
+  padding-block: 80px 96px;
+}
+.contact-section .rule-deco::after { background: var(--surface-2); }
+
+.contact-frame {
+  border: 1px solid var(--gold-line);
+  padding: 48px;
+  position: relative;
+}
+/* corner ticks */
+.contact-frame::before,
+.contact-frame::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--gold);
+  border-style: solid;
+}
+.contact-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.contact-frame::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.contact-frame h2 {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 300;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.contact-frame > p {
+  font-size: 15px;
+  color: var(--fg-dim);
+  margin-bottom: 36px;
+  max-width: 38em;
+}
+
+.contact-form { display: flex; flex-direction: column; gap: 18px; }
+.form-row { display: flex; flex-wrap: wrap; gap: 18px; }
+.form-field { display: flex; flex-direction: column; gap: 7px; flex: 1 1 200px; min-width: 0; }
+.form-field label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.form-field input,
+.form-field textarea {
+  background: transparent;
+  border: 1px solid var(--gold-line);
+  color: var(--fg);
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 15px;
+  padding: 10px 14px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: var(--fg-dim); font-style: italic; }
+.form-field input:focus,
+.form-field textarea:focus { border-color: var(--teal); }
+
+.form-submit {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.form-submit button {
+  background: transparent;
+  color: var(--gold-bright);
+  border: 1px solid var(--gold);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 12px 32px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.form-submit button:hover {
+  background: var(--gold);
+  color: var(--bg);
+}
+.form-submit button:disabled { opacity: 0.4; cursor: default; }
+.contact-address {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--fg-dim);
+  letter-spacing: 0.04em;
+}
+
+.form-notice {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding-top: 4px;
+}
+.form-notice.success { color: var(--teal); }
+.form-notice.error   { color: #E07050; }
+
+/* ── Footer ── */
+.site-footer {
+  background: var(--bg);
+  border-top: 1px solid var(--gold-line);
+}
+.footer-inner {
+  padding-block: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  justify-content: space-between;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+}
+
+@media (max-width: 480px) {
+  .contact-frame { padding: 28px 20px; }
+  .two-col { gap: 40px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="wordmark">Elixir<span>Corp</span></div>
+      <div class="header-meta">Founded 1926 &nbsp;·&nbsp; Reincorporated 2026</div>
+    </div>
+  </div>
+  <div class="inner"><div class="rule-deco"></div></div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <span class="label">A company in the process of becoming</span>
+    <h1>Resources for those who practise the <em>craft of time.</em></h1>
+    <p>ElixirCorp supplies instruments, archive, space and funding to practitioners of the time travel craft. It is a real company with a real ledger and a very old name. Nothing is for sale yet, and this page is where we say so plainly.</p>
+  </div>
+</section>
+
+<section class="properties-section">
+  <div class="inner">
+    <div class="rule-deco" style="margin-bottom: 56px"></div>
+    <div class="section-head">
+      <span class="label">What we are for</span>
+      <h2>Four kinds of help, each meant<br>to take a real form</h2>
+    </div>
+    <table class="registry">
+      <tbody>
+        <tr>
+          <td><div class="reg-name">Instruments</div><div class="reg-url">01</div></td>
+          <td><div class="reg-desc">Tools tuned for the craft, made in small numbers and meant to be played, worn or carried.</div></td>
+        </tr>
+        <tr>
+          <td><div class="reg-name">Archive</div><div class="reg-url">02</div></td>
+          <td><div class="reg-desc">A memory the craft can lean on: records, maps and marks kept so that practitioners need not begin again.</div></td>
+        </tr>
+        <tr>
+          <td><div class="reg-name">Space</div><div class="reg-url">03</div></td>
+          <td><div class="reg-desc">Rooms and hours set aside for work that does not fit anywhere else on the calendar.</div></td>
+        </tr>
+        <tr>
+          <td><div class="reg-name">Commissions &amp; funding</div><div class="reg-url">04</div></td>
+          <td><div class="reg-desc">Paid work and grant-backed programmes, so the craft can be a livelihood and not only a vocation.</div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="rule-deco" style="margin: 56px 0"></div>
+    <div class="section-head">
+      <span class="label">What it holds</span>
+      <h2>IP currently under<br>the ElixirCorp roof</h2>
+    </div>
+    <table class="registry">
+      <tbody>
+        <tr>
+          <td>
+            <div class="reg-name"><a href="https://chronometer.online" target="_blank" rel="noopener">Chronometer</a></div>
+            <div class="reg-url">chronometer.online</div>
+          </td>
+          <td>
+            <div class="reg-desc">A biwheel orrery of transits against a natal chart, driven by a temporal throttle from 1900 to 2100. Cast a chart, move the wheel to any moment, consult the Oracle. Built under the Time Travellers Guild.</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="reg-name"><a href="https://notthefinalvinyl.net" target="_blank" rel="noopener">Not the Final Vinyl</a></div>
+            <div class="reg-url">notthefinalvinyl.net</div>
+          </td>
+          <td>
+            <div class="reg-desc">The complete catalogue of Procrastinatrix — recordings, releases, and the archive of a working practice.</div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="reg-name">Further works</div>
+            <div class="reg-url">in progress</div>
+          </td>
+          <td>
+            <div class="reg-desc">All future products of the mind of Toby Godden are held here by default, whether registered separately or not.</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="rule-deco" style="margin-top: 56px"></div>
+  </div>
+</section>
+
+<section class="structure-section">
+  <div class="inner">
+    <div class="section-head">
+      <span class="label">How it is built</span>
+      <h2>Two layers, one ledger,<br>and a ceiling</h2>
+    </div>
+    <div class="rule-plain"></div>
+    <div class="two-col">
+      <div>
+        <span class="col-head">The old voice and the plain record</span>
+        <div class="col-body">
+          <p>The company has two layers and keeps them apart. The first is the lore: its history, its name, the craft that gave rise to it. The second is the law: a registered company with accounts, tax and directors.</p>
+          <p>The name is old. The registration is new. The IP is real.</p>
+        </div>
+      </div>
+      <div>
+        <span class="col-head">The Ceiling</span>
+        <div class="col-body">
+          <p>ElixirCorp's financial headroom is capped by its own constitution at one pound less than one billion, because wealth without limit warps the people who hold it. Anything beyond the line passes to a commons fund.</p>
+        </div>
+        <div class="ceiling-box">
+          <div class="ceiling-label">Constitutional maximum</div>
+          <div class="ceiling-figure">£999,999,999</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section">
+  <div class="inner">
+    <div class="contact-frame">
+      <h2>Practise the craft?<br>Come and say so.</h2>
+      <p>We are listening before we sell. Tell us what you would need, and we will tell you honestly whether we can make it.</p>
+      <form class="contact-form" id="contact-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" autocomplete="name" placeholder="How to address you">
+          </div>
+          <div class="form-field">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="For our reply">
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="5" placeholder="What you'd like to discuss."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" id="cf-submit">Transmit</button>
+          <div class="contact-address">elixircorpenterprises@gmail.com</div>
+        </div>
+        <div id="cf-notice" class="form-notice" hidden></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="inner">
+    <div class="footer-inner">
+      <div>ElixirCorp™ &nbsp;·&nbsp; Founded 1926 &nbsp;·&nbsp; Reincorporated 2026</div>
+      <div>An IP holding company &nbsp;·&nbsp; England &amp; Wales</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('contact-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var btn    = document.getElementById('cf-submit');
+  var notice = document.getElementById('cf-notice');
+
+  btn.disabled = true;
+  btn.textContent = 'Transmitting…';
+  notice.hidden = true;
+  notice.className = 'form-notice';
+
+  fetch('https://formspree.io/f/meaedndw', {
+    method: 'POST',
+    body: new FormData(e.target),
+    headers: { 'Accept': 'application/json' }
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.ok) {
+        e.target.reset();
+        notice.className = 'form-notice success';
+        notice.textContent = 'Transmitted.';
+        notice.hidden = false;
+      } else {
+        throw new Error((res.errors || []).map(function(x){ return x.message; }).join(' ') || 'Transmission failed.');
+      }
+    })
+    .catch(function(err) {
+      notice.className = 'form-notice error';
+      notice.textContent = err.message;
+      notice.hidden = false;
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Transmit';
+    });
+});
+</script>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

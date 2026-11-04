@@ -12,3 +12,6 @@ storage/jack/*.json
 .DS_Store
 error_log
 **/error_log
+
+# /screen proxies (rebuilt by ~/Desktop/screen-footage/build-for-web.py)
+screen/media/

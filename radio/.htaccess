@@ -1,0 +1,10 @@
+# Allow BUTT's SOURCE method
+<LimitExcept GET POST PUT SOURCE HEAD OPTIONS>
+  Require all denied
+</LimitExcept>
+
+RewriteEngine On
+RewriteRule ^source/?$ source.php [L,NS]
+RewriteRule ^stream/?$ stream.php [L,NS]
+RewriteRule ^meta/?$   meta.php   [L,NS]
+RewriteRule ^$         index.php  [L]

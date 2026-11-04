@@ -1,0 +1,1355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+>
+<title>Islington Portal</title>
+
+<style>
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #050504;
+    touch-action: none;
+    overscroll-behavior: none;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+</style>
+</head>
+
+<body>
+
+<script type="module">
+
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+
+
+/* ============================================================
+   SCENE
+============================================================ */
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050504);
+
+const camera = new THREE.PerspectiveCamera(
+    38,
+    innerWidth / innerHeight,
+    0.05,
+    100
+);
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: 'high-performance'
+});
+
+renderer.setPixelRatio(
+    Math.min(devicePixelRatio || 1, 2)
+);
+
+renderer.setSize(
+    innerWidth,
+    innerHeight
+);
+
+renderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+renderer.toneMapping =
+    THREE.ACESFilmicToneMapping;
+
+renderer.toneMappingExposure =
+    1.2;
+
+document.body.appendChild(
+    renderer.domElement
+);
+
+
+/* ============================================================
+   PROCEDURAL STONE
+============================================================ */
+
+function makeStoneTexture(size = 768) {
+
+    const canvas =
+        document.createElement('canvas');
+
+    canvas.width =
+    canvas.height =
+        size;
+
+    const ctx =
+        canvas.getContext('2d');
+
+    const image =
+        ctx.createImageData(
+            size,
+            size
+        );
+
+    const d =
+        image.data;
+
+
+    for (let y = 0; y < size; y++) {
+
+        for (let x = 0; x < size; x++) {
+
+            const i =
+                (y * size + x) * 4;
+
+            const large =
+                Math.sin(x * 0.018) * 4 +
+                Math.sin(y * 0.015) * 4 +
+                Math.sin(
+                    (x + y) * 0.008
+                ) * 3;
+
+            const noise =
+                (Math.random() - 0.5) *
+                26;
+
+            const value =
+                157 +
+                large +
+                noise;
+
+            d[i] =
+                value * 1.00;
+
+            d[i + 1] =
+                value * 0.98;
+
+            d[i + 2] =
+                value * 0.88;
+
+            d[i + 3] =
+                255;
+        }
+    }
+
+
+    ctx.putImageData(
+        image,
+        0,
+        0
+    );
+
+
+    /*
+       Mineral grains.
+    */
+
+    for (let i = 0; i < 9000; i++) {
+
+        const x =
+            Math.random() * size;
+
+        const y =
+            Math.random() * size;
+
+        const r =
+            0.2 +
+            Math.random() * 1.4;
+
+        if (Math.random() > 0.48) {
+
+            ctx.fillStyle =
+                `rgba(245,239,216,${
+                    0.03 +
+                    Math.random() * 0.15
+                })`;
+
+        } else {
+
+            ctx.fillStyle =
+                `rgba(43,41,35,${
+                    0.03 +
+                    Math.random() * 0.17
+                })`;
+        }
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            r,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+
+    /*
+       Very faint tooling / weathering.
+    */
+
+    for (let i = 0; i < 500; i++) {
+
+        const x =
+            Math.random() * size;
+
+        const y =
+            Math.random() * size;
+
+        const len =
+            3 +
+            Math.random() * 14;
+
+        ctx.strokeStyle =
+            `rgba(40,38,32,${
+                0.015 +
+                Math.random() * 0.045
+            })`;
+
+        ctx.lineWidth =
+            0.5 +
+            Math.random();
+
+        ctx.beginPath();
+
+        ctx.moveTo(x, y);
+
+        ctx.lineTo(
+            x +
+            (Math.random() - 0.5) * 3,
+            y + len
+        );
+
+        ctx.stroke();
+    }
+
+
+    const texture =
+        new THREE.CanvasTexture(
+            canvas
+        );
+
+    texture.colorSpace =
+        THREE.SRGBColorSpace;
+
+    texture.wrapS =
+    texture.wrapT =
+        THREE.RepeatWrapping;
+
+    texture.repeat.set(
+        5,
+        1.5
+    );
+
+    texture.anisotropy =
+        Math.min(
+            renderer.capabilities
+                .getMaxAnisotropy(),
+            8
+        );
+
+    return texture;
+}
+
+
+/* ============================================================
+   BUMP
+============================================================ */
+
+function makeBumpTexture(size = 512) {
+
+    const canvas =
+        document.createElement('canvas');
+
+    canvas.width =
+    canvas.height =
+        size;
+
+    const ctx =
+        canvas.getContext('2d');
+
+    const image =
+        ctx.createImageData(
+            size,
+            size
+        );
+
+    const d =
+        image.data;
+
+
+    for (
+        let i = 0;
+        i < d.length;
+        i += 4
+    ) {
+
+        const value =
+            100 +
+            Math.random() * 90;
+
+        d[i] =
+        d[i + 1] =
+        d[i + 2] =
+            value;
+
+        d[i + 3] =
+            255;
+    }
+
+
+    ctx.putImageData(
+        image,
+        0,
+        0
+    );
+
+
+    for (let i = 0; i < 600; i++) {
+
+        const x =
+            Math.random() * size;
+
+        const y =
+            Math.random() * size;
+
+        ctx.strokeStyle =
+            Math.random() > 0.5
+            ? 'rgba(30,30,30,.12)'
+            : 'rgba(230,230,230,.10)';
+
+        ctx.lineWidth =
+            0.5 +
+            Math.random();
+
+        ctx.beginPath();
+
+        ctx.moveTo(x, y);
+
+        ctx.lineTo(
+            x +
+            (Math.random() - 0.5) * 5,
+            y +
+            3 +
+            Math.random() * 13
+        );
+
+        ctx.stroke();
+    }
+
+
+    const texture =
+        new THREE.CanvasTexture(
+            canvas
+        );
+
+    texture.wrapS =
+    texture.wrapT =
+        THREE.RepeatWrapping;
+
+    texture.repeat.set(
+        6,
+        2
+    );
+
+    return texture;
+}
+
+
+/* ============================================================
+   TWISTED SQUARE STONE LOOP
+
+   NOT TorusGeometry.
+
+   Centreline = slightly irregular oval.
+   Cross-section = four-sided stone beam.
+   Cross-section rotates through half a turn around the loop.
+============================================================ */
+
+function createPortalGeometry({
+
+    segments = 384,
+
+    radiusX = 3.15,
+    radiusY = 3.02,
+
+    sectionWidth = 0.92,
+    sectionDepth = 0.80,
+
+    twist = Math.PI,
+
+    twistPhase =
+        THREE.MathUtils.degToRad(23),
+
+    irregularity = 0.018
+
+} = {}) {
+
+
+    const positions = [];
+    const uvs = [];
+    const indices = [];
+
+
+    const hw =
+        sectionWidth * 0.5;
+
+    const hd =
+        sectionDepth * 0.5;
+
+
+    const profile = [
+
+        [-hw, -hd],
+
+        [ hw, -hd],
+
+        [ hw,  hd],
+
+        [-hw,  hd]
+
+    ];
+
+
+    /*
+       Separate face strips preserve the
+       square/hard-edged cross-section.
+    */
+
+    const faces = [
+
+        [0, 1],
+
+        [1, 2],
+
+        [2, 3],
+
+        [3, 0]
+
+    ];
+
+
+    for (
+        let face = 0;
+        face < 4;
+        face++
+    ) {
+
+        const [
+            cornerA,
+            cornerB
+        ] =
+            faces[face];
+
+
+        const base =
+            positions.length / 3;
+
+
+        for (
+            let i = 0;
+            i <= segments;
+            i++
+        ) {
+
+            const f =
+                i / segments;
+
+
+            const theta =
+                f *
+                Math.PI *
+                2;
+
+
+            /*
+               Slight handmade centreline.
+            */
+
+            const distortion =
+
+                1 +
+
+                Math.sin(
+                    theta * 2 + 0.45
+                ) *
+                irregularity +
+
+                Math.sin(
+                    theta * 5 - 0.8
+                ) *
+                irregularity *
+                0.16;
+
+
+            const cx =
+
+                Math.cos(theta) *
+                radiusX *
+                distortion;
+
+
+            const cy =
+
+                Math.sin(theta) *
+                radiusY /
+                distortion;
+
+
+            /*
+               Outward axis in the plane
+               of the sculpture.
+            */
+
+            const radial =
+                new THREE.Vector3(
+
+                    Math.cos(theta),
+
+                    Math.sin(theta),
+
+                    0
+
+                ).normalize();
+
+
+            /*
+               Front/back axis.
+            */
+
+            const depth =
+                new THREE.Vector3(
+                    0,
+                    0,
+                    1
+                );
+
+
+            /*
+               Continuous twist.
+            */
+
+            const phi =
+
+                twistPhase +
+
+                twist * f;
+
+
+            const cp =
+                Math.cos(phi);
+
+            const sp =
+                Math.sin(phi);
+
+
+            /*
+               Rotating square-section basis.
+            */
+
+            const A =
+                radial.clone()
+                .multiplyScalar(cp)
+                .addScaledVector(
+                    depth,
+                    sp
+                );
+
+
+            const B =
+                radial.clone()
+                .multiplyScalar(-sp)
+                .addScaledVector(
+                    depth,
+                    cp
+                );
+
+
+            function point(index) {
+
+                const [
+                    u,
+                    v
+                ] =
+                    profile[index];
+
+
+                return new THREE.Vector3(
+                    cx,
+                    cy,
+                    0
+                )
+
+                .addScaledVector(
+                    A,
+                    u
+                )
+
+                .addScaledVector(
+                    B,
+                    v
+                );
+            }
+
+
+            const pA =
+                point(cornerA);
+
+            const pB =
+                point(cornerB);
+
+
+            positions.push(
+
+                pA.x,
+                pA.y,
+                pA.z,
+
+                pB.x,
+                pB.y,
+                pB.z
+
+            );
+
+
+            uvs.push(
+
+                f * 5,
+                0,
+
+                f * 5,
+                1
+
+            );
+        }
+
+
+        for (
+            let i = 0;
+            i < segments;
+            i++
+        ) {
+
+            const a =
+                base +
+                i * 2;
+
+            const b =
+                a + 1;
+
+            const c =
+                a + 2;
+
+            const d =
+                a + 3;
+
+
+            indices.push(
+
+                a,
+                c,
+                b,
+
+                c,
+                d,
+                b
+
+            );
+        }
+    }
+
+
+    const geometry =
+        new THREE.BufferGeometry();
+
+
+    geometry.setAttribute(
+
+        'position',
+
+        new THREE.Float32BufferAttribute(
+            positions,
+            3
+        )
+    );
+
+
+    geometry.setAttribute(
+
+        'uv',
+
+        new THREE.Float32BufferAttribute(
+            uvs,
+            2
+        )
+    );
+
+
+    geometry.setIndex(
+        indices
+    );
+
+
+    geometry.computeVertexNormals();
+
+    geometry.computeBoundingSphere();
+
+
+    return geometry;
+}
+
+
+/* ============================================================
+   SCULPTURE
+============================================================ */
+
+const stoneMaterial =
+    new THREE.MeshStandardMaterial({
+
+        map:
+            makeStoneTexture(),
+
+        bumpMap:
+            makeBumpTexture(),
+
+        bumpScale:
+            0.055,
+
+        color:
+            0xbdb69b,
+
+        roughness:
+            0.96,
+
+        metalness:
+            0,
+
+        side:
+            THREE.DoubleSide
+    });
+
+
+const portal =
+    new THREE.Mesh(
+
+        createPortalGeometry(),
+
+        stoneMaterial
+
+    );
+
+
+scene.add(
+    portal
+);
+
+
+/* ============================================================
+   FIXED REAL-WORLD INSTALLATION ATTITUDE
+
+   We orbit the CAMERA.
+   We do not spin the sculpture.
+============================================================ */
+
+portal.rotation.set(
+
+    THREE.MathUtils.degToRad(-14),
+
+    THREE.MathUtils.degToRad(-3.5),
+
+    THREE.MathUtils.degToRad(-2.2)
+
+);
+
+
+/* ============================================================
+   LIGHTING
+============================================================ */
+
+const hemi =
+    new THREE.HemisphereLight(
+
+        0xd7d1ba,
+
+        0x161510,
+
+        1.9
+
+    );
+
+scene.add(
+    hemi
+);
+
+
+const key =
+    new THREE.DirectionalLight(
+
+        0xfff3d4,
+
+        4.2
+
+    );
+
+key.position.set(
+    -4,
+    6,
+    7
+);
+
+scene.add(
+    key
+);
+
+
+const fill =
+    new THREE.DirectionalLight(
+
+        0xadb6b1,
+
+        1.6
+
+    );
+
+fill.position.set(
+    5,
+    -2,
+    3
+);
+
+scene.add(
+    fill
+);
+
+
+const rear =
+    new THREE.DirectionalLight(
+
+        0xd8d0b3,
+
+        1.2
+
+    );
+
+rear.position.set(
+    1,
+    3,
+    -6
+);
+
+scene.add(
+    rear
+);
+
+
+/* ============================================================
+   CAMERA ORBIT
+============================================================ */
+
+const target =
+    new THREE.Vector3(
+        0,
+        0,
+        0
+    );
+
+
+let theta =
+    0;
+
+let phi =
+    Math.PI * 0.5;
+
+
+let targetTheta =
+    theta;
+
+let targetPhi =
+    phi;
+
+
+/*
+   Portrait starts far enough back to see
+   the complete stone object.
+*/
+
+let radius =
+    10.8;
+
+let targetRadius =
+    radius;
+
+
+const MIN_RADIUS =
+    4.8;
+
+const MAX_RADIUS =
+    20;
+
+const MIN_PHI =
+    0.12;
+
+const MAX_PHI =
+    Math.PI - 0.12;
+
+
+/* ============================================================
+   TOUCH STATE
+============================================================ */
+
+const pointers =
+    new Map();
+
+
+let previousX =
+    0;
+
+let previousY =
+    0;
+
+let previousPinch =
+    null;
+
+
+/* ============================================================
+   PINCH DISTANCE
+============================================================ */
+
+function pinchDistance() {
+
+    const p =
+        [...pointers.values()];
+
+
+    if (p.length < 2) {
+        return null;
+    }
+
+
+    const dx =
+        p[0].x -
+        p[1].x;
+
+    const dy =
+        p[0].y -
+        p[1].y;
+
+
+    return Math.hypot(
+        dx,
+        dy
+    );
+}
+
+
+/* ============================================================
+   POINTER DOWN
+============================================================ */
+
+renderer.domElement.addEventListener(
+
+    'pointerdown',
+
+    event => {
+
+        event.preventDefault();
+
+
+        renderer.domElement
+            .setPointerCapture?.(
+                event.pointerId
+            );
+
+
+        pointers.set(
+
+            event.pointerId,
+
+            {
+                x: event.clientX,
+                y: event.clientY
+            }
+
+        );
+
+
+        if (pointers.size === 1) {
+
+            previousX =
+                event.clientX;
+
+            previousY =
+                event.clientY;
+
+            previousPinch =
+                null;
+        }
+
+
+        else if (pointers.size === 2) {
+
+            previousPinch =
+                pinchDistance();
+        }
+    }
+
+);
+
+
+/* ============================================================
+   POINTER MOVE
+============================================================ */
+
+renderer.domElement.addEventListener(
+
+    'pointermove',
+
+    event => {
+
+        if (
+            !pointers.has(
+                event.pointerId
+            )
+        ) {
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        pointers.set(
+
+            event.pointerId,
+
+            {
+                x: event.clientX,
+                y: event.clientY
+            }
+
+        );
+
+
+        /* ----------------------------------------------------
+           ONE FINGER = WALK AROUND OBJECT
+        ---------------------------------------------------- */
+
+        if (pointers.size === 1) {
+
+            const dx =
+                event.clientX -
+                previousX;
+
+            const dy =
+                event.clientY -
+                previousY;
+
+
+            targetTheta -=
+                dx * 0.0065;
+
+
+            targetPhi -=
+                dy * 0.0065;
+
+
+            targetPhi =
+                THREE.MathUtils.clamp(
+
+                    targetPhi,
+
+                    MIN_PHI,
+
+                    MAX_PHI
+
+                );
+
+
+            previousX =
+                event.clientX;
+
+            previousY =
+                event.clientY;
+        }
+
+
+        /* ----------------------------------------------------
+           TWO FINGERS = PINCH / DOLLY
+        ---------------------------------------------------- */
+
+        else if (pointers.size === 2) {
+
+            const distance =
+                pinchDistance();
+
+
+            if (
+                previousPinch !== null &&
+                distance !== null &&
+                distance > 0
+            ) {
+
+                const scale =
+                    previousPinch /
+                    distance;
+
+
+                targetRadius *=
+                    scale;
+
+
+                targetRadius =
+                    THREE.MathUtils.clamp(
+
+                        targetRadius,
+
+                        MIN_RADIUS,
+
+                        MAX_RADIUS
+
+                    );
+            }
+
+
+            previousPinch =
+                distance;
+        }
+    }
+
+);
+
+
+/* ============================================================
+   RELEASE
+============================================================ */
+
+function releasePointer(
+    event
+) {
+
+    pointers.delete(
+        event.pointerId
+    );
+
+
+    if (
+        pointers.size < 2
+    ) {
+
+        previousPinch =
+            null;
+    }
+
+
+    /*
+       One finger remains after pinch:
+       reset its origin to prevent jumping.
+    */
+
+    if (
+        pointers.size === 1
+    ) {
+
+        const remaining =
+            [...pointers.values()][0];
+
+
+        previousX =
+            remaining.x;
+
+        previousY =
+            remaining.y;
+    }
+}
+
+
+renderer.domElement.addEventListener(
+
+    'pointerup',
+
+    releasePointer
+
+);
+
+
+renderer.domElement.addEventListener(
+
+    'pointercancel',
+
+    releasePointer
+
+);
+
+
+/* ============================================================
+   DESKTOP WHEEL TOO
+============================================================ */
+
+renderer.domElement.addEventListener(
+
+    'wheel',
+
+    event => {
+
+        event.preventDefault();
+
+
+        targetRadius *=
+            Math.exp(
+                event.deltaY *
+                0.001
+            );
+
+
+        targetRadius =
+            THREE.MathUtils.clamp(
+
+                targetRadius,
+
+                MIN_RADIUS,
+
+                MAX_RADIUS
+
+            );
+    },
+
+    {
+        passive: false
+    }
+
+);
+
+
+/* ============================================================
+   CAMERA POSITION
+============================================================ */
+
+function updateCamera() {
+
+    const sinPhi =
+        Math.sin(phi);
+
+
+    camera.position.set(
+
+        target.x +
+        radius *
+        sinPhi *
+        Math.sin(theta),
+
+        target.y +
+        radius *
+        Math.cos(phi),
+
+        target.z +
+        radius *
+        sinPhi *
+        Math.cos(theta)
+
+    );
+
+
+    camera.lookAt(
+        target
+    );
+}
+
+
+/* ============================================================
+   ANIMATION
+============================================================ */
+
+function animate() {
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    /*
+       Dampened physical movement.
+    */
+
+    theta +=
+        (
+            targetTheta -
+            theta
+        ) *
+        0.13;
+
+
+    phi +=
+        (
+            targetPhi -
+            phi
+        ) *
+        0.13;
+
+
+    radius +=
+        (
+            targetRadius -
+            radius
+        ) *
+        0.13;
+
+
+    updateCamera();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+
+updateCamera();
+
+animate();
+
+
+/* ============================================================
+   RESIZE
+============================================================ */
+
+function resize() {
+
+    camera.aspect =
+        innerWidth /
+        innerHeight;
+
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+        innerWidth,
+        innerHeight
+    );
+}
+
+
+addEventListener(
+    'resize',
+    resize
+);
+
+</script>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+    "records": {
+        "jsta_IN_TRAY": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_IN_TRAY",
+            "slug": "in-tray",
+            "retired": false
+        },
+        "jsta_ACTIVE_DESKS": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_ACTIVE_DESKS",
+            "slug": "active-desks",
+            "retired": false
+        },
+        "jsta_PERSONS": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_PERSONS",
+            "slug": "persons",
+            "retired": false
+        },
+        "jsta_PLACES": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_PLACES",
+            "slug": "places",
+            "retired": false
+        },
+        "jsta_UNCLASSIFIED": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_UNCLASSIFIED",
+            "slug": "unclassified",
+            "retired": false
+        },
+        "jsta_CORRESPONDENCES": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_CORRESPONDENCES",
+            "slug": "correspondences",
+            "retired": false
+        },
+        "jsta_PROGRAMMES": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_PROGRAMMES",
+            "slug": "programmes",
+            "retired": false
+        },
+        "jsta_DREAMS": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_DREAMS",
+            "slug": "dreams",
+            "retired": false
+        },
+        "jsta_PRIVATE_NOTES": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_PRIVATE_NOTES",
+            "slug": "private-notes",
+            "retired": false
+        },
+        "jsta_OUT_TRAY": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_OUT_TRAY",
+            "slug": "out-tray",
+            "retired": false
+        },
+        "jsta_QUARANTINE": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_QUARANTINE",
+            "slug": "quarantine",
+            "retired": false
+        },
+        "jsta_RETIRED": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_RETIRED",
+            "slug": "retired",
+            "retired": false
+        },
+        "jsta_LEDGER": {
+            "kind": "station",
+            "parent_id": null,
+            "station_id": "jsta_LEDGER",
+            "slug": "ledger",
+            "retired": false
+        }
+    }
+}

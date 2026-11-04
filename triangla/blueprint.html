@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Triangla — Blueprint</title>
+<link rel="canonical" href="https://timetravellersguild.com/triangla/blueprint.html">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="Triangla — Blueprint">
+<meta property="og:description" content="The finger drum with three sides.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/triangla.png">
+<meta property="og:url" content="https://timetravellersguild.com/triangla/blueprint.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    --ink:#080C12;--panel:#0E141C;--panel2:#131B25;--line:#1F2A36;
+    --amber:#D69A4E;--amberhi:#F0BC72;--teal:#4F9089;--parchment:#EFE7D6;--muted:#77848F;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+    --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--parchment);font-family:var(--serif);
+       font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  .guildbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;
+    border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(8,12,18,.92);
+    backdrop-filter:blur(8px);z-index:20}
+  .guildmark{display:flex;align-items:center;gap:11px}
+  .ring{width:19px;height:19px;border:1.5px solid var(--amber);border-radius:50%;position:relative;flex:none}
+  .ring::after{content:'';position:absolute;inset:5px;border:1px solid var(--teal);border-radius:50%}
+  .join{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--amber);border:1px solid var(--amber);border-radius:5px;padding:7px 15px;text-decoration:none}
+  .join:hover{background:var(--amber);color:var(--ink)}
+
+  header{padding:56px 0 30px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--teal);margin:0 0 16px}
+  h1{font-size:clamp(38px,7vw,64px);line-height:1;margin:0;font-weight:400;letter-spacing:-.02em}
+
+  .rig{display:grid;grid-template-columns:1.4fr .8fr;gap:30px;align-items:start;padding-bottom:60px}
+  .stage{background:radial-gradient(115% 95% at 50% 20%,#141C26 0%,var(--panel) 60%,#0A0F16 100%);
+    border:1px solid var(--line);border-radius:9px;position:relative;overflow:hidden;
+    cursor:grab;touch-action:none}
+  .stage:active{cursor:grabbing}
+  .stage svg{display:block;width:100%;height:auto}
+  .hint{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);text-align:center;padding:8px 4px 10px}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:22px}
+  label.ctl{display:block;margin:0 0 18px}
+  label.ctl .lab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  label.ctl .lab b{color:var(--parchment);font-weight:400}
+  input[type=range]{width:100%;-webkit-appearance:none;background:transparent;height:22px;margin:0}
+  input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line)}
+  input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;
+    background:var(--amber);margin-top:-5.5px;cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:13px;height:13px;border:none;border-radius:50%;background:var(--amber)}
+  input[type=range]:focus-visible{outline:1px solid var(--amber);outline-offset:5px}
+
+  .btns{display:flex;gap:7px;margin-bottom:18px}
+  button{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    background:transparent;color:var(--parchment);border:1px solid var(--line);border-radius:5px;
+    padding:10px 6px;cursor:pointer;flex:1;transition:.18s}
+  button:hover{border-color:var(--amber);color:var(--amberhi)}
+  button.sel{border-color:var(--teal);color:var(--teal)}
+  button:focus-visible{outline:1px solid var(--amber);outline-offset:2px}
+
+  .key{list-style:none;margin:22px 0 0;padding:0;border-top:1px solid var(--line)}
+  .key li{border-bottom:1px solid var(--line);padding:11px 0 11px 34px;position:relative;
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:#B9B2A3;cursor:default}
+  .key li::before{content:attr(data-n);position:absolute;left:0;top:12px;font-size:10px;color:var(--muted)}
+  .key li:hover{color:var(--amberhi)}
+  .key li:hover::before{color:var(--amber)}
+
+  .note{font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--muted);
+    border-left:1px solid var(--teal);padding-left:13px;margin-top:24px}
+
+  @media(max-width:880px){.rig{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="guildbar">
+  <div class="guildmark"><a href="/" style="display:flex;align-items:center;gap:11px;color:inherit;text-decoration:none"><span class="ring"></span>Time Travellers Guild</a></div>
+  <div style="display:flex;gap:10px;align-items:center">
+    <a class="join" href="/now">tree</a>
+    <a class="join" href="/triangla/">Triangla</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Drawing 01 · outer form · schematic, not to scale</p>
+    <h1>Blueprint</h1>
+  </header>
+
+  <div class="rig">
+    <div>
+      <div class="stage" id="stage">
+        <svg id="v" viewBox="0 0 640 560"></svg>
+      </div>
+      <p class="hint">Drag to orbit</p>
+    </div>
+
+    <div class="panel">
+      <div class="btns">
+        <button data-view="0" class="sel">Iso</button>
+        <button data-view="1">Plan</button>
+        <button data-view="2">Edge</button>
+      </div>
+
+      <label class="ctl">
+        <span class="lab">Separation <b id="vExp">0 mm</b></span>
+        <input id="sExp" type="range" min="0" max="160" value="0">
+      </label>
+      <label class="ctl">
+        <span class="lab">Edge length <b id="vEdge">450 mm</b></span>
+        <input id="sEdge" type="range" min="300" max="620" value="450">
+      </label>
+      <label class="ctl">
+        <span class="lab">Frame thickness <b id="vThk">18 mm</b></span>
+        <input id="sThk" type="range" min="9" max="34" value="18">
+      </label>
+
+      <div class="btns">
+        <button id="bSpin" class="sel">Rotate</button>
+        <button id="bLbl" class="sel">Labels</button>
+      </div>
+
+      <ul class="key">
+        <li data-n="10" data-p="frame">Frame — recycled plywood</li>
+        <li data-n="12" data-p="bass">Bass membrane — laminated paper</li>
+        <li data-n="22" data-p="second">Second membrane</li>
+        <li data-n="16" data-p="string">Tuning string</li>
+        <li data-n="18" data-p="key">Tuning key</li>
+        <li data-n="24" data-p="jack">Output jack</li>
+      </ul>
+
+      <p class="note">
+        Outer form only. This drawing shows what has been public since 2012 and
+        deliberately omits the internal coupling and sensing arrangement.
+        Dimensions are adjustable and illustrative; nothing here has been measured
+        off a built instrument.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SVG=document.getElementById('v'), NS='http://www.w3.org/2000/svg';
+  var W=640,H=560;
+
+  var st={edge:450,thk:18,exp:0,rx:-0.42,ry:0.62,spin:true,labels:true};
+
+  /* ---------- model (mm, y up, z out of the face) ---------- */
+  function model(){
+    var R=st.edge/Math.sqrt(3), t=st.thk/2, E=st.exp;
+    var V=[];
+    for(var i=0;i<3;i++){
+      var a=Math.PI/2 - i*2*Math.PI/3;
+      V.push([R*Math.cos(a),R*Math.sin(a)]);
+    }
+    var s=st.edge/450;
+    var bass={c:[-58*s,-8*s], r:82*s};
+    var snare={c:[88*s,42*s], r:47*s};
+    var pegP=[-14*s,196*s], ancP=[96*s,-104*s];
+    var jackP=[168*s,-118*s];
+
+    var parts=[];
+
+    function tri(z){ return V.map(function(p){return [p[0],p[1],z]}) }
+    function ring(c,r,z,n){
+      var o=[]; n=n||64;
+      for(var i=0;i<=n;i++){var a=i/n*2*Math.PI;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a),z])}
+      return o;
+    }
+    /* frame: two faces + corner risers + both cutouts on both faces */
+    parts.push({id:'frame',pts:tri(-t).concat([tri(-t)[0]]),c:'#5C6A79',w:1.4});
+    parts.push({id:'frame',pts:tri(t).concat([tri(t)[0]]),c:'#8494A4',w:1.6});
+    for(var i=0;i<3;i++) parts.push({id:'frame',pts:[[V[i][0],V[i][1],-t],[V[i][0],V[i][1],t]],c:'#5C6A79',w:1.3});
+    parts.push({id:'frame',pts:ring(bass.c,bass.r,-t),c:'#455260',w:1});
+    parts.push({id:'frame',pts:ring(bass.c,bass.r,t),c:'#6E7E8E',w:1.1});
+    parts.push({id:'frame',pts:ring(snare.c,snare.r,-t),c:'#455260',w:1});
+    parts.push({id:'frame',pts:ring(snare.c,snare.r,t),c:'#6E7E8E',w:1.1});
+
+    /* membranes lift away on separation */
+    var mz=t+E;
+    parts.push({id:'bass',pts:ring(bass.c,bass.r,mz),c:'#D9C9A6',w:1.5,label:[bass.c[0],bass.c[1],mz]});
+    for(var k=1;k<4;k++) parts.push({id:'bass',pts:ring(bass.c,bass.r*(1-k*0.22),mz),c:'#7E7460',w:.7});
+    parts.push({id:'second',pts:ring(snare.c,snare.r,mz),c:'#D9C9A6',w:1.5,label:[snare.c[0],snare.c[1],mz]});
+    for(var k2=1;k2<3;k2++) parts.push({id:'second',pts:ring(snare.c,snare.r*(1-k2*0.3),mz),c:'#7E7460',w:.7});
+
+    /* string sits above the membranes when separated */
+    var sz=t+E*1.9;
+    parts.push({id:'string',pts:[[pegP[0],pegP[1],sz],[ancP[0],ancP[1],sz]],c:'#C6CFD8',w:1.2,
+                label:[(pegP[0]+ancP[0])/2,(pegP[1]+ancP[1])/2,sz]});
+    parts.push({id:'key',pts:ring(pegP,13*s,sz,20),c:'#9FB0C0',w:1.3,label:[pegP[0],pegP[1],sz]});
+    parts.push({id:'jack',pts:ring(jackP,11*s,0,20),c:'#9FB0C0',w:1.3,label:[jackP[0],jackP[1],0]});
+
+    return parts.filter(function(p){return p.w>0});
+  }
+
+  /* ---------- projection ---------- */
+  function project(p){
+    var cx=Math.cos(st.rx),sx=Math.sin(st.rx),cy=Math.cos(st.ry),sy=Math.sin(st.ry);
+    var x=p[0]*cy + p[2]*sy;
+    var z1=-p[0]*sy + p[2]*cy;
+    var y=p[1]*cx - z1*sx;
+    var z=p[1]*sx + z1*cx;
+    var d=1400, k=d/(d+z+700);
+    var scale=0.62;
+    return {x:W/2 + x*k*scale, y:H/2 - y*k*scale, z:z};
+  }
+
+  var LABELS={frame:'10  FRAME',bass:'12  BASS MEMBRANE',second:'22  SECOND MEMBRANE',
+              string:'16  TUNING STRING',key:'18  TUNING KEY',jack:'24  OUTPUT JACK'};
+  var hi=null;
+
+  function render(){
+    while(SVG.firstChild)SVG.removeChild(SVG.firstChild);
+    var parts=model(), drawn=[];
+
+    parts.forEach(function(p){
+      var pr=p.pts.map(project);
+      var mz=pr.reduce(function(a,b){return a+b.z},0)/pr.length;
+      drawn.push({p:p,pr:pr,z:mz});
+    });
+    drawn.sort(function(a,b){return b.z-a.z});
+
+    drawn.forEach(function(d){
+      var el=document.createElementNS(NS,'polyline');
+      el.setAttribute('points',d.pr.map(function(q){return q.x.toFixed(1)+','+q.y.toFixed(1)}).join(' '));
+      el.setAttribute('fill','none');
+      var lit = hi===d.p.id;
+      el.setAttribute('stroke',lit?'#F0BC72':d.p.c);
+      el.setAttribute('stroke-width',(lit?d.p.w+.8:d.p.w).toFixed(2));
+      el.setAttribute('stroke-linejoin','round');
+      el.setAttribute('stroke-linecap','round');
+      el.setAttribute('opacity', lit?1:.92);
+      SVG.appendChild(el);
+    });
+
+    if(st.labels){
+      drawn.forEach(function(d){
+        if(!d.p.label)return;
+        var a=project(d.p.label);
+        var out={x:a.x + (a.x<W/2?-58:58), y:a.y + (a.y<H/2?-26:26)};
+        var ln=document.createElementNS(NS,'line');
+        ln.setAttribute('x1',a.x);ln.setAttribute('y1',a.y);
+        ln.setAttribute('x2',out.x);ln.setAttribute('y2',out.y);
+        ln.setAttribute('stroke','#3C4A58');ln.setAttribute('stroke-width','.8');
+        SVG.appendChild(ln);
+        var tx=document.createElementNS(NS,'text');
+        tx.setAttribute('x',out.x + (a.x<W/2?-5:5));
+        tx.setAttribute('y',out.y-5);
+        tx.setAttribute('text-anchor',a.x<W/2?'end':'start');
+        tx.setAttribute('font-family','ui-monospace,Menlo,monospace');
+        tx.setAttribute('font-size','9.5');
+        tx.setAttribute('letter-spacing','1.4');
+        tx.setAttribute('fill',hi===d.p.id?'#F0BC72':'#77848F');
+        tx.textContent=LABELS[d.p.id]||'';
+        SVG.appendChild(tx);
+      });
+    }
+  }
+
+  /* ---------- interaction ---------- */
+  var stage=document.getElementById('stage'),drag=null;
+  stage.addEventListener('pointerdown',function(e){
+    drag={x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);st.spin=false;
+    document.getElementById('bSpin').classList.remove('sel');
+  });
+  stage.addEventListener('pointermove',function(e){
+    if(!drag)return;
+    st.ry += (e.clientX-drag.x)*0.008;
+    st.rx += (e.clientY-drag.y)*0.006;
+    st.rx=Math.max(-1.45,Math.min(1.45,st.rx));
+    drag={x:e.clientX,y:e.clientY};render();
+  });
+  stage.addEventListener('pointerup',function(){drag=null});
+  stage.addEventListener('pointercancel',function(){drag=null});
+
+  function bind(id,key,fmt,map){
+    var el=document.getElementById(id),lb=document.getElementById(fmt.id);
+    el.addEventListener('input',function(){
+      st[key]=map?map(+el.value):+el.value; lb.textContent=fmt.f(st[key]); render();
+    });
+    lb.textContent=fmt.f(st[key]);
+  }
+  bind('sExp','exp',{id:'vExp',f:function(v){return Math.round(v)+' mm'}});
+  bind('sEdge','edge',{id:'vEdge',f:function(v){return Math.round(v)+' mm'}});
+  bind('sThk','thk',{id:'vThk',f:function(v){return Math.round(v)+' mm'}});
+
+  var VIEWS=[[-0.42,0.62],[0,0],[-0.02,1.5708]];
+  document.querySelectorAll('[data-view]').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('[data-view]').forEach(function(o){o.classList.remove('sel')});
+      b.classList.add('sel');
+      var v=VIEWS[+b.dataset.view]; st.rx=v[0]; st.ry=v[1]; st.spin=false;
+      document.getElementById('bSpin').classList.remove('sel'); render();
+    });
+  });
+  document.getElementById('bSpin').addEventListener('click',function(){
+    st.spin=!st.spin; this.classList.toggle('sel',st.spin);
+  });
+  document.getElementById('bLbl').addEventListener('click',function(){
+    st.labels=!st.labels; this.classList.toggle('sel',st.labels); render();
+  });
+
+  document.querySelectorAll('.key li').forEach(function(li){
+    li.addEventListener('mouseenter',function(){hi=li.dataset.p;render()});
+    li.addEventListener('mouseleave',function(){hi=null;render()});
+  });
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce)st.spin=false;
+  (function loop(){
+    if(st.spin&&!drag){ st.ry+=0.0032; render(); }
+    requestAnimationFrame(loop);
+  })();
+
+  render();
+})();
+</script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

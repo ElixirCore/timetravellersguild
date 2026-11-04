@@ -1,0 +1,8 @@
+[
+  {"id":"cardiff","name":"Cardiff","name_cy":"Caerdydd","status":"open","role":"Headquarters and Wales regional office","address":"Cathays Park, Cardiff CF10 3NQ","address_cy":"Parc Cathays, Caerdydd CF10 3NQ","note":"Public counter: Tuesday and Thursday, 10:00 to 15:00. Appointments preferred.","x":215,"y":375},
+  {"id":"abercrave","name":"Abercrave","name_cy":"Abercraf","status":"limited","role":"Field station","address":"Upper Swansea Valley","address_cy":"Cwm Tawe Uchaf","note":"Restricted hours. Attendance by arrangement with Cardiff. No public counter.","x":188,"y":350},
+  {"id":"bristol","name":"Bristol","name_cy":"Bryste","status":"closed","role":"Former South West office","address":"Closed","address_cy":"Ar gau","note":"Closed due to budget reductions. Enquiries transfer to Cardiff.","x":255,"y":360},
+  {"id":"manchester","name":"Manchester","name_cy":"Manceinion","status":"closed","role":"Former North of England office","address":"Closed","address_cy":"Ar gau","note":"Closed due to budget reductions. Enquiries transfer to Cardiff.","x":248,"y":228},
+  {"id":"edinburgh","name":"Edinburgh","name_cy":"Caeredin","status":"closed","role":"Former Scotland office","address":"Closed","address_cy":"Ar gau","note":"Closed due to budget reductions. Scottish enquiries by correspondence to Cardiff.","x":248,"y":72},
+  {"id":"belfast","name":"Belfast","name_cy":"Béal Feirste","status":"closed","role":"Former Northern Ireland office","address":"Closed","address_cy":"Ar gau","note":"Closed due to budget reductions. Northern Ireland enquiries by correspondence to Cardiff.","x":98,"y":198}
+]

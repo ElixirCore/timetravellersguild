@@ -1,0 +1,224 @@
+[
+  {
+    "id": "DET-HR-2026-041",
+    "slug": "assistant-temporal-survey-officer",
+    "title": "Assistant Temporal Survey Officer",
+    "grade": "EO",
+    "salary": "£29,640",
+    "location": "Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week",
+    "closing": "2026-09-25",
+    "published": "2026-07-22",
+    "summary": "Support the continuous watch over indicators of temporal imbalance in Wales and, where directed, associated jurisdictions.",
+    "duties": [
+      "Attend reported Excess Time Events under the supervision of a Continuity Inspector.",
+      "Complete field logs to the standard set out in DET-MANUAL-003.",
+      "Preserve accurate and impartial records of all recognised events.",
+      "Do not interpret causes. Record consequences."
+    ],
+    "essential": [
+      "Right to work in the United Kingdom.",
+      "A full UK driving licence, or the ability to travel independently across Wales.",
+      "Accuracy in written English. Welsh is desirable.",
+      "The ability to apply a published procedure without improving it."
+    ],
+    "desirable": [
+      "Experience of operational casework in a public body.",
+      "Welsh to working standard."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-038",
+    "slug": "archive-conservator",
+    "title": "Archive Conservator",
+    "grade": "HEO",
+    "salary": "£35,620 to £39,453",
+    "location": "Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week",
+    "closing": "2026-09-18",
+    "published": "2026-07-11",
+    "summary": "Conserve paper, film and instrument records of Excess Time Events. Contradiction is retained. It is not resolved.",
+    "duties": [
+      "Assess, treat and house holdings of the Institute for Temporal Studies.",
+      "Maintain the retention schedule DET-RET-011.",
+      "Prepare material for authorised research access.",
+      "Report deterioration that cannot be explained by ordinary ageing."
+    ],
+    "essential": [
+      "A recognised qualification in archive conservation or equivalent experience.",
+      "Right to work in the United Kingdom.",
+      "Experience of working to BS 4971 or an equivalent standard."
+    ],
+    "desirable": [
+      "Experience of film or instrument collections.",
+      "Welsh language skills."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-033",
+    "slug": "continuity-inspector",
+    "title": "Continuity Inspector",
+    "grade": "SEO",
+    "salary": "£41,608 to £45,992",
+    "location": "Wales — field, based at Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week, unsocial hours as required",
+    "closing": "2026-10-02",
+    "published": "2026-07-04",
+    "summary": "Inspect sites at which measurable continuity has diverged from ordinary expectation and produced demonstrable effects upon public life.",
+    "duties": [
+      "Lead the departmental response to a recognised Excess Time Event.",
+      "Determine whether restoration is reasonably practicable.",
+      "Issue and vary notices under the operational procedures.",
+      "Give evidence to the Minister as required."
+    ],
+    "essential": [
+      "Substantial experience of inspection, regulation or emergency coordination in a public body.",
+      "Right to work in the United Kingdom.",
+      "A full UK driving licence.",
+      "The ability to write a decision letter that a court could read."
+    ],
+    "desirable": [
+      "Welsh to oral hearing standard.",
+      "Experience of working with local authorities and emergency services."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-029",
+    "slug": "senior-drift-analyst",
+    "title": "Senior Drift Analyst",
+    "grade": "Grade 7",
+    "salary": "£55,403 to £65,713",
+    "location": "Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week",
+    "closing": "2026-09-16",
+    "published": "2026-06-27",
+    "summary": "Lead the measurement of temporal drift and the preparation of the National Risk Register entry for Excess Time.",
+    "duties": [
+      "Own the statistical yearbook and the quarterly drift tables.",
+      "Advise the Institute for Temporal Studies on method.",
+      "Ensure that coincidence is not recorded as explanation.",
+      "Brief the Minister and the Permanent Secretary."
+    ],
+    "essential": [
+      "A degree in a quantitative discipline, or equivalent professional experience.",
+      "Experience of official statistics or a comparable published series.",
+      "Right to work in the United Kingdom."
+    ],
+    "desirable": [
+      "Experience of the Government Statistical Service.",
+      "Welsh language skills."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-044",
+    "slug": "records-officer-foi",
+    "title": "Records Officer (Information Rights)",
+    "grade": "EO",
+    "salary": "£29,640",
+    "location": "Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week",
+    "closing": "2026-10-09",
+    "published": "2026-08-20",
+    "summary": "Administer freedom of information, subject access and the temporal records that those regimes do not quite cover.",
+    "duties": [
+      "Log and answer requests under FOIA, GDPR and DET-GDPR-001.",
+      "Apply exemptions where the record is of an event that has not yet become eligible.",
+      "Maintain the disclosure log.",
+      "Do not confirm or deny holdings that would themselves constitute an Excess Time Event."
+    ],
+    "essential": [
+      "Experience of information rights or casework administration.",
+      "Right to work in the United Kingdom.",
+      "Accuracy under statutory deadlines."
+    ],
+    "desirable": [
+      "ICO or equivalent training.",
+      "Welsh language skills."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-047",
+    "slug": "community-programmes-officer",
+    "title": "Community Programmes Officer",
+    "grade": "HEO",
+    "salary": "£35,620 to £39,453",
+    "location": "Cardiff, with travel in Wales",
+    "type": "Fixed term — 24 months",
+    "hours": "37 hours a week",
+    "closing": "2026-10-14",
+    "published": "2026-09-01",
+    "summary": "Deliver the community programmes through which the Department reduces harm arising from temporal displacement wherever reasonably practicable.",
+    "duties": [
+      "Administer grants and local agreements under DET-COM-012.",
+      "Work with local authorities and community groups.",
+      "Report outcomes without claiming that ordinary life has been improved.",
+      "Keep the public assurance: most citizens will never knowingly encounter an event."
+    ],
+    "essential": [
+      "Experience of community or grant programmes in the public or voluntary sector.",
+      "Right to work in the United Kingdom.",
+      "The ability to travel in Wales."
+    ],
+    "desirable": [
+      "Welsh to community meeting standard."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-021",
+    "slug": "welsh-language-officer",
+    "title": "Welsh Language Officer",
+    "grade": "HEO",
+    "salary": "£35,620 to £39,453",
+    "location": "Cardiff",
+    "type": "Permanent",
+    "hours": "37 hours a week",
+    "closing": "2026-09-30",
+    "published": "2026-08-06",
+    "summary": "Own the Welsh language scheme DET-WELSH-001 and the bilingual standard of departmental publishing.",
+    "duties": [
+      "Advise on translation of operational notices and public guidance.",
+      "Monitor compliance with the Welsh Language Standards as they apply to the Department.",
+      "The Codex is issued in English. Supporting material is not excused."
+    ],
+    "essential": [
+      "Welsh and English to professional standard.",
+      "Right to work in the United Kingdom.",
+      "Experience of bilingual public-sector publishing."
+    ],
+    "desirable": [
+      "Experience of statutory language schemes."
+    ]
+  },
+  {
+    "id": "DET-HR-2026-018",
+    "slug": "apprentice-records-assistant",
+    "title": "Apprentice Records Assistant",
+    "grade": "AO",
+    "salary": "£25,974",
+    "location": "Cardiff",
+    "type": "Apprenticeship — 18 months",
+    "hours": "37 hours a week",
+    "closing": "2026-10-21",
+    "published": "2026-09-02",
+    "summary": "A first post in the public register of Excess Time Events. You will not be asked to hold a case alone.",
+    "duties": [
+      "File, retrieve and paginate records under supervision.",
+      "Learn DET-MANUAL-003 and the forms catalogue.",
+      "Attend the civic induction and the Institute reading room as required."
+    ],
+    "essential": [
+      "Age 16 or over on the day you start.",
+      "Right to work in the United Kingdom.",
+      "GCSE English, or equivalent, at grade C/4 or above."
+    ],
+    "desirable": [
+      "An interest in archives or public administration.",
+      "Welsh language skills."
+    ]
+  }
+]

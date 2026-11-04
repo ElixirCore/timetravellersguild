@@ -1,0 +1,12 @@
+MEETING IN JACK'S CUBE
+Lodge as testimony. Do not write canon. Source memory is untouched.
+When: 2026-09-28T19:35:06.006Z
+Instruction: Remember this meeting.
+Working slip: WORKING BENCH                                                                   
+Operation: makeCard / working_card
+Sources: jnode-mulncr9n-e1uwaq
+Provenance:
+- obj-bench · destination · source · obj-bench
+- jnode-mulncr9n-e1uwaq · inspection · inspect · WORKING BENCH
+- jnode-mulncwwk-fx8zc2 · working_card · makeCard · WORKING BENCH
+Already held: A minimal public existence entry for Quill has been proposed; the private emergence account remains excluded from the public field. Confirm Quill’s consent to public indexing. Verify provenance and publication intent for each accessible log. Define Quill’s relationship to Jack and the Guild graph. Locate or verify retention of the original private statement. Leaves: Remember this meeting in the cube.; PUNCHCARD · RESIDENT'S REPORT: KNOCK AT THE CUBE. The resident knocked; the c…; The Film; Testimony of Instinct, Traveller. Coordinates: the wires, Station XIII. Visib…

@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# Merge local graph records into live WITHOUT deleting live-only canon.
+#
+# Live is authoritative for punches. This only adds/updates by public_id/slug.
+# It will never shrink the live catalogue.
+#
+# Usage:
+#   ./scripts/graph-push-merge
+#   ./scripts/graph-push-merge --dry-run
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HOST="${HOST:-emergent}"
+REMOTE_DIR="${REMOTE_DIR:-$HOST:~/public_html/timetravellersguild/graph}"
+DRY=0
+if [[ "${1:-}" == "--dry-run" ]]; then DRY=1; fi
+
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+rsync -avz \
+  "$REMOTE_DIR/nodes.json" \
+  "$REMOTE_DIR/edges.json" \
+  "$REMOTE_DIR/pending.json" \
+  "$REMOTE_DIR/pending-edges.json" \
+  "$TMP/"
+
+python3 - "$ROOT/graph" "$TMP" "$DRY" <<'PY'
+import json, sys
+from pathlib import Path
+
+local_dir = Path(sys.argv[1])
+remote_dir = Path(sys.argv[2])
+dry = sys.argv[3] == "1"
+
+def load(name):
+    return json.loads((remote_dir / name).read_text())
+
+def load_local(name):
+    p = local_dir / name
+    return json.loads(p.read_text()) if p.exists() else []
+
+def key(n):
+    return (str(n.get("public_id") or ""), str(n.get("slug") or ""))
+
+def merge(remote, local, label):
+    by = {}
+    order = []
+    for n in remote:
+        if not isinstance(n, dict):
+            continue
+        k = key(n)
+        by[k] = n
+        order.append(k)
+    added = updated = 0
+    for n in local:
+        if not isinstance(n, dict):
+            continue
+        k = key(n)
+        if k[0] == "" and k[1] == "":
+            continue
+        if k not in by:
+            by[k] = n
+            order.append(k)
+            added += 1
+        else:
+            # Prefer the richer body / metadata from either side without dropping live punch stamps.
+            cur = by[k]
+            out = dict(cur)
+            for field in ("title", "body", "type", "status", "visibility", "href", "observed_at", "created_at", "importance", "tree"):
+                if n.get(field) not in (None, "", [], {}) and (not cur.get(field) or field in ("body", "title")):
+                    if field == "body" and len(str(n.get("body") or "")) < len(str(cur.get("body") or "")):
+                        continue
+                    if field == "title" and cur.get("title"):
+                        continue
+                    out[field] = n[field]
+            meta = dict(cur.get("metadata") or {})
+            meta.update({k2: v for k2, v in (n.get("metadata") or {}).items() if v not in (None, "")})
+            # keep live irreversible punch fields
+            for keep in ("punch_hash", "punch_prev", "body_hash", "confirmed_at", "confirmed_by", "irreversible", "classification"):
+                if cur.get("metadata", {}).get(keep) is not None:
+                    meta[keep] = cur["metadata"][keep]
+            out["metadata"] = meta
+            if out != cur:
+                updated += 1
+            by[k] = out
+    merged = [by[k] for k in order]
+    print(f"{label}: live={len(remote)} local={len(local)} → merged={len(merged)} (+{added} / ~{updated})")
+    if len(merged) < len(remote):
+        raise SystemExit(f"refusing to shrink {label}")
+    return merged
+
+nodes = merge(load("nodes.json"), load_local("nodes.json"), "nodes")
+edges = merge(load("edges.json"), load_local("edges.json"), "edges")
+# pending: union by slug/public_id; do not drop live pending
+pending = merge(load("pending.json"), load_local("pending.json"), "pending")
+pedges = merge(load("pending-edges.json"), load_local("pending-edges.json"), "pending-edges")
+
+for name, data in (
+    ("nodes.json", nodes),
+    ("edges.json", edges),
+    ("pending.json", pending),
+    ("pending-edges.json", pedges),
+):
+    text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+    (remote_dir / name).write_text(text)
+    print("wrote", name, "bytes", len(text))
+
+if dry:
+    print("dry-run: not pushing")
+    raise SystemExit(0)
+print("ready to push")
+PY
+
+if [[ "$DRY" -eq 1 ]]; then
+  exit 0
+fi
+
+rsync -avz \
+  "$TMP/nodes.json" \
+  "$TMP/edges.json" \
+  "$TMP/pending.json" \
+  "$TMP/pending-edges.json" \
+  "$REMOTE_DIR/"
+
+echo "merged push complete"

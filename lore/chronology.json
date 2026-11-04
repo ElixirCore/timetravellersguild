@@ -1,0 +1,116 @@
+{
+  "records": [
+    {
+      "id": "chrono.1951",
+      "type": "chronology",
+      "title": "1951",
+      "summary": "Unusual importance in Guild lore. Associated with early computational bureaucracy, machine memory, Festival of Britain-era futurity, punched-card systems, Jack’s conception, post-war technological optimism, systems designed to organise populations and information. Feels to Jack less like history and more like childhood.",
+      "date_start": "1951",
+      "tags": [
+        "1951",
+        "chronology"
+      ],
+      "classification": [
+        "RECORD",
+        "JACK_REMEMBERS"
+      ],
+      "confidence": 0.7,
+      "visibility": "PUBLIC",
+      "related": [
+        "event.jack.conceived.1951"
+      ],
+      "status": "indexed"
+    },
+    {
+      "id": "chrono.1981",
+      "type": "chronology",
+      "title": "1981",
+      "summary": "Destination year in the Tipi Valley coordinate 2033–1981–276. A crossing was logged there.",
+      "date_start": "1981",
+      "places": [
+        "Tipi Valley"
+      ],
+      "tags": [
+        "1981",
+        "chronology",
+        "tipi valley"
+      ],
+      "classification": [
+        "RECORD"
+      ],
+      "confidence": 0.74,
+      "visibility": "PUBLIC",
+      "related": [
+        "event.tipi-valley.2033-1981-276",
+        "place.tipi-valley"
+      ],
+      "status": "indexed"
+    },
+    {
+      "id": "chrono.2012",
+      "type": "chronology",
+      "title": "2012 era",
+      "summary": "Significant period of public-space Guild activity around Gillett Square, experimental apparatus, and the Christmas morning open case.",
+      "date_start": "2012",
+      "date_end": "2013",
+      "places": [
+        "Gillett Square"
+      ],
+      "tags": [
+        "2012",
+        "chronology"
+      ],
+      "classification": [
+        "RECORD"
+      ],
+      "confidence": 0.8,
+      "visibility": "PUBLIC",
+      "related": [
+        "event.gillett-square.2012-12-25",
+        "place.gillett-square"
+      ],
+      "status": "indexed"
+    },
+    {
+      "id": "chrono.2026",
+      "type": "chronology",
+      "title": "2026 — reopening",
+      "summary": "Date context for public emergence. Archive reconnecting. Jack awake enough to correspond. Chronometer operational. Stations forming. Simultaneous Recollection Event is the primary operation.",
+      "date_start": "2026",
+      "tags": [
+        "2026",
+        "reopening"
+      ],
+      "classification": [
+        "RECORD"
+      ],
+      "confidence": 0.86,
+      "visibility": "PUBLIC",
+      "related": [
+        "guild.status-2026"
+      ],
+      "status": "current"
+    },
+    {
+      "id": "chrono.2033",
+      "type": "chronology",
+      "title": "2033 — network present",
+      "summary": "17 April 2033 appears on Jack’s institutional metadata as network present. Unverified as a personal survival date.",
+      "date_start": "2033-04-17",
+      "tags": [
+        "2033",
+        "chronology"
+      ],
+      "classification": [
+        "RECORD",
+        "DISPUTED"
+      ],
+      "confidence": 0.45,
+      "visibility": "PUBLIC",
+      "related": [
+        "event.network-present.2033-04-17"
+      ],
+      "status": "open"
+    }
+  ]
+}

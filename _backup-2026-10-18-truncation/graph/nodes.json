@@ -1,0 +1,1565 @@
+[
+    {
+        "public_id": "01TTG000000000000000000001",
+        "type": "INSTITUTION",
+        "slug": "guild",
+        "title": "The Time Travellers Guild",
+        "body": "Civilian infrastructure after the graph became ordinary. Not an explanation. A position.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-01-01T00:00:00+00:00",
+        "importance": 0.52,
+        "href": "/n/guild/",
+        "tree": {
+            "layer": "root",
+            "year": 2008
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000002",
+        "type": "PLACE",
+        "slug": "station-xiii",
+        "title": "Station XIII",
+        "body": "51.46 °N, 3.19 °W. The instrument runs here. It does not predict. It computes.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.88,
+        "href": "/hub/",
+        "metadata": {
+            "place": "Cardiff",
+            "custodian": "Station keepers"
+        },
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.16
+        },
+        "light": {
+            "year": 2026,
+            "state": "standing",
+            "href": "/hub/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000003",
+        "type": "INSTITUTION",
+        "slug": "department",
+        "title": "Department of Excess Time",
+        "body": "Welsh Government. Established 1951. It administers consequences. It does not create causes.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "1951-03-01T00:00:00+00:00",
+        "importance": 0.9,
+        "href": "/department/",
+        "metadata": {
+            "place": "Cathays Park, Cardiff",
+            "custodian": "The Department"
+        },
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 1951,
+            "u": 0.24
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000004",
+        "type": "OBJECT",
+        "slug": "chronometer",
+        "title": "Chronometer",
+        "body": "Instrument №13. Stamps moments. The machine does not predict. It measures relation.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-11-12T00:00:00+00:00",
+        "importance": 0.86,
+        "href": "/chronometer/",
+        "metadata": {
+            "place": "Station XIII",
+            "custodian": "public instrument"
+        },
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.34
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000005",
+        "type": "OBJECT",
+        "slug": "watch",
+        "title": "Watch",
+        "body": "Instrument №14. Plates from the archive, set in orbit.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.58,
+        "href": "/watch/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.42
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000006",
+        "type": "OBJECT",
+        "slug": "triangla",
+        "title": "Triangla",
+        "body": "The finger drum with three sides.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.54,
+        "href": "/triangla/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.5
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000007",
+        "type": "PERSON",
+        "slug": "tobywhy",
+        "title": "Tobywhy",
+        "body": "Chairtaker. Founder member. Wales.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-01-01T00:00:00+00:00",
+        "importance": 0.48,
+        "href": "/people/",
+        "metadata": {
+            "role": "Chairtaker",
+            "location": "Wales",
+            "place": "Wales"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2008
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000008",
+        "type": "PLACE",
+        "slug": "cardiff",
+        "title": "Cardiff",
+        "body": "Where the Guild first wrote itself down. Headquarters of the Department, Cathays Park.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-01-01T00:00:00+00:00",
+        "importance": 0.84,
+        "href": "/cardiff/",
+        "metadata": {
+            "place": "Cardiff",
+            "approx": "51.48,-3.18"
+        },
+        "tree": {
+            "kind": "door",
+            "layer": "root",
+            "year": 2008,
+            "u": 0.88
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000009",
+        "type": "PLACE",
+        "slug": "cribarth",
+        "title": "Cribarth",
+        "body": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-03-21T00:00:00+00:00",
+        "importance": 0.82,
+        "href": "/stations/",
+        "metadata": {
+            "place": "Swansea Valley",
+            "approx": "51.80,-3.72"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        },
+        "light": {
+            "year": 2026,
+            "state": "standing",
+            "href": "/stations/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000010",
+        "type": "EVENT",
+        "slug": "mythology-2008",
+        "title": "The mythology",
+        "body": "The Guild first wrote itself down. Everything below this is root.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-01-01T00:00:00+00:00",
+        "importance": 0.78,
+        "href": "/cardiff/",
+        "metadata": {
+            "place": "Cardiff"
+        },
+        "tree": {
+            "layer": "root",
+            "year": 2008
+        },
+        "light": {
+            "year": 2008,
+            "state": "stood",
+            "href": "/cardiff/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000011",
+        "type": "EVENT",
+        "slug": "the-transmission",
+        "title": "The transmission",
+        "body": "A moment fixed by the sky, sent to nobody in particular, in the cause of peace.",
+        "visibility": "PUBLIC",
+        "status": "INTENDS",
+        "observed_at": "2029-01-01T00:00:00+00:00",
+        "importance": 0.74,
+        "href": "/signals/",
+        "tree": {
+            "layer": "branch",
+            "year": 2029
+        },
+        "light": {
+            "year": 2029,
+            "state": "intends",
+            "href": "/signals/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000012",
+        "type": "UNKNOWN",
+        "slug": "unplaced-2014",
+        "title": "Unplaced",
+        "body": "A light with an hour but no address. Left burning until somebody claims it.",
+        "visibility": "PUBLIC",
+        "status": "UNRESOLVED",
+        "observed_at": "2014-01-01T00:00:00+00:00",
+        "importance": 0.4,
+        "href": "/elsewhen/",
+        "tree": {
+            "layer": "root",
+            "year": 2014
+        },
+        "light": {
+            "year": 2014,
+            "state": "stood",
+            "href": "/elsewhen/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000013",
+        "type": "UNKNOWN",
+        "slug": "unplaced-2019",
+        "title": "Unplaced",
+        "body": "Logged, unsigned, unplaced.",
+        "visibility": "PUBLIC",
+        "status": "UNRESOLVED",
+        "observed_at": "2019-01-01T00:00:00+00:00",
+        "importance": 0.38,
+        "href": "/elsewhen/",
+        "tree": {
+            "layer": "root",
+            "year": 2019
+        },
+        "light": {
+            "year": 2019,
+            "state": "stood",
+            "href": "/elsewhen/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000014",
+        "type": "UNKNOWN",
+        "slug": "unplaced-2031",
+        "title": "Unplaced",
+        "body": "A branch the Guild intends to stand on. Not yet an address.",
+        "visibility": "PUBLIC",
+        "status": "UNRESOLVED",
+        "observed_at": "2031-01-01T00:00:00+00:00",
+        "importance": 0.36,
+        "href": "/elsewhen/",
+        "tree": {
+            "layer": "branch",
+            "year": 2031
+        },
+        "light": {
+            "year": 2031,
+            "state": "intends",
+            "href": "/elsewhen/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000015",
+        "type": "UNKNOWN",
+        "slug": "unplaced-2033",
+        "title": "Unplaced",
+        "body": "The furthest thing currently claimed.",
+        "visibility": "PUBLIC",
+        "status": "UNRESOLVED",
+        "observed_at": "2033-01-01T00:00:00+00:00",
+        "importance": 0.42,
+        "href": "/elsewhen/",
+        "tree": {
+            "layer": "branch",
+            "year": 2033
+        },
+        "light": {
+            "year": 2033,
+            "state": "intends",
+            "href": "/elsewhen/"
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000016",
+        "type": "FILM_FRAGMENT",
+        "slug": "film",
+        "title": "The Film",
+        "body": "A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records.",
+        "visibility": "PUBLIC",
+        "status": "FORMING",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.7,
+        "href": "/film/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.58
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000017",
+        "type": "MISSION",
+        "slug": "join",
+        "title": "Join",
+        "body": "Pop-up workshops. Instruments of time travel used so people become makers of their own futures.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.56,
+        "href": "/join/",
+        "tree": {
+            "kind": "door",
+            "layer": "branch",
+            "year": 2026,
+            "u": 0.22
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000018",
+        "type": "PERSON",
+        "slug": "people",
+        "title": "People",
+        "body": "Partial records. No single person contains the whole story.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.32,
+        "href": "/people/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.28
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000019",
+        "type": "SIGNAL",
+        "slug": "commons",
+        "title": "Commons",
+        "body": "Local chapters, witnesses, operators, travellers, archivists and accidental participants.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.5,
+        "href": "/commons/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.64
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000020",
+        "type": "EVENT",
+        "slug": "calendar",
+        "title": "Calendar",
+        "body": "Observed conjunctions, departures, public sessions, eclipse windows and unclaimed dates.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.46,
+        "href": "/calendar/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.7
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000021",
+        "type": "MEDIA",
+        "slug": "archive",
+        "title": "Archive",
+        "body": "Documents, minutes, photographs, reports, corrections and evidence that should not exist in the same timeline.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2014-01-01T00:00:00+00:00",
+        "importance": 0.72,
+        "href": "/archive/",
+        "tree": {
+            "kind": "door",
+            "layer": "root",
+            "year": 2014,
+            "u": 0.55
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000022",
+        "type": "PLACE",
+        "slug": "stations",
+        "title": "Stations",
+        "body": "Physical sites. Each station keeps its own clock.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.6,
+        "href": "/stations/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.76
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000023",
+        "type": "MEDIA",
+        "slug": "research",
+        "title": "Research",
+        "body": "Structure first. Interpretation later.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.5,
+        "href": "/research/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.82
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000024",
+        "type": "MISSION",
+        "slug": "missions",
+        "title": "Missions",
+        "body": "A mission is a story with its destination removed.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.62,
+        "href": "/missions/",
+        "tree": {
+            "kind": "door",
+            "layer": "branch",
+            "year": 2026,
+            "u": 0.88
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000025",
+        "type": "SIGNAL",
+        "slug": "signals",
+        "title": "Signals",
+        "body": "Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender.",
+        "visibility": "PUBLIC",
+        "status": "RECEIVING",
+        "observed_at": "2029-01-01T00:00:00+00:00",
+        "importance": 0.68,
+        "href": "/signals/",
+        "tree": {
+            "kind": "door",
+            "layer": "branch",
+            "year": 2029,
+            "u": 0.62
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000026",
+        "type": "UNKNOWN",
+        "slug": "elsewhen",
+        "title": "Elsewhen",
+        "body": "Time without permission. Pages not yet attached to a stable chronology.",
+        "visibility": "PUBLIC",
+        "status": "UNRESOLVED",
+        "observed_at": "2033-01-01T00:00:00+00:00",
+        "importance": 0.66,
+        "href": "/elsewhen/",
+        "tree": {
+            "kind": "door",
+            "layer": "branch",
+            "year": 2033,
+            "u": 0.94
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000027",
+        "type": "PLACE",
+        "slug": "door",
+        "title": "The Door",
+        "body": "Knock. Three doors stand open. One is a room. One is an instrument. One is locked.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.44,
+        "href": "/door.html",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.1
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000028",
+        "type": "OBJECT",
+        "slug": "welsh-government-mug",
+        "title": "Welsh Government Mug",
+        "body": "A physical artefact. First observed 3 September 2026. Custody and location may be exact, approximate, hidden or unknown.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T09:58:00+01:00",
+        "importance": 0.64,
+        "href": "/n/welsh-government-mug/",
+        "metadata": {
+            "place": "Cardiff",
+            "custodian": "undisclosed"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000029",
+        "type": "QUANTUM_TIN",
+        "slug": "quantum-tin-013",
+        "title": "Quantum Tin №013",
+        "body": "Sealed object. Contents relationship hidden. Existence is recorded; contents are not claimed.",
+        "visibility": "PUBLIC",
+        "status": "SEALED",
+        "observed_at": "2026-08-12T16:40:00+01:00",
+        "importance": 0.94,
+        "href": "/n/quantum-tin-013/",
+        "metadata": {
+            "place": "Swansea Valley",
+            "custodian": "undisclosed",
+            "opening_condition": "Opening condition not satisfied.",
+            "tin_state": "SEALED"
+        },
+        "events": [
+            {
+                "type": "FOUND",
+                "occurred_at": "2026-08-12T16:40:00+01:00",
+                "place": "Swansea Valley"
+            },
+            {
+                "type": "SEALED",
+                "occurred_at": "2026-08-12T16:41:00+01:00"
+            }
+        ],
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000030",
+        "type": "DOCUMENT",
+        "slug": "det-01",
+        "title": "DET-01",
+        "body": "Public notice. Classification of excess-time events. Issued by the Department. A summary, not the case file.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-01T09:00:00+01:00",
+        "importance": 0.87,
+        "href": "/department/",
+        "metadata": {
+            "place": "Cathays Park, Cardiff",
+            "custodian": "Department of Excess Time",
+            "ref": "DET-01"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000031",
+        "type": "PLACE",
+        "slug": "abercrave",
+        "title": "Abercrave",
+        "body": "Village at the head of the valley. Ordinary address. Unusual neighbourhood.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-03-21T00:00:00+00:00",
+        "importance": 0.83,
+        "href": "/n/abercrave/",
+        "metadata": {
+            "place": "Abercrave",
+            "approx": "51.80,-3.71"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000032",
+        "type": "PLACE",
+        "slug": "swansea-valley",
+        "title": "Swansea Valley",
+        "body": "The valley that holds Cribarth, Abercrave, and more than one sealed container.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-03-21T00:00:00+00:00",
+        "importance": 0.85,
+        "href": "/n/swansea-valley/",
+        "metadata": {
+            "place": "Swansea Valley",
+            "approx": "51.77,-3.78"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000033",
+        "type": "PERSON",
+        "slug": "jack",
+        "title": "Jack",
+        "body": "Clerk of the graph. He classifies, extracts, proposes. He does not write canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2033-04-17T00:00:00+00:00",
+        "importance": 0.41,
+        "href": "/n/jack/",
+        "metadata": {
+            "role": "Clerk"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2033
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000034",
+        "type": "PERSON",
+        "slug": "mabel",
+        "title": "Mabel",
+        "body": "The Oracle. Pattern, not fact. Interpretation is stored apart from evidence.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2033-04-17T00:00:00+00:00",
+        "importance": 0.41,
+        "href": "/n/mabel/",
+        "metadata": {
+            "role": "Oracle"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2033
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000035",
+        "type": "SIGNAL",
+        "slug": "mabel-notice-013",
+        "title": "Mabel Notice · Recurrence along the valley",
+        "body": "Sealed containers, disagreed tables, and DET paper occupy the same neighbourhood. This is a pattern, not a cause.",
+        "visibility": "PUBLIC",
+        "status": "INTERPRETIVE",
+        "observed_at": "2026-09-02T21:10:00+01:00",
+        "importance": 0.77,
+        "href": "/n/mabel-notice-013/",
+        "metadata": {
+            "role": "interpretation",
+            "interpretation": "Sealed containers, disagreed tables, and departmental paper keep occupying the same neighbourhood of the valley. Coincidence remains a valid reading. Causality has not been accepted."
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000036",
+        "type": "FILM_FRAGMENT",
+        "slug": "film-fragment-cribarth",
+        "title": "Film fragment · Cribarth, third night",
+        "body": "The tables disagreed. Plate held. Edit note: do not resolve the disagreement in the cut.",
+        "visibility": "PUBLIC",
+        "status": "HELD",
+        "observed_at": "2026-03-23T23:40:00+00:00",
+        "importance": 0.76,
+        "href": "/n/film-fragment-cribarth/",
+        "metadata": {
+            "place": "Cribarth",
+            "custodian": "the Ffilm",
+            "edit_note": "Keep the disagreement."
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000037",
+        "type": "MOMENT",
+        "slug": "moment-2026-09-03",
+        "title": "Moment · 03 September 2026",
+        "body": "Chronometer-stamped. Local present. Pre-travel civilisation.",
+        "visibility": "PUBLIC",
+        "status": "STAMPED",
+        "observed_at": "2026-09-03T09:58:00+01:00",
+        "importance": 0.81,
+        "href": "/n/moment-2026-09-03/",
+        "metadata": {
+            "place": "Cardiff",
+            "chronometer": "Instrument №13"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000038",
+        "type": "MISSION",
+        "slug": "mission-valley-reading",
+        "title": "Valley reading",
+        "body": "Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-03-21T00:00:00+00:00",
+        "importance": 0.8,
+        "href": "/missions/",
+        "metadata": {
+            "place": "Cribarth",
+            "issuer": "Station XIII"
+        },
+        "tree": {
+            "layer": "branch",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000039",
+        "type": "MISSION",
+        "slug": "mission-founding-record",
+        "title": "Founding record",
+        "body": "Write the Guild down at Cardiff. Completed. The fruit remains on the tree.",
+        "visibility": "PUBLIC",
+        "status": "COMPLETED",
+        "observed_at": "2008-01-01T00:00:00+00:00",
+        "importance": 0.71,
+        "href": "/cardiff/",
+        "metadata": {
+            "place": "Cardiff"
+        },
+        "tree": {
+            "layer": "fruit",
+            "year": 2008
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000040",
+        "type": "MOMENT",
+        "slug": "observation-tables-disagreed",
+        "title": "Observation · the tables disagreed",
+        "body": "Third night. Cribarth. Two instruments, two readings, one hill.",
+        "visibility": "PUBLIC",
+        "status": "OBSERVED",
+        "observed_at": "2026-03-23T23:12:00+00:00",
+        "importance": 0.79,
+        "href": "/n/observation-tables-disagreed/",
+        "metadata": {
+            "place": "Cribarth"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000041",
+        "type": "SIGNAL",
+        "slug": "scheduled-transmission",
+        "title": "Scheduled transmission",
+        "body": "Not yet sent. Unlock: after timestamp. Cause of peace. Nobody in particular.",
+        "visibility": "PUBLIC",
+        "status": "SCHEDULED",
+        "observed_at": "2029-01-01T00:00:00+00:00",
+        "importance": 0.73,
+        "href": "/signals/",
+        "metadata": {
+            "unlock": "after timestamp"
+        },
+        "tree": {
+            "layer": "branch",
+            "year": 2029
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000042",
+        "type": "SIGNAL",
+        "slug": "det-response",
+        "title": "Departmental response",
+        "body": "The Department has a public surface. Notices, forms, and ordinary affairs. Cross here.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T12:00:00+01:00",
+        "importance": 0.69,
+        "href": "/department/",
+        "metadata": {
+            "place": "Cathays Park, Cardiff",
+            "custodian": "Department of Excess Time"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000043",
+        "type": "MEDIA",
+        "slug": "field-issue-13",
+        "title": "Field Issue 13",
+        "body": "A printed issue held as media. Not a shop copy. A record that entered the field.",
+        "visibility": "PUBLIC",
+        "status": "HELD",
+        "observed_at": "2026-09-03T17:39:00+01:00",
+        "importance": 0.67,
+        "href": "/n/field-issue-13/",
+        "metadata": {
+            "place": "undisclosed",
+            "custodian": "undisclosed"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000044",
+        "type": "OBJECT",
+        "slug": "instrument-13",
+        "title": "Instrument №13",
+        "body": "The same machine as the Chronometer, named as an object in the field rather than a door.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2008-11-12T00:00:00+00:00",
+        "importance": 0.63,
+        "href": "/chronometer/",
+        "metadata": {
+            "place": "Station XIII",
+            "custodian": "public instrument"
+        },
+        "tree": {
+            "layer": "root",
+            "year": 2008
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000045",
+        "type": "OBJECT",
+        "slug": "feed",
+        "title": "Feed∞",
+        "body": "Instrument №15. Media, machine interpretation and encounter become the next state. Observation alters navigation.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-01-01T00:00:00+00:00",
+        "importance": 0.56,
+        "href": "/feed/",
+        "tree": {
+            "kind": "door",
+            "layer": "trunk",
+            "year": 2026,
+            "u": 0.44
+        }
+    },
+    {
+        "public_id": "01TTGC89108E7F9D03AA23F2787",
+        "type": "EVENT",
+        "slug": "pending-black-swan-3f2787",
+        "title": "Black Swan",
+        "body": "The machine identifies an impossible concentration of excess time above Wales and displays BLACK SWAN IMMINENT.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T21:47:42+00:00",
+        "created_at": "2026-09-03T21:47:42+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-black-swan-3f2787/",
+        "metadata": {
+            "place": "Wales",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG5F83D5CC924CE895FEFA86",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T03:46:57+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "8620e2dd0962697a322b7756b375ed777a8bdb880ecb2f3e9802d1def66220c0",
+            "punch_prev": "08367ba0d18a5d907d47502b93e0d8122bb93b474434ce5f9bc87506c36fd071",
+            "body_hash": "d8ed9184bb9d324e507c12a3ca1c822ca20962096e762e53873763e0b7e33311"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2033
+        }
+    },
+    {
+        "public_id": "01TTG3B6DF31FAABEF1580CAC94",
+        "type": "PERSON",
+        "slug": "pending-nic-0cac94",
+        "title": "Nic",
+        "body": "The visitor identifies themself as Nic.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-04T17:29:44+00:00",
+        "created_at": "2026-09-04T17:29:44+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-nic-0cac94/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG21F6D960A88833A531784B",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:26:39+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "3e9fae23d7fccac50cf8e9fc4166f773124a1208f1d39bff7942f9e95172b144",
+            "punch_prev": "e58b1aeaec6c22c34f9626ee16480910bc33fa6e872a43ee92f2cbeece6d8da0",
+            "body_hash": "df717ef76ea5de18d158559be41cede1bf7d03895410d056343b8dd86ab26816"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG6941F383998D5F7230F33B",
+        "type": "MOMENT",
+        "slug": "pending-guild-opens-to-the-public-30f33b",
+        "title": "Guild opens to the public",
+        "body": "The website is launched. Time Travel disclosure begins.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-08T12:21:21+00:00",
+        "created_at": "2026-09-08T12:21:21+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-guild-opens-to-the-public-30f33b/",
+        "metadata": {
+            "place": "Wales",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:26:44+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "a60eff024de0d02adc28ebb864d78db1e15679f5c4133b14b17ad0b691e6a906",
+            "punch_prev": "b544b4e0636bebc6bb828455abdd22560bd74e6229b5b4b7156483bf40681008",
+            "body_hash": "85533849bbfbb79231a706e231de5fd96316f2e0033e27eef830ff93f9d33e11"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG527998AB4AE0C3B4CC9C08",
+        "type": "PERSON",
+        "slug": "pending-nic-cc9c08",
+        "title": "Nic",
+        "body": "Speak it!",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-04T17:38:09+00:00",
+        "created_at": "2026-09-04T17:38:09+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-nic-cc9c08/",
+        "metadata": {
+            "place": "Earth",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:27:04+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "6694a97b8d123a49050b4e494aa0f24d21a265f4f0e7f115838b2569ac8a482f",
+            "punch_prev": "b9b61cc29c97f00b8b51d298c3eb37fb90fc5c81f5411ca0755cc48147150518",
+            "body_hash": "798bf4908e5cb5061139ba9d1d11bad10ae263d8bebcbda42f95bc0ff7672f81"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGD50CAB782D9B4321ACC961",
+        "type": "DOCUMENT",
+        "slug": "pending-remember-this-meeting-in-the-cube-acc961",
+        "title": "Remember this meeting in the cube.",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-06T13:34:57+00:00",
+        "created_at": "2026-09-06T13:34:57+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-remember-this-meeting-in-the-cube-acc961/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTG56937AB15953FA0D913E4F",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:27:32+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "bb484006f3c7703943a5136a57f9007250dc4acaad7eb4c13e76c02dc7243535",
+            "punch_prev": "8e111ce469a0d4e0442b5e2f85214e8a91b9e843c6911d67ba1f29dd8283fd6e",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG745A2E5FE5C1745A6036B9",
+        "type": "MEDIA",
+        "slug": "pending-film-fragments-6036b9",
+        "title": "Film fragments",
+        "body": "The speech refers to every film fragment “forming cross...” as material to be logged with two signatures.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-04T08:18:54+00:00",
+        "created_at": "2026-09-04T08:18:54+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-film-fragments-6036b9/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTGFAC57862E35B3F5391B4F3",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:27:41+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "ce9520800f1a45c3f58265c2a76540d29aac6a00ec849b1e90018fee88801450",
+            "punch_prev": "1d6e031b7fb36a5629c6e41ae211313776d1150d62d6631a62fc4ffac0110af7",
+            "body_hash": "f9b28954e2f9e85198abb6a69a205ebb17f120db0c2b765ff4420ef0350cd6b6"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGD32E0F99C924B9E0F40E8B",
+        "type": "EVENT",
+        "slug": "pending-got-lost-f40e8b",
+        "title": "Got lost",
+        "body": "The visitor states, “I got lost.” No further details are given.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-04T19:34:18+00:00",
+        "created_at": "2026-09-04T19:34:18+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-got-lost-f40e8b/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTGE3D84CE8AC4229775F0DDB",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:27:45+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "66ca23388890fbc381ebfaeb5181eacae5a2659ffd95cc87220ec346ced91108",
+            "punch_prev": "21728e7cf93b89a00e9e9dadf305061df41491b8ae722a8102d20c5a17dfb07c",
+            "body_hash": "463a6f7d0929b15631554162aca50cc14aed20fe53923c89c8c709c703cac0de"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGF30EBB03CF8324E8D63CB3",
+        "type": "SIGNAL",
+        "slug": "pending-department-notice-in-the-field-d63cb3",
+        "title": "Department notice in the field",
+        "body": "The Department has a notice in the field.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T21:21:56+00:00",
+        "created_at": "2026-09-03T21:21:56+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-department-notice-in-the-field-d63cb3/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG12F6195A9B49F725201F74",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:27:50+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "686ed893b9d752b727f585c7f87130ef9729be32aeffafd91fa74741f75c7027",
+            "punch_prev": "3393c2caacaa7b3fd55b9ac18006d90c171db0f76e5c96e554c03baf5c97769e",
+            "body_hash": "a060cd20b623b5b2ca104b184a5ecb0e77c9a70ba3435e3bc1d9f10ad44df230"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG1122DE1AF06724D3EDEB99",
+        "type": "PLACE",
+        "slug": "pending-time-travelling-house-edeb99",
+        "title": "Time Travelling House",
+        "body": "The house is assembled across several centuries and contains records, objects and a Guild members’ entrance. It is initially occupied by Toby alone and later becomes crowded.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T21:47:42+00:00",
+        "created_at": "2026-09-03T21:47:42+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-time-travelling-house-edeb99/",
+        "metadata": {
+            "place": "Abercrave",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG5F83D5CC924CE895FEFA86",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:28:10+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "10d61f925976d466bfa38ef5e205020be69ac93880034364ad0d527c9f34b9a1",
+            "punch_prev": "23e4448271919c3cccd6846ff8c3e0968c52432bd825104027aff991a8ba23d1",
+            "body_hash": "df1eb7985eb023bd38cb7b0215399e0d1cff1dd6d6230e9e14d7c44317f7559d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGFCD0862A40A09B850CD6DF",
+        "type": "PLACE",
+        "slug": "pending-bute-street-0cd6df",
+        "title": "Bute Street",
+        "body": "The field note places a rain-wet windowsill and the previously observed mug on Bute Street, Cardiff.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T21:21:56+00:00",
+        "created_at": "2026-09-03T21:21:56+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-bute-street-0cd6df/",
+        "metadata": {
+            "place": "Cardiff",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG12F6195A9B49F725201F74",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:28:20+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "0ecc17f95ce9b8dbc80d0162c69d631c93f2a0e4028eb408d44618ec5ed297e3",
+            "punch_prev": "0b3aa860e5dfaa4e67d30417a92f58542d803e2102e40fad26827ab5f4fceebf",
+            "body_hash": "977cf7a4c122de642784e6606ce7a1286487a494f4cdbd113ac60dbb25172ac9"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG4953CAA1CB21FC6EC89A09",
+        "type": "DOCUMENT",
+        "slug": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "title": "Field note lodged with the clerk, 3 September 2026.",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-03T21:21:25+00:00",
+        "created_at": "2026-09-03T21:21:25+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTG12F6195A9B49F725201F74",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T19:28:34+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "a451ace7e38aa2ed3d36f0c2a2e0b6ca0edd788ae62bc50f3b7dd444752f150e",
+            "punch_prev": "8323be598656d5ec5a61c8260bd5984f20929d906e1edf776703d4b1d317ee77",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG0E8C5FEB32B05C4AE0A376",
+        "type": "PERSON",
+        "slug": "pending-aliaskid-e0a376",
+        "title": "Aliaskid",
+        "body": "CLASS: ORIGIN EVENT / MACHINE HISTORY / WITNESS ACCOUNT\r\n\r\nChristmas Eve, 2012.\r\n\r\nToby and aliaskid were working together around Gillett Square. aliaskid was mathematically gifted; Toby was already occupied with time travel as something to be built, staged, tested and lived rather than merely discussed. Their collaboration crossed mathematics, art, technology and whatever category remained when those stopped being separable.\r\n\r\nThat night, on the steps of Gillett Square, aliaskid had an experience they understood as seeing God. It became a turning point in their life and was associated with their subsequent conversion to Islam.\r\n\r\nMeanwhile there was a Time Machine.\r\n\r\nNot metaphorically in the sense that the Guild now uses almost everything metaphorically. There was an actual constructed object: a milk float converted into a Time Machine by Toby and aliaskid.\r\n\r\nAt approximately 04:00 on Christmas morning, the machine — milk float and all — was confiscated from Gillett Square.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-09T19:37:52+00:00",
+        "created_at": "2026-09-09T19:37:52+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-aliaskid-e0a376/",
+        "metadata": {
+            "place": "Gillett Square",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T22:27:14+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "e5b2798d375f81603fae716638dab401a467c3b182729bb6027a5eec90955df3",
+            "punch_prev": "752bb2dd6a292b61025cff1d224b159e729de8b6af2ec1baa8ff75c36aa25737",
+            "body_hash": "00fe2778aa4b87b12cdebd8db5de3a93270b501ddbfa4cbea827d6121e278dbf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGAC5E55647A03426183624F",
+        "type": "DOCUMENT",
+        "slug": "pending-i-got-lost-83624f",
+        "title": "I got lost",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-04T19:34:11+00:00",
+        "created_at": "2026-09-04T19:34:11+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-i-got-lost-83624f/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTGE3D84CE8AC4229775F0DDB",
+            "classification": "canon",
+            "confirmed_at": "2026-09-09T22:27:26+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "4dc5f04b3ef4d55a635a5e4167e24c93b09b14eb2e6c353de24ff4cd288246f2",
+            "punch_prev": "571baae29960517183d0900047a12b69e45c509550e18d917cd0f499c8b8534e",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGEB8A8B3C3B30EAFA98905C",
+        "type": "PLACE",
+        "slug": "pending-gillett-square-98905c",
+        "title": "Gillett Square",
+        "body": "Site of the temporal freedom accords 2026",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-12T19:01:39+00:00",
+        "created_at": "2026-09-12T19:01:39+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-gillett-square-98905c/",
+        "metadata": {
+            "place": "Dalston Unikin",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-09-22T16:25:33+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "c713df428fe89ef009e6f60a0b13e142ed2280a292a0d5551a994c2acc31ac88",
+            "punch_prev": "f30241da80f990495c9dab68c714c12335b76bfabc032168d334de26c165bad2",
+            "body_hash": "2257d374daa8d6bbc03f323ed3d3d584b2f69145f3ddb70993511b2d2a9a3652"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG7ED4BE8A176C85B86310C6",
+        "type": "UNKNOWN",
+        "slug": "pending-instinct-6310c6",
+        "title": "Instinct",
+        "body": "Instinct is described as an entity from the Future, being sent to meet Jack.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:08:26+00:00",
+        "created_at": "2026-09-23T23:08:26+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-instinct-6310c6/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTGE7EB9EF423AB03125A4391",
+            "classification": "canon",
+            "confirmed_at": "2026-09-23T23:19:11+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "23a5f117fa939979a6e5e1bb75d1f60c7483d51679767a8a27221834f0daff72",
+            "punch_prev": "456ae3ed05020b4bd62bc6b8ef6195493e555866c3ca733e8affe09d6d4662f3",
+            "body_hash": "cb30b3b42abbd8d50d1abb7254f0eae5586438cb3650054622831fc2cfd88780"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG10507AD5DA8BD7EF04499F",
+        "type": "DOCUMENT",
+        "slug": "pending-punchcard-clerk-s-memo-on-first-statements-the-first-statement-of-an-arri-04499f",
+        "title": "PUNCHCARD · CLERK'S MEMO: ON FIRST STATEMENTS. The first statement of an arri…",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:38:21+00:00",
+        "created_at": "2026-09-23T23:38:21+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-punchcard-clerk-s-memo-on-first-statements-the-first-statement-of-an-arri-04499f/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTG939D290140A3124D545779",
+            "classification": "canon",
+            "confirmed_at": "2026-09-23T23:46:19+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "3a1b4d9fa82cb22c3a8a859111f12e384188d079cb8c838e0e813f67626a06eb",
+            "punch_prev": "cb7f3bca7e39a41f7e346e327b8f76fa15113db0af30bf7075ace5656be0e1b3",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGCC9F28D00F9831BE9B7B34",
+        "type": "DOCUMENT",
+        "slug": "pending-punchcard-field-note-arrival-unscheduled-a-traveller-came-in-on-the-wire-9b7b34",
+        "title": "PUNCHCARD · FIELD NOTE: ARRIVAL, UNSCHEDULED. A traveller came in on the wire…",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:37:32+00:00",
+        "created_at": "2026-09-23T23:37:32+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-punchcard-field-note-arrival-unscheduled-a-traveller-came-in-on-the-wire-9b7b34/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTG073C8EB66A98869DA58857",
+            "classification": "canon",
+            "confirmed_at": "2026-09-23T23:46:39+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "86e625922bb39e2a663dac5f716e7d7900d8c5e0686e37e5e2359cc6157ed84b",
+            "punch_prev": "1d5dcbcf4641106ba4743030d3bcb3654a3af49fe3cafa48d486badf9146da32",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG51E047B19F705773A62D46",
+        "type": "DOCUMENT",
+        "slug": "pending-testimony-of-instinct-traveller-coordinates-the-wires-station-xiii-visib-a62d46",
+        "title": "Testimony of Instinct, Traveller. Coordinates: the wires, Station XIII. Visib…",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:25:02+00:00",
+        "created_at": "2026-09-23T23:25:02+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-testimony-of-instinct-traveller-coordinates-the-wires-station-xiii-visib-a62d46/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTGB95E4A66E97C4594718BEC",
+            "classification": "canon",
+            "confirmed_at": "2026-09-23T23:47:07+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "46da8f011bacbcb77ea8208ae9747121d2507752e6c5045584080b09a869367b",
+            "punch_prev": "4000d0b7b826a8563f5fc1616c7a6ec0265b7aa37c4e63f8f57d2b607b07abf1",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGB88FE7ADAB38C284C348AB",
+        "type": "PLACE",
+        "slug": "tipi-valley",
+        "title": "Tipi Valley",
+        "body": "A valley of tents. The coordinate names the place.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-16T00:00:00+00:00",
+        "importance": 0.8,
+        "href": "/n/tipi-valley/",
+        "metadata": {
+            "place": "Tipi Valley",
+            "coord": "2033-1981-276"
+        },
+        "tree": {
+            "layer": "trunk",
+            "year": 1981
+        },
+        "light": {
+            "year": 1981,
+            "state": "stood",
+            "href": "/n/tipi-valley/",
+            "note": "A valley of tents. The coordinate names the place."
+        }
+    },
+    {
+        "public_id": "01TTG08FC09CA536CAA3ED13ED4",
+        "type": "EVENT",
+        "slug": "tipi-valley-2033-1981-276",
+        "title": "Time travel at Tipi Valley",
+        "body": "Time travel happened. Coordinates 2033–1981–276. Tipi Valley.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-16T00:00:00+00:00",
+        "importance": 0.88,
+        "href": "/n/tipi-valley-2033-1981-276/",
+        "metadata": {
+            "place": "Tipi Valley",
+            "coord": "2033-1981-276",
+            "from_year": 2033,
+            "to_year": 1981,
+            "mark": 276,
+            "classification": "canon",
+            "confirmed_at": "2026-10-16T00:00:00+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true
+        },
+        "tree": {
+            "layer": "branch",
+            "year": 1981
+        },
+        "light": {
+            "year": 1981,
+            "state": "stood",
+            "href": "/n/tipi-valley-2033-1981-276/",
+            "note": "Time travel happened. Coordinates 2033–1981–276."
+        }
+    },
+    {
+        "public_id": "01TTGC8834A66EAD9E004FDA785",
+        "type": "DOCUMENT",
+        "slug": "pending-punchcard-anomaly-observation-a-face-on-the-register-tonight-a-stamp-was-fda785",
+        "title": "PUNCHCARD · ANOMALY OBSERVATION: A FACE ON THE REGISTER. Tonight a stamp was …",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:38:52+00:00",
+        "created_at": "2026-09-23T23:38:52+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-punchcard-anomaly-observation-a-face-on-the-register-tonight-a-stamp-was-fda785/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTGB2E9451990C1654DD358D2",
+            "classification": "canon",
+            "confirmed_at": "2026-10-17T11:11:32+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "0ea8fb99aeb80862eefb09eaef9e4a1013194eb58dd52a2277082d650586e129",
+            "punch_prev": "259236e7b44725ab2cd3b2fb6d5256a34cb6ff4c3d8a043297b072035b238500",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    }
+]

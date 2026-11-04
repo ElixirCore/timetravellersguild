@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Pull the live graph store onto this checkout.
+#
+# How canon updates:
+#   Keeper punches WRITE_CANON on the host → PHP appends to graph/nodes.json there.
+#   This checkout does NOT see that until you pull.
+#
+# Never rsync local graph/*.json onto the host as a blind overwrite —
+# that deletes live-only punches (Black Swan / Nerys class of bug).
+# Use ./scripts/graph-push-merge if you must send local records up.
+#
+# Usage:
+#   ./scripts/graph-pull
+#   HOST=emergent ./scripts/graph-pull
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HOST="${HOST:-emergent}"
+REMOTE="${REMOTE:-$HOST:~/public_html/timetravellersguild/graph/}"
+DEST="$ROOT/graph"
+
+mkdir -p "$DEST"
+rsync -avz \
+  "${REMOTE}nodes.json" \
+  "${REMOTE}edges.json" \
+  "${REMOTE}pending.json" \
+  "${REMOTE}pending-edges.json" \
+  "${REMOTE}punches.jsonl" \
+  "$DEST/"
+
+python3 - "$DEST" <<'PY'
+import json, sys
+from pathlib import Path
+root = Path(sys.argv[1])
+nodes = json.loads((root / "nodes.json").read_text())
+pending = json.loads((root / "pending.json").read_text())
+titles = [str(n.get("title") or "") for n in nodes if isinstance(n, dict)]
+print(f"pulled {len(nodes)} canon · {len(pending)} pending")
+print("Black Swan on file:", "Black Swan" in titles)
+PY

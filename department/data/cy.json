@@ -1,0 +1,682 @@
+{
+  "news": {
+    "annual-report-2026": {
+      "title": "Adroddiad Blynyddol 2026 wedi’i gyhoeddi"
+    },
+    "cardiff-relocation": {
+      "title": "Adleoli Swyddfa Ranbarthol Caerdydd"
+    },
+    "consultation-wales": {
+      "title": "Ymgynghoriad ar Reoliadau Amser Dros Ben (Cymru)"
+    },
+    "recruitment-atso": {
+      "title": "Recriwtio Swyddogion Arolwg Amserol Cynorthwyol"
+    },
+    "instrument-13": {
+      "title": "Rhaglen ymchwil Offeryn 13 wedi’i diweddaru"
+    }
+  },
+  "forms": {
+    "DET-01": {
+      "title": "Adroddiad Digwyddiad",
+      "summary": "Defnyddiwch y ffurflen hon i roi gwybod am Ddigwyddiad Amser Dros Ben tybiedig. Mae’r Adran yn gweinyddu canlyniadau. Nid yw’n creu achosion."
+    },
+    "DET-14": {
+      "title": "Datganiad Oriau a Adenillwyd",
+      "summary": "Datganwch oriau sydd wedi dychwelyd ar ôl dadleoli cydnabyddedig. Peidiwch ag amcangyfrif. Cofnodwch yr hyn y gellir ei ddangos yn unig."
+    },
+    "DET-22": {
+      "title": "Hawliad Difrod Cronolegol",
+      "summary": "Hawliwch am effeithiau dangosadwy ar fywyd cyhoeddus neu breifat yn deillio o Ddigwyddiad Amser Dros Ben cydnabyddedig."
+    },
+    "DET-44": {
+      "title": "Hysbysiad Prynhawn Coll",
+      "summary": "Hysbyswch yr Adran am brynhawn a fethodd â chyrraedd lle’r oedd disgwyl. Mae digwyddiadau lleol, yn y rhan fwyaf o achosion, yn cael eu datrys heb ganlyniad parhaol."
+    },
+    "DET-61": {
+      "title": "Asesiad Parhad Cof",
+      "summary": "Gofynnwch am asesiad pan ymddengys bod diwrnod wedi digwydd ond na ellir ei ail-lunio’n ddigonol. Nid yw’r Adran yn rheoleiddio cof."
+    },
+    "DET-78": {
+      "title": "Cais am Fynediad Ymchwil",
+      "summary": "Gwnewch gais i ymgynghori â daliadau Sefydliad Astudiaethau Amserol. Ymchwilwyr awdurdodedig yn unig."
+    },
+    "DET-09": {
+      "title": "Dychweliad oriau dros ben staff",
+      "summary": "Ar gyfer swyddogion yr Adran yn unig. Dychwelwch oriau dros ben sy’n codi yn ystod dyletswydd."
+    },
+    "DET-17": {
+      "title": "Enwebiad rhaglen gymunedol",
+      "summary": "Enwebwch gymuned, ysgol neu awdurdod lleol ar gyfer rhaglen o dan DET-COM-012."
+    },
+    "DET-33": {
+      "title": "Cais am ymweliad ysgolion",
+      "summary": "Gofynnwch am ymweliad adrannol neu becyn addysgu. Nid yw’r Adran yn addysgu hanes. Mae’n addysgu parhad."
+    },
+    "DET-52": {
+      "title": "Cais mynediad gwrthrych (cofnodion amserol)",
+      "summary": "Gofynnwch a yw’r Adran yn dal cofnodion yr ydych yn ymddangos ynddynt. Nid yw rhai daliadau eto’n gymwys i’w datgelu."
+    },
+    "DET-80": {
+      "title": "Cais am gyflogaeth",
+      "summary": "Cais gwasanaeth sifil. Defnyddiwch gyfeirnod y swydd wag o’r hysbysiad."
+    }
+  },
+  "vacancies": {
+    "assistant-temporal-survey-officer": {
+      "title": "Swyddog Arolwg Amserol Cynorthwyol",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Cynorthwyo’r wylfa barhaus dros ddangosyddion anghydbwysedd amserol yng Nghymru ac, lle y cyfarwyddir, awdurdodaethau cysylltiedig.",
+      "duties": [
+        "Mynychu Digwyddiadau Amser Dros Ben a adroddwyd o dan oruchwyliaeth Arolygydd Parhad.",
+        "Cwblhau logiau maes i’r safon a osodir yn DET-MANUAL-003.",
+        "Cadw cofnodion cywir a diduedd o bob digwyddiad cydnabyddedig.",
+        "Peidiwch â dehongli achosion. Cofnodwch ganlyniadau."
+      ],
+      "essential": [
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Trwydded yrru lawn y DU, neu’r gallu i deithio’n annibynnol ar draws Cymru.",
+        "Cywirdeb yn Saesneg ysgrifenedig. Mae’r Gymraeg yn ddymunol.",
+        "Y gallu i gymhwyso gweithdrefn gyhoeddedig heb ei gwella."
+      ],
+      "desirable": [
+        "Profiad o waith achos gweithredol mewn corff cyhoeddus.",
+        "Cymraeg i safon weithio."
+      ]
+    },
+    "DET-HR-2026-041": {
+      "title": "Swyddog Arolwg Amserol Cynorthwyol",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Cynorthwyo’r wylfa barhaus dros ddangosyddion anghydbwysedd amserol yng Nghymru ac, lle y cyfarwyddir, awdurdodaethau cysylltiedig."
+    },
+    "archive-conservator": {
+      "title": "Ceidwad Archif",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Cadw cofnodion papur, ffilm ac offerynnau o Ddigwyddiadau Amser Dros Ben. Cedwir gwrthddywediad. Nid yw’n cael ei ddatrys.",
+      "duties": [
+        "Asesu, trin a thai daliadau Sefydliad Astudiaethau Amserol.",
+        "Cynnal yr amserlen cadw DET-RET-011.",
+        "Paratoi deunydd ar gyfer mynediad ymchwil awdurdodedig.",
+        "Adrodd dirywiad na ellir ei esbonio gan heneiddio cyffredin."
+      ],
+      "essential": [
+        "Cymhwyster cydnabyddedig mewn cadwraeth archif neu brofiad cyfatebol.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Profiad o weithio i BS 4971 neu safon gyfatebol."
+      ],
+      "desirable": [
+        "Profiad o gasgliadau ffilm neu offerynnau.",
+        "Sgiliau iaith Gymraeg."
+      ]
+    },
+    "continuity-inspector": {
+      "title": "Arolygydd Parhad",
+      "location": "Cymru — maes, wedi’i leoli yng Nghaerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos, oriau afresymol yn ôl angen",
+      "summary": "Arolygu safleoedd lle mae parhad mesuradwy wedi gwyro oddi wrth ddisgwyliad cyffredin ac wedi cynhyrchu effeithiau dangosadwy ar fywyd cyhoeddus.",
+      "duties": [
+        "Arwain ymateb yr Adran i Ddigwyddiad Amser Dros Ben cydnabyddedig.",
+        "Penderfynu a yw adfer yn rhesymol ymarferol.",
+        "Cyhoeddi ac amrywio hysbysiadau o dan y gweithdrefnau gweithredol.",
+        "Rhoi tystiolaeth i’r Gweinidog yn ôl yr angen."
+      ],
+      "essential": [
+        "Profiad sylweddol o arolygu, rheoleiddio neu gydlynu brys mewn corff cyhoeddus.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Trwydded yrru lawn y DU.",
+        "Y gallu i ysgrifennu llythyr penderfyniad y gallai llys ei ddarllen."
+      ],
+      "desirable": [
+        "Cymraeg i safon gwrandawiad llafar.",
+        "Profiad o weithio gydag awdurdodau lleol a gwasanaethau brys."
+      ]
+    },
+    "senior-drift-analyst": {
+      "title": "Dadansoddwr Drifft Uwch",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Arwain mesur drifft amserol a pharatoi cofnod y Gofrestr Risg Genedlaethol ar gyfer Amser Dros Ben.",
+      "duties": [
+        "Perchenogi’r blwyddlyfr ystadegol a thablau drifft chwarterol.",
+        "Cynghori Sefydliad Astudiaethau Amserol ar ddull.",
+        "Sicrhau na chofnodir cyd-ddigwyddiad fel esboniad.",
+        "Briffio’r Gweinidog a’r Ysgrifennydd Parhaol."
+      ],
+      "essential": [
+        "Gradd mewn ddisgyblaeth feintiol, neu brofiad proffesiynol cyfatebol.",
+        "Profiad o ystadegau swyddogol neu gyfres gyhoeddedig gymaradwy.",
+        "Hawl i weithio yn y Deyrnas Unedig."
+      ],
+      "desirable": [
+        "Profiad o Wasanaeth Ystadegol y Llywodraeth.",
+        "Sgiliau iaith Gymraeg."
+      ]
+    },
+    "records-officer-foi": {
+      "title": "Swyddog Cofnodion (Hawliau Gwybodaeth)",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Gweinyddu rhyddid gwybodaeth, mynediad gwrthrych a’r cofnodion amserol nad yw’r trefnau hynny’n eu cwmpasu’n llwyr.",
+      "duties": [
+        "Cofnodi ac ateb ceisiadau o dan FOIA, GDPR a DET-GDPR-001.",
+        "Cymhwyso eithriadau lle mae’r cofnod yn ymwneud â digwyddiad nad yw eto’n gymwys.",
+        "Cynnal y cofnod datgelu.",
+        "Peidiwch â chadarnhau nac ymwadu daliadau a fyddai ynddynt eu hunain yn gyfystyr â Digwyddiad Amser Dros Ben."
+      ],
+      "essential": [
+        "Profiad o hawliau gwybodaeth neu weinyddu gwaith achos.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Cywirdeb o dan derfynau amser statudol."
+      ],
+      "desirable": [
+        "Hyfforddiant ICO neu gyfatebol.",
+        "Sgiliau iaith Gymraeg."
+      ]
+    },
+    "community-programmes-officer": {
+      "title": "Swyddog Rhaglenni Cymunedol",
+      "location": "Caerdydd, gyda theithio yng Nghymru",
+      "type": "Tymor penodol — 24 mis",
+      "hours": "37 awr yr wythnos",
+      "summary": "Cyflawni’r rhaglenni cymunedol y mae’r Adran yn lleihau niwed o ddadleoli amserol drwyddynt lle y mae’n rhesymol ymarferol.",
+      "duties": [
+        "Gweinyddu grantiau a chytundebau lleol o dan DET-COM-012.",
+        "Gweithio gydag awdurdodau lleol a grwpiau cymunedol.",
+        "Adrodd canlyniadau heb honni bod bywyd cyffredin wedi’i wella.",
+        "Cadw’r sicrwydd cyhoeddus: ni fydd y rhan fwyaf o ddinasyddion byth yn dod ar draws digwyddiad yn wybodus."
+      ],
+      "essential": [
+        "Profiad o raglenni cymunedol neu grant yn y sector cyhoeddus neu wirfoddol.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Y gallu i deithio yng Nghymru."
+      ],
+      "desirable": [
+        "Cymraeg i safon cyfarfod cymunedol."
+      ]
+    },
+    "welsh-language-officer": {
+      "title": "Swyddog yr Iaith Gymraeg",
+      "location": "Caerdydd",
+      "type": "Parhaol",
+      "hours": "37 awr yr wythnos",
+      "summary": "Perchenogi cynllun iaith Gymraeg DET-WELSH-001 a safon ddwyieithog cyhoeddi adrannol.",
+      "duties": [
+        "Cynghori ar gyfieithu hysbysiadau gweithredol a chanllawiau cyhoeddus.",
+        "Monitro cydymffurfiaeth â Safonau’r Gymraeg fel y maent yn gymwys i’r Adran.",
+        "Cyhoeddir y Codex yn Saesneg. Nid yw deunydd ategol wedi’i esgusodi."
+      ],
+      "essential": [
+        "Cymraeg a Saesneg i safon broffesiynol.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "Profiad o gyhoeddi dwyieithog yn y sector cyhoeddus."
+      ],
+      "desirable": [
+        "Profiad o gynlluniau iaith statudol."
+      ]
+    },
+    "apprentice-records-assistant": {
+      "title": "Cynorthwyydd Cofnodion Prentis",
+      "location": "Caerdydd",
+      "type": "Prentisiaeth — 18 mis",
+      "hours": "37 awr yr wythnos",
+      "summary": "Swydd gyntaf yn y gofrestr gyhoeddus o Ddigwyddiadau Amser Dros Ben. Ni ofynnir ichi ddal achos ar eich pen eich hun.",
+      "duties": [
+        "Ffeilio, adalw a thudalenu cofnodion o dan oruchwyliaeth.",
+        "Dysgu DET-MANUAL-003 a catalog y ffurflenni.",
+        "Mynychu’r sefydliad dinesig ac ystafell ddarllen y Sefydliad yn ôl yr angen."
+      ],
+      "essential": [
+        "16 oed neu drosodd ar y diwrnod y dechreuwch.",
+        "Hawl i weithio yn y Deyrnas Unedig.",
+        "TGAU Saesneg, neu gyfwerth, ar radd C/4 neu uwch."
+      ],
+      "desirable": [
+        "Diddordeb mewn archifau neu weinyddiaeth gyhoeddus.",
+        "Sgiliau iaith Gymraeg."
+      ]
+    }
+  },
+  "publications": {
+    "DET-CODEX-001": {
+      "title": "Codex Sefydlu Argraffiad 1",
+      "summary": "Pennod 0 — Offeryn Sefydlu. Cyhoeddiad mewnol. Awdurdodaeth yr Adran.",
+      "rev": {
+        "1.0": "Cyhoeddiad cyntaf.",
+        "1.0 reprint": "Ailosod ar gyfer cyhoeddi cyfoes. Testun Pennod 0 heb ei newid."
+      }
+    },
+    "DET-MANUAL-003": {
+      "title": "Gweithdrefnau Gweithredol",
+      "summary": "Cyfarwyddiadau sefydlog i swyddogion sy’n mynychu Digwyddiad Amser Dros Ben cydnabyddedig.",
+      "paras": [
+        "Cyhoeddir y llawlyfr hwn o dan awdurdod yr Ysgrifennydd Parhaol. Nid canllawiau mohono. Cyfarwyddyd yw.",
+        "Bydd swyddogion yn arsylwi, cofnodi, diogelu ac adfer, yn y drefn honno, oni bai bod diogelu’n gofyn gweithred gynharach.",
+        "Mae’r Adran yn gweinyddu canlyniadau. Nid yw’n creu achosion. Ni fydd swyddogion yn cynnig esboniad am ddigwyddiad y tu hwnt i’r ffeithiau a gofnodwyd.",
+        "Lle cynigir cyd-ddigwyddiad fel cyfrif cyflawn, bydd y swyddog yn nodi’r cynnig a pharhau â’r cofnod."
+      ],
+      "rev": {
+        "3.0": "Ailysgrifennwyd ar ôl adolygiad 2018.",
+        "3.4": "Diwygiwyd y log maes. Mae achosion yn parhau y tu allan i gwmpas."
+      }
+    },
+    "DET-TECH-011": {
+      "title": "Rhaglen Chronomedr",
+      "summary": "Manyleb a goruchwyliaeth sifil ar gronomedrau cyhoeddus a ddefnyddir i fesur drifft.",
+      "paras": [
+        "Mae’r Rhaglen Chronomedr yn bodoli fel y gellir mesur drifft yn erbyn goddefiant cyhoeddedig.",
+        "Nid oraclau yw offerynnau. Nid ydynt yn rhagweld. Maent yn mesur perthynas.",
+        "Caniateir arddangos cyhoeddus. Ni chaniateir dehongli.",
+        "Gall contractwyr sifil gynnal offeryn. Ni allant amrywio’r goddefiant cyhoeddedig."
+      ],
+      "rev": {
+        "1.0": "Agorwyd y rhaglen.",
+        "2.1": "Diweddarwyd atodiad Offeryn 13."
+      }
+    },
+    "DET-GDPR-001": {
+      "title": "Llywodraethu Gwybodaeth",
+      "summary": "Sut mae’r Adran yn dal data personol, gan gynnwys cofnodion o ddigwyddiadau nad ydynt eto’n gymwys i’w datgelu.",
+      "paras": [
+        "Mae’r Adran yn reolydd data. Mae rhai cofnodion yn disgrifio oriau a fethodd â chyrraedd. Mae’r cofnodion hynny’n parhau’n ddata personol.",
+        "Atebir cais mynediad gwrthrych o fewn y cyfnod statudol oni bai bod y cofnod yn ymwneud â digwyddiad nad yw eto’n gymwys.",
+        "Mater o ddyddiad yw cymhwysedd, nid cyfleustra.",
+        "Nid yw dim yn y polisi hwn yn rhoi awdurdod dros basio cyfreithlon amser ei hun."
+      ],
+      "rev": {
+        "1.0": "Gweithredu GDPR.",
+        "1.6": "Atodiad cofnodion amserol."
+      }
+    },
+    "DET-STAT-2026": {
+      "title": "Blwyddlyfr Ystadegol 2026",
+      "summary": "Ystadegau swyddogol ar Ddigwyddiadau Amser Dros Ben cydnabyddedig yng Nghymru ac awdurdodaethau cysylltiedig.",
+      "paras": [
+        "Yn y flwyddyn hyd at 31 Mawrth 2026 cydnabu’r Adran 184 Digwyddiad Amser Dros Ben yng Nghymru. Aseswyd pedwar fel mwy na lleol.",
+        "Ni ddaeth mwyafrif llethol y dinasyddion ar draws digwyddiad yn wybodus.",
+        "Cyd-ddigwyddiad yw’r cyfrif cyntaf mwyaf cyffredin a gynigir i swyddogion. Fe’i cofnodir. Nid yw’n cael ei dderbyn fel esboniad cyflawn.",
+        "Mae tablau yn Ystadegau Gwladol hyd nes asesiad."
+      ],
+      "rev": {
+        "2026.1": "Rhyddhad cyntaf."
+      }
+    },
+    "DET-RISK-2026": {
+      "title": "Gofrestr Risg Genedlaethol — Amser Dros Ben",
+      "summary": "Cyfraniad yr Adran at y Gofrestr Risg Genedlaethol.",
+      "paras": [
+        "Asesir Amser Dros Ben fel risg tebygolrwydd isel gydag effeithiau lleol yn y rhan fwyaf o achosion.",
+        "Nid yw’r Adran yn gwahodd y cyhoedd i baratoi y tu hwnt i wydnwch cartref cyffredin.",
+        "Pan fydd digwyddiad yn cynhyrchu effeithiau dangosadwy ar fywyd cyhoeddus, awdurdodau lleol yw’r ymatebwyr cyntaf o hyd ar gyfer lles. Mae’r Adran yn mynychu parhad."
+      ],
+      "rev": {
+        "2026": "Cyhoeddiad blynyddol."
+      }
+    },
+    "DET-AR-2026": {
+      "title": "Adroddiad Blynyddol a Chyfrifon 2026",
+      "summary": "Wedi’i osod gerbron y Senedd. Gwaith, gwariant ac ystâd yr Adran.",
+      "paras": [
+        "Parhaodd yr Adran i arsylwi, cofnodi, diogelu ac adfer.",
+        "Mae swyddfeydd rhanbarthol ym Mryste, Manceinion, Caeredin a Béal Feirste ar gau o hyd oherwydd toriadau cyllideb. Caerdydd yw’r pencadlys. Gorsaf faes yw Abercraf gydag oriau cyfyngedig.",
+        "Ailosodwyd y Codex ar gyfer cyhoeddi cyfoes. Nid yw testun Pennod 0 wedi newid.",
+        "Staff mewn swydd ar 31 Mawrth: 146 cyfwerth ag amser llawn."
+      ],
+      "rev": {
+        "2025–26": "Wedi’i osod."
+      }
+    },
+    "DET-AR-2025": {
+      "title": "Adroddiad Blynyddol a Chyfrifon 2025",
+      "summary": "Adroddiad y flwyddyn flaenorol.",
+      "paras": [
+        "Digwyddiadau cydnabyddedig: 171. Cwblhawyd adfer mewn 149 achos.",
+        "Gofynnodd y Gweinidog am adolygiad o gyd-ddigwyddiad fel cofnod cau. Canfu’r adolygiad ei fod yn annigonol."
+      ],
+      "rev": {
+        "2024–25": "Wedi’i osod."
+      }
+    },
+    "DET-AR-2024": {
+      "title": "Adroddiad Blynyddol a Chyfrifon 2024",
+      "summary": "Adroddiad 2023–24.",
+      "paras": [
+        "Argymhellodd adolygiad yr ystâd gau pedair swyddfa ranbarthol. Daeth y cau i rym y flwyddyn ganlynol."
+      ],
+      "rev": {
+        "2023–24": "Wedi’i osod."
+      }
+    },
+    "DET-CONS-2026": {
+      "title": "Ymgynghoriad: Rheoliadau Amser Dros Ben (Cymru)",
+      "summary": "Ymgynghoriad ar reoliadau drafft. Yn cau 23 Hydref 2026.",
+      "paras": [
+        "Mae Llywodraeth Cymru yn gwahodd barn ar reoliadau drafft ar gyfer gweinyddu Amser Dros Ben yng Nghymru.",
+        "Nid yw’r rheoliadau yn rhoi awdurdod dros basio cyfreithlon amser ei hun.",
+        "Dylid anfon ymatebion at consultations@det.gov.wales neu drwy’r post i Barc Cathays."
+      ],
+      "rev": {
+        "draft": "Agorwyd."
+      }
+    },
+    "DET-WELSH-001": {
+      "title": "Cynllun yr iaith Gymraeg",
+      "summary": "Cynllun yr Adran o dan Safonau’r Gymraeg.",
+      "paras": [
+        "Bydd yr Adran yn cyhoeddi deunydd cyhoeddus yn Gymraeg ac yn Saesneg.",
+        "Mae’r Codex Sefydlu yn gyhoeddiad mewnol yn Saesneg. Mae canllawiau ategol yn ddwyieithog.",
+        "Atebir gohebiaeth a dderbynnir yn Gymraeg yn Gymraeg."
+      ],
+      "rev": {
+        "3": "Diwygiwyd."
+      }
+    },
+    "DET-CIRC-014": {
+      "title": "Cylchlythyr: cau swyddfeydd rhanbarthol",
+      "summary": "Hysbysiad i awdurdodau lleol a chyrff partner.",
+      "paras": [
+        "Mae Bryste, Manceinion, Caeredin a Béal Feirste ar gau oherwydd toriadau cyllideb.",
+        "Trosglwyddir pob ymholiad i Gaerdydd. Gorsaf faes yw Abercraf o hyd. Nid oes cownter cyhoeddus yn Abercraf."
+      ],
+      "rev": {
+        "1": "Cyhoeddwyd."
+      }
+    },
+    "DET-POL-007": {
+      "title": "Polisi Lles Amserol",
+      "summary": "Lles lle mae dadleoli wedi cynhyrchu effeithiau dangosadwy.",
+      "paras": [
+        "Ni chaiff amser neb ei ystyried yn ormodol oherwydd diffyg cynhyrchiant economaidd yn unig.",
+        "Mae oriau a neilltuir i gyfeillgarwch yn parhau’n oriau. Mae oriau a neilltuir i alaru yn parhau’n oriau. Mae oriau a neilltuir i grwydro yn parhau’n oriau. Mae oriau a neilltuir i ryfeddod yn parhau’n oriau.",
+        "Cynigir cymorth i adfer parhad adenilladwy. Nid budd-dal am amser nas defnyddiwyd mohono."
+      ],
+      "rev": {
+        "2.2": "Wedi’i alinio â’r maxim arweiniol."
+      }
+    },
+    "DET-GUID-002": {
+      "title": "Canllawiau cyhoeddus: os yw prynhawn ar goll",
+      "summary": "Beth i’w wneud. Beth i beidio â’i wneud.",
+      "paras": [
+        "Os yw prynhawn wedi methu â chyrraedd lle’r oedd disgwyl, parhewch â’ch materion arferol lle y gallwch.",
+        "Peidiwch â cheisio adennill yr oriau eich hun.",
+        "Hysbyswch yr Adran ar ffurflen DET-44 os yw’r absenoldeb yn cynhyrchu effaith ddangosadwy ar eich aelwyd neu waith.",
+        "Mae’r rhan fwyaf o ddigwyddiadau o’r fath yn lleol, yn dros dro ac yn cael eu datrys heb ganlyniad parhaol."
+      ],
+      "rev": {
+        "3": "Cyfeiriwyd at ffurflen DET-44."
+      }
+    },
+    "DET-GUID-009": {
+      "title": "Ysgolion: addysgu parhad amserol",
+      "summary": "Memorandwm i ysgolion a gynhelir yng Nghymru.",
+      "paras": [
+        "Nid yw’r Adran yn addysgu hanes. Nid yw’n rheoleiddio cof.",
+        "Gall ysgolion ofyn am ymweliad neu becyn. Ni fydd swyddogion yn trafod achosion.",
+        "Dylid dweud wrth ddisgyblion nad yw bodolaeth yr Adran yn dystiolaeth eu bod mewn perygl anarferol."
+      ],
+      "rev": {
+        "2": "Aliniad Cwricwlwm Cymru."
+      }
+    },
+    "DET-RES-044": {
+      "title": "Papur gwaith: Geometreg oriau heb eu gosod",
+      "summary": "Sefydliad Astudiaethau Amserol. Nid datganiad o bolisi adrannol.",
+      "paras": [
+        "Mae’r papur hwn yn disgrifio dull o fapio oriau sydd ag amser a dim lle cytunedig.",
+        "Fe’i cyhoeddir ar gyfer adolygiad cymheiriaid. Nid cyfarwyddyd gweithredol mohono.",
+        "Strwythur yn gyntaf. Dehongliad yn ddiweddarach."
+      ],
+      "rev": {
+        "WP": "Cyhoeddwyd ar gyfer adolygiad cymheiriaid."
+      }
+    },
+    "DET-RES-051": {
+      "title": "Papur gwaith: Cyd-ddigwyddiad fel esboniad annigonol",
+      "summary": "Pam y cofnodir cyd-ddigwyddiad ac na dderbynnir ef fel cofnod cau.",
+      "paras": [
+        "Am genedlaethau triniwyd digwyddiadau fel cyd-ddigwyddiad. Sefydlwyd yr Adran ar sail yr arsylwad nad oedd cyd-ddigwyddiad yn ddigon o esboniad ynddo’i hun.",
+        "Mae’r papur hwn yn ailddatgan yr arsylwad sefydlu hwnnw mewn dull cyfoes."
+      ],
+      "rev": {
+        "WP": "Cyhoeddwyd."
+      }
+    },
+    "DET-FIELD-088": {
+      "title": "Adroddiad maes: darlleniadau nos Cribarth",
+      "summary": "Cyfyngedig. Dyfyniad cyhoeddus wedi’i golygu.",
+      "paras": [
+        "Cymerwyd darlleniadau tair noson yn olynol. Roedd y tablau’n anghytuno.",
+        "Ni chydnabuwyd Digwyddiad Amser Dros Ben. Cedwir yr anghytundeb ar y ffeil.",
+        "Mae’r adroddiad llawn yn cael ei hatal o dan adran 31 hyd nes cyfres bellach."
+      ],
+      "rev": {
+        "extract": "Cyhoeddwyd dyfyniad cyhoeddus."
+      }
+    },
+    "DET-FIELD-091": {
+      "title": "Adroddiad maes: dadleoli dociau Caerdydd",
+      "summary": "Digwyddiad lleol. Wedi’i adfer.",
+      "paras": [
+        "Methodd bore â chyrraedd ar gyfer grŵp gwaith ar y dociau. Adenillwyd yr oriau yr un wythnos.",
+        "Ni chanfuwyd canlyniad parhaol. Mae’r sicrwydd cyhoeddus yn dal."
+      ],
+      "rev": {
+        "final": "Adfer wedi’i gwblhau."
+      }
+    },
+    "DET-HIST-1951": {
+      "title": "Offeryn Sefydlu, 1951",
+      "summary": "Y gorchymyn a sefydlodd yr Adran.",
+      "paras": [
+        "Sefydlir Adran Amser Dros Ben fel adran weithredol yn gweithredu o dan awdurdod gweinidogol.",
+        "Mae ei chyfrifoldebau yn ymestyn ar draws Cymru ac, drwy gytundeb, awdurdodaethau cysylltiedig y Deyrnas Unedig.",
+        "Y Codex Sefydlu yw’r cyhoeddiad mewnol cyntaf."
+      ],
+      "rev": {
+        "original": "Fel y’i gwnaed."
+      }
+    },
+    "DET-HIST-1963": {
+      "title": "Cofnod: gorsaf Abercraf, 1963",
+      "summary": "Agor gorsaf faes y cwm.",
+      "paras": [
+        "Mae gorsaf faes i’w chadw yng Nghwm Tawe Uchaf. Ni fydd yn swyddfa gyhoeddus.",
+        "Nid yw’r cofnod yn enwi partner sifil. Mae ffeiliau diweddarach yn gwneud."
+      ],
+      "rev": {
+        "original": "Fel y’i cofnodwyd."
+      }
+    },
+    "DET-SI-2026-13": {
+      "title": "Drafft: Rheoliadau Amser Dros Ben (Cymru) 2026",
+      "summary": "Offeryn statudol drafft. Nid yw mewn grym.",
+      "paras": [
+        "Mae’r Rheoliadau hyn yn gwneud darpariaeth ar gyfer cydnabod Digwyddiadau Amser Dros Ben yng Nghymru ac ar gyfer dyletswyddau awdurdodau lleol pan fydd digwyddiadau o’r fath yn cynhyrchu effeithiau dangosadwy.",
+        "Ni ddylid darllen dim yn y Rheoliadau hyn fel pe bai’n rhoi awdurdod dros basio cyfreithlon amser ei hun."
+      ],
+      "rev": {
+        "draft": "Ar gyfer ymgynghoriad."
+      }
+    },
+    "DET-FOI-LOG-2026": {
+      "title": "Cofnod datgelu rhyddid gwybodaeth 2026",
+      "summary": "Datgeliadau a wnaed eleni.",
+      "paras": [
+        "Mae’r Adran wedi ateb 63 cais eleni. Gwrthodwyd deuddeg yn llawn. Ni chadarnhawyd nac ymwadiwyd pedwar.",
+        "Mae ceisiadau am gyfres Cribarth heb ei golygu yn parhau’n ddyledus."
+      ],
+      "rev": {
+        "Q2": "Diweddarwyd."
+      }
+    },
+    "DET-HR-009": {
+      "title": "Llawlyfr staff (dyfyniad)",
+      "summary": "Dyfyniad cyhoeddus o amodau ac ymddygiad.",
+      "paras": [
+        "Ni fydd swyddogion yn trafod achosion yn gyhoeddus.",
+        "Ni fydd swyddogion yn derbyn lletygarwch gan bersonau sy’n honni gwerthu oriau a adenillwyd.",
+        "Mae’r cyfeirnod TTG-13 yn ymddangos ar bapur swyddfa’r Adran. Marc catalog yw. Nid gwasanaeth cyhoeddus mohono."
+      ],
+      "rev": {
+        "extract": "Dyfyniad blynyddol."
+      }
+    },
+    "DET-EST-003": {
+      "title": "Ystâd: adleoli Caerdydd",
+      "summary": "Adleoli’r cownter cyhoeddus o fewn Parc Cathays.",
+      "paras": [
+        "Mae’r cownter cyhoeddus yn symud i’r adain ddwyreiniol ar 6 Hydref 2026. Mae apwyntiadau’n well.",
+        "Parc Cathays yw’r pencadlys o hyd. Nid yw’r cyfeiriad cofrestredig wedi newid."
+      ],
+      "rev": {
+        "1": "Cyhoeddwyd."
+      }
+    },
+    "DET-COM-012": {
+      "title": "Fframwaith rhaglenni cymunedol",
+      "summary": "Sut mae’r Adran yn gweithio gyda chymunedau.",
+      "paras": [
+        "Mae rhaglenni’n bodoli i leihau niwed sy’n deillio o ddadleoli amserol lle y mae’n rhesymol ymarferol.",
+        "Nid cyllid diwylliannol mohonynt. Nid ydynt yn lle gwasanaethau lleol cyffredin."
+      ],
+      "rev": {
+        "1.3": "Diweddarwyd cyfraddau grant."
+      }
+    },
+    "DET-SCH-005": {
+      "title": "Memorandwm ysgolion",
+      "summary": "Cydymaith i DET-GUID-009.",
+      "paras": [
+        "Dylai penaethiaid ddefnyddio ffurflen DET-33.",
+        "Mae ymweliadau’n para un awr. Ni fydd swyddogion yn cymryd cwestiynau ar 1951."
+      ],
+      "rev": {
+        "2": "Diweddarwyd."
+      }
+    },
+    "DET-INS-013": {
+      "title": "Rhaglen ymchwil Offeryn 13",
+      "summary": "Rhaglen ddiweddarwyd. Mae arsylwi sifil yn parhau.",
+      "paras": [
+        "Mae Offeryn 13 yn parhau o dan oruchwyliaeth sifil.",
+        "Nid yw’r peiriant yn rhagweld. Mae’n mesur perthynas.",
+        "Cyhoeddir atodiad pellach os bydd y tablau’n cytuno. Nid ydynt wedi gwneud."
+      ],
+      "rev": {
+        "2026.2": "Diweddarwyd y rhaglen."
+      }
+    },
+    "DET-REV-002": {
+      "title": "Protocol adolygiad cymheiriaid",
+      "summary": "Sut y caiff papurau’r Sefydliad eu hadolygu.",
+      "paras": [
+        "Adolygir papurau gwaith cyn y gellir eu dyfynnu mewn cyfarwyddyd gweithredol.",
+        "Gofynnir i adolygwyr am ddull, nid am gred."
+      ],
+      "rev": {
+        "2": "Cadwyd dwbl-ddall."
+      }
+    },
+    "DET-MAP-001": {
+      "title": "Nodiadau map yr ystâd ranbarthol",
+      "summary": "Nodiadau i gyd-fynd â’r map cyhoeddus.",
+      "paras": [
+        "Ar agor: Caerdydd. Cyfyngedig: Abercraf. Ar gau oherwydd toriadau cyllideb: Bryste, Manceinion, Caeredin, Béal Feirste."
+      ],
+      "rev": {
+        "2": "Adleoli Caerdydd."
+      }
+    },
+    "DET-FORM-PACK-2026": {
+      "title": "Catalog ffurflenni 2026",
+      "summary": "Ffurflenni rhifedig yr Adran.",
+      "paras": [
+        "DET-01 Adroddiad Digwyddiad. DET-14 Datganiad Oriau a Adenillwyd. DET-22 Hawliad Difrod Cronolegol. DET-44 Hysbysiad Prynhawn Coll. DET-61 Asesiad Parhad Cof. DET-78 Cais am Fynediad Ymchwil.",
+        "Rhestrir ffurflenni pellach ar wefan yr Adran. Gellir casglu copïau papur yng Nghaerdydd ar ddiwrnodau cownter."
+      ],
+      "rev": {
+        "2026": "Catalog blynyddol."
+      }
+    },
+    "DET-MIN-2026-03": {
+      "title": "Datganiad gweinidogol, Mawrth 2026",
+      "summary": "Datganiad llafar i’r Senedd.",
+      "paras": [
+        "Dywedodd y Gweinidog y dylai’r cyhoedd barhau â’u materion arferol.",
+        "Dywedodd y Gweinidog fod yr Adran yn gweinyddu canlyniadau ac nad yw’n creu achosion."
+      ],
+      "rev": {
+        "as given": "Fel y’i rhoddwyd."
+      }
+    },
+    "DET-BUD-2026": {
+      "title": "Setliad adolygiad gwariant 2026",
+      "summary": "Adnodd a chyfalaf.",
+      "paras": [
+        "Mae DEL adnodd wedi’i leihau. Nid yw’r gostyngiad ystâd a gymerwyd eisoes yn cael ei wrthdroi.",
+        "Mae ailargraffu’r Codex yn cael ei gwrdd o gyllidebau presennol."
+      ],
+      "rev": {
+        "1": "Cyhoeddwyd."
+      }
+    },
+    "DET-EQIA-2026": {
+      "title": "Asesiad effaith cydraddoldeb 2026",
+      "summary": "Asesiad o newidiadau gweithredol y flwyddyn.",
+      "paras": [
+        "Ailddatgenir y maxim arweiniol. Ni chaiff amser neb ei ystyried yn ormodol oherwydd diffyg cynhyrchiant economaidd yn unig.",
+        "Mae cau swyddfeydd yn cael effaith wahaniaethol ar y rhai na allant deithio i Gaerdydd. Mae gohebiaeth ar gael o hyd."
+      ],
+      "rev": {
+        "1": "Llofnodwyd."
+      }
+    },
+    "DET-RET-011": {
+      "title": "Amserlen cadw cofnodion",
+      "summary": "Pa mor hir y cedwir cofnodion.",
+      "paras": [
+        "Cedwir ffeiliau Digwyddiad Amser Dros Ben cydnabyddedig am 75 mlynedd.",
+        "Cedwir adroddiadau nas cydnabuwyd am 7 mlynedd.",
+        "Cedwir marc catalog TTG-13 gyda’r ffeil. Nid dosbarth gwaredu mohono."
+      ],
+      "rev": {
+        "4": "Estynnwyd ffeiliau digwyddiad."
+      }
+    }
+  },
+  "offices": {
+    "cardiff": {
+      "role": "Pencadlys a swyddfa ranbarthol Cymru",
+      "note": "Cownter cyhoeddus: dydd Mawrth a dydd Iau, 10:00 i 15:00. Mae apwyntiadau’n well."
+    },
+    "abercrave": {
+      "role": "Gorsaf faes",
+      "note": "Oriau cyfyngedig. Presenoldeb drwy drefniant â Chaerdydd. Dim cownter cyhoeddus."
+    },
+    "bristol": {
+      "role": "Cyn-swyddfa De-orllewin",
+      "note": "Ar gau oherwydd toriadau cyllideb. Trosglwyddir ymholiadau i Gaerdydd."
+    },
+    "manchester": {
+      "role": "Cyn-swyddfa Gogledd Lloegr",
+      "note": "Ar gau oherwydd toriadau cyllideb. Trosglwyddir ymholiadau i Gaerdydd."
+    },
+    "edinburgh": {
+      "role": "Cyn-swyddfa’r Alban",
+      "note": "Ar gau oherwydd toriadau cyllideb. Ymholiadau’r Alban drwy ohebiaeth i Gaerdydd."
+    },
+    "belfast": {
+      "role": "Cyn-swyddfa Gogledd Iwerddon",
+      "note": "Ar gau oherwydd toriadau cyllideb. Ymholiadau Gogledd Iwerddon drwy ohebiaeth i Gaerdydd."
+    }
+  }
+}

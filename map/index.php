@@ -10,5 +10,5 @@ if (!$user) {
 
 $html = file_get_contents(__DIR__ . '/index.html');
 // Inject the record endpoint override before </head>
-$inject = '<script>window.TTG_MAP={record:"/map/record.php"};</script>';
+$inject = '<script>window.TTG_MAP={record:"/map/record.php",live:"/map/live.php",trail:"/map/trail.php"};</script>';
 echo str_replace('</head>', $inject . '</head>', $html);

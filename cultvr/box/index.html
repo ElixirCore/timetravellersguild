@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a0505">
+<title>CHRONOS — Fulldome · Time Travellers Guild</title>
+<meta name="description" content="The Guild's red phonebox time machine rebuilt for a fulldome: 180° domemaster, cube-map cross and look-around.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://timetravellersguild.com/cultvr/box/">
+<style>
+:root{--bg:#0a0303;--panel:#160807;--line:#4a2420;--text:#ecdcc6;--mute:#a58f7c;--gold:#c9a227;--red:#b3342a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Share Tech Mono",ui-monospace,Menlo,monospace}
+a{color:var(--gold)}
+.mark{margin:0;padding:.7rem 1rem;font-size:12px;letter-spacing:.14em;color:var(--mute)}
+.mark a{text-decoration:none}
+main{max-width:1100px;margin:0 auto;padding:0 1rem 3rem}
+h1{font:600 1.5rem/1.1 Orbitron,system-ui,sans-serif;letter-spacing:.12em;margin:.4rem 0 .2rem}
+.sub{color:var(--mute);margin:0 0 1rem}
+.bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:0 0 .8rem}
+.bar .grp{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+button,select{font:inherit;color:var(--text);background:var(--panel);border:0;padding:.5rem .8rem;cursor:pointer}
+.grp button+button{border-left:1px solid var(--line)}
+button[aria-pressed=true]{background:var(--red);color:#fff}
+button.solo,select.solo{border:1px solid var(--line);border-radius:4px}
+button:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+#stage{position:relative;background:#000;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;touch-action:none}
+#stage canvas{display:block}
+#stage.look{cursor:grab}#stage.look.drag{cursor:grabbing}
+#stage.dome canvas,#stage.cross canvas{image-rendering:auto}
+.cap{color:var(--mute);margin:.6rem 0 0;min-height:2.6em}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.4rem}
+.box{border:1px solid var(--line);background:var(--panel);padding:1rem;border-radius:4px}
+.box h2{margin:0 0 .5rem;font:600 .85rem/1 Orbitron,system-ui,sans-serif;letter-spacing:.14em;color:var(--gold)}
+.box ul{margin:0;padding-left:1.1rem}.box li{margin:.3rem 0}
+.msg{color:var(--mute);margin:.5rem 0 0;min-height:1.4em}.err{color:#ff8b7a}
+/* projection mode: only the picture, on black */
+body.proj{overflow:hidden;cursor:none}
+body.proj .mark,body.proj h1,body.proj .sub,body.proj .bar,body.proj .cap,body.proj .cols{display:none}
+body.proj main{max-width:none;padding:0}
+body.proj #stage{border:0;width:100vw;height:100vh}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<p class="mark"><a href="/">TIMETRAVELLERSGUILD.COM</a> · CULTVR · <a href="/box/">BOX</a> · FULLDOME</p>
+<main>
+  <h1>CHRONOS · FULLDOME</h1>
+  <p class="sub">Temporal Relay Booth · Mk VI, rebuilt for the dome. The booth hangs in front of you; the geocentric orrery is the sky above.</p>
+
+  <div class="bar" role="toolbar" aria-label="Dome controls">
+    <div class="grp" role="group" aria-label="View">
+      <button type="button" data-mode="dome" aria-pressed="true">Domemaster</button>
+      <button type="button" data-mode="cross" aria-pressed="false">Cube cross</button>
+      <button type="button" data-mode="look" aria-pressed="false">Look around</button>
+    </div>
+    <button type="button" id="play" class="solo" aria-pressed="true">Pause</button>
+    <label class="sr" for="rate" style="position:absolute;left:-9999px">Time rate</label>
+    <select id="rate" class="solo" aria-label="Orrery time rate">
+      <option value="live">True time</option>
+      <option value="60">1 min / s</option>
+      <option value="3600">1 hour / s</option>
+      <option value="86400">1 day / s</option>
+      <option value="2629800">1 month / s</option>
+      <option value="31557600">1 year / s</option>
+      <option value="-3600">1 hour / s backwards</option>
+      <option value="-31557600">1 year / s backwards</option>
+    </select>
+    <button type="button" id="proj" class="solo">Projection mode</button>
+    <select id="size" class="solo" aria-label="Export size"><option value="2048">2048</option><option value="4096" selected>4096</option><option value="8192">8192</option></select>
+    <button type="button" id="save" class="solo">Save PNG</button>
+  </div>
+
+  <div id="stage" class="dome"></div>
+  <p class="cap" id="cap" role="status"></p>
+  <p class="msg" id="msg" role="status"></p>
+
+  <div class="cols">
+    <section class="box">
+      <h2>HOW TO USE IT</h2>
+      <ul>
+        <li><b>Projection mode</b> fills the screen with the dome image on black. Press Esc to return. Use it on the dome's media server through a browser, or save a PNG for a still.</li>
+        <li><b>Domemaster:</b> square, 180° equidistant fisheye. Zenith at the centre, front of the room at the bottom edge.</li>
+        <li><b>Cube cross:</b> six square faces in a 4×3 cross for software that wants a cube map.</li>
+        <li><b>Look around:</b> drag to turn, to check the scene as a person in the room would.</li>
+        <li>Keys: Space pauses, M changes view, P is projection mode.</li>
+      </ul>
+    </section>
+    <section class="box">
+      <h2>WHAT IS NOT KNOWN</h2>
+      <ul>
+        <li>CULTVR's required input format, resolution and frame rate have not been confirmed with the venue. This uses the common domemaster layout. Confirm before delivering anything.</li>
+        <li>The Save PNG button gives stills. It does not make video.</li>
+        <li>Sizes above what your graphics card supports will fail with a message.</li>
+        <li>The scene is shared with <a href="/box/">/box</a>: the booth, stars and orrery come from the same files, so changes there carry over here.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createTardis } from '/box/js/tardis.js?v=4';
+import { createStarfield, createGround, createChrononField, animateChrononField } from '/box/js/vortex.js?v=2';
+import { createOrrery, updateOrrery } from '/box/js/orrery.js?v=1';
+
+const $ = (s) => document.querySelector(s);
+const stage = $('#stage'), capEl = $('#cap'), msgEl = $('#msg');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const params = new URLSearchParams(location.search);
+
+/* ---------- renderer ---------- */
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+stage.appendChild(renderer.domElement);
+
+/* ---------- scene: viewer at the origin, eye level; zenith is +Y; the front of the room is -Z ---------- */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0303);
+scene.fog = new THREE.FogExp2(0x0a0303, 0.012);
+
+scene.add(new THREE.AmbientLight(0x3a1818, 0.7));
+const key = new THREE.DirectionalLight(0xffd0b0, 1.25); key.position.set(4, 9, 3); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); Object.assign(key.shadow.camera, { near: 1, far: 30, left: -8, right: 8, top: 8, bottom: -8 });
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xff6a40, 0.6); rim.position.set(-5, 3, -9); scene.add(rim);
+const fill = new THREE.PointLight(0xc9a227, 40, 22); fill.position.set(-2, 3, -3); scene.add(fill);
+
+/* booth: hangs ahead of the audience, about 30° up, facing them */
+const BOOTH_POS = new THREE.Vector3(0, 4.0, -6.4);
+const booth = createTardis();
+booth.scale.setScalar(1.25);
+booth.position.copy(BOOTH_POS);
+booth.rotation.y = 0;
+scene.add(booth);
+const boothGlow = new THREE.PointLight(0xff3a20, 30, 12); boothGlow.position.copy(BOOTH_POS).add(new THREE.Vector3(0, -2.2, 0)); scene.add(boothGlow);
+
+const stars = createStarfield(); scene.add(stars);
+const chronons = createChrononField(); chronons.material.size = 0.04; chronons.position.copy(BOOTH_POS).add(new THREE.Vector3(0, -1.2, 0)); scene.add(chronons); // a halo around the booth, as in /box
+const ground = createGround(); ground.position.y = 1.65; scene.add(ground); // floor sits just below the horizon
+
+/* orrery: a flat dial overhead, face down so the audience reads it from below */
+const orrery = createOrrery(scene, renderer, { scale: 0.62, offset: new THREE.Vector3(0, 9.5, -1.5) });
+orrery.root.rotation.x = Math.PI / 2;
+
+let simTime = Date.now(), rate = 'live';
+const dial = () => booth.getObjectByName('dial');
+const lamp = () => booth.getObjectByName('lamp');
+const lampLight = () => booth.getObjectByName('lampLight');
+let curFace = 1024;
+
+function update(t, dt) {
+  booth.position.set(BOOTH_POS.x, BOOTH_POS.y + Math.sin(t * 0.85) * 0.05, BOOTH_POS.z);
+  booth.rotation.y = Math.sin(t * 0.28) * 0.03;
+  const l = lamp(), ll = lampLight();
+  if (l && l.material) l.material.emissiveIntensity = 0.55 + Math.sin(t * 2.1) * 0.22;
+  if (ll) ll.intensity = 1.8 + Math.sin(t * 2.1) * 0.55;
+  const d = dial(); if (d) d.rotation.z = t * 0.4;
+  stars.rotation.y = t * 0.012;
+  ground.rotation.y = t * 0.02;
+  animateChrononField(chronons, t);
+  if (rate === 'live') simTime = Date.now(); else simTime = Math.max(-8.64e15, Math.min(8.64e15, simTime + Number(rate) * 1000 * dt));
+  updateOrrery(orrery, simTime, dt, reduce);
+}
+
+/* ---------- projection pass: cube camera at the viewer, then fisheye / cross shader ---------- */
+let cubeSize = 1024;
+const cubeRT = new THREE.WebGLCubeRenderTarget(cubeSize, { type: THREE.HalfFloatType, generateMipmaps: false, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
+const cubeCam = new THREE.CubeCamera(0.1, 220, cubeRT); cubeCam.position.set(0, 0, 0);
+const postScene = new THREE.Scene(), postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const postMat = new THREE.ShaderMaterial({
+  uniforms: { tCube: { value: cubeRT.texture }, mode: { value: 0 } },
+  vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+  fragmentShader: `
+    uniform samplerCube tCube; uniform float mode; varying vec2 vUv;
+    const float PI = 3.14159265;
+    void main(){
+      vec3 col = vec3(0.0);
+      if (mode < 0.5) {
+        vec2 p = vUv * 2.0 - 1.0; float r = length(p);
+        if (r <= 1.0) {
+          float th = r * PI * 0.5; vec2 h = r > 0.0 ? p / r : vec2(0.0);
+          vec3 d = vec3(sin(th) * h.x, cos(th), sin(th) * h.y);
+          col = textureCube(tCube, d).rgb;
+        }
+      } else {
+        vec2 g = vec2(vUv.x * 4.0, vUv.y * 3.0); vec2 cell = floor(g); vec2 q = fract(g) * 2.0 - 1.0;
+        vec3 d = vec3(0.0); bool ok = true;
+        if (cell.y == 2.0 && cell.x == 1.0) d = vec3(q.x, 1.0, q.y);
+        else if (cell.y == 0.0 && cell.x == 1.0) d = vec3(q.x, -1.0, -q.y);
+        else if (cell.y == 1.0) {
+          if (cell.x == 0.0) d = vec3(-1.0, q.y, -q.x);
+          else if (cell.x == 1.0) d = vec3(q.x, q.y, -1.0);
+          else if (cell.x == 2.0) d = vec3(1.0, q.y, q.x);
+          else d = vec3(-q.x, q.y, 1.0);
+        } else ok = false;
+        if (ok) {
+          col = textureCube(tCube, d).rgb;
+          float e = 1.0 - step(0.012, min(1.0 - abs(q.x), 1.0 - abs(q.y)));
+          col = mix(col, vec3(0.9, 0.86, 0.76) * 0.55, e * 0.7);
+        }
+      }
+      gl_FragColor = vec4(col, 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
+  depthTest: false, depthWrite: false
+});
+postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), postMat));
+
+const lookCam = new THREE.PerspectiveCamera(75, 1, 0.1, 220); lookCam.rotation.order = 'YXZ';
+let yaw = 0, pitch = 0.5;
+
+function renderFrame(mode) {
+  if (mode === 'look') { lookCam.rotation.set(pitch, yaw, 0); renderer.render(scene, lookCam); return; }
+  cubeCam.update(renderer, scene);
+  postMat.uniforms.mode.value = mode === 'dome' ? 0 : 1;
+  renderer.render(postScene, postCam);
+}
+
+/* ---------- layout, modes ---------- */
+let mode = ['dome', 'cross', 'look'].includes(params.get('mode')) ? params.get('mode') : 'dome';
+let playing = !reduce, T = 8, last = 0;
+const CAP = {
+  dome: 'Domemaster: 180° equidistant fisheye. Zenith at the centre, front of the room at the bottom edge. The orrery is overhead and the booth is ahead of the audience.',
+  cross: 'Cube-map cross: top, front, right, back, left and bottom faces. Seam lines are drawn so the faces can be told apart.',
+  look: 'Look around: drag to turn your head. This is a normal perspective view, not the dome image.'
+};
+function sizeFor(m, availW, availH) {
+  if (m === 'cross') { const w = Math.min(availW, availH * 4 / 3); return [Math.round(w), Math.round(w * 0.75)]; }
+  if (m === 'look') { const w = availW; return [Math.round(w), Math.round(Math.min(availH, w * 0.62))]; }
+  const s = Math.min(availW, availH); return [Math.round(s), Math.round(s)];
+}
+function layout() {
+  const proj = document.body.classList.contains('proj');
+  const aw = proj ? innerWidth : Math.min(stage.parentElement.clientWidth - 2, 1080);
+  const ah = proj ? innerHeight : Math.min(innerHeight * 0.75, 1080);
+  const [w, h] = sizeFor(mode, aw, ah);
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.setSize(w, h, true);
+  const face = mode === 'look' ? 0 : Math.max(512, Math.min(2048, Math.round((mode === 'cross' ? w / 4 : w / 2) * (devicePixelRatio > 1 ? 1.5 : 1))));
+  if (face && face !== cubeSize) { cubeRT.setSize(face, face); cubeSize = face; }
+  if (mode === 'look') { lookCam.aspect = w / h; lookCam.updateProjectionMatrix(); }
+  curFace = cubeSize;
+}
+function setMode(m) {
+  mode = m; stage.className = m + (document.body.classList.contains('proj') ? ' proj' : '');
+  document.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+  capEl.textContent = CAP[m]; layout(); renderFrame(mode);
+}
+document.querySelectorAll('[data-mode]').forEach((b) => (b.onclick = () => setMode(b.dataset.mode)));
+$('#play').onclick = () => setPlaying(!playing);
+function setPlaying(p) { playing = p; $('#play').textContent = p ? 'Pause' : 'Play'; $('#play').setAttribute('aria-pressed', String(p)); }
+$('#rate').onchange = (e) => { rate = e.target.value; if (rate === 'live') simTime = Date.now(); };
+function setProj(on) {
+  document.body.classList.toggle('proj', on);
+  if (on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+  if (!on && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  layout(); renderFrame(mode);
+}
+$('#proj').onclick = () => setProj(true);
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('proj')) setProj(false); });
+addEventListener('keydown', (e) => {
+  if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+  if (e.key === ' ') { e.preventDefault(); setPlaying(!playing); }
+  else if (e.key === 'm' || e.key === 'M') setMode(['dome', 'cross', 'look'][(['dome', 'cross', 'look'].indexOf(mode) + 1) % 3]);
+  else if (e.key === 'p' || e.key === 'P') setProj(!document.body.classList.contains('proj'));
+  else if (e.key === 'Escape' && document.body.classList.contains('proj')) setProj(false);
+});
+addEventListener('resize', () => { layout(); renderFrame(mode); });
+
+let drag = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { if (mode !== 'look') return; drag = { x: e.clientX, y: e.clientY }; stage.classList.add('drag'); try { renderer.domElement.setPointerCapture(e.pointerId); } catch (x) { /* ignore */ } });
+renderer.domElement.addEventListener('pointermove', (e) => { if (!drag) return; yaw -= (e.clientX - drag.x) * 0.005; pitch = Math.max(-1.4, Math.min(1.5, pitch - (e.clientY - drag.y) * 0.005)); drag = { x: e.clientX, y: e.clientY }; if (!playing) renderFrame(mode); });
+addEventListener('pointerup', () => { drag = null; stage.classList.remove('drag'); });
+
+function loop(ts) {
+  const dt = Math.min(0.1, last ? (ts - last) / 1000 : 0.016); last = ts;
+  if (playing) { T += dt; update(T, dt); renderFrame(mode); }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- export ---------- */
+function renderAt(m, size, t) {
+  const pr = renderer.getPixelRatio();
+  const w = size, h = m === 'cross' ? Math.round(size * 0.75) : size;
+  const maxTex = renderer.capabilities.maxTextureSize, maxCube = renderer.capabilities.maxCubemapSize || maxTex;
+  const face = m === 'cross' ? Math.round(size / 4) : Math.round(size / 2);
+  if (w > maxTex || h > maxTex || face > maxCube) throw new Error('This graphics card cannot draw ' + size + 'px. Try a smaller size.');
+  renderer.setPixelRatio(1); renderer.setSize(w, h, false);
+  cubeRT.setSize(face, face); curFace = face;
+  try { update(t, 0); renderFrame(m); return renderer.domElement.toDataURL('image/png'); }
+  finally { cubeRT.setSize(cubeSize, cubeSize); renderer.setPixelRatio(pr); layout(); renderFrame(mode); }
+}
+window.__export = (m, size, t) => renderAt(m, size, t);
+$('#save').onclick = () => {
+  msgEl.className = 'msg'; msgEl.textContent = '';
+  if (mode === 'look') { msgEl.className = 'msg err'; msgEl.textContent = 'Switch to Domemaster or Cube cross to save.'; return; }
+  const size = Number($('#size').value);
+  try {
+    msgEl.textContent = 'Rendering ' + size + 'px…';
+    setTimeout(() => {
+      try {
+        const url = renderAt(mode, mode === 'cross' ? Math.round(size * 1.5) : size, T);
+        const a = document.createElement('a'); a.href = url; a.download = 'chronos-' + (mode === 'dome' ? 'domemaster-' + size : 'cubecross-' + Math.round(size * 1.5)) + '.png';
+        document.body.appendChild(a); a.click(); a.remove(); msgEl.textContent = 'Saved.';
+      } catch (e) { msgEl.className = 'msg err'; msgEl.textContent = e.message; }
+    }, 30);
+  } catch (e) { msgEl.className = 'msg err'; msgEl.textContent = e.message; }
+};
+
+if (params.get('proj') === '1') document.body.classList.add('proj');
+update(T, 0); setMode(mode);
+if (!playing) renderFrame(mode);
+requestAnimationFrame(loop);
+window.__ready = true;
+</script>
+</body>
+</html>

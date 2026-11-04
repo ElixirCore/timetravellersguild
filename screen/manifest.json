@@ -1,0 +1,247 @@
+{
+  "generated": "2026-10-27T02:56:01+00:00",
+  "clips": [
+    {
+      "id": "2026-08-28-054840",
+      "file": "media/2026-08-28-054840.mp4",
+      "title": "Screen Recording 2026-08-28 05:48",
+      "recorded": "2026-08-28T05:48:40",
+      "duration": 107.67,
+      "w": 1280,
+      "h": 590,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-08-28-143330",
+      "file": "media/2026-08-28-143330.mp4",
+      "title": "Screen Recording 2026-08-28 14:33",
+      "recorded": "2026-08-28T14:33:30",
+      "duration": 50.32,
+      "w": 1280,
+      "h": 684,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-09-04-024006",
+      "file": "media/2026-09-04-024006.mp4",
+      "title": "Screen Recording 2026-09-04 02:40",
+      "recorded": "2026-09-04T02:40:06",
+      "duration": 240.77,
+      "w": 1280,
+      "h": 760,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-09-05-133103",
+      "file": "media/2026-09-05-133103.mp4",
+      "title": "Screen Recording 2026-09-05 13:31",
+      "recorded": "2026-09-05T13:31:03",
+      "duration": 590.5,
+      "w": 1280,
+      "h": 632,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-09-10-022143",
+      "file": "media/2026-09-10-022143.mp4",
+      "title": "Screen Recording 2026-09-10 02:21",
+      "recorded": "2026-09-10T02:21:43",
+      "duration": 156.87,
+      "w": 1280,
+      "h": 710,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-09-10-022829",
+      "file": "media/2026-09-10-022829.mp4",
+      "title": "Screen Recording 2026-09-10 02:28",
+      "recorded": "2026-09-10T02:28:29",
+      "duration": 103.17,
+      "w": 1280,
+      "h": 526,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-09-10-023214",
+      "file": "media/2026-09-10-023214.mp4",
+      "title": "Screen Recording 2026-09-10 02:32",
+      "recorded": "2026-09-10T02:32:14",
+      "duration": 168.97,
+      "w": 1280,
+      "h": 428,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-18-201454",
+      "file": "media/2026-10-18-201454.mp4",
+      "title": "Screen Recording 2026-10-18 20:14",
+      "recorded": "2026-10-18T20:14:54",
+      "duration": 339.54,
+      "w": 1152,
+      "h": 1334,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-20-134246",
+      "file": "media/2026-10-20-134246.mp4",
+      "title": "Screen Recording 2026-10-20 13:42",
+      "recorded": "2026-10-20T13:42:46",
+      "duration": 48.1,
+      "w": 1280,
+      "h": 814,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-20-175645",
+      "file": "media/2026-10-20-175645.mp4",
+      "title": "Screen Recording 2026-10-20 17:56",
+      "recorded": "2026-10-20T17:56:45",
+      "duration": 302.9,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-20-182154",
+      "file": "media/2026-10-20-182154.mp4",
+      "title": "Screen Recording 2026-10-20 18:21",
+      "recorded": "2026-10-20T18:21:54",
+      "duration": 298.27,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-20-185022",
+      "file": "media/2026-10-20-185022.mp4",
+      "title": "Screen Recording 2026-10-20 18:50",
+      "recorded": "2026-10-20T18:50:22",
+      "duration": 95.47,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-21-175026",
+      "file": "media/2026-10-21-175026.mp4",
+      "title": "Screen Recording 2026-10-21 17:50",
+      "recorded": "2026-10-21T17:50:26",
+      "duration": 242.75,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-21-192248",
+      "file": "media/2026-10-21-192248.mp4",
+      "title": "Screen Recording 2026-10-21 19:22",
+      "recorded": "2026-10-21T19:22:48",
+      "duration": 29.48,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-21-194009",
+      "file": "media/2026-10-21-194009.mp4",
+      "title": "Screen Recording 2026-10-21 19:40",
+      "recorded": "2026-10-21T19:40:09",
+      "duration": 344.49,
+      "w": 1280,
+      "h": 708,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-21-201219",
+      "file": "media/2026-10-21-201219.mp4",
+      "title": "Screen Recording 2026-10-21 20:12",
+      "recorded": "2026-10-21T20:12:19",
+      "duration": 47.74,
+      "w": 1280,
+      "h": 576,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-22-174447",
+      "file": "media/2026-10-22-174447.mp4",
+      "title": "Screen Recording 2026-10-22 17:44",
+      "recorded": "2026-10-22T17:44:47",
+      "duration": 147.33,
+      "w": 1280,
+      "h": 550,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-22-181121",
+      "file": "media/2026-10-22-181121.mp4",
+      "title": "Screen Recording 2026-10-22 18:11",
+      "recorded": "2026-10-22T18:11:21",
+      "duration": 132.57,
+      "w": 1280,
+      "h": 630,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-23-201220",
+      "file": "media/2026-10-23-201220.mp4",
+      "title": "Screen Recording 2026-10-23 20:12",
+      "recorded": "2026-10-23T20:12:20",
+      "duration": 36.81,
+      "w": 1280,
+      "h": 518,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-23-215923",
+      "file": "media/2026-10-23-215923.mp4",
+      "title": "Screen Recording 2026-10-23 21:59",
+      "recorded": "2026-10-23T21:59:23",
+      "duration": 18.1,
+      "w": 1280,
+      "h": 686,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-24-213842",
+      "file": "media/2026-10-24-213842.mp4",
+      "title": "Screen Recording 2026-10-24 21:38",
+      "recorded": "2026-10-24T21:38:42",
+      "duration": 261.0,
+      "w": 1280,
+      "h": 600,
+      "audio": true,
+      "enabled": true
+    },
+    {
+      "id": "2026-10-27-013842",
+      "file": "media/2026-10-27-013842.mp4",
+      "title": "Screen Recording 2026-10-27 01:38",
+      "recorded": "2026-10-27T01:38:42",
+      "duration": 84.7,
+      "w": 1280,
+      "h": 1118,
+      "audio": true,
+      "enabled": true
+    }
+  ]
+}

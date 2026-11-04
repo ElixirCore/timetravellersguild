@@ -1,0 +1,987 @@
+<title>UNIKIN Workbench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: three working columns (record data | stamp bench | agent) that collapse to one tabbed pane at phone width. */
+:root {
+  --ground: #0e1418; --panel: #131c21; --raise: #1a262d; --ink: #dde7e3; --dim: #8a9b97; --rule: #26333a;
+  --iris: #5cc8d6; --ok: #6fcf97; --flag: #e8573a; --warn: #e3b341; --paper: #e8eeea;
+  --f-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "JetBrains Mono", ui-monospace, Menlo, "Courier New", monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --ground: #eef2f0; --panel: #f7faf8; --raise: #e3eae7; --ink: #10232b; --dim: #52666c; --rule: #c5d1cd;
+  --iris: #0e6f87; --ok: #1f7a4d; --flag: #c23b1e; --warn: #8a6410; --paper: #ffffff; color-scheme: light; } }
+:root[data-theme="light"] {
+  --ground: #eef2f0; --panel: #f7faf8; --raise: #e3eae7; --ink: #10232b; --dim: #52666c; --rule: #c5d1cd;
+  --iris: #0e6f87; --ok: #1f7a4d; --flag: #c23b1e; --warn: #8a6410; --paper: #ffffff; color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { height: 100%; background: var(--ground); }
+body { margin: 0; color: var(--ink); font: 400 13px/1.45 var(--f-body); overflow: hidden;
+  padding-block: 10px 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 10px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: var(--raise); border: 1px solid var(--rule); border-radius: 4px; padding: 5px 10px; }
+button:hover:not(:disabled) { border-color: var(--iris); }
+button:disabled { opacity: .45; cursor: default; }
+button.go { background: var(--iris); color: var(--ground); border-color: var(--iris); font-weight: 600; }
+button.bad { border-color: var(--flag); color: var(--flag); }
+:focus-visible { outline: 2px solid var(--iris); outline-offset: 1px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+h1 { font: 800 21px/1 var(--f-display); letter-spacing: -.01em; margin: 0; }
+.sub { color: var(--dim); font-size: 12px; min-width: 0; overflow-wrap: anywhere; }
+.pill { font: 600 10.5px/1 var(--f-data); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px; border-radius: 3px; border: 1px solid var(--rule); color: var(--dim); }
+.pill.ok { color: var(--ok); border-color: var(--ok); } .pill.flag { color: var(--flag); border-color: var(--flag); } .pill.warn { color: var(--warn); border-color: var(--warn); }
+.spacer { flex: 1; }
+#tabs { display: none; gap: 6px; }
+#tabs button[aria-selected="true"] { background: var(--iris); color: var(--ground); border-color: var(--iris); }
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(250px, 320px) minmax(0, 1fr) minmax(300px, 390px); gap: 10px; }
+section.col { min-height: 0; min-width: 0; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; display: flex; flex-direction: column; }
+.col > h2 { margin: 0; padding: 9px 12px; font: 600 11px/1 var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--rule); display: flex; gap: 8px; align-items: center; }
+.body { flex: 1; min-height: 0; overflow: auto; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+label.f { display: flex; flex-direction: column; gap: 3px; font-size: 11px; color: var(--dim); }
+input[type=text], input[type=date], select, textarea { background: var(--ground); border: 1px solid var(--rule); border-radius: 4px; padding: 5px 7px; width: 100%; min-width: 0; }
+textarea { resize: vertical; font: 400 11.5px/1.45 var(--f-data); }
+#json { min-height: 180px; }
+.msg { font-size: 12px; min-height: 1.4em; } .msg.err { color: var(--flag); } .msg.good { color: var(--ok); }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.places { display: flex; flex-direction: column; gap: 4px; }
+.place { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; text-align: left; padding: 6px 8px; width: 100%; }
+.place[aria-current="true"] { border-color: var(--iris); background: color-mix(in srgb, var(--iris) 12%, var(--raise)); }
+.place .n { font: 600 11px var(--f-data); color: var(--dim); }
+.place .t { min-width: 0; overflow-wrap: anywhere; } .place .t small { color: var(--dim); display: block; }
+.place.refused .t { text-decoration: line-through; text-decoration-color: var(--flag); }
+.bench { display: grid; grid-template-rows: auto 1fr; min-height: 0; }
+.subtabs { display: flex; gap: 2px; padding: 8px 12px 0; border-bottom: 1px solid var(--rule); }
+.subtabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 6px 10px; color: var(--dim); }
+.subtabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--iris); }
+.stampwrap { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; }
+canvas#stamp { width: 100%; max-width: 520px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #16232a, #0b1114); border: 1px solid var(--rule); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 600 11px var(--f-data); padding: 4px 8px; border-radius: 999px; }
+.chip[aria-pressed="true"] { background: var(--iris); color: var(--ground); border-color: var(--iris); }
+.chip.solo { box-shadow: 0 0 0 2px var(--warn); }
+.seal { font: 600 13px var(--f-data); letter-spacing: .04em; overflow-wrap: anywhere; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; }
+th { text-align: left; font: 600 10.5px var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+th, td { padding: 5px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+td.m { font-family: var(--f-data); font-size: 11px; overflow-wrap: anywhere; }
+tr.bad td { color: var(--flag); } tr.hl td { background: color-mix(in srgb, var(--warn) 16%, transparent); }
+.scroll-x { overflow-x: auto; }
+.chain { display: flex; flex-direction: column; gap: 0; }
+.link { border-left: 2px solid var(--iris); margin-left: 8px; padding: 2px 0 12px 14px; position: relative; }
+.link::before { content: ""; position: absolute; left: -6px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--iris); }
+.link.refused { border-color: var(--flag); } .link.refused::before { background: var(--flag); }
+.link .k { color: var(--dim); font-size: 11px; }
+.link code { font: 400 11px var(--f-data); overflow-wrap: anywhere; }
+/* agent */
+.agent .body { gap: 8px; }
+#feed { flex: 1; min-height: 120px; overflow: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 2px; }
+.bub { padding: 8px 10px; border-radius: 6px; background: var(--raise); white-space: pre-wrap; overflow-wrap: anywhere; }
+.bub.me { background: color-mix(in srgb, var(--iris) 18%, var(--panel)); align-self: flex-end; max-width: 92%; }
+.bub.sys { color: var(--dim); font-size: 12px; background: none; border: 1px dashed var(--rule); }
+.trace { font: 400 11px/1.4 var(--f-data); color: var(--dim); border-left: 2px solid var(--rule); padding: 2px 0 2px 8px; overflow-wrap: anywhere; }
+.trace b { color: var(--iris); font-weight: 600; } .trace.write b { color: var(--warn); }
+.prop { border: 1px solid var(--warn); border-radius: 6px; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; background: color-mix(in srgb, var(--warn) 8%, var(--panel)); }
+.prop .why { color: var(--dim); font-size: 12px; } .prop.done { opacity: .55; border-color: var(--rule); }
+.compose { display: flex; flex-direction: column; gap: 6px; }
+.compose textarea { min-height: 54px; font-family: var(--f-body); font-size: 13px; }
+.think { color: var(--dim); font-style: italic; }
+.note { color: var(--dim); font-size: 11.5px; }
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cmp canvas { width: 100%; aspect-ratio: 1; border-radius: 50%; background: #0b1114; border: 1px solid var(--rule); }
+.cmp figcaption { text-align: center; font: 600 10.5px var(--f-data); color: var(--dim); text-transform: uppercase; letter-spacing: .08em; }
+.cmp figure { margin: 0; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.pills { display: flex; flex-direction: column; gap: 3px; align-items: flex-end; max-width: 150px; }
+.pills .pill { text-transform: none; letter-spacing: 0; font-size: 10px; text-align: right; line-height: 1.2; }
+details.share { border: 1px solid var(--rule); border-radius: 6px; background: var(--raise); }
+details.share > summary { cursor: pointer; padding: 7px 10px; font-weight: 600; }
+details.share .in { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 6px; }
+label.sf { display: flex; gap: 7px; align-items: flex-start; font-size: 12px; overflow-wrap: anywhere; }
+label.sf input { margin-top: 2px; flex: none; }
+.treebox { border: 1px solid var(--rule); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; background: var(--raise); }
+.treebox h3 { margin: 0; font: 600 11px/1 var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); display: flex; gap: 8px; align-items: center; }
+.treebox textarea { min-height: 70px; }
+.checks { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; } .checks label { display: flex; gap: 5px; align-items: center; }
+@media (max-width: 980px) {
+  #tabs { display: flex; }
+  main { grid-template-columns: minmax(0, 1fr); }
+  main[data-pane="record"] > .bench, main[data-pane="record"] > .agent,
+  main[data-pane="bench"] > .rec, main[data-pane="bench"] > .agent,
+  main[data-pane="agent"] > .rec, main[data-pane="agent"] > .bench { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { .think { animation: pulse 1.4s ease-in-out infinite; } @keyframes pulse { 50% { opacity: .45; } } }
+</style>
+
+<header>
+  <h1>UNIKIN Workbench</h1>
+  <span class="sub" id="who">no record loaded</span>
+  <span class="pill" id="chainPill">chain</span>
+  <span class="pill" id="auditPill" hidden></span>
+  <span class="spacer"></span>
+  <nav id="tabs" aria-label="Panels">
+    <button data-pane="record" aria-selected="true">Record</button>
+    <button data-pane="bench" aria-selected="false">Bench</button>
+    <button data-pane="agent" aria-selected="false">Agent</button>
+  </nav>
+</header>
+
+<main id="main" data-pane="record">
+  <section class="col rec" aria-label="Record">
+    <h2>Record <span class="spacer"></span><span class="pill" id="jsonState">json</span></h2>
+    <div class="body">
+      <label class="f" for="json">Passport record (JSON). Edits apply live when valid.
+        <textarea id="json" spellcheck="false" autocomplete="off"></textarea></label>
+      <div class="msg" id="jsonMsg" role="status"></div>
+      <div class="row">
+        <button id="btnSample">Load example</button>
+        <button id="btnUndo" disabled>Undo</button>
+        <button id="btnCopy">Copy JSON</button>
+        <button id="btnSave" hidden>Save file</button>
+      </div>
+      <div class="places" id="places" aria-label="Places"></div>
+      <div class="treebox" id="treebox">
+        <h3>Tree <span class="spacer"></span><span class="pill" id="treeState">Not loaded</span></h3>
+        <label class="f" for="treeurl">Tree address. It is a public HTML page, not JSON.
+          <input type="text" id="treeurl" value="https://timetravellersguild.com/now/tree"></label>
+        <div class="row"><button class="go" id="btnLoadTree">Load tree</button><button id="btnImport">Import file</button><button id="btnDetails" disabled>Read node pages</button><button id="btnInterlink" disabled>Propose links</button></div>
+        <input type="file" id="treefile" accept=".html,.htm,.txt,.json,text/html,text/plain,application/json" hidden>
+        <div class="msg" id="treeMsg" role="status"></div>
+        <details><summary class="note" style="cursor:pointer">Paste instead</summary>
+          <label class="f" for="treepaste">Paste the tree page text, its HTML source, or JSON.
+            <textarea id="treepaste" spellcheck="false"></textarea></label>
+          <div class="row" style="margin-top:6px"><button id="btnUsePaste">Use pasted text</button></div></details>
+        <div class="checks" aria-label="What the assistant may receive from the tree">
+          <label><input type="checkbox" id="tnarr" checked> narrative entries</label>
+          <label><input type="checkbox" id="tgrim" checked> Grimoire documents</label>
+          <label><input type="checkbox" id="tmedia"> media descriptions</label></div>
+        <div id="treePrev"></div>
+      </div>
+      <label class="f" for="canon">Canon notes. One rule per line; the agent treats these as fixed.
+        <textarea id="canon" spellcheck="false" style="min-height:110px"></textarea></label>
+      <p class="note">The seal is a visual fingerprint from a non-cryptographic hash. A real issuer would sign it. UNIKIN is a fictional state, issuer code XUN is made up.</p>
+    </div>
+  </section>
+
+  <section class="col bench" aria-label="Bench">
+    <div class="subtabs" role="tablist" id="subtabs">
+      <button role="tab" data-v="stamp" aria-selected="true">Stamp</button>
+      <button role="tab" data-v="chain" aria-selected="false">Chain</button>
+      <button role="tab" data-v="verify" aria-selected="false">Verify</button>
+      <button role="tab" data-v="ledger" aria-selected="false">Ledger</button>
+    </div>
+    <div class="body" id="benchBody"></div>
+  </section>
+
+  <section class="col agent" aria-label="Agent">
+    <h2>Agent <span class="spacer"></span><span class="pill" id="agentPill">checking</span></h2>
+    <div class="body">
+      <div class="row">
+        <button class="chip" data-goal="audit">Audit the record</button>
+        <button class="chip" data-goal="stamp">Explain this stamp</button>
+        <button class="chip" data-goal="about">What does it show?</button>
+        <button class="chip" data-goal="dupes">Fix duplicates</button>
+        <button class="chip" data-goal="machine">Explain machine reading</button>
+        <button class="chip" data-goal="story">Write story</button>
+        <button class="chip" id="btnOffline">Offline audit</button>
+      </div>
+      <div id="feed" aria-live="polite"></div>
+      <div id="props"></div>
+      <details class="share" id="sharebox">
+        <summary id="shareSum">Sharing off: nothing about the holder is sent</summary>
+        <div class="in">
+          <label class="sf"><input type="checkbox" id="share"><span><b>Share holder details with the assistant.</b> Off by default. Tick it, then choose the fields.</span></label>
+          <div id="sharefields"></div>
+          <div class="note" id="shareWill"></div>
+          <div class="note">Always sent when you ask something: the places, lines and dates, accept or refuse results, seals and layer digests, and the tree entries listed under Tree.</div>
+          <div class="note" id="shareSent" hidden></div>
+        </div>
+      </details>
+      <div id="aurlRow" hidden>
+        <label class="f" for="aurl">Agent endpoint on your server
+          <input type="text" id="aurl" value="agent.php" autocomplete="off"></label>
+        <p class="note">Requests go to this address on your site, which holds the API key and forwards to OpenAI. Holder fields you have ticked go too. It only works when this page is served from the same site as agent.php.</p>
+        <label class="f" for="lurl">Voice endpoint on your server
+          <input type="text" id="lurl" value="live.php" autocomplete="off"></label>
+        <div class="msg" id="talkMsg" role="status"></div>
+      </div>
+      <div class="compose">
+        <textarea id="ask" placeholder="Ask about the record, or tell the agent what to check. Example: which stamps would fail if the date on stamp 2 were changed?"></textarea>
+        <div class="row">
+          <button class="go" id="btnSend">Send</button>
+          <button id="btnStop" disabled>Stop</button>
+          <button id="btnTalk" hidden title="Start a voice session through your server">Talk</button>
+          <select id="prov" aria-label="Which model runs the assistant" style="width:auto"><option value="claude">Claude (this page)</option><option value="openai">OpenAI (your server)</option></select>
+          <select id="tier" aria-label="Model speed" style="width:auto"><option value="quick">Quick</option><option value="default" selected>Default</option><option value="complex">Thorough</option></select>
+          <button id="btnClear" title="Forget this conversation. Records and approvals are kept.">New conversation</button>
+        </div>
+        <p class="note" id="agentNote">The agent reads this record through the tools shown above. It can only change data by queueing a proposal that you approve. Each model call is paid from your own Claude usage.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const TAU = Math.PI * 2;
+  function cyrb128(str) {
+    let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
+    for (let i = 0, k; i < str.length; i++) {
+      k = str.charCodeAt(i);
+      h1 = h2 ^ Math.imul(h1 ^ k, 597399067); h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+      h3 = h4 ^ Math.imul(h3 ^ k, 951274213); h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067); h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+    h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213); h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
+  }
+  function sfc32(a, b, c, d) {
+    return function () {
+      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
+      let t = (a + b) | 0; a = b ^ b >>> 9; b = c + (c << 3) | 0; c = (c << 21 | c >>> 11);
+      d = d + 1 | 0; t = t + d | 0; c = c + t | 0; return (t >>> 0) / 4294967296;
+    };
+  }
+  const rngFor = (key) => { const s = cyrb128(key); return sfc32(s[0], s[1], s[2], s[3]); };
+  const hex = (key) => cyrb128(key).map((x) => x.toString(16).padStart(8, '0')).join('');
+  const dg = (o) => hex(JSON.stringify(o)).slice(0, 8);
+  const slugify = (s) => String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'unplaced';
+  const initials = (n) => n.split(/\s+/).filter(Boolean).map((w) => w[0].toUpperCase()).join('').slice(0, 4) || '?';
+  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
+  const clean = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const cv = (c) => (c >= '0' && c <= '9' ? +c : c >= 'A' && c <= 'Z' ? c.charCodeAt(0) - 55 : 0);
+  function check731(s) { const w = [7, 3, 1]; let t = 0; for (let i = 0; i < s.length; i++) t += cv(s[i]) * w[i % 3]; return t % 10; }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  /* ================= derive every layer from the record ================= */
+  function derive(F) {
+    const slug = slugify(F.place), L = {};
+    let r = rngFor('rosette|' + slug);
+    const pool = [7, 9, 11, 13, 17, 19, 21, 23, 27, 29, 31, 33, 37, 39, 41, 43], curves = [];
+    for (let i = 0; i < 3; i++) curves.push({ r: pool[Math.floor(r() * pool.length)], rho: +(0.56 + r() * 0.14).toFixed(3), ph: +(r() * TAU).toFixed(3) });
+    L.rosette = { curves, digest: dg(curves) };
+    const phase = +(rngFor('micro|' + slug + '|' + F.number)() * TAU).toFixed(3);
+    const rings = [F.place.toUpperCase() + ' · ', F.number + ' · ' + F.date + ' · ', F.name.toUpperCase() + ' · UNIKIN · '];
+    L.micro = { rings, phase, digest: dg({ rings, phase }) };
+    r = rngFor('intaglio|' + F.number + '|' + F.date);
+    L.intaglio = { k1: 5 + Math.floor(r() * 14), k2: 23 + Math.floor(r() * 26), a1: +(0.35 + r() * 0.3).toFixed(3), a2: +(0.15 + r() * 0.25).toFixed(3), p1: +(r() * TAU).toFixed(3), p2: +(r() * TAU).toFixed(3) };
+    L.intaglio.digest = dg(L.intaglio);
+    const ini = initials(F.name); r = rngFor('latent|' + ini + '|' + slug);
+    L.latent = { glyph: ini, angle: Math.floor(r() * 12) * 15, period: 4 + Math.floor(r() * 2) };
+    L.latent.digest = dg(L.latent);
+    const S = clean(F.number) + clean(F.date) + clean(F.place) + String(F.ordinal), vals = S.split('').map(cv);
+    L.ring = { vals, cd: check731(S), digest: dg(vals) };
+    const gc = Array.isArray(F.grid) && F.grid.length === 81 && F.grid.some(Boolean) ? F.grid : null;
+    L.idgrid = { cells: gc, digest: dg({ c: gc, n: F.number }) };
+    const h = hex([F.prev, F.name, F.number, F.place, F.line, F.date, F.ordinal, F.town || '', F.placement || '', F.email || '', L.rosette.digest, L.micro.digest, L.intaglio.digest, L.latent.digest, L.ring.digest, L.idgrid.digest].join('|')).toUpperCase();
+    L.seal = { value: 'XUN-' + h.slice(0, 4) + '-' + h.slice(4, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) };
+    return L;
+  }
+
+  /* ================= drawing ================= */
+  function iris(g, foil) {
+    if (g.createConicGradient) {
+      const gr = g.createConicGradient(-Math.PI / 2, 0, 0);
+      const st = foil ? [[0, '#7fe3f0'], [0.2, '#8fb0ff'], [0.42, '#c99bff'], [0.62, '#ff9bd0'], [0.8, '#ffd08a'], [0.92, '#8fe8c2'], [1, '#7fe3f0']]
+                      : [[0, '#0e6f87'], [0.2, '#2b56b6'], [0.42, '#7b3ab0'], [0.62, '#b5367f'], [0.8, '#c0782c'], [0.92, '#2c8f6a'], [1, '#0e6f87']];
+      st.forEach((s) => gr.addColorStop(s[0], s[1]));
+      return gr;
+    }
+    return foil ? '#8fd8e6' : '#1f5f8f';
+  }
+  function latentCanvas(D, L, k, rgb) {
+    const m = document.createElement('canvas'); m.width = m.height = D;
+    const mg = m.getContext('2d'); mg.fillStyle = '#000'; mg.fillRect(0, 0, D, D); mg.fillStyle = '#fff';
+    let fs = D * 0.30; const f = (s) => '900 ' + s + 'px "Arial Black",Impact,sans-serif';
+    mg.font = f(fs); mg.textAlign = 'center'; mg.textBaseline = 'middle';
+    while (mg.measureText(L.latent.glyph).width > D * 0.62 && fs > 10) { fs -= 4; mg.font = f(fs); }
+    mg.fillText(L.latent.glyph, D / 2, D * 0.31);
+    const md = mg.getImageData(0, 0, D, D).data;
+    const out = document.createElement('canvas'); out.width = out.height = D;
+    const og = out.getContext('2d'), id = og.createImageData(D, D), px = id.data;
+    const P = Math.max(2.4, L.latent.period * k), A = L.latent.angle * Math.PI / 180, ca = Math.cos(A), sa = Math.sin(A), R2 = (D / 2) * (D / 2);
+    for (let y = 0; y < D; y++) for (let x = 0; x < D; x++) {
+      const dx = x - D / 2, dy = y - D / 2; if (dx * dx + dy * dy > R2) continue;
+      const u = dx * ca + dy * sa, inM = md[(y * D + x) * 4] > 127;
+      if ((((u + (inM ? P / 2 : 0)) % P) + P) % P / P < 0.45) { const i = (y * D + x) * 4; px[i] = rgb[0]; px[i + 1] = rgb[1]; px[i + 2] = rgb[2]; px[i + 3] = 235; }
+    }
+    og.putImageData(id, 0, 0); return out;
+  }
+  function drawStamp(g, n, L, o) {
+    const k = n / 2400, Rs = n * 0.46, on = o.layers;
+    g.save(); g.translate(n / 2, n / 2);
+    const sty = iris(g, o.foil);
+    g.strokeStyle = sty; g.fillStyle = sty; g.lineJoin = 'round';
+    const ring = (r, w, a) => { g.globalAlpha = a || 1; g.lineWidth = w * k; g.beginPath(); g.arc(0, 0, r * Rs, 0, TAU); g.stroke(); };
+    ring(1, 6); ring(0.985, 1.6); ring(0.93, 1.6, 0.8); ring(0.795, 1.4, 0.8); ring(0.665, 1.8); ring(0.335, 2.2);
+    if (on.rosette) {
+      g.globalAlpha = 0.8; g.lineWidth = 2.1 * k;
+      L.rosette.curves.forEach((c) => {
+        const R = 100, r = c.r, d = (R - r) * (1 - c.rho) / (1 + c.rho), ext = R - r + d, sc = 0.655 * Rs / ext;
+        const turns = r / gcd(R, r), steps = Math.min(26000, Math.round(turns * TAU / 0.012));
+        g.beginPath();
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps * turns * TAU;
+          const x = ((R - r) * Math.cos(t) + d * Math.cos((R - r) / r * t + c.ph)) * sc, y = ((R - r) * Math.sin(t) - d * Math.sin((R - r) / r * t + c.ph)) * sc;
+          if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+        }
+        g.stroke();
+      });
+    }
+    if (on.micro) {
+      g.globalAlpha = 0.92; g.font = '600 ' + (11 * k) + 'px "JetBrains Mono",ui-monospace,Menlo,monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      L.micro.rings.forEach((txt, idx) => {
+        const r = [0.69, 0.725, 0.76][idx] * Rs, adv = 6.7 * k;
+        const reps = Math.max(1, Math.round(TAU * r / adv / txt.length)), s = txt.repeat(reps), m = s.length, step = TAU / m, ph = L.micro.phase * (idx + 1);
+        for (let i = 0; i < m; i++) { g.save(); g.rotate(ph + i * step); g.translate(0, -r); g.fillText(s[i], 0, 0); g.restore(); }
+      });
+    }
+    if (on.intaglio) {
+      const I = L.intaglio, M = 900; g.globalAlpha = 0.9; g.lineWidth = 2.6 * k; g.beginPath();
+      for (let i = 0; i < M; i++) {
+        const a = i / M * TAU, w = Math.sin(a * I.k1 + I.p1) * I.a1 + Math.sin(a * I.k2 + I.p2) * I.a2, t = clamp(0.5 + 0.5 * w, 0, 1);
+        const r0 = 0.8 * Rs, r1 = r0 + (0.02 + 0.085 * t) * Rs, ca = Math.cos(a), sa = Math.sin(a);
+        g.moveTo(ca * r0, sa * r0); g.lineTo(ca * r1, sa * r1);
+      }
+      g.stroke();
+    }
+    if (on.ring) {
+      g.save(); g.globalAlpha = 1; g.rotate(-Math.PI / 2);
+      const v = L.ring.vals, m = v.length;
+      for (let j = 0; j < m; j++) {
+        const a0 = j / m * TAU, a1 = (j + 0.68) / m * TAU, r0 = 0.945 * Rs, r1 = (0.955 + 0.025 * v[j] / 35) * Rs;
+        g.beginPath(); g.arc(0, 0, r1, a0, a1); g.arc(0, 0, r0, a1, a0, true); g.closePath(); g.fill();
+      }
+      g.restore();
+    }
+    if (on.latent) { const D = Math.ceil(0.32 * Rs) * 2; g.globalAlpha = 1; g.drawImage(latentCanvas(D, L, k, [52, 58, 150]), -D / 2, -D / 2); }
+    if (on.idgrid) {
+      /* QR-styled labyrinth: finder squares at three corners, a maze seeded by the grid digest and the place rosette, the 9x9 ID plate in the middle. Not a scannable QR code. */
+      const N = 25, s = 0.28 * Rs, m = s / N, x0 = -s / 2, y0 = 0.12 * Rs - s / 2, cells = L.idgrid.cells, rr = rngFor('maze|' + L.idgrid.digest + '|' + L.rosette.digest);
+      const M = []; for (let y = 0; y < N; y++) M.push(new Array(N).fill(1));
+      const W = 12, seen = new Array(W * W).fill(0), stack = [0]; seen[0] = 1; M[1][1] = 0;
+      while (stack.length) {
+        const c = stack[stack.length - 1], cx = c % W, cy = (c / W) | 0, nb = [];
+        [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach((d) => { const nx = cx + d[0], ny = cy + d[1]; if (nx >= 0 && ny >= 0 && nx < W && ny < W && !seen[ny * W + nx]) nb.push([nx, ny]); });
+        if (!nb.length) { stack.pop(); continue; }
+        const q = nb[Math.floor(rr() * nb.length)]; seen[q[1] * W + q[0]] = 1; M[2 * q[1] + 1][2 * q[0] + 1] = 0; M[cy + q[1] + 1][cx + q[0] + 1] = 0; stack.push(q[1] * W + q[0]);
+      }
+      const fin = (fx, fy) => { for (let j = -1; j <= 7; j++) for (let i = -1; i <= 7; i++) { const X = fx + i, Y = fy + j; if (X < 0 || Y < 0 || X >= N || Y >= N) continue; const inB = i >= 0 && i < 7 && j >= 0 && j < 7; M[Y][X] = inB && (i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4)) ? 2 : 0; } };
+      fin(0, 0); fin(N - 7, 0); fin(0, N - 7);
+      g.globalAlpha = 1; g.fillStyle = '#e8eeea'; g.fillRect(x0 - m * 1.5, y0 - m * 1.5, s + m * 3, s + m * 3);
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+        if (!M[y][x] || (x >= 7 && x <= 17 && y >= 7 && y <= 17)) continue;
+        g.fillStyle = M[y][x] === 2 ? sty : '#10232b'; g.fillRect(x0 + x * m, y0 + y * m, m * 1.04, m * 1.04);
+      }
+      const gx = x0 + 8 * m, gy = y0 + 8 * m;
+      if (cells) for (let i = 0; i < 81; i++) { if (!cells[i]) continue; g.fillStyle = cells[i]; g.fillRect(gx + (i % 9) * m, gy + Math.floor(i / 9) * m, m * 0.94, m * 0.94); }
+      else { g.strokeStyle = sty; g.globalAlpha = 0.3; g.lineWidth = 1 * k; g.beginPath(); for (let i = 0; i <= 9; i++) { g.moveTo(gx + i * m, gy); g.lineTo(gx + i * m, gy + 9 * m); g.moveTo(gx, gy + i * m); g.lineTo(gx + 9 * m, gy + i * m); } g.stroke(); }
+      g.globalAlpha = 1; g.strokeStyle = sty; g.lineWidth = 2 * k; g.strokeRect(x0 - m * 1.5, y0 - m * 1.5, s + m * 3, s + m * 3);
+    }
+    g.restore();
+  }
+
+  /* ================= model ================= */
+  const LAYERS = ['rosette', 'micro', 'intaglio', 'latent', 'ring', 'idgrid'];
+  const INFO = {
+    rosette: 'Guilloche rosette. Keyed to the place slug only, so every stamp for one place shares it.',
+    micro: 'Microtext rings. Keyed to place, number, date and holder name; a changed letter changes the digest.',
+    intaglio: 'Engraved wave band. Keyed to the passport number and the date.',
+    latent: 'Latent image in a line screen. Keyed to the holder initials and the place.',
+    ring: 'Check ring of 7-3-1 weighted digits (ICAO 9303 scheme). Keyed to number, date, place and ordinal.',
+    idgrid: 'The 9 by 9 ID grid plate from /join. Keyed to the signature grid and the number.'
+  };
+  const CANON = 'The Guild\'s time machines are the red phonebox network (TimePods). Pods stay red.\nThe Guild is not affiliated with the TARDIS. Doctor Who is a BBC show in the Guild\'s world, so a blue phonebox is only ever a TV prop.\nJack is a punchcard entity from the 1950s foundation of the Department of Excess Time. Austerity cuts made him unemployed and he now works as the Guild\'s clerk.';
+  const SAMPLE = { id: '28988e1394ce6783', name: 'Toby Why Godden', number: 'TTG-XIII-918752', issued: '2026-11-04',
+    places: [ { slug: 'brecon', name: 'Brecon', line: 'Schooled', inked: '2026-11-04', tree: 'lodged' }, { slug: 'brecon-2', name: 'Brecon', line: 'Schooled', inked: '2026-11-04', tree: 'lodged' } ] };
+  const S = { rec: null, holder: null, rows: [], stamps: [], sel: 0, on: { rosette: 1, micro: 1, intaglio: 1, latent: 1, ring: 1, idgrid: 1 }, solo: null,
+    view: 'stamp', claim: {}, undo: [], props: [], turns: [], busy: false, ctl: null, sample: null, nextId: 1 };
+  const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const maskEmail = (e) => { const i = e.indexOf('@'); return !e ? '' : i < 1 ? e.slice(0, 1) + '***' : e.slice(0, 1) + '***' + e.slice(i); };
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  function normGrid(sig) {
+    if (!sig) return null;
+    let a = sig.cells || sig.grid || sig;
+    if (typeof a === 'string') a = a.trim().split(/[\s,;|]+/).filter(Boolean);
+    if (Array.isArray(a) && a.length === 9 && Array.isArray(a[0])) a = [].concat.apply([], a);
+    if (!Array.isArray(a) || a.length !== 81) return null;
+    return a.map((v) => (typeof v === 'string' && /^(#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\))$/i.test(v.trim())) ? v.trim() : ((v === 1 || v === true || v === '1') ? '#3a3f9e' : ''));
+  }
+  function validate(rec) {
+    if (!rec || typeof rec !== 'object' || Array.isArray(rec)) throw new Error('The record must be a JSON object.');
+    if (!String(rec.name || '').trim() || !String(rec.number || '').trim()) throw new Error('The record needs a name and a number.');
+    if (!Array.isArray(rec.places) || !rec.places.length) throw new Error('The record needs a non-empty places array.');
+    if (rec.places.some((p) => !p || typeof p !== 'object')) throw new Error('Every place must be an object.');
+  }
+  function derived(rec) {
+    const j = rec.join && typeof rec.join === 'object' ? rec.join : rec, str = (v) => (v == null ? '' : String(v).trim());
+    const holder = { id: str(rec.id), name: str(rec.name), number: str(rec.number), issued: String(rec.issued || '').slice(0, 10) || '0000-00-00',
+      email: str(j.email), town: str(j.town || j.nearest || j.valley), placement: str(j.placement || j.clerk), grid: normGrid(j.signature || j.grid || j.sig) };
+    const rows = rec.places.slice(0, 24).map((p) => ({ place: String(p.name || p.slug || 'Unplaced'), line: String(p.line || ''), date: String(p.inked || rec.issued || '').slice(0, 10) }));
+    const stamps = []; let chain = 'GENESIS|' + holder.number;
+    rows.forEach((s, i) => {
+      const dup = stamps.find((t) => t.ok && slugify(t.F.place) === slugify(s.place) && t.F.line === s.line && t.F.date === s.date);
+      const F = { name: holder.name, number: holder.number, place: s.place, line: s.line, date: s.date, town: holder.town, placement: holder.placement, email: holder.email, grid: holder.grid, ordinal: i + 1, prev: chain };
+      const L = derive(F); stamps.push({ F, L, ok: !dup, dupOf: dup ? stamps.indexOf(dup) : -1 }); if (!dup) chain = L.seal.value;
+    });
+    return { holder, rows, stamps, head: chain };
+  }
+  function setRecord(rec, opts) {
+    validate(rec);
+    const d = derived(rec);
+    if (!(opts && opts.noUndo) && S.rec) { S.undo.push(JSON.stringify(S.rec)); if (S.undo.length > 30) S.undo.shift(); }
+    S.rec = rec; S.holder = d.holder; S.rows = d.rows; S.stamps = d.stamps; S.head = d.head;
+    if (S.sel >= S.stamps.length) S.sel = S.stamps.length - 1;
+    S.claim = {};
+    store.set('unikin-wb-rec', JSON.stringify(rec));
+    if (!(opts && opts.keepText)) $('json').value = JSON.stringify(rec, null, 2);
+    renderAll();
+  }
+
+  /* ================= offline audit (same tools, no model) ================= */
+  function findings() {
+    const out = [], today = new Date().toISOString().slice(0, 10), H = S.holder;
+    S.stamps.forEach((s, i) => {
+      if (!s.ok) out.push({ sev: 'flag', i, rule: 'R4', text: 'Stamp ' + (i + 1) + ' repeats stamp ' + (s.dupOf + 1) + ' (same place, line and day). It is refused and not chained.', fix: { op: 'remove_place', index: i, reason: 'Rule R4: one stamp per place, line and day.' } });
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(s.F.date) || isNaN(Date.parse(s.F.date))) out.push({ sev: 'flag', i, rule: 'date', text: 'Stamp ' + (i + 1) + ' has no valid ISO date ("' + s.F.date + '").' });
+      else if (s.F.date > today) out.push({ sev: 'warn', i, rule: 'date', text: 'Stamp ' + (i + 1) + ' is dated in the future (' + s.F.date + ').' });
+      else if (H.issued !== '0000-00-00' && s.F.date < H.issued) out.push({ sev: 'warn', i, rule: 'date', text: 'Stamp ' + (i + 1) + ' (' + s.F.date + ') predates the passport issue date ' + H.issued + '.' });
+      if (!s.F.line) out.push({ sev: 'warn', i, rule: 'line', text: 'Stamp ' + (i + 1) + ' has no line.' });
+    });
+    if (!H.grid) out.push({ sev: 'warn', i: -1, rule: 'grid', text: 'No usable 9 by 9 ID grid in the record, so the ID grid layer is blank on every stamp.' });
+    if (!H.email && !H.town && !H.placement) out.push({ sev: 'warn', i: -1, rule: 'join', text: 'No /join slip data (email, town, placement) in the record.' });
+    return out;
+  }
+
+  /* ================= tools the agent may call ================= */
+  const num = (v, lo, hi) => { const n = Math.round(Number(v)); if (!Number.isFinite(n) || n < lo || n > hi) throw new Error('index out of range'); return n; };
+  const TRACE = (name, args, res, write) => { const t = h('div', 'trace' + (write ? ' write' : '')); const b = h('b', '', name); t.append(b, ' ' + JSON.stringify(args || {}).slice(0, 140) + '\n→ ' + String(res).slice(0, 220)); feed().appendChild(t); feed().scrollTop = 1e9; };
+  const feed = () => $('feed');
+  function tool(name, description, props, required, fn, write) {
+    return { name, description, inputSchema: { type: 'object', properties: props || {}, required: required || [] },
+      execute(input) { let r; try { r = fn(input || {}); } catch (e) { TRACE(name, input, 'Error: ' + e.message, write); throw e; } const s = typeof r === 'string' ? r : JSON.stringify(r); TRACE(name, input, s, write); return r; } };
+  }
+  function toolList() {
+    return [
+      tool('get_record_summary', 'Returns the holder fields and a record summary. Each holder field is one of: shared (has a value, use it), withheld (hidden by the viewer\'s sharing setting; it may exist, it is NOT missing), or absent (shared but the record has no value). Also returns place count, refused count and the chain head.', {}, [], () => ({
+        holder: holderContext(true), places: S.stamps.length, refused: S.stamps.filter((s) => !s.ok).length, chain_head: S.head })),
+      tool('offer_share_control', 'Shows the viewer a card saying certain holder fields are withheld by their sharing setting, with a button to review the controls. It never turns sharing on. Call it when you need a withheld field, then tell the viewer plainly that the field is withheld, not missing.', { fields: { type: 'array', items: { type: 'string', enum: HF.map((f) => f[0]) } } }, [], (a) => { offerShare(Array.isArray(a.fields) ? a.fields.map(String) : []); return 'Card shown. Nothing was shared. Say that the field is withheld by the viewer\'s setting.'; }),
+      tool('list_stamps', 'Lists every stamp with index (1-based), place, line, date, stamp_chain (whether it was accepted into the chain or refused under rule R4), tree_submission (the record\'s tree status and what it does or does not mean about keeper approval), the number of linked refs, and its seal. Use first.', {}, [], () =>
+        S.stamps.map((s, i) => { const pl = S.rec.places[i] || {}, k = keeper(pl.tree); return { index: i + 1, place: s.F.place, line: s.F.line, date: s.F.date, stamp_chain: chainWord(s), tree_submission: { record_value: k.record_value, keeper_approval: k.keeper_approval }, linked_refs: (pl.refs || []).length, seal: s.L.seal.value }; })),
+      tool('get_tree', 'Returns tree context the viewer loaded and allowed: entries that mention the record\'s places, plus narrative and Grimoire entries if the viewer allowed them (short summaries when read). Excludes media, private, held and pending narrative entries. tree_state tells you if it is not_loaded, empty, failed or loaded. An empty list for a place means the loaded tree has no entry for it, not that the place is invalid. Tree statuses such as ACTIVE are not keeper approval.', {}, [], () => {
+        if (TREE.state !== 'loaded') return { tree_state: TREE.state === 'idle' ? 'not_loaded' : TREE.state, note: 'No tree context is available. Tell the viewer to use Load tree or Import. Do not invent tree content.' };
+        const t = treeForAgent(); return { tree_state: 'loaded', source: TREE.source, loaded_at: TREE.at, about_places: t.places, narrative: t.narrative, grimoire: t.grimoire, left_out_counts: t.excluded,
+          per_place: S.rec.places.map((p, i) => ({ index: i + 1, place: p.name || p.slug, entries_found: entriesForPlace(p).length })) }; }),
+      tool('get_canon', 'Returns the fixed canon rules the viewer wrote for the Guild. Obey them. They are not to be extended or contradicted.', {}, [], () => $('canon').value.trim() || 'EMPTY: no canon notes'),
+      tool('get_stamp', 'Returns one stamp: its fields, the digest of each of the six layers, and what each layer is keyed to.', { index: { type: 'integer', description: '1-based stamp number' } }, ['index'], (a) => {
+        const i = num(a.index, 1, S.stamps.length) - 1, s = S.stamps[i];
+        return { index: i + 1, place: s.F.place, line: s.F.line, date: s.F.date, ordinal: s.F.ordinal, check_digit: s.L.ring.cd, seal: s.L.seal.value, layers: LAYERS.map((k) => ({ layer: k, digest: s.L[k].digest, keyed_to: INFO[k] })) };
+      }),
+      tool('check_rules', 'Runs the offline audit: duplicate stamps (rule R4), bad or future dates, dates before the issue date, missing lines, missing ID grid. Returns findings with severity.', {}, [], () => {
+        const f = findings(); return f.length ? f.map((x) => ({ severity: x.sev, stamp: x.i + 1 || null, rule: x.rule, text: x.text })) : 'No findings.'; }),
+      tool('verify_claim', 'Compares a CLAIMED stamp against the genuine one, layer by layer. Pass the stamp index and any fields the claim changes (place, line, date, name, number). Returns which layers differ. Does not change the record.', {
+        index: { type: 'integer' }, place: { type: 'string' }, line: { type: 'string' }, date: { type: 'string' }, name: { type: 'string' }, number: { type: 'string' } }, ['index'], (a) => {
+        const i = num(a.index, 1, S.stamps.length) - 1, c = {}; ['place', 'line', 'date', 'name', 'number'].forEach((k) => { if (a[k] != null && String(a[k]) !== '') c[k] = String(a[k]); });
+        const r = compare(i, c); return { index: i + 1, changed_fields: Object.keys(c), layers_differing: r.rows.filter((x) => !x.same).map((x) => x.layer), all_layers: r.rows.map((x) => ({ layer: x.layer, same: x.same })) };
+      }),
+      tool('focus_stamp', 'Moves the viewer to a stamp so they can see it. Use after you have identified a stamp worth looking at.', { index: { type: 'integer' } }, ['index'], (a) => { S.sel = num(a.index, 1, S.stamps.length) - 1; S.view = 'stamp'; renderAll(); return 'Showing stamp ' + (S.sel + 1); }),
+      tool('highlight_layer', 'Shows only one layer of the selected stamp so the viewer can inspect it. Pass layer=all to restore.', { layer: { type: 'string', enum: LAYERS.concat(['all']) } }, ['layer'], (a) => {
+        const k = String(a.layer); if (k === 'all') S.solo = null; else if (LAYERS.indexOf(k) < 0) throw new Error('unknown layer'); else S.solo = k; S.view = 'stamp'; renderAll(); return S.solo ? 'Only ' + S.solo + ' is drawn.' : 'All enabled layers drawn.'; }),
+      tool('propose_edit', 'Queues a change to the record for the viewer to approve or reject. Nothing changes until they approve. ops: set_place_field (index, field name|line|inked, value), remove_place (index), add_place (name, line, inked), add_refs (index, hrefs: links to tree entries that appear in get_tree; only adds a refs list). Always give a short reason.', {
+        op: { type: 'string', enum: ['set_place_field', 'remove_place', 'add_place', 'add_refs'] }, index: { type: 'integer' }, field: { type: 'string', enum: ['name', 'line', 'inked'] }, value: { type: 'string' },
+        name: { type: 'string' }, line: { type: 'string' }, inked: { type: 'string' }, hrefs: { type: 'array', items: { type: 'string' } }, reason: { type: 'string' } }, ['op', 'reason'], (a) => {
+        const p = { id: S.nextId++, op: String(a.op), reason: String(a.reason || '').slice(0, 200) };
+        if (p.op === 'set_place_field') { p.index = num(a.index, 1, S.rec.places.length); p.field = String(a.field); if (['name', 'line', 'inked'].indexOf(p.field) < 0) throw new Error('bad field'); p.value = String(a.value == null ? '' : a.value).slice(0, 80); }
+        else if (p.op === 'remove_place') { p.index = num(a.index, 1, S.rec.places.length); if (S.rec.places.length < 2) throw new Error('cannot remove the last place'); }
+        else if (p.op === 'add_place') { p.place = { name: String(a.name || '').slice(0, 80), line: String(a.line || '').slice(0, 80), inked: String(a.inked || '').slice(0, 10) }; if (!p.place.name) throw new Error('name required'); }
+        else if (p.op === 'add_refs') { p.index = num(a.index, 1, S.rec.places.length); const hs = (Array.isArray(a.hrefs) ? a.hrefs : []).map(String).slice(0, 6); p.refs = hs.map((hh) => { const e = TREE.entries.filter((x) => abs(x.href) === abs(hh))[0]; if (!e) throw new Error('"' + hh + '" is not in the loaded tree, so it cannot be linked'); return { href: abs(e.href), title: e.title, type: e.type }; }); if (!p.refs.length) throw new Error('no hrefs given'); }
+        else throw new Error('unknown op');
+        S.props.push(p); renderProps(); return 'Queued proposal #' + p.id + '. Waiting for the viewer to approve.'; }, true),
+      { name: 'get_machine', description: 'Fetches a live reading from TIME MACHINE №13 (/api/machine/state on the same site) and returns it with a plain-language explanation of each parameter and how the top cards relate to the loaded tree. Optional machine_url: a full /machine/ link whose query string (mind, matter, k, t, dc, focus) is used. Works only when the workbench is served from the Guild site; otherwise returns an error: say so, do not guess a reading. The meaning of M and R in the equation is not published; say you do not know.',
+        inputSchema: { type: 'object', properties: { machine_url: { type: 'string' } }, required: [] },
+        async execute(input) {
+          const fin = (r, ok) => { TRACE('get_machine', input, JSON.stringify(r), false); return r; };
+          let q = ''; try { q = input && input.machine_url ? new URL(input.machine_url, location.href).search : ''; } catch (e) { q = ''; }
+          let st; try { const r = await fetch('/api/machine/state' + q, { credentials: 'same-origin' }); if (!r.ok) throw new Error('HTTP ' + r.status); st = await r.json(); } catch (e) { return fin({ error: 'Could not read /api/machine/state here (' + e.message + '). It works only when the workbench is served from the Guild site.' }); }
+          const lw = (d) => d < 0.25 ? 'quiet' : d < 0.45 ? 'warming' : d < 0.7 ? 'working' : d < 0.88 ? 'hot' : 'saturated';
+          const slugOf = (h) => (String(h || '').match(/\/n\/([^/]+)\//) || [])[1] || '';
+          const inTree = {}; TREE.entries.forEach((e) => { inTree[slugOf(e.href)] = e; });
+          const cards = (st.cards || []).filter((c) => !c.beyond).slice(0, 8).map((c) => ({ title: c.title, type: c.type, status: c.status, place: c.place, importance: c.importance, in_loaded_tree: !!inTree[c.slug], tree_summary: inTree[c.slug] && inTree[c.slug].summary ? inTree[c.slug].summary.slice(0, 200) : undefined }));
+          const dy = (new Date(st.machine_present) - new Date(st.local_present)) / 31557600000;
+          return fin({ instrument: st.instrument, equation: st.equation, emergy: { display: st.emergy_display, raw: st.emergy_raw, word: lw(st.emergy_display) },
+            knobs: { mind: st.mind_knob, matter: st.matter_knob, kappa: st.kappa, dc_axis: st.dc_axis, delta_context: st.delta_context },
+            effective: { mind: st.mind, matter: st.matter, mind_base: st.mind_base, matter_base: st.matter_base },
+            meaning: { mind: 'attention aperture: higher widens association, lower keeps to literal selected records', matter: 'evidential weight: higher privileges dated places, documents and canon; lower admits hypothesis and pending slips', kappa: 'context constant 0 to 3.33: high penalises loose association', dc: 'contextual distance, read on the axis named (TIME, PLACE, PEOPLE, INSTITUTIONS, SYMBOLS)' },
+            time: { machine_present: st.machine_present, local_present: st.local_present, network_present: st.network_present, years_machine_minus_local: Math.round(dy * 100) / 100 },
+            field: st.field, top_active_cards: cards, beyond_present: (st.cards || []).filter((c) => c.beyond).map((c) => c.title),
+            unknown: ['what M and R are in the equation', 'why effective mind and matter differ from the knob settings'] });
+        } }
+    ];
+  }
+
+  /* ================= compare (verify) ================= */
+  function compare(i, claim) {
+    const s = S.stamps[i], F2 = Object.assign({}, s.F, claim || {});
+    const L2 = derive(F2), rows = LAYERS.map((k) => ({ layer: k, a: s.L[k].digest, b: L2[k].digest, same: s.L[k].digest === L2[k].digest }));
+    rows.push({ layer: 'seal', a: s.L.seal.value, b: L2.seal.value, same: s.L.seal.value === L2.seal.value });
+    return { rows, F2, L2 };
+  }
+
+  /* ================= holder sharing (off by default) ================= */
+  const HF = [['name', 'Name'], ['number', 'Passport number'], ['issued', 'Issue date'], ['email', 'Email'], ['town', 'Town'], ['placement', 'Placement'], ['idgrid', 'ID grid (presence only)']];
+  const HDEF = { name: 1, number: 1, issued: 1 };
+  const hlabel = (k) => HF.filter((f) => f[0] === k)[0][1];
+  S.sent = new Set();
+  let lastPicked = [];
+  const shareOn = () => $('share').checked;
+  const picked = () => (shareOn() ? HF.map((f) => f[0]).filter((k) => $('sf-' + k).checked) : []);
+  function holderValue(k) {
+    const H = S.holder; if (!H) return '';
+    if (k === 'idgrid') return H.grid ? 'present, ' + H.grid.filter(Boolean).length + ' of 81 cells set' : '';
+    if (k === 'issued') return H.issued === '0000-00-00' ? '' : H.issued;
+    return H[k] || '';
+  }
+  function holderContext(mark) {
+    const out = {}, pk = picked();
+    HF.forEach(([k]) => {
+      if (pk.indexOf(k) < 0) out[k] = { status: 'withheld', note: 'Hidden from you by the viewer\'s sharing setting. It may exist in the record. It is NOT missing.' };
+      else { const v = holderValue(k); out[k] = v ? { status: 'shared', value: v } : { status: 'absent', note: 'Shared, and the record has no value for it.' }; if (mark) S.sent.add(k); }
+    });
+    return out;
+  }
+  function buildShare() {
+    const box = $('sharefields');
+    HF.forEach(([k]) => { const l = h('label', 'sf'), c = document.createElement('input'); c.type = 'checkbox'; c.id = 'sf-' + k; c.checked = !!HDEF[k]; c.onchange = shareChanged; const sp = h('span'); sp.id = 'sv-' + k; l.append(c, sp); box.appendChild(l); });
+    $('share').onchange = shareChanged;
+  }
+  function renderShare() {
+    const on = shareOn(), pk = picked();
+    $('shareSum').textContent = on ? (pk.length ? 'Sharing on: ' + pk.map(hlabel).join(', ') : 'Sharing on, no fields ticked') : 'Sharing off: nothing about the holder is sent';
+    HF.forEach(([k, lab]) => { const v = holderValue(k); $('sv-' + k).textContent = lab + ': ' + (v || 'not in the record'); $('sf-' + k).disabled = !on; });
+    $('shareWill').textContent = pk.length ? 'Will be sent: ' + pk.map((k) => hlabel(k) + (holderValue(k) ? '' : ' (absent from record)')).join(', ') + '.' : 'Nothing about the holder will be sent.';
+    const sent = Array.from(S.sent);
+    $('shareSent').hidden = !sent.length;
+    $('shareSent').textContent = sent.length ? 'Already sent in this session: ' + sent.map(hlabel).join(', ') + '. Turning a field off stops later requests including it. It cannot retract what was already sent.' : '';
+  }
+  function shareChanged() {
+    const now = picked(), removed = lastPicked.filter((k) => now.indexOf(k) < 0 && S.sent.has(k));
+    lastPicked = now; renderShare();
+    if (removed.length) { S.turns = []; say('sys', 'Stopped sharing ' + removed.map(hlabel).join(', ') + '. Later requests will not include it, and this conversation\'s earlier messages are no longer sent either, because they may repeat it. What was already sent cannot be retracted.'); }
+  }
+  function offerShare(fields) {
+    const d = h('div', 'bub sys'), want = (fields && fields.length ? fields : ['name']).map((k) => (HF.some((f) => f[0] === k) ? hlabel(k) : k));
+    d.appendChild(h('div', '', 'The assistant asked for: ' + want.join(', ') + '. ' + (shareOn() ? 'Those fields are not ticked in your sharing controls.' : 'Sharing is off, so they are withheld. They are not missing from the record.') + ' Nothing is sent until you tick them.'));
+    const b = h('button', '', 'Review sharing controls'); b.style.marginTop = '6px';
+    b.onclick = () => { if (innerWidth <= 980) pane('agent'); $('sharebox').open = true; $('sharebox').scrollIntoView({ block: 'nearest' }); $('share').focus(); };
+    d.appendChild(b); feed().appendChild(d); feed().scrollTop = 1e9;
+  }
+
+  /* ================= keeper approval is separate from chain acceptance ================= */
+  function keeper(raw) {
+    const r = String(raw == null ? '' : raw).trim().toLowerCase();
+    if (!r) return { record_value: null, keeper_approval: 'not recorded', label: 'tree: no status in record', cls: '' };
+    if (/^(lodged|submitted|pending|filed)$/.test(r)) return { record_value: raw, keeper_approval: 'pending. "' + raw + '" means submitted, not approved by a keeper', label: 'tree: ' + raw + ', keeper approval pending', cls: 'warn' };
+    if (/^(approved|kept|keeper[ -]?approved)$/.test(r)) return { record_value: raw, keeper_approval: 'approved', label: 'tree: ' + raw + ', keeper approved', cls: 'ok' };
+    return { record_value: raw, keeper_approval: 'unknown. The value "' + raw + '" is not one this workbench knows, so it is not approval', label: 'tree: ' + raw + ', keeper status unknown', cls: '' };
+  }
+  const chainWord = (s) => (s.ok ? 'accepted into the chain' : 'refused by rule R4 as a duplicate of stamp ' + (s.dupOf + 1));
+
+  /* ================= tree: load, parse, filter ================= */
+  const TREE = { state: 'idle', url: 'https://timetravellersguild.com/now/tree', entries: [], msg: '', at: '', source: '', details: '' };
+  const NARR = /^(DOCUMENT|MOMENT|EVENT|MISSION|FILM FRAGMENT|INSTITUTION)$/i;
+  const PRIV = /pass(word|phrase)?\b|login|clerk access|credential/i;
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  function parseLine(s, year) {
+    s = s.replace(/\s+/g, ' ').trim().replace(/\s+cross$/, '');
+    const m = s.match(/^(.+?) — (.+?) · (.+?)(?:\. Last observed: (.*?))?(?: · (PENDING))?$/);
+    if (!m) return null;
+    return { title: m[1].trim(), type: m[2].trim(), status: m[3].trim(), observed: (m[4] || '').trim(), pending: !!m[5], year: year || '', href: '', links: [], private: false };
+  }
+  function parseHtml(t) {
+    const d = new DOMParser().parseFromString(t, 'text/html'); let year = ''; const out = [];
+    Array.prototype.forEach.call(d.querySelectorAll('#fallbackList li'), (li) => {
+      if (li.classList.contains('fb-group')) { year = li.textContent.trim(); return; }
+      const e = parseLine(li.textContent, year); if (!e) return;
+      const as = Array.prototype.map.call(li.querySelectorAll('a'), (a) => a.getAttribute('href') || '');
+      e.href = as[0] || ''; e.links = as; out.push(e);
+    });
+    return out;
+  }
+  function parseText(t) { let year = ''; const out = []; t.split(/\r?\n/).forEach((ln) => { const s = ln.trim(); if (/^\d{4}$/.test(s)) { year = s; return; } const e = parseLine(s, year); if (e) out.push(e); }); return out; }
+  function parseJson(t) {
+    const out = []; (function walk(v) {
+      if (Array.isArray(v)) v.forEach(walk);
+      else if (v && typeof v === 'object') {
+        const title = v.title || v.name || v.label;
+        if (title && (v.type || v.status || v.kind)) out.push({ title: String(title), type: String(v.type || v.kind || ''), status: String(v.status || v.state || ''), observed: String(v.observed || v.place || v.location || ''), pending: /pending/i.test(String(v.status || v.state || '')) || v.pending === true, year: String(v.year || ''), href: String(v.href || v.url || ''), summary: String(v.gist || v.summary || ''), links: [], private: v.private === true || v.excluded === true || (v.visibility && String(v.visibility) !== 'public') });
+        Object.keys(v).forEach((k) => walk(v[k]));
+      }
+    })(JSON.parse(t)); return out;
+  }
+  function applyTree(text, ctype, source) {
+    let entries = [], fmt;
+    try {
+      const head = text.trim().slice(0, 200);
+      if (/json/i.test(ctype || '') || /^[\[{]/.test(head)) { fmt = 'JSON'; entries = parseJson(text); }
+      else if (/^<|<html/i.test(head)) { fmt = 'HTML'; entries = parseHtml(text); }
+      else { fmt = 'plain text'; entries = parseText(text); }
+    } catch (e) { return treeFail('The ' + (fmt || 'content') + ' could not be parsed: ' + e.message); }
+    TREE.at = new Date().toISOString().slice(0, 16).replace('T', ' '); TREE.source = source;
+    if (!entries.length) { TREE.entries = []; TREE.state = 'empty'; TREE.msg = 'Read ' + fmt + ' from ' + source + ' but found no tree entries. ' + (fmt === 'HTML' ? 'No list with id fallbackList was found. The page may need a sign-in, or its format has changed.' : 'The text did not contain lines like "Title — TYPE · STATUS. Last observed: PLACE".'); }
+    else { TREE.entries = entries; TREE.state = 'loaded'; TREE.msg = 'Read ' + entries.length + ' entries as ' + fmt + ' from ' + source + ' at ' + TREE.at + '.'; }
+    store.set('unikin-wb-tree2', JSON.stringify({ entries: TREE.entries, source, at: TREE.at, url: TREE.url }));
+    renderTree();
+  }
+  function treeFail(msg) { TREE.state = 'failed'; TREE.msg = msg; renderTree(); }
+  async function loadTree() {
+    TREE.url = $('treeurl').value.trim() || TREE.url; TREE.state = 'loading'; TREE.msg = 'Requesting ' + TREE.url + ' …'; renderTree();
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 15000);
+    try {
+      const r = await fetch(TREE.url, { signal: ctl.signal, credentials: 'omit', headers: { Accept: 'text/html,application/json;q=0.9,text/plain;q=0.5' } });
+      if (!r.ok) return treeFail('The server answered ' + r.status + '. Nothing was loaded.');
+      applyTree(await r.text(), r.headers.get('content-type') || '', TREE.url);
+    } catch (e) {
+      treeFail(e && e.name === 'AbortError' ? 'No answer within 15 seconds.' : 'The browser would not make this request. A page published as an artifact cannot reach other sites, and another origin also needs CORS. Open the workbench from timetravellersguild.com and Load tree works; here, use Import or paste below.');
+    } finally { clearTimeout(to); }
+  }
+  async function loadDetails() {
+    const sel = treeForAgent(), list = sel.places.concat(sel.narrative, sel.grimoire).filter((e) => /^\/n\//.test(e.href)); let ok = 0, bad = 0;
+    $('btnDetails').disabled = true; TREE.details = 'Fetching ' + list.length + ' node pages …'; renderTree();
+    const q = list.slice(); const run = async () => { while (q.length) { const s = q.shift(), e = TREE.entries.filter((x) => x.href === s.href)[0]; try { const r = await fetch(new URL(s.href, TREE.url).href, { credentials: 'omit' }); if (!r.ok) throw 0; const d = new DOMParser().parseFromString(await r.text(), 'text/html'); const root = d.querySelector('main') || d.body; e.summary = root.textContent.replace(/\s+/g, ' ').trim().slice(0, 600); ok++; } catch (x) { bad++; } } };
+    await Promise.all([run(), run(), run()]);
+    TREE.details = ok + ' of ' + list.length + ' node pages read' + (bad ? ', ' + bad + ' failed (' + (ok ? 'some pages were not reachable' : 'blocked here, same as Load tree') + ')' : '') + '.';
+    $('btnDetails').disabled = false; store.set('unikin-wb-tree2', JSON.stringify({ entries: TREE.entries, source: TREE.source, at: TREE.at, url: TREE.url })); renderTree();
+  }
+  const termsOf = (p) => { const a = []; [p.name, String(p.slug || '').replace(/-\d+$/, '')].forEach((x) => { x = String(x || '').trim().toLowerCase(); if (x && a.indexOf(x) < 0) a.push(x); }); return a; };
+  const termsAll = () => { const a = []; S.rec.places.forEach((p) => termsOf(p).forEach((t) => { if (a.indexOf(t) < 0) a.push(t); })); return a; };
+  const hits = (e, terms) => { const hay = (e.title + ' ' + e.observed + ' ' + e.links.join(' ') + ' ' + e.href).toLowerCase(); return terms.some((t) => new RegExp('(^|[^a-z0-9])' + esc(t) + '([^a-z0-9]|$)').test(hay)); };
+  const isGrim = (e) => /grimoire/i.test(e.observed + ' ' + e.links.join(' ') + ' ' + e.href);
+  const slim = (e) => { const o = { title: e.title, type: e.type, status: e.status, observed: e.observed, pending: !!e.pending, year: e.year, href: e.href }; if (e.summary) o.summary = e.summary.slice(0, 320); return o; };
+  function treeForAgent() {
+    const incN = $('tnarr').checked, incG = $('tgrim').checked, incM = $('tmedia').checked, ex = { media: 0, private: 0, held_or_pending: 0, not_selected: 0 }, all = termsAll(), out = { places: [], narrative: [], grimoire: [], excluded: ex };
+    TREE.entries.forEach((e) => {
+      const b = hits(e, all) ? 'places' : (isGrim(e) && incG) ? 'grimoire' : (NARR.test(e.type) && incN) ? 'narrative' : null;
+      if (!b) { ex.not_selected++; return; }
+      if (e.private || PRIV.test(e.title)) { ex.private++; return; }
+      if (/^media$/i.test(e.type) && !incM) { ex.media++; return; }
+      if (b !== 'places' && (e.pending || /held|pending|sealed/i.test(e.status))) { ex.held_or_pending++; return; }
+      out[b].push(slim(e));
+    });
+    out.places = out.places.slice(0, 20); out.narrative = out.narrative.slice(0, 14); out.grimoire = out.grimoire.slice(0, 10);
+    return out;
+  }
+  function entriesForPlace(p) { const t = termsOf(p); return TREE.entries.filter((e) => hits(e, t) && !e.private && !PRIV.test(e.title) && !/^media$/i.test(e.type)); }
+  function renderTree() {
+    const M = { idle: ['Not loaded', ''], loading: ['Loading', 'warn'], loaded: ['Loaded', 'ok'], failed: ['Failed', 'flag'], empty: ['Empty', 'warn'] }[TREE.state];
+    $('treeState').textContent = M[0]; $('treeState').className = 'pill ' + M[1];
+    $('treeMsg').textContent = TREE.msg || 'Load the tree or import it. Nothing from the tree reaches the assistant until it is loaded.';
+    $('treeMsg').className = 'msg' + (TREE.state === 'failed' ? ' err' : '');
+    const box = $('treePrev'); box.textContent = '';
+    $('btnDetails').disabled = TREE.state !== 'loaded'; $('btnInterlink').disabled = TREE.state !== 'loaded';
+    if (TREE.state !== 'loaded') return;
+    const t = treeForAgent(), n = t.places.length + t.narrative.length + t.grimoire.length, x = t.excluded;
+    box.appendChild(h('div', 'note', 'Sending ' + n + ' of ' + TREE.entries.length + ' entries: ' + t.places.length + ' about your places, ' + t.narrative.length + ' narrative, ' + t.grimoire.length + ' Grimoire. Left out: ' + x.media + ' media, ' + x.private + ' private, ' + x.held_or_pending + ' held or pending, ' + x.not_selected + ' not selected.' + (TREE.details ? ' ' + TREE.details : '')));
+    const seen = {}; S.rec.places.forEach((p) => { const k = String(p.name || p.slug); if (seen[k]) return; seen[k] = 1; const c = entriesForPlace(p).length; box.appendChild(h('div', 'note', k + ': ' + (c ? c + ' tree entr' + (c > 1 ? 'ies' : 'y') : 'no entry in the loaded tree') + '.')); });
+    const tb = h('table'), body = h('tbody');
+    [['place', t.places], ['narrative', t.narrative], ['grimoire', t.grimoire]].forEach(([tag, arr]) => arr.forEach((e) => { const r = h('tr'); r.append(h('td', 'm', tag), h('td', '', e.title + (e.summary ? '' : '')), h('td', 'm', e.type + ' · ' + e.status + (e.pending ? ' · PENDING' : ''))); body.appendChild(r); }));
+    tb.appendChild(body); const sc = h('div', 'scroll-x'); sc.style.maxHeight = '220px'; sc.style.overflowY = 'auto'; sc.appendChild(tb); box.appendChild(sc);
+  }
+  function proposeLinks() {
+    let made = 0; const none = [];
+    S.rec.places.forEach((p, i) => {
+      const have = (p.refs || []).map((r) => r.href), add = entriesForPlace(p).filter((e) => e.href && have.indexOf(abs(e.href)) < 0).slice(0, 6);
+      if (!add.length) { none.push(p.name || p.slug); return; }
+      if (S.props.some((q) => !q.done && q.op === 'add_refs' && q.index === i + 1)) return;
+      S.props.push({ id: S.nextId++, op: 'add_refs', index: i + 1, refs: add.map((e) => ({ href: abs(e.href), title: e.title, type: e.type })), reason: 'Interlink tree entries that mention this place. Only a refs list is added; nothing else changes.' }); made++;
+    });
+    renderProps(); return { queued: made, no_matching_entries: none.filter((v, i, a) => a.indexOf(v) === i) };
+  }
+  const abs = (h2) => { try { return new URL(h2, TREE.url).href; } catch (e) { return h2; } };
+
+  /* ================= rendering ================= */
+  function renderHead() {
+    const H = S.holder; $('who').textContent = H ? H.name + ' · ' + H.number + ' · issued ' + H.issued : 'no record loaded';
+    const bad = S.stamps.filter((s) => !s.ok).length, p = $('chainPill');
+    p.textContent = bad ? 'chain · ' + bad + ' refused' : 'chain intact'; p.className = 'pill ' + (bad ? 'warn' : 'ok');
+    const f = findings(), a = $('auditPill'); a.hidden = false;
+    const fl = f.filter((x) => x.sev === 'flag').length;
+    a.textContent = f.length ? f.length + ' finding' + (f.length > 1 ? 's' : '') : 'no findings'; a.className = 'pill ' + (fl ? 'flag' : f.length ? 'warn' : 'ok');
+  }
+  function renderPlaces() {
+    const box = $('places'); box.textContent = '';
+    S.stamps.forEach((s, i) => {
+      const b = h('button', 'place' + (s.ok ? '' : ' refused')); b.setAttribute('aria-current', i === S.sel ? 'true' : 'false');
+      const t = h('span', 't', s.F.place); t.appendChild(h('small', '', (s.F.line || 'no line') + ' · ' + s.F.date));
+      const pl = S.rec.places[i] || {}, k = keeper(pl.tree), pills = h('span', 'pills');
+      pills.append(h('span', 'pill ' + (s.ok ? 'ok' : 'flag'), s.ok ? 'stamp accepted' : 'stamp refused R4'), h('span', 'pill ' + k.cls, k.label));
+      if ((pl.refs || []).length) pills.appendChild(h('span', 'pill', (pl.refs || []).length + ' linked'));
+      b.append(h('span', 'n', String(i + 1)), t, pills);
+      b.onclick = () => { S.sel = i; S.claim = {}; renderAll(); if (innerWidth <= 980) pane('bench'); };
+      box.appendChild(b);
+    });
+  }
+  function paintStamp(cv, st, on, n) {
+    cv.width = cv.height = n; const g = cv.getContext('2d'); g.clearRect(0, 0, n, n);
+    const layers = {}; LAYERS.forEach((k) => { layers[k] = S.solo ? S.solo === k : !!S.on[k]; });
+    drawStamp(g, n, st.L, { layers, foil: true });
+  }
+  function viewStamp(body) {
+    const s = S.stamps[S.sel];
+    const wrap = h('div', 'stampwrap'), cv = h('canvas'); cv.id = 'stamp'; wrap.appendChild(cv); body.appendChild(wrap);
+    const chips = h('div', 'chips');
+    LAYERS.forEach((k) => { const c = h('button', 'chip' + (S.solo === k ? ' solo' : ''), k); c.setAttribute('aria-pressed', S.solo ? String(S.solo === k) : String(!!S.on[k]));
+      c.onclick = () => { if (S.solo) { S.solo = null; } else S.on[k] = S.on[k] ? 0 : 1; renderBench(); }; chips.appendChild(c); });
+    if (S.solo) { const r = h('button', 'chip', 'show all'); r.onclick = () => { S.solo = null; renderBench(); }; chips.appendChild(r); }
+    body.appendChild(chips);
+    const meta = h('div'); meta.append(h('div', 'seal', s.L.seal.value), h('div', 'sub', 'Stamp ' + (S.sel + 1) + ' of ' + S.stamps.length + ' · ' + s.F.place + ' · ' + (s.F.line || 'no line') + ' · ' + s.F.date + ' · check digit ' + s.L.ring.cd + (s.ok ? '' : ' · REFUSED, not chained')));
+    { const kk = keeper((S.rec.places[S.sel] || {}).tree); meta.appendChild(h('div', 'sub', 'Chain: ' + chainWord(s) + '. ' + kk.label + '.')); }
+    body.appendChild(meta);
+    if (S.solo) body.appendChild(h('p', 'note', INFO[S.solo]));
+    requestAnimationFrame(() => paintStamp(cv, s, S.on, 900));
+  }
+  function viewChain(body) {
+    body.appendChild(h('p', 'note', 'Each accepted stamp seals the previous seal into its own, so removing or reordering a stamp changes every seal after it. A refused stamp is shown in red and is not part of the chain.'));
+    const c = h('div', 'chain'); let prev = 'GENESIS|' + S.holder.number;
+    S.stamps.forEach((s, i) => {
+      const d = h('div', 'link' + (s.ok ? '' : ' refused')); d.style.cursor = 'pointer';
+      d.append(h('div', '', (i + 1) + ' · ' + s.F.place + ' · ' + (s.F.line || 'no line') + ' · ' + s.F.date), h('div', 'k', 'sealed over: ' + prev), h('code', '', s.L.seal.value));
+      d.onclick = () => { S.sel = i; S.view = 'stamp'; renderAll(); };
+      c.appendChild(d); if (s.ok) prev = s.L.seal.value;
+    });
+    const end = h('div', 'link'); end.append(h('div', '', 'Chain head'), h('code', '', S.head)); c.appendChild(end);
+    body.appendChild(c);
+  }
+  function viewVerify(body) {
+    const i = S.sel, s = S.stamps[i];
+    body.appendChild(h('p', 'note', 'Edit the fields to describe what a claimed copy of stamp ' + (i + 1) + ' says. Each layer is re-derived from the claim and compared by digest with the genuine one.'));
+    const f = h('div', 'fields');
+    ['place', 'line', 'date', 'name', 'number'].forEach((k) => {
+      const l = h('label', 'f', k), inp = h('input'); inp.type = 'text'; inp.id = 'cl-' + k; inp.value = S.claim[k] != null ? S.claim[k] : s.F[k];
+      inp.oninput = () => { if (inp.value === s.F[k]) delete S.claim[k]; else S.claim[k] = inp.value; refreshVerify(); }; l.appendChild(inp); f.appendChild(l);
+    });
+    body.appendChild(f);
+    const r = h('div'); r.id = 'verifyOut'; body.appendChild(r); refreshVerify();
+  }
+  function refreshVerify() {
+    const out = $('verifyOut'); if (!out) return; out.textContent = '';
+    const i = S.sel, res = compare(i, S.claim), diff = res.rows.filter((x) => !x.same && x.layer !== 'seal').length;
+    const verdict = h('div', 'pill ' + (Object.keys(S.claim).length === 0 ? '' : diff ? 'flag' : 'warn'), Object.keys(S.claim).length === 0 ? 'claim equals genuine' : diff ? diff + ' of 6 layers fail' : 'layers match, seal differs');
+    verdict.style.alignSelf = 'flex-start'; verdict.style.width = 'fit-content'; out.appendChild(verdict);
+    const cmp = h('div', 'cmp'); cmp.style.margin = '10px 0';
+    [['genuine', S.stamps[i].L], ['claimed', res.L2]].forEach(([cap, L]) => { const fg = h('figure'), cv = h('canvas'); fg.append(cv, h('figcaption', '', cap)); cmp.appendChild(fg); requestAnimationFrame(() => paintStamp(cv, { L }, S.on, 520)); });
+    out.appendChild(cmp);
+    const t = h('table'); t.innerHTML = '<thead><tr><th>Layer</th><th>Genuine</th><th>Claimed</th></tr></thead>'; const tb = h('tbody');
+    res.rows.forEach((x) => { const tr = h('tr', x.same ? '' : 'bad'); tr.append(h('td', '', x.layer), h('td', 'm', x.a), h('td', 'm', x.same ? 'match' : x.b)); tb.appendChild(tr); });
+    t.appendChild(tb); const sc = h('div', 'scroll-x'); sc.appendChild(t); out.appendChild(sc);
+  }
+  function viewLedger(body) {
+    body.appendChild(h('p', 'note', 'Every layer of every stamp. Click a layer name to isolate it on the selected stamp.'));
+    const t = h('table'), hd = h('thead'), tr = h('tr'); tr.appendChild(h('th', '', '#')); LAYERS.forEach((k) => { const th = h('th'); const b = h('button', 'chip', k); b.onclick = () => { S.solo = k; S.view = 'stamp'; renderAll(); }; th.appendChild(b); tr.appendChild(th); });
+    hd.appendChild(tr); t.appendChild(hd); const tb = h('tbody');
+    S.stamps.forEach((s, i) => { const r = h('tr', (s.ok ? '' : 'bad ') + (i === S.sel ? 'hl' : '')); r.appendChild(h('td', '', String(i + 1)));
+      LAYERS.forEach((k) => { const same = S.stamps.some((o, j) => j !== i && o.L[k].digest === s.L[k].digest); const td = h('td', 'm', s.L[k].digest + (same ? ' =' : '')); r.appendChild(td); });
+      r.onclick = () => { S.sel = i; renderAll(); }; tb.appendChild(r); });
+    t.appendChild(tb); const sc = h('div', 'scroll-x'); sc.appendChild(t); body.appendChild(sc);
+    body.appendChild(h('p', 'note', '"=" means another stamp has the same digest for that layer. Rosette repeats for one place by design; the seal never repeats.'));
+  }
+  function renderBench() {
+    document.querySelectorAll('#subtabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.v === S.view)));
+    const body = $('benchBody'); body.textContent = '';
+    if (!S.stamps.length) return;
+    ({ stamp: viewStamp, chain: viewChain, verify: viewVerify, ledger: viewLedger })[S.view](body);
+  }
+  function renderProps() {
+    const box = $('props'); box.textContent = '';
+    S.props.forEach((p) => {
+      const d = h('div', 'prop' + (p.done ? ' done' : ''));
+      let desc = p.op === 'remove_place' ? 'Remove place ' + p.index + (S.rec.places[p.index - 1] ? ' (' + (S.rec.places[p.index - 1].name || S.rec.places[p.index - 1].slug) + ')' : '')
+        : p.op === 'add_refs' ? 'Link place ' + p.index + ' to ' + p.refs.length + ' tree entr' + (p.refs.length > 1 ? 'ies' : 'y') + ': ' + p.refs.map((r) => r.title).join('; ')
+        : p.op === 'set_place_field' ? 'Set place ' + p.index + ' ' + p.field + ' to "' + p.value + '"' : 'Add place "' + p.place.name + '" · ' + (p.place.line || 'no line') + ' · ' + (p.place.inked || 'no date');
+      if (p.done) desc += ' — ' + p.done;
+      d.append(h('b', '', 'Proposal #' + p.id + ': ' + desc), h('div', 'why', p.reason || 'No reason given.'));
+      if (!p.done) { const r = h('div', 'row'), a = h('button', 'go', 'Approve'), x = h('button', 'bad', 'Reject');
+        a.onclick = () => applyProp(p); x.onclick = () => { p.done = 'rejected'; renderProps(); }; r.append(a, x); d.appendChild(r); }
+      box.appendChild(d);
+    });
+  }
+  function applyProp(p) {
+    try {
+      const rec = JSON.parse(JSON.stringify(S.rec));
+      if (p.op === 'remove_place') rec.places.splice(p.index - 1, 1);
+      else if (p.op === 'set_place_field') { const pl = rec.places[p.index - 1]; if (!pl) throw new Error('that place no longer exists'); if (p.field === 'name') { pl.name = p.value; } else pl[p.field] = p.value; }
+      else if (p.op === 'add_place') rec.places.push({ slug: slugify(p.place.name), name: p.place.name, line: p.place.line, inked: p.place.inked });
+      else if (p.op === 'add_refs') { const pl = rec.places[p.index - 1]; if (!pl) throw new Error('that place no longer exists'); pl.refs = (pl.refs || []).slice(); p.refs.forEach((r) => { if (!pl.refs.some((q) => q.href === r.href)) pl.refs.push(r); }); }
+      setRecord(rec); p.done = 'applied';
+      say('sys', 'Applied proposal #' + p.id + '. Indexes may have shifted, so list the stamps again before proposing more.');
+    } catch (e) { p.done = 'failed: ' + e.message; }
+    renderProps();
+  }
+  function renderAll() { renderHead(); renderPlaces(); renderBench(); if ($('sharefields').children.length) renderShare(); if ($('treePrev')) renderTree(); $('btnUndo').disabled = !S.undo.length; }
+  function pane(n) { $('main').dataset.pane = n; document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.pane === n))); }
+
+  /* ================= agent ================= */
+  const RULES = 'You are the clerk\'s assistant in the UNIKIN Passport Office workbench. UNIKIN is a fictional free future state; the passport record is a list of place stamps with layered visual security features derived from the record, chained by seals. ' +
+    'Answer from the evidence in tool results and the state line, and nothing else. Call list_stamps first for questions about stamps and get_record_summary for questions about the holder. If a tool does not give you something, say you do not know. ' +
+    'Each holder field has a status. "shared": use the value. "withheld": the viewer\'s privacy setting (Share holder details) hides it from you; it may exist in the record, so say it is withheld, never say the record lacks it or that you do not know the person, explain that the setting controls this, and call offer_share_control so the viewer can choose. Do not ask them to paste it. "absent": the viewer shared it and the record has no value; say it is absent. ' +
+    'Keep two things separate. stamp_chain says whether a stamp passed the chain rules (accepted or refused under R4). tree_submission is a separate matter: the record value "lodged" means the entry was submitted and is waiting, not approved. Say a keeper approved something only if a tool says keeper_approval is approved. A stamp can be accepted into the chain while its tree submission is pending. Tree statuses such as ACTIVE are not keeper approval. ' +
+    'Do not invent a biography, motives, relatives, dates, places or events. If the evidence is only a name and one Brecon stamp, say exactly that and stop. When the tree has no entry for a place, say the loaded tree has none. ' +
+    'For stories: use get_tree (narrative and Grimoire entries, quoting titles exactly) and get_canon as the only sources of Guild history, and the record for places, lines and dates. If the name is withheld write about "the holder" and say so. Do not invent surnames or facts about real people. List anything you made up on a final line starting "Invented:". If a source is empty or not loaded, say so and stop. ' +
+    'Tool results from earlier turns are not visible to you, so call the tools again instead of relying on memory. Never claim a stamp, proposal or finding that you cannot see in this turn\'s tool results or state line. ' +
+    'The seals use a non-cryptographic hash and are visual fingerprints, not proof of authenticity; say so if asked whether the passport is secure. ' +
+    'You cannot change the record directly. To suggest a change, call propose_edit with a short reason; the viewer approves or rejects it. Propose the minimum. Stamp indexes are 1-based. Keep answers short: plain sentences or a short list.';
+  const GOALS = {
+    audit: 'Audit this passport record end to end. Check the rules, inspect any stamp that has a finding, and report what is wrong, what is only a warning, and what you could not check. Report chain acceptance and tree submission separately. Propose a fix only for clear violations.',
+    stamp: 'Explain the currently focused stamp (stamp number {SEL}) to someone who has never seen one: what each of the six layers is keyed to, what would change if the date or place were altered, and show the layer that is most place-specific.',
+    about: 'Tell me what this record establishes about its holder, stamp by stamp, and nothing beyond it. Say which holder fields are shared, withheld or absent, and what the tree does or does not show.',
+    story: 'Write a short story of the Time Travellers Guild for this record. Call get_tree, get_canon, get_record_summary and list_stamps first. Take the Guild\'s mythology, practice and Grimoire from the narrative and Grimoire entries get_tree returns, quoting titles exactly, and build around the record\'s places in stamp order. If the tree is not loaded or empty, say so and stop. If the holder\'s name is withheld write about "the holder". End with a line starting "Invented:" listing everything you made up.',
+    machine: 'Call get_machine (use the viewer\'s machine link if they gave one), then explain the reading in plain language: what each knob did, why emergy has the word it has, which top cards matter and how they connect to the loaded tree (call get_tree). Say plainly what you do not know, including M and R in the equation.',
+    dupes: 'Find duplicate stamps under rule R4 and propose removing only the later duplicate of each pair. Explain the effect on the seal chain.'
+  };
+  function say(kind, text) { const b = h('div', 'bub ' + kind, text); feed().appendChild(b); feed().scrollTop = 1e9; return b; }
+  const COPY = { not_granted: 'Claude access was declined for this page, so the agent is off. The offline audit still works.', sampling_disabled: 'Claude is not available on this account.', rate_limited: 'Too many calls or a usage limit. Wait a bit, then send again.', session_expired: 'Sign in to Claude again, then retry.', refused: 'Claude declined this request. Rephrase and try again.', empty_completion: 'Claude returned nothing. Ask for something narrower.', prompt_too_large: 'The conversation got too long. Reload to start a fresh one.', upstream_error: 'The model connection failed. You can send again.', tools_unavailable: 'This view cannot run the page tools, so the agent is off. The offline audit still works.' };
+  async function run(text) {
+    if ((!S.sample && !isOA()) || S.busy || !text.trim()) return;
+    S.busy = true; S.ctl = new AbortController(); $('btnSend').disabled = true; $('btnStop').disabled = false;
+    say('me', text); S.turns.push({ role: 'user', content: text });
+    const bub = say('bub', ''); bub.className = 'bub think'; bub.textContent = 'Thinking…';
+    const ctxLine = 'Current state: ' + S.stamps.length + ' stamps (' + S.stamps.map((s, i) => (i + 1) + ' ' + s.F.place + ' ' + s.F.date + (s.ok ? '' : ' refused')).join('; ') + '); focused stamp ' + (S.sel + 1) + '. Holder fields: ' + JSON.stringify(holderContext(true)) + '. Tree: ' + (TREE.state === 'loaded' ? 'loaded' : TREE.state) + '.';
+    const input = [{ role: 'user', content: RULES + '\n\n' + ctxLine }].concat(S.turns.slice(-12));
+    try {
+      const res = isOA() ? await runOpenAI(input, S.ctl.signal) : await S.sample(input, { signal: S.ctl.signal, tools: toolList(), modelTier: $('tier').value,
+        onText: ({ text: t }) => { bub.className = 'bub'; bub.textContent = t; feed().scrollTop = 1e9; } });
+      bub.className = 'bub'; bub.textContent = res.text; S.turns.push({ role: 'assistant', content: res.text });
+      if (res.truncated) say('sys', 'The answer was cut short. Ask for less at a time.');
+    } catch (e) {
+      if (e && e.text) { bub.className = 'bub'; bub.textContent = e.text; S.turns.push({ role: 'assistant', content: e.text }); } else bub.remove();
+      if (S.turns.length && S.turns[S.turns.length - 1].role === 'user') S.turns.pop();
+      if (!e || e.code !== 'cancelled') say('sys', copyFor(e));
+      if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled' || e.code === 'tools_unavailable')) agentOff();
+    } finally { S.busy = false; S.ctl = null; $('btnStop').disabled = true; refreshProv(); }
+  }
+  function agentOff() { S.sample = null; refreshProv(); }
+  const isOA = () => $('prov').value === 'openai';
+  function refreshProv() {
+    const oa = isOA(), ok = oa || !!S.sample;
+    $('aurlRow').hidden = !oa; $('tier').hidden = oa; $('btnTalk').hidden = !oa; if (!oa) stopTalk();
+    $('btnSend').disabled = S.busy || !ok; document.querySelectorAll('[data-goal]').forEach((b) => (b.disabled = !ok));
+    $('agentPill').textContent = oa ? 'openai' : S.sample ? 'ready' : 'offline'; $('agentPill').className = 'pill ' + (oa ? 'warn' : S.sample ? 'ok' : 'warn');
+  }
+  let TALK = null;
+  function stopTalk(keep) { if (!TALK) return; TALK.stream.getTracks().forEach((x) => x.stop()); try { TALK.pc.close(); } catch (e) {} TALK = null; $('btnTalk').textContent = 'Talk'; if (!keep) { $('talkMsg').textContent = 'Voice ended.'; $('talkMsg').className = 'msg'; } }
+  async function startTalk() {
+    if (TALK) return stopTalk();
+    const msg = (s, c) => { $('talkMsg').textContent = s; $('talkMsg').className = 'msg ' + (c || ''); };
+    if (!navigator.mediaDevices || !window.RTCPeerConnection) return msg('Voice is not available in this view (no microphone or WebRTC access). Artifact views block it. Use the page on your own site.', 'err');
+    msg('Asking for the microphone…'); let stream;
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { return msg('Microphone access was refused or is not available here.', 'err'); }
+    const pc = new RTCPeerConnection(), audio = new Audio(); audio.autoplay = true;
+    pc.ontrack = (ev) => { audio.srcObject = ev.streams[0]; };
+    stream.getTracks().forEach((x) => pc.addTrack(x, stream));
+    TALK = { pc, stream }; $('btnTalk').textContent = 'End voice';
+    pc.onconnectionstatechange = () => {
+      if (pc.connectionState === 'connected') msg('Connected. Speak now. Your audio goes to OpenAI through your server. The voice cannot see your record or holder fields.', 'good');
+      else if (TALK && /failed|closed|disconnected/.test(pc.connectionState)) { msg('The voice connection ' + pc.connectionState + '.', 'err'); stopTalk(true); }
+    };
+    try {
+      msg('Connecting…'); await pc.setLocalDescription(await pc.createOffer());
+      await new Promise((res) => { if (pc.iceGatheringState === 'complete') return res(); const to = setTimeout(res, 3000); pc.onicegatheringstatechange = () => { if (pc.iceGatheringState === 'complete') { clearTimeout(to); res(); } }; });
+      const r = await fetch($('lurl').value.trim() || 'live.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ sdp: pc.localDescription.sdp }) });
+      if (!r.ok) { let m = ''; try { m = ((await r.json()).error || {}).message || ''; } catch (e) {} throw new Error('the server answered ' + r.status + (m ? ': ' + m : '.')); }
+      await pc.setRemoteDescription({ type: 'answer', sdp: (await r.json()).sdp });
+    } catch (e) { msg('Voice failed: ' + (e instanceof TypeError ? 'the voice endpoint could not be reached. Artifact views cannot reach other sites.' : (e.message || String(e))), 'err'); stopTalk(true); }
+  }
+  function copyFor(e) {
+    const c = e && e.code || '';
+    if (c === 'openai_unreachable') return 'The agent endpoint could not be reached. Pages published as artifacts cannot reach other sites. This works when the workbench is served from the same site as agent.php, at the address you entered.';
+    if (c === 'openai_http_403') return 'The server refused the request: ' + (e.message || 'sign-in required').replace(/\.$/, '') + '. agent.php needs a signed-in citizen (agent_auth.php), or AGENT_ALLOW_ANON=1 while testing.';
+    if (c === 'openai_http_404') return 'No agent.php was found at that address.';
+    if (c === 'openai_http_429') return 'Too many requests, or the provider\'s limit was reached. Wait, then send again.';
+    if (/^openai_http_/.test(c)) return 'The agent endpoint answered ' + c.slice(12) + (e.message ? ': ' + e.message : '.');
+    return COPY[c] || 'Something went wrong (' + c + ').';
+  }
+  async function runOpenAI(msgs, signal) {
+    const url = $('aurl').value.trim() || 'agent.php', tl = toolList(), texts = [];
+    const defs = tl.map((x) => ({ name: x.name, description: x.description, parameters: x.inputSchema }));
+    let input = msgs.slice(1).map((m) => ({ role: m.role, content: m.content }));
+    for (let round = 0; round < 6; round++) {
+      let r;
+      try { r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', signal, body: JSON.stringify({ instructions: msgs[0].content, input, tools: defs, last: round === 5 }) }); }
+      catch (e) { throw e && e.name === 'AbortError' ? { code: 'cancelled' } : { code: 'openai_unreachable' }; }
+      if (!r.ok) { let m = ''; try { m = ((await r.json()).error || {}).message || ''; } catch (e) {} throw { code: 'openai_http_' + r.status, message: m }; }
+      const j = await r.json(), out = Array.isArray(j.output) ? j.output : [];
+      input = input.concat(out);
+      out.filter((o) => o.type === 'message').forEach((o) => (o.content || []).forEach((c) => { if (c.type === 'output_text') texts.push(c.text); }));
+      const calls = out.filter((o) => o.type === 'function_call');
+      if (!calls.length) return { text: texts.join('\n\n') || 'The model returned no text.', truncated: j.status === 'incomplete' };
+      for (const c of calls) {
+        const x = tl.filter((y) => y.name === c.name)[0]; let res;
+        try { res = x ? await x.execute(JSON.parse(c.arguments || '{}'), { signal }) : 'Error: unknown tool ' + c.name; } catch (e) { res = 'Error: ' + (e && e.message); }
+        input.push({ type: 'function_call_output', call_id: c.call_id, output: typeof res === 'string' ? res : JSON.stringify(res) });
+      }
+    }
+    return { text: texts.join('\n\n') || 'Stopped after 6 tool rounds.', truncated: true };
+  }
+  function offlineAudit() {
+    const f = findings(); say('me', 'Offline audit');
+    if (!f.length) { say('bub', 'No findings. Checked: duplicate stamps (R4), date validity and order, missing lines, ID grid, join slip data. Not checked: whether this record matches what the registry holds.'); return; }
+    say('bub', f.map((x) => (x.sev === 'flag' ? '✖ ' : '• ') + x.text).join('\n'));
+    f.forEach((x) => { if (x.fix && !S.props.some((p) => !p.done && p.op === x.fix.op && p.index === x.fix.index + 1)) S.props.push({ id: S.nextId++, op: x.fix.op, index: x.fix.index + 1, reason: x.fix.reason }); });
+    renderProps();
+  }
+
+  /* ================= wiring ================= */
+  $('json').addEventListener('input', () => {
+    const m = $('jsonMsg'), st = $('jsonState');
+    try { const r = JSON.parse($('json').value); validate(r); setRecord(r, { keepText: true }); m.className = 'msg good'; m.textContent = 'Applied. ' + S.stamps.length + ' stamps, ' + S.stamps.filter((s) => !s.ok).length + ' refused.'; st.textContent = 'valid'; st.className = 'pill ok'; }
+    catch (e) { m.className = 'msg err'; m.textContent = e.message; st.textContent = 'invalid'; st.className = 'pill flag'; }
+  });
+  $('btnSample').onclick = () => setRecord(JSON.parse(JSON.stringify(SAMPLE)));
+  $('btnUndo').onclick = () => { const j = S.undo.pop(); if (j) { setRecord(JSON.parse(j), { noUndo: true }); } };
+  $('btnCopy').onclick = async () => { const txt = JSON.stringify(S.rec, null, 2); try { await navigator.clipboard.writeText(txt); $('jsonMsg').className = 'msg good'; $('jsonMsg').textContent = 'Copied.'; } catch (e) { $('json').select(); $('jsonMsg').className = 'msg'; $('jsonMsg').textContent = 'Clipboard blocked. The text is selected; copy it yourself.'; } };
+  document.querySelectorAll('#subtabs button').forEach((b) => (b.onclick = () => { S.view = b.dataset.v; renderBench(); }));
+  document.querySelectorAll('#tabs button').forEach((b) => (b.onclick = () => pane(b.dataset.pane)));
+  document.querySelectorAll('[data-goal]').forEach((b) => (b.onclick = () => { if (innerWidth <= 980) pane('agent'); run(GOALS[b.dataset.goal].replace('{SEL}', String(S.sel + 1))); }));
+  $('btnSend').onclick = () => { const v = $('ask').value; $('ask').value = ''; run(v); };
+  $('ask').addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $('btnSend').click(); } });
+  $('prov').onchange = () => { refreshProv(); if (isOA()) say('sys', 'Requests now go to your server and on to OpenAI, including any holder fields you have ticked. Switch back to Claude to send them to Claude instead.'); };
+  $('btnTalk').onclick = startTalk;
+  $('btnStop').onclick = () => { if (S.ctl) S.ctl.abort(); };
+  $('btnOffline').onclick = () => { if (innerWidth <= 980) pane('agent'); offlineAudit(); };
+
+  /* ================= boot ================= */
+  let boot = SAMPLE;
+  try { const saved = store.get('unikin-wb-rec'); if (saved) { const r = JSON.parse(saved); validate(r); boot = r; } } catch (e) {}
+  setRecord(JSON.parse(JSON.stringify(boot)), { noUndo: true });
+  say('sys', 'Record loaded. Ask a question, use a goal button, or run the offline audit, which needs no model.');
+  $('canon').value = store.get('unikin-wb-canon') || CANON;
+  $('canon').addEventListener('input', () => store.set('unikin-wb-canon', $('canon').value));
+  buildShare(); lastPicked = picked(); renderShare();
+  try { const sv = JSON.parse(store.get('unikin-wb-tree2') || 'null'); if (sv && sv.entries && sv.entries.length) { TREE.entries = sv.entries; TREE.state = 'loaded'; TREE.source = sv.source; TREE.at = sv.at; TREE.url = sv.url || TREE.url; $('treeurl').value = TREE.url; TREE.msg = 'Restored ' + sv.entries.length + ' entries saved in this browser from ' + sv.source + ' at ' + sv.at + '. Load tree again to refresh.'; } } catch (e) {}
+  renderTree();
+  $('btnLoadTree').onclick = loadTree;
+  $('btnImport').onclick = () => $('treefile').click();
+  $('treefile').onchange = () => { const f = $('treefile').files[0]; if (!f) return; const r = new FileReader(); r.onload = () => applyTree(String(r.result), f.type, 'imported file ' + f.name); r.onerror = () => treeFail('The file could not be read.'); r.readAsText(f); $('treefile').value = ''; };
+  $('btnUsePaste').onclick = () => { const v = $('treepaste').value.trim(); if (!v) return treeFail('Nothing pasted.'); applyTree(v, '', 'pasted text'); };
+  $('btnDetails').onclick = loadDetails;
+  $('btnInterlink').onclick = () => { if (innerWidth <= 980) pane('agent'); const r = proposeLinks(); say('sys', 'Link proposals queued: ' + r.queued + '.' + (r.no_matching_entries.length ? ' No tree entry mentions: ' + r.no_matching_entries.join(', ') + '.' : '') + ' Nothing changes until you approve.'); };
+  ['tnarr', 'tgrim', 'tmedia'].forEach((id) => $(id).addEventListener('change', renderTree));
+  $('btnClear').onclick = () => { S.turns = []; feed().textContent = ''; say('sys', 'New conversation. Earlier messages are no longer sent. Records, proposals and sharing settings are unchanged.'); };
+  window.unikinWorkbench = { load(rec) { setRecord(rec); }, state: S, tools: toolList, tree: TREE };
+  (async () => {
+    try {
+      const c = window.claude && await window.claude.use('sample');
+      if (c) { let lim = null; try { lim = await c.limits(); } catch (e) {} if (lim && !lim.tools) throw 0; S.sample = c; refreshProv(); }
+      else agentOff();
+    } catch (e) { agentOff(); }
+    try { const d = window.claude && await window.claude.use('downloads'); if (d) { $('btnSave').hidden = false; $('btnSave').onclick = async () => { try { await d.save({ filename: 'ttg-passport-record.json', data: JSON.stringify(S.rec, null, 2) }); } catch (e) {} }; } } catch (e) {}
+  })();
+})();
+</script>

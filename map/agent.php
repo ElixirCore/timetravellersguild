@@ -60,12 +60,12 @@ $key = secret('OPENAI_API_KEY'); $model = secret('OPENAI_MODEL');
 if (!$key || !$model) fail(500, 'No OPENAI_API_KEY or OPENAI_MODEL found in secret_agent.php, secrets.php or the environment.');
 $base = rtrim(secret('OPENAI_BASE_URL') ?: 'https://api.openai.com', '/');
 
-/* rate limit: 60 calls an hour per address (one question can take several calls) */
+/* rate limit: 240 calls an hour per address (one question can take several round-trips) */
 $rl = __DIR__ . '/cache'; if (!is_dir($rl)) @mkdir($rl, 0755, true);
 if (!is_file($rl . '/.htaccess')) @file_put_contents($rl . '/.htaccess', "Require all denied\n");
 $rf = $rl . '/rate-' . hash('sha256', $_SERVER['REMOTE_ADDR'] ?? '');
 $now = time(); $hits = array_filter(array_map('intval', is_file($rf) ? explode(',', (string) file_get_contents($rf)) : []), fn($t) => $t > $now - 3600);
-if (count($hits) >= 60) fail(429, 'The map has answered a lot this hour. Try again shortly.');
+if (count($hits) >= 240) fail(429, 'The map has answered a lot this hour. Try again shortly.');
 $hits[] = $now; @file_put_contents($rf, implode(',', $hits), LOCK_EX);
 
 /* request */
@@ -129,6 +129,15 @@ $tools = [
      'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'], 'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
   $fn('set_camera', "Tilt and turn the view. pitch 0 (flat) to 75; bearing in degrees from north.",
     ['pitch' => ['type' => 'number'], 'bearing' => ['type' => 'number']], []),
+  $fn('start_run', "Begin recording a named run. All places flown to will be grouped under this run until end_run is called. Use when the viewer asks to record, save or name a tour of places.",
+    ['name' => ['type' => 'string', 'description' => 'Short name for this run, e.g. "Cities of Wales" or "Swansea Valley circuit"']], ['name']),
+  $fn('end_run', "End the current run and save it. Call after the last fly_to in the sequence.", [], []),
+  $fn('add_stamp', "Ink a new place slip on the viewer's passport. Use this when the viewer asks to record, add or ink a place. Geocodes the name automatically if no coordinates are given.",
+    ['name'  => ['type' => 'string', 'description' => 'Place name, as it should appear on the slip'],
+     'line'  => ['type' => 'string', 'description' => 'The line or note for the slip (optional)'],
+     'inked' => ['type' => 'string', 'description' => 'Date inked, in d.m.Y format e.g. 04.11.2026 (defaults to today)'],
+     'lng'   => ['type' => 'number', 'description' => 'Longitude WGS84 (optional — will be looked up from name)'],
+     'lat'   => ['type' => 'number', 'description' => 'Latitude WGS84 (optional)']], ['name']),
 ];
 
 $body = ['model' => $model, 'instructions' => $instructions, 'input' => $input, 'tools' => $tools, 'parallel_tool_calls' => true, 'max_output_tokens' => 1500];

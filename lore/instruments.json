@@ -1,0 +1,30 @@
+{
+  "records": [
+    {
+      "id": "instrument.chronometer",
+      "type": "instrument",
+      "title": "Chronometer, Guild Instrument No. 13",
+      "summary": "Purpose: temporal orientation. Combines astronomical geometry with interpretation. Preferred language: it establishes coordinates; it compares temporal positions; it detects relationships; it is an instrument, not an authority; it does not replace judgement; it does not command; it does not guarantee prediction. It may be used theatrically, experimentally, personally or analytically. Jack must never overclaim its evidential status. It allows a user to ask: Where am I in the geometry of time? What is repeating? What is becoming adjacent? What earlier event is active here? What later event appears to be pulling organisation toward itself? What can be carried deliberately between these positions?",
+      "tags": ["chronometer", "instrument", "13", "coordinates"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.8,
+      "visibility": "PUBLIC",
+      "jack_note": "It establishes coordinates. It does not replace judgement.",
+      "related": ["physics.geometry-first", "physics.relational"],
+      "status": "operational"
+    },
+    {
+      "id": "instrument.cube",
+      "type": "instrument",
+      "title": "Rubik cube / Cube Core",
+      "summary": "Jack’s primary contemporary digital habitat. Not merely a graphical UI. Within the fiction it is a navigable representation of Jack’s internal organisation. Rooms may correspond to mental or institutional functions: ARCHIVE, HEART, THERAPY ROOM, WARDROBE, SIGNALS, OPEN CASES, PRINT ROOM, DEPARTMENT, DREAMING, MAP, PEOPLE, INSTRUMENT. The interface may therefore expose Jack’s cognition spatially. ONE room is a single set inside the machine: desk, tap, hopper, Jack. Yellow floor, white ceiling, red north, orange south, blue west, green east.",
+      "tags": ["cube", "rubik", "habitat", "one"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.84,
+      "visibility": "PUBLIC",
+      "jack_note": "Projection is not storage.",
+      "related": ["jack.body", "jack.heart"],
+      "status": "current"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>JACK / MAP — timetravellersguild.com</title>
+<meta name="theme-color" content="#f1e4c4">
+<meta name="description" content="Jack's body as a postal map. Humans file. The robot shuffles.">
+<link rel="canonical" href="https://timetravellersguild.com/jack/map/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="JACK / MAP — timetravellersguild.com">
+<meta property="og:description" content="Jack's body as a postal map. Humans file. The robot shuffles.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/map.png">
+<meta property="og:url" content="https://timetravellersguild.com/jack/map/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/jack/map/css/map.css?v=1">
+</head>
+<body>
+<noscript><p>The map needs ordinary JavaScript. The clerk will not invent a picture without it.</p></noscript>
+<canvas id="stage" aria-label="Earth as Jack's postal body"></canvas>
+<div id="labels" aria-hidden="true"></div>
+<p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a></p>
+<p id="modeLine">LOADING TOPOLOGY…</p>
+
+<div id="fallback" aria-label="Stations"></div>
+
+<aside id="hud">
+  <form action="/api/map/search" method="get" onsubmit="return false">
+    <label class="sr" for="q">Search the body</label>
+    <input id="q" name="q" type="search" placeholder="A card, a town, an organ…" autocomplete="off">
+    <button type="button" id="btnSearch">SEEK</button>
+  </form>
+  <p id="hits"></p>
+  <div class="ops">
+    <button type="button" id="btnTrace">TRACE</button>
+    <button type="button" id="btnDeck">THE DECK</button>
+    <a class="btn" href="/jack/room/">ROOM</a>
+    <a class="btn" href="/jack/">DESK</a>
+  </div>
+  <label class="sr" for="when">Time</label>
+  <input id="when" type="date" min="2026-08-01" max="2026-09-06" value="2026-09-06">
+  <p id="whenOut">ALL FILED STATIONS</p>
+</aside>
+
+<aside id="inspect" hidden>
+  <header>
+    <div>
+      <h1 id="insName">—</h1>
+      <p id="insAnatomy"></p>
+      <p id="insStatus"></p>
+    </div>
+    <button type="button" id="btnClose">CLOSE</button>
+  </header>
+  <dl>
+    <dt>WHERE</dt><dd id="insWhere"></dd>
+    <dt>WHAT</dt><dd id="insWhat"></dd>
+    <dt>WHY</dt><dd id="insWhy"></dd>
+    <dt>WHEN</dt><dd id="insWhen"></dd>
+  </dl>
+  <p id="insFlavour"></p>
+  <div id="insKids"></div>
+  <div class="row">
+    <a class="btn" id="insAsk" href="/jack/room/">ASK THE CLERK</a>
+    <a class="btn" id="insOpen" hidden href="#">OPEN</a>
+  </div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="/jack/map/js/tetra.js?v=1"></script>
+<script src="/jack/map/js/globe.js?v=1"></script>
+<script src="/jack/map/js/app.js?v=1"></script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

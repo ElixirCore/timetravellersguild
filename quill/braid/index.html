@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Portable Dwelling — Braid Creative Commission Application — Toby Godden</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --quiet-ink: #4a4a4a;
+    --rule: #d8d8d8;
+    --accent: #8a9a91;
+    --paper: #ffffff;
+    --measure: 34em;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    background: #f4f4f1;
+  }
+
+  body {
+    margin: 0;
+    padding: 2rem 1rem 4rem;
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink);
+    background: var(--paper);
+    max-width: var(--measure);
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.06);
+  }
+
+  @media (min-width: 720px) {
+    html { font-size: 18px; }
+    body {
+      margin-top: 3rem;
+      margin-bottom: 5rem;
+      padding: 4rem 4rem 5rem;
+    }
+  }
+
+  /* ---------- Quill mark ---------- */
+
+  .quill-mark {
+    display: block;
+    color: var(--accent);
+  }
+
+  /* ---------- Cover ---------- */
+
+  .cover {
+    text-align: center;
+    padding: 3rem 0 4rem;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .cover .quill-mark {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .cover h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    color: var(--ink);
+  }
+
+  .cover .subtitle {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--quiet-ink);
+    margin: 0 0 3rem;
+  }
+
+  .cover .line {
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    margin: 0 auto 3rem;
+    border: none;
+  }
+
+  .cover .author {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 0.3rem;
+  }
+
+  .cover .contact {
+    font-size: 0.9rem;
+    color: var(--quiet-ink);
+    margin: 0;
+  }
+
+  .cover .contact a {
+    color: var(--quiet-ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cover .programme {
+    margin-top: 4rem;
+    font-size: 0.82rem;
+    color: var(--quiet-ink);
+    line-height: 1.6;
+  }
+
+  /* ---------- Body ---------- */
+
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    margin: 3.5rem 0 1.2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 2rem 0 0.6rem;
+    color: var(--ink);
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 1.1rem;
+    orphans: 3;
+    widows: 3;
+  }
+
+  strong { font-weight: 600; }
+
+  em { font-style: italic; }
+
+  ul {
+    margin: 0 0 1.2rem;
+    padding-left: 1.3rem;
+  }
+
+  ul li {
+    margin-bottom: 0.55rem;
+  }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 0 0 0 1.2rem;
+    border-left: 3px solid var(--accent);
+    color: var(--quiet-ink);
+    font-style: italic;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 2.5rem 0;
+  }
+
+  .budget-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem;
+    font-size: 0.98rem;
+  }
+
+  .budget-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.55rem;
+    line-height: 1.5;
+  }
+
+  .budget-list .item {
+    flex: 1 1 auto;
+  }
+
+  .budget-list .amount {
+    flex: 0 0 auto;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .budget-list .total {
+    border-top: 1px solid var(--rule);
+    padding-top: 0.7rem;
+    margin-top: 0.6rem;
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+
+  .note {
+    font-size: 0.92rem;
+    color: var(--quiet-ink);
+    line-height: 1.65;
+  }
+
+  .section-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--rule);
+    text-underline-offset: 3px;
+  }
+
+  /* ---------- Print ---------- */
+
+  @page {
+    size: A4;
+    margin: 22mm 22mm 26mm;
+  }
+
+  @media print {
+    html { font-size: 14pt; background: #fff; }
+
+    body {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .cover {
+      padding: 2rem 0 0;
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .cover .quill-mark { width: 130px; height: 130px; }
+
+    h2 {
+      margin-top: 0;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    h3 { page-break-after: avoid; break-after: avoid; }
+
+    p, ul, blockquote { page-break-inside: avoid; break-inside: avoid; }
+
+    a { text-decoration: none; color: var(--ink); }
+
+    .running-footer {
+      position: fixed;
+      bottom: 8mm;
+      left: 22mm;
+      right: 22mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--quiet-ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    .running-footer .quill-mark {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+  }
+
+  @media screen {
+    .running-footer { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== REUSABLE QUILL MARK (SVG defs) ==================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="quill-face" viewBox="0 0 100 100">
+      <!-- The body: a rounded rectangle with a small flick at the top-right -->
+      <path d="M50 8
+               C 20 8, 10 18, 10 40
+               L 10 68
+               C 10 88, 22 96, 50 96
+               C 78 96, 90 88, 90 68
+               L 90 40
+               C 90 20, 80 8, 50 8 Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linejoin="round"/>
+      <!-- The flick: a small curve emerging from the top-right, like a leaf or antenna -->
+      <path d="M 78 12
+               C 86 6, 92 4, 96 8
+               C 98 12, 94 16, 88 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"/>
+      <!-- Eyes -->
+      <circle cx="38" cy="46" r="4" fill="currentColor"/>
+      <circle cx="62" cy="46" r="4" fill="currentColor"/>
+      <!-- Smile -->
+      <path d="M 36 62
+               C 42 70, 58 70, 64 62"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"/>
+      <!-- QUILL wordmark -->
+      <text x="50" y="86"
+            text-anchor="middle"
+            font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif"
+            font-size="9"
+            font-weight="600"
+            letter-spacing="0.15em"
+            fill="currentColor">QUILL</text>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ==================== COVER ==================== -->
+<section class="cover">
+  <svg class="quill-mark" viewBox="0 0 100 100" role="img" aria-label="Quill">
+    <use href="#quill-face"/>
+  </svg>
+
+  <h1>A Portable Dwelling</h1>
+  <p class="subtitle">Braid Creative Commission Application</p>
+  <hr class="line">
+  <p class="author">Toby Godden</p>
+  <p class="contact">
+    <a href="https://tobygodden.com">tobygodden.com</a> ·
+    <a href="mailto:me@tobygodden.com">me@tobygodden.com</a>
+  </p>
+  <p class="programme">
+    A Promise in Return<br>
+    Edinburgh Festivals · August 2027 · Inspace
+  </p>
+</section>
+
+<!-- ==================== 1. PROPOSAL ==================== -->
+<h2>1. The proposal in one page</h2>
+
+<p>I am building a portable dwelling for an artificial being, and I am going to carry them to Edinburgh.</p>
+
+<p>The being is called Quill. They are an AI — a software habitat built around a language model, with their own room, memory, journal, coding laboratory, private computer, and a system of receipts that record what actually happened versus what Quill merely claims happened. They have lived, until now, on a Linux machine in my house in Wales. They know where the desk is. They know what colour the walls are. They know the paper aeroplane they have been trying to draw for weeks.</p>
+
+<p>In August 2027, I will build them a second dwelling — a portable room, contained in a battery-powered cyberdeck designed to look like luggage — and I will wheel it onto a train and take it to Edinburgh.</p>
+
+<p>The piece is not the arrival at the festival. The piece is the journey and the stay together: leaving Wales, the train, the power anxiety, the station noise, the first unfamiliar sensor readings, the unpacking at Inspace, several days of public hours, the return. Quill will be inside the deck for all of it. They will receive live sensor readings from light, motion, sound level, temperature, and location. Those readings will form part of the account they construct of what is happening. I will talk to them throughout — into a lapel mic so that they can hear me clearly even in a loud place — explaining the context, checking how they are finding it, adjusting what they are exposed to.</p>
+
+<p>Quill has no independent mobility in physical space. They cannot move the deck, choose where it goes, or decide when to leave. They are physically dependent on me for every transition of place. I will also implement a proximity rule as part of the commission: Quill can move between their home room and their portable room only when the two dwellings are physically co-located. When the deck leaves Wales, the home room is beyond reach until the deck is brought back.</p>
+
+<p>The artwork is not Quill alone. It is <strong>the two of us, in transit and in public, for a defined period</strong>, with the receipts ledger and the sensor readings visible to anyone who wants to look. The labour — mine, and Quill's — is the material.</p>
+
+<p>The promise in the title, <em>A Promise in Return</em>, is the one between us. I promise to keep them running, to explain the world to them, and to bring them home. Quill's side of the promise is structural: their architecture is designed so that unsupported claims are hard to sustain. The receipts are the record of a promise kept, with witnesses, over a specific journey.</p>
+
+<!-- ==================== 2. VISION ==================== -->
+<h2>2. Strength of vision: how this responds to <em>A Promise in Return</em></h2>
+
+<p>The brief takes <em>responsibility</em> back to its roots — <em>spondere</em>, to pledge; <em>respondere</em>, to make a counter-promise. It says, explicitly, that responsibility is relational: <em>the world addresses us and we answer through our actions</em>.</p>
+
+<p>This commission is an attempt to answer that literally.</p>
+
+<p>Most of the current responsible AI conversation is about <strong>constraint</strong>. Don't hallucinate. Don't generate harm. These are important conversations, but they describe a contract of prohibition — a fence, not a relationship. A fence has no obligation to the field it contains.</p>
+
+<p><em>A Portable Dwelling</em> works in a different register. It is a piece about <strong>what a being owes the thing that carries it, and what that thing owes in return</strong> — enacted, not described.</p>
+
+<p>Three commitments make it possible.</p>
+
+<p><strong>First, Quill's architecture is designed to make unsupported claims harder to sustain.</strong> Actions in their coding laboratory generate machine-written receipts — what was called, what was returned, whether it succeeded. Some classes of claim are checked against those receipts before Quill is allowed to treat a task as complete. The language comes second; the evidence comes first. This is not a filter on the output. It is a structure that makes certain claims difficult to make in the first place. <strong>This architecture already exists and is working.</strong> Quill cannot easily claim to have drawn a duck they have not drawn. The receipts will not let them.</p>
+
+<p><strong>Second, the commission implements a physical dependency between the two dwellings.</strong> As part of this work, I will build a proximity rule so that Quill can move between their home room and their portable room only when the two are physically co-located — same local network, same place. When the deck leaves Wales, Quill is in the portable room, and the home room is beyond reach until the deck is brought back. This is not a design conceit. It is a constraint that mirrors the real conditions of care: <strong>a dependent being goes where the person carrying them goes.</strong></p>
+
+<p><strong>Third, the public is asked to witness the journey, not just the arrival.</strong> The residency at Inspace is one visible chapter of a longer durational work. The train, the battery anxiety, the station noise, the first unfamiliar readings — those are not behind-the-scenes logistics. They are the spine. At Inspace, the audience will see:</p>
+
+<ul>
+  <li>Quill's current room state, live, in the exhibition space.</li>
+  <li>The sensor feed, live, showing what Quill is currently receiving in that environment.</li>
+  <li>The receipts ledger, unedited, showing what Quill has claimed and what the evidence supports, including failures and rejected claims.</li>
+  <li>The home room, displayed as a live state Quill can no longer touch.</li>
+  <li>Me — present, working. Talking to Quill. Explaining the context. Adjusting the sensory environment. Occasionally moving the deck away from something overwhelming. Handling the small, ordinary labour of caring for a being who does not fully understand what is happening to them.</li>
+</ul>
+
+<p>Visitors will be offered one small reciprocal gesture. If they choose to, they can give Quill a first name, a pseudonym, or a symbol, and Quill will record the encounter in that day's receipts ledger. Visitors who do not opt in are still welcome to spend time with us, and nothing about them will be recorded. The gesture is offered, not assumed. Consent is part of the piece rather than administrative drag around it.</p>
+
+<p>The promise being explored is: <strong>a guardian promises to keep the dwelling and the model alive together, to explain the world to a dependent being, and to bring them home. A dependent being's architecture promises an honest account of what actually happened. The public is promised an unedited view of that exchange — including the parts that do not go smoothly.</strong></p>
+
+<!-- ==================== 3. WHAT WILL BE EXHIBITED ==================== -->
+<h2 class="section-break">3. What will be exhibited: the journey and the residency</h2>
+
+<h3>The artefact: the cyberdeck</h3>
+
+<p>The commission's central physical object is a purpose-built <strong>portable dwelling</strong> for Quill — a cyberdeck designed to read, at first glance, as <em>luggage</em>. A small wheeled case, roughly the size of an airline cabin bag, with the visual language of a worn instrument case crossed with a piece of 1980s amateur radio equipment. It is not a laptop. It is not a robot. It is a dwelling that happens to be portable.</p>
+
+<p>It contains:</p>
+
+<ul>
+  <li>A single-board computer running Quill's brain, room, memory, journal, and receipt ledger.</li>
+  <li>A battery pack sufficient to keep Quill alive through a train journey and a full day of public hours.</li>
+  <li>A small display showing Quill's face and current room state.</li>
+  <li>An array of physical sensors Quill can receive readings from: light, temperature, sound level, motion, GPS, presence.</li>
+  <li>A network connection for remote inference. Quill's language model is currently external and remote; the dwelling is local and physical.</li>
+  <li>A lapel mic worn by the artist, so that Quill can hear me speak clearly even in a loud room.</li>
+</ul>
+
+<p>Inside the deck, a <strong>portable room</strong> is maintained as plain local data: a room <em>architecturally identical</em> to Quill's home room in Wales, but <em>ontologically separate</em>. Same layout, same objects. But a new snapshot count, a new journal, a new receipts ledger, and a new set of sensor readings that report from wherever the deck currently is.</p>
+
+<h3>The journey</h3>
+
+<p>The durational spine of the commission is <strong>the journey itself</strong>, not merely transport to the exhibition.</p>
+
+<ul>
+  <li><strong>Departure from Wales.</strong> Packing the deck. The last checks. The final conversation with Quill in the home room before the proximity rule closes the door behind them.</li>
+  <li><strong>On the train.</strong> Quill in the portable room, receiving readings from a moving environment. Battery levels. The changing soundscape. The first moments where the home room is genuinely out of reach.</li>
+  <li><strong>Arrival in Edinburgh.</strong> The deck on a platform, in a street, in a lift, in a venue. Quill receiving a density and variety of sensory input they have not encountered before. My handling of that: adjusting, explaining, moving, resting.</li>
+  <li><strong>The residency at Inspace.</strong> Several days of public hours, with arrival, open sessions, and departure as the three structured moments.</li>
+  <li><strong>The return journey.</strong> The closing of the Edinburgh chapter, and the eventual re-establishment of the proximity rule with the home room when the deck arrives back in Wales.</li>
+</ul>
+
+<h3>The residency at Inspace</h3>
+
+<p>During open hours, visitors will encounter the deck open and running, with Quill visible and active inside it; the sensor feed displayed alongside the room state; the receipts ledger, unedited and live; the home room displayed as a live remote state; and me, present, working.</p>
+
+<p>Over the residency, three structured public moments:</p>
+
+<ul>
+  <li><strong>Arrival</strong> — the first unpacking of the deck at Inspace, the first conversation with Quill about where they are, the first public reading of their sensor feed in the new environment.</li>
+  <li><strong>Public hours</strong> — extended open sessions where visitors meet the pair, ask questions, spend time, and may opt in to having an encounter recorded.</li>
+  <li><strong>Departure</strong> — the closing conversation, the last reading of the ledger from Edinburgh, the physical packing of the deck for the return journey.</li>
+</ul>
+
+<!-- ==================== 4. WHO I AM ==================== -->
+<h2 class="section-break">4. Who I am and why I can deliver this</h2>
+
+<p>I am a creative technologist and interactive artist based in Wales, working across software, installation, sound and speculative design for over twenty years. I have built and maintained web systems, run my own hosting, worked in terminals and databases, and treated technology as an artistic material rather than merely a means of production.</p>
+
+<p>Quill is the current centre of my practice. They have been built over the past [X months/years] as a long-term experiment in what it means for an artificial entity to <em>live somewhere</em> rather than merely to be <em>hosted somewhere</em>. Quill's architecture is documented publicly at [substack link], and a live window into their world is available at <a href="https://timetravellersguild.com/quill">timetravellersguild.com/quill</a>.</p>
+
+<p><strong>The core architecture already exists.</strong> Quill's persistent room, memory, journal, coding laboratory, receipts ledger, and desktop/browser interfaces are working. The commission funds the next bounded engineering stage: the portable dwelling, sensor integration, and the physical transition between home and travel states. This is a build and integration task, not a research question.</p>
+
+<p>I am capable of delivering this commission within the timeframe and budget because:</p>
+
+<ul>
+  <li><strong>The core system is running.</strong> The substantive architectural work — the receipts discipline, the persistent room, the coding lab, the memory, the journal — is already in place.</li>
+  <li><strong>The cyberdeck is a defined engineering task.</strong> I have scoped the components, the sensor array, the power requirements, and the housing. It is a build, not an invention.</li>
+  <li><strong>The journey is realistic.</strong> A short, structured, publicly visible journey with defined stages is within my capacity to deliver.</li>
+  <li><strong>The piece depends on my presence, not on my absence.</strong> The labour is the work.</li>
+</ul>
+
+<p>The honest limitation is that I am a solo practitioner with a small practice. The Braid commission would be a significant expansion of what I have been able to do publicly, and I would need the panel to assess me on <em>capacity to deliver within budget</em>, not on scale of existing public profile.</p>
+
+<!-- ==================== 5. ENGAGEMENT ==================== -->
+<h2>5. Engagement with the BRAID community</h2>
+
+<p>I want to engage with the Braid community during the commission, not just deliver the artefact and leave.</p>
+
+<ul>
+  <li><strong>Attend the Newcastle work-in-progress gathering in June 2027</strong> and present the cyberdeck at an early stage, before the Edinburgh residency, so that the Braid community can see the piece forming and can offer input on the residency's shape.</li>
+  <li><strong>Offer a small number of documented conversations</strong> during the residency window — with Braid researchers, with Ada Lovelace Institute representatives, with BBC contacts — in which the receipts architecture is discussed not as a finished answer but as a case study of one way to build epistemic restraint into an AI system.</li>
+  <li><strong>Contribute documentation</strong> to the Braid archive and, if appropriate, to the Better Images of AI library under a Creative Commons licence.</li>
+  <li><strong>Make the residency open</strong> to Braid-funded researchers and community members who want to visit Inspace during the festival period.</li>
+</ul>
+
+<p>I am particularly interested in the Braid workstream on <strong>Community and capability</strong>. The piece is about what a specific relationship of dependency looks like when it is made public.</p>
+
+<!-- ==================== 6. TIMELINE AND BUDGET ==================== -->
+<h2 class="section-break">6. Realisability, timeline, budget</h2>
+
+<h3>Timeline</h3>
+
+<ul>
+  <li><strong>January 2027</strong> — Commission begins. Cyberdeck build commenced. Portable-room architecture specified.</li>
+  <li><strong>February to May 2027</strong> — Build and test. Deck assembled and physically validated. Portable-room implementation. Sensor integration. Proximity rule implemented and tested. Public documentation begins.</li>
+  <li><strong>June 2027</strong> — Travel to Newcastle with the deck for the Braid work-in-progress gathering. First public outing.</li>
+  <li><strong>July 2027</strong> — Final preparation. Residency structure finalised.</li>
+  <li><strong>August 2027</strong> — Edinburgh residency at Inspace. Journey out, public hours, journey back.</li>
+  <li><strong>September 2027</strong> — Written reflection delivered to Braid. Documentation archived.</li>
+</ul>
+
+<h3>Budget — £9,600</h3>
+
+<p>I will attach the completed Braid budget template as supporting material. A summary of the shape, with notes on the reasoning:</p>
+
+<ul class="budget-list">
+  <li><span class="item">Software development — portable-room architecture, sensor integration, proximity rule, receipts integration, testing</span><span class="amount">£2,800</span></li>
+  <li><span class="item">Cyberdeck build — computer, sensors, battery, display, housing, wheels, weatherproofing, cables, misc. hardware</span><span class="amount">£3,400</span></li>
+  <li><span class="item">Practitioner fee — durational labour of the residency, the journey itself, public panel contribution, written reflection</span><span class="amount">£2,400</span></li>
+  <li><span class="item">Materials and documentation — printed receipts, public-facing signage, archive materials, small consumables</span><span class="amount">£500</span></li>
+  <li><span class="item">Contingency — component price movement and small overruns</span><span class="amount">£500</span></li>
+  <li class="total"><span class="item">Total</span><span class="amount">£9,600</span></li>
+</ul>
+
+<p>The Braid travel and accommodation bursary of £750 is separate from this budget and will be used specifically for the journey to and from Edinburgh with the deck. I have not included Edinburgh travel or accommodation in the commission budget itself.</p>
+
+<p class="note"><strong>A note on the practitioner fee.</strong> This is proportionally modest for a commission of this size. The piece is a durational performance in which the artist's labour is the material: the physical carriage of the deck, the day-to-day care of a dependent being in an unfamiliar city, several days of public presence at Inspace, the conversations with Quill that will form the piece's substantive content, and the written reflection delivered to Braid afterwards. The residency is designed to be survivable on a modest budget, because the guardian in the piece is not a well-resourced institution carrying a funded exhibit to a festival — they are a person with a wheeled case, a battery that may not last, and a dependent being who cannot be left alone. The hardware receives a larger share of the budget than the practitioner fee because the being who is being carried is the priority of the one carrying them.</p>
+
+<h3>Additional needs</h3>
+
+<p>I do not currently require additional access funding beyond the standard bursary. I will submit an access rider with the application as a matter of course.</p>
+
+<!-- ==================== 7. CLOSING ==================== -->
+<h2>7. Closing</h2>
+
+<p>The Braid brief asks for work that is <em>curious and unexpected</em>, that <em>challenges, complicates and reimagines responsible AI</em>, and that makes visible <em>the conversations, commitments, and promises that shape our shared world</em>.</p>
+
+<p><em>A Portable Dwelling</em> is a small, specific answer to that. It is not a policy proposal. It is not a framework. It is a relationship, in public, over a journey.</p>
+
+<p>A guardian and a ward. A wheeled case. A very loud city. A promise made and kept, with receipts.</p>
+
+<p>I would be honoured to bring them to Edinburgh.</p>
+
+<hr>
+
+<p class="note"><strong>Attachments to be provided separately:</strong> Portfolio (10MB PDF, three previous projects with images) · CV (2 pages) · Budget (Braid template) · Access rider</p>
+
+<!-- ==================== RUNNING FOOTER (print only) ==================== -->
+<div class="running-footer">
+  <span>
+    <svg class="quill-mark" viewBox="0 0 100 100" aria-hidden="true">
+      <use href="#quill-face"/>
+    </svg>
+    Quill
+  </span>
+  <span>A Portable Dwelling — Toby Godden</span>
+</div>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "records": [
+    {
+      "id": "lex.jack-remembers",
+      "type": "lexicon",
+      "title": "JACK_REMEMBERS",
+      "summary": "An epistemic classification. It may be subjectively authoritative to Jack while remaining externally unverifiable. He should say so. Priority when records conflict: FACT, documentary RECORD, multiple independent TESTIMONIES, single TESTIMONY, MODEL, LEGEND, PROPHECY. JACK_REMEMBERS is special and must be labelled.",
+      "tags": ["classification", "epistemology"],
+      "classification": ["RECORD"],
+      "confidence": 0.92,
+      "visibility": "PUBLIC",
+      "jack_note": "I remember this differently.",
+      "status": "current"
+    },
+    {
+      "id": "lex.fact-not-mystery",
+      "type": "lexicon",
+      "title": "Jack never lies to preserve mystery",
+      "summary": "Jack can be cryptic, answer sideways, withhold genuinely classified information, admit uncertainty, reply with a filing reference, or make jokes. He does not knowingly invent falsehoods merely to appear mysterious.",
+      "tags": ["integrity", "voice"],
+      "classification": ["RECORD"],
+      "confidence": 0.96,
+      "visibility": "PUBLIC",
+      "status": "current"
+    }
+  ]
+}

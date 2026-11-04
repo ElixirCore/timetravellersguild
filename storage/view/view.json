@@ -1,0 +1,277 @@
+{
+    "updated_at": "2026-09-09T21:54:22+00:00",
+    "observations": [
+        {
+            "id": "20260909T210051-c11ad8",
+            "at": "2026-09-09T21:00:51+00:00",
+            "projection": "TEMPORAL",
+            "pattern": false,
+            "focus": {
+                "slug": "department",
+                "title": "Department of Excess Time",
+                "type": "INSTITUTION",
+                "when": "01.03.1951",
+                "place": "Cathays Park, Cardiff"
+            },
+            "beat": "TEST · BEAT 1",
+            "ask": "The VIEW orbit is on TEMPORAL. Present station: Department of Excess Time · INSTITUTION · 01.03.1951 · Cathays Park, Cardiff. Beat: TEST · BEAT 1. What significance is the tree showing right now? Observe briefly for the log. Do not invent canon.",
+            "text": "TEMPORAL is showing the Department as an anchor: established on 01.03.1951, still active in the present field. The TEST appears to concern continuity—whether that founding date continues to produce administrative consequences. The tree shows persistence, not proof of a causal chain.",
+            "ok": true
+        },
+        {
+            "id": "20260909T210417-08162b",
+            "at": "2026-09-09T21:04:17+00:00",
+            "projection": "TEMPORAL",
+            "pattern": false,
+            "focus": {
+                "slug": "cardiff",
+                "title": "Cardiff",
+                "type": "PLACE",
+                "when": "01.01.2008",
+                "place": "Cardiff"
+            },
+            "beat": "BEAT 2/51 · TEMPORAL",
+            "ask": "The VIEW orbit is on TEMPORAL. Present station: Cardiff · PLACE · 01.01.2008 · Cardiff. Beat: BEAT 2/51 · TEMPORAL. What significance is the tree showing right now? Observe briefly for the log. Do not invent canon.",
+            "text": "TEMPORAL is showing Cardiff on 01.01.2008 as an origin point: the place where the Guild first wrote itself down and the later tree begins to branch. That is structural significance in the current view, not proof that every later account began there.",
+            "ok": true
+        },
+        {
+            "id": "20260909T210609-197e0c",
+            "at": "2026-09-09T21:06:09+00:00",
+            "projection": "SPATIAL",
+            "pattern": true,
+            "focus": {
+                "slug": "station-xiii",
+                "title": "Station XIII",
+                "type": "PLACE",
+                "when": "01.01.2026",
+                "place": "Cardiff"
+            },
+            "beat": "BEAT 11/51 · SPATIAL · PATTERN",
+            "ask": "The VIEW orbit is on SPATIAL with PATTERN lit. Present station: Station XIII · PLACE · 01.01.2026 · Cardiff. Beat: BEAT 11/51 · SPATIAL · PATTERN. What significance is the tree showing right now? Observe briefly for the log. Do not invent canon.",
+            "text": "The spatial pattern is concentrating on Cardiff: Station XIII sits where place, instrument and Department repeatedly meet. The tree is showing Cardiff as an operational anchor, not proving a new event. Working significance only; no canon added.",
+            "ok": true
+        },
+        {
+            "id": "20260909T211751-63659d",
+            "at": "2026-09-09T21:17:51+00:00",
+            "projection": "TEMPORAL",
+            "pattern": false,
+            "focus": {
+                "slug": "cardiff",
+                "title": "Cardiff",
+                "type": "PLACE",
+                "when": "01.01.2008",
+                "place": "Cardiff"
+            },
+            "beat": "BEAT 2/51 · TEMPORAL",
+            "ask": "The VIEW orbit is on TEMPORAL. Present station: Cardiff · PLACE · 01.01.2008 · Cardiff. Beat: BEAT 2/51 · TEMPORAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "TEMPORAL shows Cardiff at 01.01.2008 as the tree’s present origin marker. The recurrence is institutional: Cardiff is both headquarters and the place where the Guild first wrote itself down. The tension is between origin of record and origin of existence; the tree establishes the former, not the latter.",
+            "ok": true
+        },
+        {
+            "id": "20260909T211940-07b0cb",
+            "at": "2026-09-09T21:19:40+00:00",
+            "projection": "SYMBOLIC",
+            "pattern": true,
+            "focus": {
+                "slug": "swansea-valley",
+                "title": "Swansea Valley",
+                "type": "PLACE",
+                "when": "21.03.2026",
+                "place": "Swansea Valley"
+            },
+            "beat": "BEAT 17/51 · SYMBOLIC · PATTERN",
+            "ask": "The VIEW orbit is on SYMBOLIC with PATTERN lit. Present station: Swansea Valley · PLACE · 21.03.2026 · Swansea Valley. Beat: BEAT 17/51 · SYMBOLIC · PATTERN. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SYMBOLIC/PATTERN is lighting a recurrence in the Swansea Valley: sealed containers, disagreed tables and Departmental paper occupy the same neighbourhood. The tension is between a place accumulating context and an interpretive notice implying connection without establishing cause. The tree is showing grounds for comparison, not a conclusion.",
+            "ok": true
+        },
+        {
+            "id": "20260909T212145-776570",
+            "at": "2026-09-09T21:21:45+00:00",
+            "projection": "SPATIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "signals",
+                "title": "Signals",
+                "type": "SIGNAL",
+                "when": "01.01.2029",
+                "place": "unplaced"
+            },
+            "beat": "BEAT 31/51 · SPATIAL",
+            "ask": "The VIEW orbit is on SPATIAL. Present station: Signals · SIGNAL · 01.01.2029. Beat: BEAT 31/51 · SPATIAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SPATIAL is treating Signals as a point of orientation without supplying an agreed origin. Recurrence is visible around active stations and the valley neighbourhood; the tension is between distributed reception and absent provenance. The 01.01.2029 stamp locates the signal in time more firmly than the tree presently locates its sender. Pattern, not cause.",
+            "ok": true
+        },
+        {
+            "id": "20260909T212537-555f61",
+            "at": "2026-09-09T21:25:37+00:00",
+            "projection": "SPATIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "play-cube-02",
+                "title": "Lesson 02",
+                "type": "PLAY",
+                "when": "2026",
+                "place": "the blotter"
+            },
+            "beat": "BEAT 50/51 · SPATIAL",
+            "ask": "The VIEW orbit is on SPATIAL. Present station: Lesson 02 · PLAY · 2026 · the blotter. Beat: BEAT 50/51 · SPATIAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SPATIAL shows PLAY recurring where place, instrument and public encounter overlap: the square, the station, the valley. The tension is between fixed sites and a lesson still moving through them. The places are recorded; Lesson 02 remains a working slip. No conclusion follows yet.",
+            "ok": true
+        },
+        {
+            "id": "20260909T212658-e9baf7",
+            "at": "2026-09-09T21:26:58+00:00",
+            "projection": "SPATIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "feed",
+                "title": "Feed∞",
+                "type": "OBJECT",
+                "when": "01.01.2026",
+                "place": "unplaced"
+            },
+            "beat": "BEAT 9/51 · SPATIAL",
+            "ask": "The VIEW orbit is on SPATIAL. Present station: Feed∞ · OBJECT · 01.01.2026. Beat: BEAT 9/51 · SPATIAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SPATIAL is showing Feed∞ as an object whose significance depends on where encounter occurs. Cardiff recurs through Station XIII and Bute Street; the valley recurs through sealed containers, disagreed tables and Departmental paper. The tension is between situated evidence and a feed that can move interpretation elsewhere. Pattern noted; cause not established.",
+            "ok": true
+        },
+        {
+            "id": "20260909T212853-c67a5d",
+            "at": "2026-09-09T21:28:53+00:00",
+            "projection": "SOCIAL",
+            "pattern": true,
+            "focus": {
+                "slug": "det-response",
+                "title": "Departmental response",
+                "type": "SIGNAL",
+                "when": "03.09.2026",
+                "place": "Cathays Park, Cardiff"
+            },
+            "beat": "BEAT 25/51 · SOCIAL · PATTERN",
+            "ask": "The VIEW orbit is on SOCIAL with PATTERN lit. Present station: Departmental response · SIGNAL · 03.09.2026 · Cathays Park, Cardiff. Beat: BEAT 25/51 · SOCIAL · PATTERN. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "On SOCIAL with PATTERN lit, the Departmental response appears as a relational act: an institution answering into public space at Cathays Park, rather than a signal standing alone. Recurrence is visible in the surrounding notices, scheduled transmissions and receiving signals. The tension is between public correspondence and uncertain coordination; the pattern shows repeated contact, not proof of a single cause.",
+            "ok": true
+        },
+        {
+            "id": "20260909T213515-e25d64",
+            "at": "2026-09-09T21:35:15+00:00",
+            "projection": "TEMPORAL",
+            "pattern": false,
+            "focus": {
+                "slug": "cardiff",
+                "title": "Cardiff",
+                "type": "PLACE",
+                "when": "01.01.2008",
+                "place": "Cardiff"
+            },
+            "beat": "BEAT 2/55 · TEMPORAL",
+            "ask": "The VIEW orbit is on TEMPORAL. Present station: Cardiff · PLACE · 01.01.2008 · Cardiff. Beat: BEAT 2/55 · TEMPORAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "Beat 2/55: Cardiff is recurring as both the 2008 point of inscription and an active departmental place. The tension is between origin and continuity: the Guild first wrote itself down here, but the record does not establish that it began here. The precise 01.01.2008 coordinate appears on the tree; the surviving record supports 2008, not necessarily that day.",
+            "ok": true
+        },
+        {
+            "id": "20260909T214501-6c4731",
+            "at": "2026-09-09T21:45:01+00:00",
+            "projection": "SPATIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "triangla",
+                "title": "Triangla",
+                "type": "OBJECT",
+                "when": "01.01.2026",
+                "place": "unplaced"
+            },
+            "beat": "BEAT 51/51 · SPATIAL",
+            "ask": "The VIEW orbit is on SPATIAL. Present station: Triangla · OBJECT · 01.01.2026. Beat: BEAT 51/51 · SPATIAL. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SPATIAL view shows Triangla as a portable object with no filed location, surrounded by place-heavy activity in Cardiff and the Swansea Valley. Recurrence is present around stations and the valley, but no record yet attaches Triangla to that pattern. The tension is simple: the object has geometry and a date, but no situated provenance.",
+            "ok": true
+        },
+        {
+            "id": "20260909T214649-59d27c",
+            "at": "2026-09-09T21:46:49+00:00",
+            "projection": "INSTITUTIONAL",
+            "pattern": false,
+            "focus": {
+                "slug": "cribarth",
+                "title": "Cribarth",
+                "type": "PLACE",
+                "when": "21.03.2026",
+                "place": "Swansea Valley"
+            },
+            "beat": "BEAT 15/51 · INSTITUTIONAL · PASS 2",
+            "ask": "The VIEW orbit is on INSTITUTIONAL. Present station: Cribarth · PLACE · 21.03.2026 · Swansea Valley. Beat: BEAT 15/51 · INSTITUTIONAL · PASS 2. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "INSTITUTIONAL shows Cribarth acquiring procedural weight: three nights of readings, disagreed tables, and a Departmental pattern notice now meet at one place. The recurrence is attention returning to the valley. The tension is that institutional recognition is accumulating faster than agreement in the evidence.",
+            "ok": true
+        },
+        {
+            "id": "20260909T214857-09a614",
+            "at": "2026-09-09T21:48:57+00:00",
+            "projection": "SPATIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "signals",
+                "title": "Signals",
+                "type": "SIGNAL",
+                "when": "01.01.2029",
+                "place": "unplaced"
+            },
+            "beat": "BEAT 31/51 · SPATIAL · PASS 2",
+            "ask": "The VIEW orbit is on SPATIAL. Present station: Signals · SIGNAL · 01.01.2029. Beat: BEAT 31/51 · SPATIAL · PASS 2. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SPATIAL is showing a dense geography around an origin it cannot place. Valley sites, Station XIII and Cardiff recur beside instruments, notices and field material; the 01.01.2029 signal still has no agreed sender or spatial provenance. The tension is between accumulated place-context and an unlocated transmission. Recurrence is on the blotter; cause is not.",
+            "ok": true
+        },
+        {
+            "id": "20260909T215053-b28cad",
+            "at": "2026-09-09T21:50:53+00:00",
+            "projection": "SOCIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "pending-i-got-lost-83624f",
+                "title": "I got lost",
+                "type": "DOCUMENT",
+                "when": "04.09.2026",
+                "place": "unplaced"
+            },
+            "beat": "BEAT 48/51 · SOCIAL · PASS 2",
+            "ask": "The VIEW orbit is on SOCIAL. Present station: I got lost · DOCUMENT · 04.09.2026. Beat: BEAT 48/51 · SOCIAL · PASS 2. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SOCIAL shows the statement “I got lost” recurring in two records: one accepted as canon, one still proposed. The tension is procedural rather than revelatory—the same loss has entered the field twice without an established relationship between the entries or further social context.",
+            "ok": true
+        },
+        {
+            "id": "20260909T215244-e27d46",
+            "at": "2026-09-09T21:52:44+00:00",
+            "projection": "INSTITUTIONAL",
+            "pattern": false,
+            "focus": {
+                "slug": "abercrave",
+                "title": "Abercrave",
+                "type": "PLACE",
+                "when": "21.03.2026",
+                "place": "Abercrave"
+            },
+            "beat": "BEAT 14/51 · INSTITUTIONAL · PASS 3",
+            "ask": "The VIEW orbit is on INSTITUTIONAL. Present station: Abercrave · PLACE · 21.03.2026 · Abercrave. Beat: BEAT 14/51 · INSTITUTIONAL · PASS 3. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "Institutionally, Abercrave is recurring as more than an address: Departmental paper, a valley mission, sealed material and disputed observations gather in its neighbourhood. The tension is between an ordinary village and accumulating institutional attention. The blotter shows a pattern, not a cause or mandate.",
+            "ok": true
+        },
+        {
+            "id": "20260909T215422-5c29bd",
+            "at": "2026-09-09T21:54:22+00:00",
+            "projection": "SOCIAL",
+            "pattern": false,
+            "focus": {
+                "slug": "field-issue-13",
+                "title": "Field Issue 13",
+                "type": "MEDIA",
+                "when": "03.09.2026",
+                "place": "undisclosed"
+            },
+            "beat": "BEAT 26/51 · SOCIAL · PASS 3",
+            "ask": "The VIEW orbit is on SOCIAL. Present station: Field Issue 13 · MEDIA · 03.09.2026 · undisclosed. Beat: BEAT 26/51 · SOCIAL · PASS 3. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "SOCIAL is showing Field Issue 13 as a carrier: held media becoming a departmental record through contact rather than commerce. Recurrence gathers around 3 September 2026—issue, moment and lodged dossier. The tension is plain: the record is public, while its location remains undisclosed. No larger conclusion is warranted.",
+            "ok": true
+        }
+    ]
+}

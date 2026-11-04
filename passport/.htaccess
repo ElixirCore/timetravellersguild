@@ -1,0 +1,6 @@
+DirectoryIndex index.php index.html
+RewriteEngine on
+RewriteRule ^map/?$ map.php [L,QSA]
+RewriteRule ^passport/?$ /passport/ [R=301,L]
+RewriteRule ^page/?$ /passport/ [R=301,L]
+RewriteRule ^page/([a-z0-9-]+)/?$ page.php?slug=$1 [L,QSA]

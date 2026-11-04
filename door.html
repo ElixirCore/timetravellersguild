@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Time Travellers Guild — Station XIII</title>
+<meta name="description" content="Station XIII. The Ffilm is begun. Find your way through.">
+<meta name="theme-color" content="#070706">
+<link rel="canonical" href="https://timetravellersguild.com/door.html">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="The Time Travellers Guild — Station XIII">
+<meta property="og:description" content="Station XIII. The Ffilm is begun. Find your way through.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/door.png">
+<meta property="og:url" content="https://timetravellersguild.com/door.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/network.css">
+<style>
+:root{
+  --ink:#070706; --ink-2:#0e0d0b; --ink-3:#151310;
+  --brass:#c9a961; --brass-dim:#7d6838; --brass-faint:#3d3320; --brass-bright:#e4c583;
+  --sage:#a8bfa8; --sage-dim:#6f8570; --oxide:#b5654a;
+  --parch:#ded7c8; --parch-dim:#948d80; --rule:#231f19;
+  --lock-red:#8a3b2f; --lock-green:#5f8f5a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--parch);font-family:"EB Garamond",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+a{color:inherit}
+::selection{background:var(--brass-faint);color:var(--brass-bright)}
+
+/* ============ GATE ============ */
+#gate{position:fixed;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 30%,#161a22,var(--ink) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6rem;padding:2rem;transition:opacity 1.4s ease .3s, visibility 0s linear 1.7s}
+body.open #gate{opacity:0;visibility:hidden;pointer-events:none}
+#door{position:relative;width:min(48vw,170px);height:min(48vw,170px);max-height:250px;border:0;padding:0;background:linear-gradient(160deg,#2b2318,#171310 55%,#0c0a08);border-radius:6px 6px 3px 3px;box-shadow:inset 0 0 0 3px #060504, inset 0 0 30px rgba(0,0,0,.7), 0 0 40px rgba(201,169,97,.08);cursor:pointer;touch-action:manipulation;transition:transform 1.2s cubic-bezier(.2,.8,.2,1), opacity 1s ease}
+#door::before{content:"";position:absolute;inset:14px;border:1px solid var(--brass-faint);border-radius:3px}
+#door::after{content:"";position:absolute;left:16px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--brass-bright),var(--brass-dim) 70%);box-shadow:0 0 8px rgba(201,169,97,.5)}
+#door.hit{animation:rap .3s cubic-bezier(.3,.9,.3,1)}
+@keyframes rap{0%{transform:translateY(0)}25%{transform:translateY(3px) scale(.99)}100%{transform:translateY(0)}}
+body.open #door{opacity:0;transform:scale(1.4)}
+#prompt{font-variant:small-caps;letter-spacing:.3em;font-size:.78rem;color:var(--brass-dim);text-align:center;min-height:1.2em}
+#tally{display:flex;gap:.9rem}
+.pip{width:6px;height:6px;border-radius:50%;border:1px solid var(--brass-dim);transition:background .35s,box-shadow .35s,transform .35s}
+.pip.on{background:var(--brass);box-shadow:0 0 12px rgba(201,169,97,.75);transform:scale(1.25)}
+
+/* ============ SITE ============ */
+#site{opacity:0;transition:opacity 1.6s ease .5s;pointer-events:none}
+body.open #site{opacity:1;pointer-events:auto}
+#grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+#chrono{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:calc(.7rem + env(safe-area-inset-top)) 5vw .7rem;font-family:"Courier Prime",monospace;font-size:.64rem;letter-spacing:.09em;color:var(--brass-dim);background:linear-gradient(180deg,rgba(7,7,6,.94),rgba(7,7,6,.7) 75%,transparent);backdrop-filter:blur(3px)}
+#chrono b{font-weight:400;color:var(--brass)}
+#chrono .right{color:var(--sage-dim)}
+#progress{position:fixed;bottom:0;left:0;right:0;z-index:80;display:flex;justify-content:center;gap:.5rem;padding:.7rem 0 calc(.7rem + env(safe-area-inset-bottom));background:linear-gradient(0deg,rgba(7,7,6,.94),transparent);font-family:"Courier Prime",monospace}
+.wp{width:8px;height:8px;border-radius:50%;border:1px solid var(--brass-faint);transition:.4s}
+.wp.done{background:var(--sage);border-color:var(--sage);box-shadow:0 0 8px rgba(168,191,168,.6)}
+
+main{max-width:1080px;margin:0 auto;padding:0 6vw}
+.sigil{display:flex;align-items:center;gap:1.2rem;margin:0 0 2.2rem;font-family:"Courier Prime",monospace;font-size:.8rem;letter-spacing:.5em;color:var(--brass-faint)}
+.sigil::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--brass-faint),transparent)}
+.eyebrow{font-variant:small-caps;letter-spacing:.24em;font-size:.74rem;color:var(--brass-dim);margin:0 0 1.1rem}
+h1,h2,h3{font-weight:400;color:#f4eede;margin:0}
+h1{font-size:clamp(2.4rem,10vw,5.4rem);line-height:.97;letter-spacing:-.01em}
+h1 small{display:block;font-size:.24em;letter-spacing:.34em;font-variant:small-caps;color:var(--brass);margin-bottom:1em;font-weight:400}
+h2{font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.08;margin-bottom:1.2rem}
+h3{font-size:1.15rem;font-weight:600;margin:2rem 0 .6rem;color:var(--brass)}
+p{margin:0 0 1.05rem;max-width:64ch}
+.lede{font-size:1.15rem;line-height:1.5;color:#efe8d8;max-width:52ch}
+.gloss{font-style:italic;color:var(--parch-dim);font-size:.98rem}
+em.term{font-style:italic;color:var(--sage)}
+strong{font-weight:600;color:#f2ecdd}
+section{padding:4.6rem 0;border-top:1px solid var(--rule)}
+
+#hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;padding:6.5rem 0 3.5rem}
+.declaration{margin:2.2rem 0 0;font-family:"Courier Prime",monospace;font-size:clamp(.8rem,3.2vw,.98rem);letter-spacing:.15em;color:var(--sage);text-transform:uppercase}
+.declaration .dots{color:var(--oxide);letter-spacing:.3em}
+#hero .gloss{max-width:36ch;margin-top:1.5rem}
+
+/* three doors — real navigation */
+.doors{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:2.2rem 0 0}
+@media(min-width:820px){.doors{grid-template-columns:repeat(3,1fr)}}
+.portal{background:var(--ink-2);padding:2rem 1.8rem 1.9rem;display:flex;flex-direction:column;gap:.6rem;text-decoration:none;color:inherit;position:relative;overflow:hidden;transition:background .4s}
+.portal::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,169,97,.09),transparent 62%);opacity:0;transition:opacity .4s}
+.portal:hover,.portal:focus-visible{background:var(--ink-3)}
+.portal:hover::before,.portal:focus-visible::before{opacity:1}
+.portal .num{font-family:"Courier Prime",monospace;font-size:.62rem;letter-spacing:.2em;color:var(--brass-faint)}
+.portal .pname{font-size:1.4rem;color:#f4eede;position:relative}
+.portal .purl{font-family:"Courier Prime",monospace;font-size:.74rem;color:var(--brass);position:relative}
+.portal .pdesc{font-style:italic;color:var(--parch-dim);font-size:.94rem;margin:.2rem 0 0;position:relative}
+.portal .enter{margin-top:auto;padding-top:1.2rem;font-variant:small-caps;letter-spacing:.2em;font-size:.66rem;color:var(--sage-dim);position:relative}
+.portal.locked{opacity:.4;pointer-events:none;filter:grayscale(.6)}
+.portal.locked .enter{color:var(--lock-red)}
+.portal.unlockable{cursor:default}
+
+/* clue cells */
+.clue{background:var(--ink-2);border:1px solid var(--rule);padding:1.6rem 1.5rem;margin:1.6rem 0;position:relative}
+.clue .tag{font-family:"Courier Prime",monospace;font-size:.62rem;letter-spacing:.18em;color:var(--brass-faint);margin-bottom:.7rem;display:block}
+.cipher{font-family:"Courier Prime",monospace;letter-spacing:.06em;font-size:1rem;color:var(--brass-bright);background:var(--ink);padding:1rem 1.1rem;border-left:2px solid var(--brass-faint);margin:.8rem 0;cursor:pointer;user-select:none;line-height:1.7;transition:color .3s}
+.cipher:hover{color:#fff2d6}
+.cipher .decoded{display:none;color:var(--sage)}
+.cipher.solved{color:var(--sage-dim);border-left-color:var(--sage-dim)}
+.cipher.solved .plain{display:none}
+.cipher.solved .decoded{display:inline}
+.clue-answer{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.clue-answer input{flex:1;min-width:160px;background:var(--ink);border:1px solid var(--rule);color:var(--parch);padding:.7rem .9rem;font-family:"Courier Prime",monospace;font-size:.88rem;letter-spacing:.05em}
+.clue-answer input:focus{outline:none;border-color:var(--brass)}
+.clue-answer button{background:var(--brass-faint);color:var(--brass-bright);border:1px solid var(--brass-dim);padding:.7rem 1.2rem;font-family:"Courier Prime",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:.25s}
+.clue-answer button:hover{background:var(--brass-dim);color:#fff}
+.clue-status{font-family:"Courier Prime",monospace;font-size:.72rem;letter-spacing:.06em;margin-top:.6rem;min-height:1.1em}
+.clue-status.ok{color:var(--sage)}
+.clue-status.bad{color:var(--oxide)}
+.clue.solved{border-color:var(--sage-dim)}
+.clue.solved::after{content:"✓ resolved";position:absolute;top:1.2rem;right:1.5rem;font-family:"Courier Prime",monospace;font-size:.66rem;letter-spacing:.14em;color:var(--sage)}
+
+/* the vault */
+#vault{text-align:center}
+.vault-frame{max-width:36rem;margin:2rem auto 0;padding:2.4rem 1.8rem;border:1px solid var(--rule);background:radial-gradient(ellipse at 50% 0%,rgba(201,169,97,.05),transparent 70%)}
+.dial-progress{display:flex;justify-content:center;gap:1.4rem;margin-bottom:1.6rem}
+.dial-progress .dp{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--brass-faint);display:flex;align-items:center;justify-content:center;font-family:"Courier Prime",monospace;font-size:.8rem;color:var(--brass-faint);transition:.4s}
+.dial-progress .dp.done{border-color:var(--sage);color:var(--sage);box-shadow:0 0 14px rgba(168,191,168,.35)}
+.vault-combo{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem}
+.vault-combo input{width:150px;background:var(--ink);border:1px solid var(--rule);color:var(--parch);padding:.8rem .9rem;font-family:"Courier Prime",monospace;text-align:center;letter-spacing:.1em}
+.vault-combo input:focus{outline:none;border-color:var(--brass)}
+.vault-combo button{background:var(--brass-faint);color:var(--brass-bright);border:1px solid var(--brass-dim);padding:.8rem 1.4rem;font-family:"Courier Prime",monospace;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:.25s}
+.vault-combo button:hover{background:var(--brass-dim);color:#fff}
+.vault-msg{margin-top:1rem;font-family:"Courier Prime",monospace;font-size:.78rem;letter-spacing:.05em;min-height:1.4em;color:var(--brass-dim)}
+.vault-msg.ok{color:var(--sage)}
+.vault-msg.bad{color:var(--oxide)}
+#cardiffReveal{display:none;margin-top:1.6rem;padding-top:1.6rem;border-top:1px dashed var(--brass-faint)}
+#cardiffReveal.show{display:block;animation:fadein 1.2s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.cardiff-link{display:inline-block;margin-top:1rem;padding:1rem 2.2rem;background:var(--brass);color:var(--ink);text-decoration:none;font-variant:small-caps;letter-spacing:.14em;font-size:.9rem;border-radius:2px;box-shadow:0 8px 30px rgba(201,169,97,.25);transition:transform .2s}
+.cardiff-link:hover{transform:translateY(-2px)}
+
+/* instrument readout */
+.instrument{background:var(--ink-2);border:1px solid var(--rule);padding:1.8rem 1.7rem;margin:1.6rem 0}
+.rows{display:grid;gap:1rem}
+.row{display:grid;grid-template-columns:9rem 1fr;gap:1.1rem;align-items:baseline}
+.row .k{font-variant:small-caps;letter-spacing:.14em;font-size:.76rem;color:var(--brass-dim)}
+.row .v{font-family:"Courier Prime",monospace;font-size:.9rem;color:var(--brass);letter-spacing:.04em}
+@media(max-width:600px){.row{grid-template-columns:1fr;gap:.1rem}}
+
+.leaf{border-left:2px solid var(--brass-faint);padding:.4rem 0 .4rem 1.5rem;margin:1.6rem 0;max-width:52ch}
+.leaf p{font-style:italic;color:#e6dfd0;font-size:1.02rem;margin:0 0 .8rem}
+.leaf .hand{font-family:"Courier Prime",monospace;font-size:.66rem;letter-spacing:.12em;color:var(--brass-faint);font-style:normal}
+
+.notice{background:#f3f1ec;color:#0b0b0b;border:3px solid #0b0b0b;padding:1.5rem 1.4rem 1.1rem;max-width:28rem;margin:1.8rem 0;font-family:system-ui,sans-serif;transform:rotate(-.5deg);box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.notice h4{margin:0 0 .6rem;font-size:1.3rem;text-align:center;text-decoration:underline;text-underline-offset:4px;font-weight:700}
+.notice p{font-size:.98rem;line-height:1.3;margin:0 0 .9rem;max-width:none;font-weight:600}
+.notice .byorder{font-family:"EB Garamond",serif;font-style:italic;font-size:.82rem;text-align:right;margin:0;font-weight:400}
+#noticeCycle{background:none;border:0;font-family:inherit;font-variant:small-caps;letter-spacing:.2em;font-size:.66rem;color:var(--brass-dim);padding:.5rem 0;cursor:pointer}
+#noticeCycle:hover{color:var(--sage)}
+
+footer{border-top:1px solid var(--rule);padding:3.6rem 6vw calc(3.6rem + env(safe-area-inset-bottom));background:var(--ink-2)}
+.finner{max-width:1080px;margin:0 auto}
+footer a{color:var(--brass);text-decoration:none;border-bottom:1px solid var(--brass-faint)}
+footer a:hover{color:var(--sage);border-bottom-color:var(--sage-dim)}
+.colophon{margin-top:2.2rem;padding-top:1.4rem;border-top:1px solid var(--rule);font-family:"Courier Prime",monospace;font-size:.66rem;color:var(--brass-faint);letter-spacing:.08em;line-height:2}
+
+a:focus-visible,button:focus-visible,input:focus-visible{outline:1px solid var(--sage);outline-offset:4px}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <button id="door" aria-label="Knock on the door"></button>
+  <p id="prompt">Knock three times</p>
+  <div id="tally" aria-hidden="true"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+  <a href="/now" style="font-family:'Courier Prime',monospace;font-size:.62rem;letter-spacing:.16em;color:#7d6838;text-decoration:none;margin-top:1.4rem">.;. the tree</a>
+</div>
+
+<div id="site">
+<nav class="ttg-net" aria-label="Guild network" data-built="1">
+  <a class="sigil" href="/now">.;. tree</a>
+  <a href="/hub/">hub</a>
+  <a href="/join/">join</a>
+  <a href="/people/">people</a>
+  <a href="/watch/">watch</a>
+  <a href="/triangla/">triangla</a>
+  <a href="/cardiff/">cardiff</a>
+</nav>
+<div id="grain"></div>
+<div id="chrono"><span>LST <b id="lst">--:--:--</b></span><span class="right">JD <span id="jd">--</span></span></div>
+
+<main>
+
+  <header id="hero">
+    <p class="crest" style="font-variant:small-caps;letter-spacing:.4em;font-size:.72rem;color:var(--brass-dim);margin:0 0 2.2rem">Station XIII</p>
+    <h1><small>The</small>Time Travellers Guild</h1>
+    <p class="declaration"><span class="dots">.;.</span> The Ffilm is begun</p>
+    <p class="gloss">Three doors stand open. One is a room. One is an instrument. One is locked, and does not open for knocking — it opens for knowing.</p>
+  </header>
+
+  <section id="doors">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">Standing addresses</p>
+    <h2>Where the Guild keeps itself</h2>
+    <p class="lede">Two doors are open to anyone who walks up. The third is not on any map. It is assembled from three things scattered through what follows — read carefully, or don't bother.</p>
+
+    <div class="doors">
+      <a class="portal" href="/join">
+        <span class="num">I</span>
+        <span class="pname">The Join</span>
+        <span class="purl">/join</span>
+        <span class="pdesc">Set your coordinates. Tell the Guild where and when you'd like to arrive.</span>
+        <span class="enter">Enter →</span>
+      </a>
+
+      <a class="portal" href="/hub">
+        <span class="num">II</span>
+        <span class="pname">The Hub</span>
+        <span class="purl">/hub</span>
+        <span class="pdesc">The public front door. Mission, events, and the pathways in.</span>
+        <span class="enter">Enter →</span>
+      </a>
+
+      <div class="portal locked" id="thirdDoor">
+        <span class="num">III</span>
+        <span class="pname">The Third Door</span>
+        <span class="purl">?  ?  ?</span>
+        <span class="pdesc">Sealed. Three fragments are hidden below. Bring all three to the vault at the foot of the page.</span>
+        <span class="enter">Locked</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="instrument-sec">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">The instrument</p>
+    <h2>It does not predict.<br>It computes.</h2>
+    <p>Instrument №13 takes the true positions of the bodies overhead at any moment named — behind us or ahead — and puts them where they actually are. There is nothing mystical in the arithmetic. The solar system is a clock, and clocks run both ways if you know their gearing.</p>
+
+    <div class="instrument">
+      <div class="rows">
+        <div class="row"><span class="k">Local sidereal</span><span class="v" id="lst2">--:--:--</span></div>
+        <div class="row"><span class="k">Julian date</span><span class="v" id="jd2">--</span></div>
+        <div class="row"><span class="k">To sidereal midnight</span><span class="v" id="mark">--:--:--</span></div>
+        <div class="row"><span class="k">Station</span><span class="v">51.46 °N &nbsp; 3.19 °W</span></div>
+      </div>
+    </div>
+
+    <div class="clue" data-clue="1">
+      <span class="tag">FRAGMENT I · THE DIAL</span>
+      <p>The instrument is numbered. Not the Guild's founding year, not a house number — the number worn on its own nameplate, the one printed at the top of every page you've read tonight. Say it as a word, in English, not a numeral.</p>
+      <div class="clue-answer">
+        <input type="text" placeholder="thirteen letters as a word…" data-answer="thirteen">
+        <button onclick="checkClue(this)">Check</button>
+      </div>
+      <div class="clue-status"></div>
+    </div>
+  </section>
+
+  <section id="field">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">The work</p>
+    <h2>The Field</h2>
+    <p class="lede">Everyone who passes through gives a temporal signature: not your fortune, not your character — your <em class="term">position</em>, where the machinery of the solar system stood at the moment you began.</p>
+    <p>When a field is complete, it is transmitted. Not stored. Not sold. Sent — at a moment fixed by the sky, to nobody in particular, in the cause of peace.</p>
+
+    <div class="clue" data-clue="2">
+      <span class="tag">FRAGMENT II · THE CIPHER</span>
+      <p>Left on the transmission log. A simple hand — each letter moved three back. Click to try, or work it by eye.</p>
+      <div class="cipher" onclick="this.classList.toggle('solved')" title="Click to reveal">
+        <span class="plain">VOHHSLR HGZGRLM</span>
+        <span class="decoded">SLEEPING STATION</span>
+      </div>
+      <p class="gloss">The Guild's second word for the hill above the Station — the one the valley calls by a different, older name. Enter that older name below.</p>
+      <div class="clue-answer">
+        <input type="text" placeholder="the older name…" data-answer="cribarth">
+        <button onclick="checkClue(this)">Check</button>
+      </div>
+      <div class="clue-status"></div>
+    </div>
+  </section>
+
+  <section id="ministry">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">Posted</p>
+    <h2>Ministry notices</h2>
+    <p class="gloss">Cable-tied to railings and lamp posts. They explain nothing and ask for nothing.</p>
+
+    <div class="notice">
+      <h4>Notice</h4>
+      <p id="noticeText">Any time traveller caught interfering with the local time line will be sent back to the Palaeozoic Era for a period of up to five years.</p>
+      <p class="byorder">By Order of the Ministry of<br>Time Travel, <span id="noticeDate">August 2235</span></p>
+    </div>
+    <button id="noticeCycle">Another notice</button>
+
+    <div class="clue" data-clue="3">
+      <span class="tag">FRAGMENT III · THE PLACE</span>
+      <p>Every notice above is signed with a Ministry date, always in a year not yet arrived. But the Ministry itself keeps its actual desk somewhere ordinary, in this century, in Wales — the city the Guild files its papers in, one door up from the Station. Where the Guild's headquarters — the Station — is actually addressed, in the here and now.</p>
+      <div class="clue-answer">
+        <input type="text" placeholder="the city…" data-answer="cardiff">
+        <button onclick="checkClue(this)">Check</button>
+      </div>
+      <div class="clue-status"></div>
+    </div>
+  </section>
+
+  <section id="archive">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">The Archive</p>
+    <h2>Found leaves</h2>
+    <div class="leaf">
+      <p>14th of the ninth, and the sky wrong again over the Giant.</p>
+      <p>Third night I have taken the readings and third night they do not agree with the tables. The instrument is not at fault. I checked her twice and she is honest.</p>
+      <p>I do not say this to anyone but I think it was a person.</p>
+      <p class="hand">UNSIGNED · CRIBARTH</p>
+    </div>
+    <div class="leaf">
+      <p>They tell you the Guild is for the sending. It is not. Anyone can send. The whole of the work is in the receiving — nobody trains you for that, you simply stand where you are told and wait.</p>
+      <p>Tonight something happened.</p>
+      <p class="hand">UNSIGNED · UNPLACED</p>
+    </div>
+  </section>
+
+  <section id="vault">
+    <p class="sigil">.;.</p>
+    <p class="eyebrow">The vault</p>
+    <h2>Three fragments, one door</h2>
+    <p class="lede">You've resolved what you've resolved. Set the combination below — order doesn't matter, spelling does.</p>
+
+    <div class="vault-frame">
+      <div class="dial-progress">
+        <div class="dp" id="dp1">I</div>
+        <div class="dp" id="dp2">II</div>
+        <div class="dp" id="dp3">III</div>
+      </div>
+      <div class="vault-combo">
+        <input type="text" id="v1" placeholder="fragment I">
+        <input type="text" id="v2" placeholder="fragment II">
+        <input type="text" id="v3" placeholder="fragment III">
+      </div>
+      <div style="margin-top:1rem">
+        <button onclick="tryVault()" style="background:var(--brass-faint);color:var(--brass-bright);border:1px solid var(--brass-dim);padding:.8rem 1.6rem;font-family:'Courier Prime',monospace;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Turn the dial</button>
+      </div>
+      <div class="vault-msg" id="vaultMsg"></div>
+
+      <div id="cardiffReveal">
+        <p class="gloss" style="max-width:none">The dial gives. A fourth address, unlisted, unlinked — kept for those who did the reading rather than the knocking.</p>
+        <a class="cardiff-link" href="/cardiff">Enter Cardiff →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="finner">
+    <p class="sigil">.;.</p>
+    <p>The Guild works by position, not by name. Two doors are posted for anyone. The third was never posted at all.</p>
+    <p><a href="/">/</a> &nbsp;·&nbsp; <a href="/join">/join</a> &nbsp;·&nbsp; <a href="/hub">/hub</a> &nbsp;·&nbsp; <a href="/people">/people</a> &nbsp;·&nbsp; <a href="/watch">/watch</a> &nbsp;·&nbsp; <a href="/triangla">/triangla</a></p>
+    <p class="colophon">MYTHOLOGY IN DEVELOPMENT SINCE 2008 · INSTRUMENT №13 · STATION XIII<br>.;. THE FFILM IS BEGUN</p>
+  </div>
+</footer>
+
+<div id="progress" aria-hidden="true">
+  <div class="wp" id="wp1"></div><div class="wp" id="wp2"></div><div class="wp" id="wp3"></div>
+</div>
+
+</div><!-- /#site -->
+
+<script>
+(function(){
+  var body=document.body, door=document.getElementById('door'),
+      prompt=document.getElementById('prompt'), pips=document.querySelectorAll('.pip'),
+      knocks=0, opened=false, ac=null;
+
+  function knockSound(){
+    try{
+      ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+      if(ac.state==='suspended') ac.resume();
+      var t=ac.currentTime, dur=.24;
+      var buf=ac.createBuffer(1, Math.floor(ac.sampleRate*dur), ac.sampleRate), d=buf.getChannelData(0);
+      for(var i=0;i<d.length;i++){ d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,7); }
+      var src=ac.createBufferSource(); src.buffer=buf;
+      var lp=ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=300; lp.Q.value=6;
+      var g=ac.createGain(); g.gain.setValueAtTime(.5,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+      src.connect(lp).connect(g).connect(ac.destination); src.start(t);
+    }catch(e){}
+  }
+
+  function knock(){
+    if(opened) return;
+    knocks++; knockSound();
+    door.classList.add('hit'); setTimeout(function(){door.classList.remove('hit')},320);
+    if(pips[knocks-1]) pips[knocks-1].classList.add('on');
+    if(knocks===1) prompt.textContent='Again';
+    else if(knocks===2) prompt.textContent='Once more';
+    else if(knocks>=3){
+      opened=true; prompt.textContent='';
+      setTimeout(function(){ body.classList.add('open'); },380);
+    }
+  }
+  door.addEventListener('click',knock);
+
+  var notices=[
+    ["Any time traveller caught interfering with the local time line will be sent back to the Palaeozoic Era for a period of up to five years.","August 2235"],
+    ["This junction has been logged as a minor divergence. Travellers are asked not to linger, and under no circumstances to speak to themselves.","March 2241"],
+    ["Persons who have arrived by syzygy must present themselves at the nearest Station within one hour.","November 2238"],
+    ["A transmission is scheduled from this district. Residents may notice nothing whatsoever. This is correct.","October 2237"]
+  ];
+  var ni=0;
+  var nText=document.getElementById('noticeText'), nDate=document.getElementById('noticeDate');
+  document.getElementById('noticeCycle').addEventListener('click',function(){
+    ni=(ni+1)%notices.length;
+    nText.textContent=notices[ni][0]; nDate.textContent=notices[ni][1];
+  });
+
+  function pad(n){return (n<10?'0':'')+n;}
+  function tick(){
+    var jd=Date.now()/86400000+2440587.5, d=jd-2451545.0;
+    var gmst=280.46061837+360.98564736629*d;
+    var lst=((gmst-3.19)%360+360)%360, h=lst/15;
+    var hh=Math.floor(h), mm=Math.floor((h-hh)*60), ss=Math.floor((((h-hh)*60)-mm)*60);
+    var s=pad(hh)+':'+pad(mm)+':'+pad(ss), j=jd.toFixed(3);
+    ['lst','lst2'].forEach(function(id){document.getElementById(id).textContent=s;});
+    ['jd','jd2'].forEach(function(id){document.getElementById(id).textContent=j;});
+    var solar=(24-h)*3600*0.9972695663;
+    document.getElementById('mark').textContent=pad(Math.floor(solar/3600))+':'+pad(Math.floor((solar%3600)/60))+':'+pad(Math.floor(solar%60));
+  }
+  tick(); setInterval(tick,1000);
+
+  window.solvedClues={1:false,2:false,3:false};
+
+  window.checkClue=function(btn){
+    var wrap=btn.parentElement, input=wrap.querySelector('input'), clue=btn.closest('.clue');
+    var idx=clue.getAttribute('data-clue');
+    var status=clue.querySelector('.clue-status');
+    var val=(input.value||'').trim().toLowerCase();
+    var ans=(input.getAttribute('data-answer')||'').toLowerCase();
+    if(val===ans){
+      status.textContent='Correct — fragment '+idx+' resolved.';
+      status.className='clue-status ok';
+      clue.classList.add('solved');
+      input.disabled=true; btn.disabled=true;
+      solvedClues[idx]=true;
+      var wp=document.getElementById('wp'+idx); if(wp) wp.classList.add('done');
+      var dp=document.getElementById('dp'+idx); if(dp) dp.classList.add('done');
+      checkAllSolved();
+    } else {
+      status.textContent='Not quite. Read again.';
+      status.className='clue-status bad';
+    }
+  };
+
+  function checkAllSolved(){
+    if(solvedClues[1]&&solvedClues[2]&&solvedClues[3]){
+      var door3=document.getElementById('thirdDoor');
+      door3.querySelector('.enter').textContent='Ready — see the vault below';
+      door3.querySelector('.enter').style.color='var(--sage)';
+    }
+  }
+
+  window.tryVault=function(){
+    var v1=document.getElementById('v1').value.trim().toLowerCase();
+    var v2=document.getElementById('v2').value.trim().toLowerCase();
+    var v3=document.getElementById('v3').value.trim().toLowerCase();
+    var need=['thirteen','cribarth','cardiff'];
+    var have=[v1,v2,v3];
+    var msg=document.getElementById('vaultMsg');
+    var ok=need.every(function(n){return have.indexOf(n)!==-1;});
+    if(ok){
+      msg.textContent='The dial turns.';
+      msg.className='vault-msg ok';
+      document.getElementById('cardiffReveal').classList.add('show');
+      [document.getElementById('dp1'),document.getElementById('dp2'),document.getElementById('dp3')].forEach(function(d){d.classList.add('done');});
+    } else {
+      msg.textContent='The dial resists. One of the three is wrong, or missing.';
+      msg.className='vault-msg bad';
+    }
+  };
+})();
+</script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

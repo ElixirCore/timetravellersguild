@@ -1,0 +1,105 @@
+{
+  "rooms": [
+    {
+      "id": "threshold",
+      "title": "The workspace",
+      "palette": [
+        "#262c29",
+        "#4b5148",
+        "#313530"
+      ],
+      "glitch": 18,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-study",
+          "label": "The study",
+          "lon": 0,
+          "lat": 0,
+          "target": "study"
+        }
+      ],
+      "capture": "partial, three user frames; uncaptured regions left void",
+      "layers": [
+        {
+          "url": "./1-workspace-partial-v1.jpg",
+          "label": "Partial sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Uncaptured / void",
+          "era": "Awaiting capture"
+        }
+      ]
+    },
+    {
+      "id": "study",
+      "title": "The study",
+      "palette": [
+        "#2e282b",
+        "#5b4b4a",
+        "#312629"
+      ],
+      "glitch": 26,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-archive",
+          "label": "The archive",
+          "lon": 0,
+          "lat": 0,
+          "target": "archive"
+        },
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": -6,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "",
+          "label": "Test panorama",
+          "era": "Undated"
+        }
+      ]
+    },
+    {
+      "id": "archive",
+      "title": "The archive",
+      "palette": [
+        "#292a33",
+        "#4a4c60",
+        "#262832"
+      ],
+      "glitch": 34,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-threshold",
+          "label": "The workspace",
+          "lon": 0,
+          "lat": 0,
+          "target": "threshold"
+        },
+        {
+          "id": "back-study",
+          "label": "The study",
+          "lon": -135,
+          "lat": -6,
+          "target": "study"
+        }
+      ],
+      "layers": [
+        {
+          "url": "",
+          "label": "Test panorama",
+          "era": "Undated"
+        }
+      ]
+    }
+  ]
+}

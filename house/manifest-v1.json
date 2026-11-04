@@ -1,0 +1,317 @@
+{
+  "rooms": [
+    {
+      "id": "threshold",
+      "title": "The workspace",
+      "palette": [
+        "#262c29",
+        "#4b5148",
+        "#313530"
+      ],
+      "glitch": 18,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-study",
+          "label": "The study",
+          "lon": 0,
+          "lat": 0,
+          "target": "study"
+        },
+        {
+          "id": "to-labyrinth-01-20260929",
+          "label": "Room 01",
+          "lon": -120,
+          "lat": 0,
+          "target": "labyrinth-01-20260929"
+        },
+        {
+          "id": "to-labyrinth-02-20260929",
+          "label": "Room 02",
+          "lon": -55,
+          "lat": 0,
+          "target": "labyrinth-02-20260929"
+        },
+        {
+          "id": "to-labyrinth-03-20260929",
+          "label": "Room 03",
+          "lon": 55,
+          "lat": 0,
+          "target": "labyrinth-03-20260929"
+        },
+        {
+          "id": "to-labyrinth-04-20260929",
+          "label": "Room 04",
+          "lon": 120,
+          "lat": 0,
+          "target": "labyrinth-04-20260929"
+        }
+      ],
+      "capture": "partial, three user frames; uncaptured regions left void",
+      "layers": [
+        {
+          "url": "./assets/roomskins/workspace-glitchy-stitch-20260929.jpg",
+          "label": "Glitchy-stitch sweep",
+          "era": "Present"
+        },
+        {
+          "url": "./assets/roomskins/panorama-workspace-moonly-20260929.jpg",
+          "label": "Sweep 2",
+          "era": "Present"
+        },
+        {
+          "url": "./assets/roomskins/panorama-workspace-screen-20260929.jpg",
+          "label": "Sweep 3",
+          "era": "Present"
+        },
+        {
+          "url": "./assets/roomskins/panorama-workspace-sign-20260929.jpg",
+          "label": "Sweep 4",
+          "era": "Present"
+        },
+        {
+          "url": "./assets/roomskins/workspace-partial-v1.jpg",
+          "label": "Partial sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Void / uncaptured",
+          "era": "Awaiting capture",
+          "void": true
+        }
+      ],
+      "objects": [
+        {
+          "id": "workspace-screen",
+          "label": "Workspace screen",
+          "lon": -8,
+          "lat": -6,
+          "record": {
+            "what": "A screen visible in Toby’s supplied workspace sweep.",
+            "source": "Toby’s three workspace frames; partial composite.",
+            "note": "Hit area is provisionally placed; no object-specific source record has been supplied."
+          }
+        },
+        {
+          "id": "manifold-example",
+          "label": "Inhaler + lighter: example object",
+          "lon": 0,
+          "lat": -3,
+          "skin": {
+            "faces": [
+              "./assets/objectskins/manifold-side-a.jpg",
+              "./assets/objectskins/manifold-end-a.jpg",
+              "./assets/objectskins/manifold-side-b.jpg",
+              "./assets/objectskins/manifold-end-b.jpg"
+            ],
+            "top": null,
+            "bottom": null,
+            "method": "four camera photos on cube faces, not 3D reconstruction"
+          },
+          "record": {
+            "what": "An example object made by Toby: inhaler and lighter joined together.",
+            "source": "Four photos Toby supplied on 29 September 2026.",
+            "note": "No independent catalog record. Top and bottom not photographed; left dark."
+          }
+        }
+      ]
+    },
+    {
+      "id": "study",
+      "title": "The study",
+      "palette": [
+        "#2e282b",
+        "#5b4b4a",
+        "#312629"
+      ],
+      "glitch": 26,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-archive",
+          "label": "The archive",
+          "lon": 0,
+          "lat": 0,
+          "target": "archive"
+        },
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": -6,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "",
+          "label": "Awaiting capture",
+          "era": "Uncaptured",
+          "void": true
+        }
+      ],
+      "objects": []
+    },
+    {
+      "id": "archive",
+      "title": "The archive",
+      "palette": [
+        "#292a33",
+        "#4a4c60",
+        "#262832"
+      ],
+      "glitch": 34,
+      "mass": 1,
+      "doors": [
+        {
+          "id": "to-threshold",
+          "label": "The workspace",
+          "lon": 0,
+          "lat": 0,
+          "target": "threshold"
+        },
+        {
+          "id": "back-study",
+          "label": "The study",
+          "lon": -135,
+          "lat": -6,
+          "target": "study"
+        }
+      ],
+      "layers": [
+        {
+          "url": "",
+          "label": "Awaiting capture",
+          "era": "Uncaptured",
+          "void": true
+        }
+      ],
+      "objects": []
+    },
+    {
+      "id": "labyrinth-01-20260929",
+      "title": "Room 01",
+      "glitch": 18,
+      "mass": 1,
+      "capture": "one panorama; partial field, uncaptured directions dark",
+      "doors": [
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": 0,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "./assets/roomskins/panorama-crt-20260929.jpg",
+          "label": "First sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Void / uncaptured",
+          "era": "Awaiting capture",
+          "void": true
+        }
+      ],
+      "objects": []
+    },
+    {
+      "id": "labyrinth-02-20260929",
+      "title": "Room 02",
+      "glitch": 18,
+      "mass": 1,
+      "capture": "one panorama; partial field, uncaptured directions dark",
+      "doors": [
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": 0,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "./assets/roomskins/panorama-alps-20260929.jpg",
+          "label": "First sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Void / uncaptured",
+          "era": "Awaiting capture",
+          "void": true
+        }
+      ],
+      "objects": []
+    },
+    {
+      "id": "labyrinth-03-20260929",
+      "title": "Room 03",
+      "glitch": 18,
+      "mass": 1,
+      "capture": "one panorama; partial field, uncaptured directions dark",
+      "doors": [
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": 0,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "./assets/roomskins/panorama-dalston-20260929.jpg",
+          "label": "First sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Void / uncaptured",
+          "era": "Awaiting capture",
+          "void": true
+        }
+      ],
+      "objects": []
+    },
+    {
+      "id": "labyrinth-04-20260929",
+      "title": "Room 04",
+      "glitch": 18,
+      "mass": 1,
+      "capture": "one panorama; partial field, uncaptured directions dark",
+      "doors": [
+        {
+          "id": "back-threshold",
+          "label": "The workspace",
+          "lon": 135,
+          "lat": 0,
+          "target": "threshold"
+        }
+      ],
+      "layers": [
+        {
+          "url": "./assets/roomskins/panorama-gillett-20260929.jpg",
+          "label": "First sweep",
+          "era": "Present"
+        },
+        {
+          "url": "",
+          "label": "Void / uncaptured",
+          "era": "Awaiting capture",
+          "void": true
+        }
+      ],
+      "objects": []
+    }
+  ],
+  "version": 4,
+  "updated": "2026-09-29T12:39:03+01:00",
+  "capture_manifest": "Server assets persist in /house/assets/roomskins and /house/assets/objectskins. Camera capture is still device session only; no automatic server upload or feature stitching.",
+  "source_panorama": "Toby’s supplied partial workspace sweep, already staged as /quill/1-workspace-partial-v1.jpg"
+}

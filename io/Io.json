@@ -1,0 +1,232 @@
+{
+  "$grammar": "goďin.node/1.0",
+
+  "node": {
+    "id": "¥jack.punchcard.reader",
+    "name": "PunchCard",
+    "kind": "instrument",
+    "realm": "bundle88",
+    "state": "AWAKE"
+  },
+
+  "glyph": ".;.punch",
+
+  "intent": {
+    "verb": "read",
+    "object": "file",
+    "result": "solvable_matrix"
+  },
+
+  "io": {
+    "in": {
+      "file": {
+        "type": "binary",
+        "accept": "*/*",
+        "required": true
+      }
+    },
+
+    "out": {
+      "card": "goďin.punchcard",
+      "archive": "json",
+      "display": "matrix"
+    }
+  },
+
+  "geometry": {
+    "columns": 80,
+    "rows": 12,
+    "cells": 960,
+    "bits_per_cell": 1,
+    "bytes_per_card": 120
+  },
+
+  "encoding": {
+    "mode": "binary",
+    "byte_order": "sequential",
+    "bit_order": "msb_first",
+
+    "map": {
+      "0": "empty",
+      "1": "hole"
+    }
+  },
+
+  "grammar": {
+    "file": {
+      "becomes": "deck"
+    },
+
+    "deck": {
+      "contains": "card[]"
+    },
+
+    "card": {
+      "contains": "cell[12][80]"
+    },
+
+    "cell": {
+      "values": [0, 1]
+    }
+  },
+
+  "transform": [
+    {
+      "id": "read",
+      "do": "file.arrayBuffer"
+    },
+    {
+      "id": "bytes",
+      "do": "buffer.uint8"
+    },
+    {
+      "id": "paginate",
+      "do": "bytes.chunk",
+      "size": 120
+    },
+    {
+      "id": "bitstream",
+      "do": "byte.bits",
+      "order": "msb_first"
+    },
+    {
+      "id": "matrix",
+      "do": "bits.reshape",
+      "shape": [12, 80]
+    }
+  ],
+
+  "card": {
+    "id": {
+      "$expr": "deck.id + ':' + card.index"
+    },
+
+    "index": 0,
+
+    "offset": {
+      "$expr": "card.index * 120"
+    },
+
+    "matrix": {
+      "$ref": "transform.matrix"
+    },
+
+    "metadata": {
+      "filename": {
+        "$ref": "in.file.name"
+      },
+
+      "byte_length": {
+        "$ref": "card.bytes.length"
+      }
+    }
+  },
+
+  "interface": {
+    "focus": "file",
+
+    "actions": {
+      "DROP": ".;.read",
+      "TAP": ".;.open",
+      "LEFT": ".;.previous",
+      "RIGHT": ".;.next",
+      "PRINT": ".;.print",
+      "EXPORT": ".;.archive"
+    }
+  },
+
+  "display": {
+    "type": "punch_matrix",
+
+    "layers": [
+      "column_index",
+      "row_index",
+      "holes",
+      "hex",
+      "ascii",
+      "metadata"
+    ]
+  },
+
+  "state": {
+    "deck": [],
+    "card": 0,
+    "filename": null,
+
+    "status": "NO_CARD"
+  },
+
+  "transition": {
+    "NO_CARD + DROP": "READING",
+    "READING + SUCCESS": "CARD_READY",
+    "CARD_READY + RIGHT": "NEXT_CARD",
+    "CARD_READY + LEFT": "PREVIOUS_CARD",
+    "CARD_READY + PRINT": "PRINTING",
+    "CARD_READY + EXPORT": "ARCHIVING"
+  },
+
+  "speech": {
+    "NO_CARD": "NO CARD INSERTED",
+    "READING": "READING",
+    "CARD_READY": "CARD HELD",
+    "END": "END OF DECK"
+  },
+
+  "jack": {
+    "role": "reader",
+
+    "may": [
+      "read",
+      "index",
+      "display",
+      "compare",
+      "contextualise"
+    ],
+
+    "may_not": [
+      "alter_source",
+      "invent_missing_bits"
+    ]
+  },
+
+  "archive": {
+    "format": {
+      "grammar": "goďin.punchcard/1.0",
+      "source": "filename",
+      "card": "integer",
+      "cards": "integer",
+      "offset": "integer",
+      "bytes": "uint8[]",
+      "matrix": "bit[12][80]"
+    }
+  },
+
+  "invocation": {
+    ".;.read": {
+      "requires": ["file"],
+      "produces": ["deck"]
+    },
+
+    ".;.print": {
+      "requires": ["card"],
+      "produces": ["physical_representation"]
+    },
+
+    ".;.archive": {
+      "requires": ["deck"],
+      "produces": ["json"]
+    }
+  },
+
+  "axiom": [
+    "FILE becomes DECK",
+    "DECK contains CARD",
+    "CARD contains HOLES",
+    "HOLES preserve BITS",
+    "BITS preserve FILE"
+  ],
+
+  "checksum": {
+    "principle": "decode(encode(file)) == file"
+  }
+}

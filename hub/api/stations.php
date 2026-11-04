@@ -1,0 +1,2 @@
+<?php
+declare(strict_types=1); require_once __DIR__.'/../inc/functions.php'; header('Content-Type: application/json; charset=utf-8'); header('Cache-Control: public, max-age='.(string)ttg_config()['cache_seconds']); header('X-Content-Type-Options: nosniff'); echo json_encode(['ok'=>true,'generated'=>gmdate('c'),'stations'=>ttg_stations()],JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);

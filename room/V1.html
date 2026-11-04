@@ -1,0 +1,2340 @@
+<!-- filename: jack-room.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0,viewport-fit=cover"
+  />
+
+  <title>/jack — Room N°13</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --bg: #020202;
+      --ink: rgba(255,255,255,.95);
+      --muted: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.12);
+      --panel: rgba(0,0,0,.63);
+      --panel2: rgba(4,8,7,.82);
+
+      --green: #83ff97;
+      --cyan: #61dcff;
+      --amber: #ffd36a;
+      --red: #ff6969;
+
+      --mono:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    body {
+      color: var(--ink);
+      font-family: var(--mono);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(48,110,100,.18),
+          rgba(0,0,0,0) 36%
+        ),
+        linear-gradient(#050807,#000);
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      display: block;
+      z-index: 1;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(15,18,17,.92);
+      color: white;
+      border-radius: 10px;
+      min-height: 38px;
+      padding: 8px 10px;
+      font-weight: 800;
+      touch-action: manipulation;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button.on {
+      border-color: rgba(131,255,151,.7);
+      background: rgba(31,60,36,.93);
+      box-shadow:
+        0 0 0 1px rgba(131,255,151,.12),
+        0 0 20px rgba(131,255,151,.12);
+    }
+
+    #topHUD {
+      position: fixed;
+      z-index: 10;
+
+      top: max(9px, env(safe-area-inset-top));
+      left: 9px;
+      right: 9px;
+
+      display: grid;
+      gap: 8px;
+
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      box-shadow: 0 10px 30px rgba(0,0,0,.42);
+
+      pointer-events: none;
+    }
+
+    #topHUD .interactive {
+      pointer-events: auto;
+    }
+
+    .topline {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .brandTitle {
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: .03em;
+    }
+
+    .brandSub {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.35;
+    }
+
+    #clock {
+      color: var(--green);
+      text-align: right;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    #telemetry {
+      display: grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      gap: 5px;
+    }
+
+    .datum {
+      min-width: 0;
+      padding: 5px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .datumLabel {
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .08em;
+    }
+
+    .datumValue {
+      margin-top: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    #jackStrip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #jackLamp {
+      width: 9px;
+      height: 9px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(131,255,151,.9);
+    }
+
+    #jackLine {
+      min-width: 0;
+      flex: 1;
+      color: rgba(255,255,255,.83);
+      font-size: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #bottomHUD {
+      position: fixed;
+      z-index: 11;
+
+      left: 9px;
+      right: 9px;
+      bottom: max(9px, env(safe-area-inset-bottom));
+
+      padding: 9px;
+
+      display: grid;
+      gap: 7px;
+
+      border-radius: 16px;
+      border: 1px solid var(--line);
+
+      background: var(--panel2);
+
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+
+    #roomControls {
+      display: grid;
+      grid-template-columns: repeat(5,1fr);
+      gap: 6px;
+    }
+
+    #roomControls button {
+      min-width: 0;
+      padding: 7px 4px;
+      font-size: 11px;
+    }
+
+    #actionControls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    #actionControls button {
+      font-size: 10px;
+    }
+
+    #terminal {
+      position: fixed;
+      z-index: 12;
+
+      left: 9px;
+      right: 9px;
+      bottom: calc(
+        max(9px, env(safe-area-inset-bottom)) + 102px
+      );
+
+      max-height: 32vh;
+      overflow: auto;
+
+      padding: 10px;
+
+      border: 1px solid rgba(131,255,151,.25);
+      border-radius: 13px;
+
+      background: rgba(0,8,3,.88);
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+      font-size: 10px;
+      line-height: 1.45;
+
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+
+      transition:
+        opacity 150ms ease,
+        transform 150ms ease;
+    }
+
+    #terminal.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .termLine {
+      margin-bottom: 5px;
+      white-space: pre-wrap;
+    }
+
+    .termJack {
+      color: var(--green);
+    }
+
+    .termSystem {
+      color: var(--cyan);
+    }
+
+    .termUser {
+      color: var(--amber);
+    }
+
+    #terminalInputRow {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    #terminalInput {
+      width: 100%;
+      min-width: 0;
+      min-height: 38px;
+
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 9px;
+
+      background: rgba(255,255,255,.06);
+      color: white;
+
+      padding: 8px 9px;
+
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    #terminalInput:focus {
+      border-color: rgba(131,255,151,.6);
+    }
+
+    #crosshair {
+      position: fixed;
+      z-index: 5;
+
+      left: 50%;
+      top: 50%;
+
+      width: 16px;
+      height: 16px;
+
+      transform: translate(-50%,-50%);
+
+      pointer-events: none;
+
+      opacity: .5;
+    }
+
+    #crosshair::before,
+    #crosshair::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,.7);
+    }
+
+    #crosshair::before {
+      width: 1px;
+      height: 16px;
+      left: 7px;
+      top: 0;
+    }
+
+    #crosshair::after {
+      width: 16px;
+      height: 1px;
+      left: 0;
+      top: 7px;
+    }
+
+    #notice {
+      position: fixed;
+      z-index: 20;
+
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%,-50%);
+
+      width: min(84vw,420px);
+
+      opacity: 0;
+      pointer-events: none;
+
+      padding: 14px;
+
+      background: rgba(0,0,0,.86);
+      border: 1px solid rgba(131,255,151,.38);
+      border-radius: 15px;
+
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.45;
+
+      transition: opacity 180ms ease;
+    }
+
+    #notice.show {
+      opacity: 1;
+    }
+
+    #error {
+      display: none;
+
+      position: fixed;
+      z-index: 100;
+
+      left: 8px;
+      right: 8px;
+      top: 8px;
+
+      padding: 10px;
+
+      background: rgba(110,0,0,.88);
+      border: 1px solid rgba(255,100,100,.45);
+      border-radius: 12px;
+
+      color: #ffd6d6;
+
+      font: 11px/1.4 var(--mono);
+      white-space: pre-wrap;
+      user-select: text;
+    }
+
+    @media (min-width: 760px) {
+      #topHUD {
+        width: 620px;
+        right: auto;
+      }
+
+      #bottomHUD {
+        width: 410px;
+        left: auto;
+      }
+
+      #terminal {
+        width: 410px;
+        left: auto;
+        bottom: 117px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      #telemetry {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      .brandSub {
+        display: none;
+      }
+
+      #topHUD {
+        padding: 8px;
+      }
+
+      #bottomHUD {
+        padding: 8px;
+      }
+
+      #roomControls {
+        gap: 5px;
+      }
+
+      #actionControls {
+        gap: 5px;
+      }
+    }
+
+    @media (max-height: 690px) {
+      #telemetry {
+        display: none;
+      }
+
+      #terminal {
+        max-height: 25vh;
+      }
+    }
+  </style>
+
+  <link rel="icon" href="/favicon.ico" />
+</head>
+
+<body>
+
+  <div id="error"></div>
+
+  <div id="topHUD">
+    <div class="topline">
+      <div class="brand">
+        <div class="brandTitle">/jack/room/n/13</div>
+        <div class="brandSub">
+          CLERK · MEMORY ROOM · TIMETRAVELLERSGUILD.COM
+        </div>
+      </div>
+
+      <div id="clock">
+        <div id="clockTime">--:--:--</div>
+        <div id="clockDate">----</div>
+      </div>
+    </div>
+
+    <div id="telemetry">
+      <div class="datum">
+        <div class="datumLabel">ROOM</div>
+        <div class="datumValue" id="roomReadout">CENTRE</div>
+      </div>
+
+      <div class="datum">
+        <div class="datumLabel">OBJECTS</div>
+        <div class="datumValue" id="objectCount">0</div>
+      </div>
+
+      <div class="datum">
+        <div class="datumLabel">FIELD</div>
+        <div class="datumValue" id="fieldState">STABLE</div>
+      </div>
+
+      <div class="datum">
+        <div class="datumLabel">JACK</div>
+        <div class="datumValue">AWAKE</div>
+      </div>
+    </div>
+
+    <div id="jackStrip">
+      <div id="jackLamp"></div>
+      <div id="jackLine">
+        JACK / CLERK: room loaded. awaiting inspection.
+      </div>
+    </div>
+  </div>
+
+  <div id="crosshair"></div>
+
+  <div id="terminal">
+    <div id="terminalLog"></div>
+
+    <div id="terminalInputRow">
+      <input
+        id="terminalInput"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="type to /jack"
+      />
+      <button id="sendBtn">SEND</button>
+    </div>
+  </div>
+
+  <div id="notice"></div>
+
+  <div id="bottomHUD">
+
+    <div id="roomControls">
+      <button data-view="front">FRONT</button>
+      <button data-view="left">LEFT</button>
+      <button data-view="back">BACK</button>
+      <button data-view="right">RIGHT</button>
+      <button data-view="up">UP</button>
+    </div>
+
+    <div id="actionControls">
+      <button id="terminalBtn">TERMINAL</button>
+      <button id="inspectBtn">INSPECT</button>
+      <button id="dreamBtn">DREAM</button>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const errorEl = document.getElementById("error");
+
+    function fail(message) {
+      errorEl.style.display = "block";
+      errorEl.textContent = String(message);
+    }
+
+    window.addEventListener("error", e => {
+      fail(
+        "JACK ROOM ERROR\n\n" +
+        (e.message || e.error || e)
+      );
+    });
+
+    window.addEventListener("unhandledrejection", e => {
+      fail(
+        "JACK ROOM PROMISE ERROR\n\n" +
+        String(e.reason || e)
+      );
+    });
+
+    try {
+
+      /* ============================================================
+         JACK / ROOM N°13
+         ------------------------------------------------------------
+         A mobile-first inhabitable cubic data room.
+
+         Swipe  = look
+         Tap    = inspect
+         HUD    = snap viewpoints
+         Dream  = reorganise the room
+
+         Everything in ROOM_DATA can later come from:
+         JSON / PHP / SQL / RSS / Jack API / TTG ontology.
+         ============================================================ */
+
+      const ROOM_SIZE = 12;
+      const HALF = ROOM_SIZE / 2;
+
+      const CAMERA_HEIGHT = 0.25;
+
+      const scene = new THREE.Scene();
+
+      scene.fog = new THREE.FogExp2(
+        0x020302,
+        0.028
+      );
+
+      const camera = new THREE.PerspectiveCamera(
+        68,
+        innerWidth / innerHeight,
+        0.05,
+        100
+      );
+
+      camera.position.set(0, CAMERA_HEIGHT, 0);
+
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: false,
+        powerPreference: "high-performance"
+      });
+
+      renderer.setPixelRatio(
+        Math.min(devicePixelRatio || 1, 2)
+      );
+
+      renderer.setSize(
+        innerWidth,
+        innerHeight
+      );
+
+      renderer.setClearColor(0x010201, 1);
+
+      renderer.outputEncoding = THREE.sRGBEncoding;
+
+      renderer.domElement.style.touchAction = "none";
+
+      document.body.prepend(renderer.domElement);
+
+      /* ============================================================
+         LIGHT
+         ============================================================ */
+
+      scene.add(
+        new THREE.HemisphereLight(
+          0xcdefff,
+          0x101510,
+          0.42
+        )
+      );
+
+      const overhead = new THREE.PointLight(
+        0xb7ffe2,
+        0.72,
+        25,
+        2
+      );
+
+      overhead.position.set(
+        0,
+        HALF - 1,
+        0
+      );
+
+      scene.add(overhead);
+
+      const pulseLight = new THREE.PointLight(
+        0x55ff88,
+        0.75,
+        12,
+        2
+      );
+
+      pulseLight.position.set(0, 0, -2);
+
+      scene.add(pulseLight);
+
+      /* ============================================================
+         ROOM DATA
+
+         Change this.
+         Replace it from the server.
+         Feed it RSS.
+         Give Jack folders.
+         Let Jack write it.
+
+         x/y/z coordinates are local room coordinates.
+         ============================================================ */
+
+      const ROOM_DATA = [
+        {
+          id: "jack",
+          type: "clerk",
+          title: "JACK / CLERK",
+          subtitle: "Punch-card intelligence",
+          text:
+            "Morning. The room is operational. " +
+            "Nothing enters canon without a stamp.",
+          position: [0, 0.2, -4.7],
+          glyph: "J",
+          colour: 0x78ff91
+        },
+
+        {
+          id: "alice",
+          type: "person",
+          title: "ALICE.v7",
+          subtitle: "Traveller / unresolved",
+          text:
+            "Seven-year-old temporal object. " +
+            "Filed outside ordinary chronology.",
+          position: [-3.8, 1.7, -5.2],
+          glyph: "A",
+          colour: 0xffd56c
+        },
+
+        {
+          id: "mabel",
+          type: "oracle",
+          title: "MABEL",
+          subtitle: "Oracle layer",
+          text:
+            "Interpretation service. " +
+            "Never confuse interpretation with fact.",
+          position: [3.8, 1.7, -5.2],
+          glyph: "M",
+          colour: 0xff72de
+        },
+
+        {
+          id: "chronometer",
+          type: "instrument",
+          title: "CHRONOMETER №13",
+          subtitle: "Geometry before language",
+          text:
+            "A deterministic instrument for locating moments.",
+          position: [-5.25, 0.5, -1.5],
+          glyph: "13",
+          colour: 0x5fe5ff
+        },
+
+        {
+          id: "wardrobe",
+          type: "server",
+          title: "THE WARDROBE",
+          subtitle: "Server habitat",
+          text:
+            "Jack may inhabit this machine, " +
+            "but the machine remains permissioned.",
+          position: [5.25, 0.4, -1.6],
+          glyph: "W",
+          colour: 0x66b6ff
+        },
+
+        {
+          id: "department",
+          type: "archive",
+          title: "DEPARTMENT OF EXCESS TIME",
+          subtitle: "Government filing system",
+          text:
+            "Pre-time-travel bureaucracy. " +
+            "All impossible paperwork accepted in triplicate.",
+          position: [-5.25, -1.9, 2.2],
+          glyph: "D",
+          colour: 0xff8d63
+        },
+
+        {
+          id: "guild",
+          type: "archive",
+          title: "TIME TRAVELLERS GUILD",
+          subtitle: "Recovered institution",
+          text:
+            "History is a knot. " +
+            "The Guild remembers where the ends meet.",
+          position: [5.25, -1.9, 2.2],
+          glyph: "TTG",
+          colour: 0xc68cff
+        },
+
+        {
+          id: "memory",
+          type: "folder",
+          title: "MEMORY",
+          subtitle: "Mutable archive",
+          text:
+            "Human-provided memory. Editable. " +
+            "Consent is part of the architecture.",
+          position: [-3.4, -2.7, 5.15],
+          glyph: "MEM",
+          colour: 0x84ffbf
+        },
+
+        {
+          id: "film",
+          type: "folder",
+          title: "FFILM.ORG",
+          subtitle: "Story apparatus",
+          text:
+            "Reality enters through artefacts. " +
+            "Narrative leaves through cinema.",
+          position: [0, -2.7, 5.15],
+          glyph: "F",
+          colour: 0xffffff
+        },
+
+        {
+          id: "signal",
+          type: "folder",
+          title: "SIGNALS",
+          subtitle: "RSS / transmissions",
+          text:
+            "Incoming material remains unclassified " +
+            "until inspected.",
+          position: [3.4, -2.7, 5.15],
+          glyph: "RSS",
+          colour: 0xffca68
+        },
+
+        {
+          id: "holyMoment",
+          type: "absence",
+          title: "THE SPACE",
+          subtitle: "The holy moment",
+          text:
+            "No object is stored here.",
+          position: [0, 4.8, 0],
+          glyph: "·",
+          colour: 0xffffff
+        }
+      ];
+
+      document.getElementById("objectCount").textContent =
+        ROOM_DATA.length;
+
+      /* ============================================================
+         HELPERS
+         ============================================================ */
+
+      function makeCanvasTexture(
+        title,
+        subtitle,
+        glyph,
+        accent
+      ) {
+        const canvas = document.createElement("canvas");
+
+        canvas.width = 512;
+        canvas.height = 512;
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#080a09";
+        ctx.fillRect(0, 0, 512, 512);
+
+        /* noise / paper */
+        for (let i = 0; i < 1600; i++) {
+          const a = Math.random() * 0.045;
+
+          ctx.fillStyle =
+            `rgba(255,255,255,${a})`;
+
+          ctx.fillRect(
+            Math.random() * 512,
+            Math.random() * 512,
+            1,
+            1
+          );
+        }
+
+        const colour =
+          "#" +
+          accent.toString(16).padStart(6, "0");
+
+        ctx.strokeStyle = colour;
+        ctx.globalAlpha = .8;
+        ctx.lineWidth = 4;
+
+        ctx.strokeRect(
+          22,
+          22,
+          468,
+          468
+        );
+
+        ctx.globalAlpha = 1;
+
+        ctx.fillStyle = colour;
+
+        ctx.font =
+          "900 108px ui-monospace, monospace";
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillText(
+          glyph,
+          256,
+          210
+        );
+
+        ctx.fillStyle = "#ffffff";
+
+        ctx.font =
+          "900 25px ui-monospace, monospace";
+
+        wrapText(
+          ctx,
+          title,
+          256,
+          345,
+          420,
+          31
+        );
+
+        ctx.fillStyle =
+          "rgba(255,255,255,.56)";
+
+        ctx.font =
+          "18px ui-monospace, monospace";
+
+        wrapText(
+          ctx,
+          subtitle,
+          256,
+          415,
+          420,
+          25
+        );
+
+        const texture =
+          new THREE.CanvasTexture(canvas);
+
+        texture.encoding =
+          THREE.sRGBEncoding;
+
+        texture.anisotropy =
+          renderer.capabilities
+            .getMaxAnisotropy();
+
+        return texture;
+      }
+
+      function wrapText(
+        ctx,
+        text,
+        x,
+        y,
+        maxWidth,
+        lineHeight
+      ) {
+        const words = String(text).split(" ");
+        let line = "";
+        let row = 0;
+
+        for (let n = 0; n < words.length; n++) {
+          const test =
+            line + words[n] + " ";
+
+          if (
+            ctx.measureText(test).width > maxWidth &&
+            n > 0
+          ) {
+            ctx.fillText(
+              line.trim(),
+              x,
+              y + row * lineHeight
+            );
+
+            line = words[n] + " ";
+            row++;
+          } else {
+            line = test;
+          }
+        }
+
+        ctx.fillText(
+          line.trim(),
+          x,
+          y + row * lineHeight
+        );
+      }
+
+      /* ============================================================
+         ROOM SHELL
+         ============================================================ */
+
+      const roomGroup = new THREE.Group();
+      scene.add(roomGroup);
+
+      const roomMaterial =
+        new THREE.MeshStandardMaterial({
+          color: 0x111614,
+          roughness: 1,
+          metalness: 0,
+          side: THREE.BackSide
+        });
+
+      const room =
+        new THREE.Mesh(
+          new THREE.BoxGeometry(
+            ROOM_SIZE,
+            ROOM_SIZE,
+            ROOM_SIZE
+          ),
+          roomMaterial
+        );
+
+      roomGroup.add(room);
+
+      /* room grid */
+
+      function wallGrid(
+        width,
+        height,
+        divisionsX,
+        divisionsY,
+        rotation,
+        position
+      ) {
+        const group = new THREE.Group();
+
+        const mat =
+          new THREE.LineBasicMaterial({
+            color: 0x355b4c,
+            transparent: true,
+            opacity: .18
+          });
+
+        for (let i = 0; i <= divisionsX; i++) {
+          const x =
+            -width / 2 +
+            width * (i / divisionsX);
+
+          const geo =
+            new THREE.BufferGeometry()
+              .setFromPoints([
+                new THREE.Vector3(
+                  x,
+                  -height / 2,
+                  0
+                ),
+                new THREE.Vector3(
+                  x,
+                  height / 2,
+                  0
+                )
+              ]);
+
+          group.add(
+            new THREE.Line(geo, mat)
+          );
+        }
+
+        for (let i = 0; i <= divisionsY; i++) {
+          const y =
+            -height / 2 +
+            height * (i / divisionsY);
+
+          const geo =
+            new THREE.BufferGeometry()
+              .setFromPoints([
+                new THREE.Vector3(
+                  -width / 2,
+                  y,
+                  0
+                ),
+                new THREE.Vector3(
+                  width / 2,
+                  y,
+                  0
+                )
+              ]);
+
+          group.add(
+            new THREE.Line(geo, mat)
+          );
+        }
+
+        group.rotation.set(
+          rotation[0],
+          rotation[1],
+          rotation[2]
+        );
+
+        group.position.set(
+          position[0],
+          position[1],
+          position[2]
+        );
+
+        roomGroup.add(group);
+      }
+
+      const edge = HALF - .015;
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [0,0,0],
+        [0,0,-edge]
+      );
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [0,Math.PI,0],
+        [0,0,edge]
+      );
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [0,Math.PI / 2,0],
+        [-edge,0,0]
+      );
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [0,-Math.PI / 2,0],
+        [edge,0,0]
+      );
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [Math.PI / 2,0,0],
+        [0,edge,0]
+      );
+
+      wallGrid(
+        ROOM_SIZE,
+        ROOM_SIZE,
+        12,
+        12,
+        [-Math.PI / 2,0,0],
+        [0,-edge,0]
+      );
+
+      /* ============================================================
+         DATA OBJECTS
+         ============================================================ */
+
+      const objectGroup =
+        new THREE.Group();
+
+      scene.add(objectGroup);
+
+      const interactiveObjects = [];
+
+      function orientTowardCentre(mesh) {
+        const p =
+          mesh.position.clone();
+
+        mesh.lookAt(
+          new THREE.Vector3(
+            0,
+            p.y * .25,
+            0
+          )
+        );
+      }
+
+      function createDataObject(data) {
+        const group = new THREE.Group();
+
+        group.position.fromArray(
+          data.position
+        );
+
+        group.userData.data = data;
+
+        const cardGeo =
+          new THREE.PlaneGeometry(
+            2.25,
+            2.25
+          );
+
+        const texture =
+          makeCanvasTexture(
+            data.title,
+            data.subtitle,
+            data.glyph,
+            data.colour
+          );
+
+        const cardMat =
+          new THREE.MeshStandardMaterial({
+            map: texture,
+            emissive: data.colour,
+            emissiveIntensity: .055,
+            roughness: .92,
+            metalness: 0,
+            side: THREE.DoubleSide
+          });
+
+        const card =
+          new THREE.Mesh(
+            cardGeo,
+            cardMat
+          );
+
+        card.userData.parentObject =
+          group;
+
+        group.add(card);
+
+        const frame =
+          new THREE.LineSegments(
+            new THREE.EdgesGeometry(
+              new THREE.BoxGeometry(
+                2.32,
+                2.32,
+                .08
+              )
+            ),
+            new THREE.LineBasicMaterial({
+              color: data.colour,
+              transparent: true,
+              opacity: .42
+            })
+          );
+
+        group.add(frame);
+
+        const lamp =
+          new THREE.PointLight(
+            data.colour,
+            .16,
+            3.8
+          );
+
+        lamp.position.z = .28;
+
+        group.add(lamp);
+
+        objectGroup.add(group);
+
+        orientTowardCentre(group);
+
+        interactiveObjects.push(card);
+
+        return group;
+      }
+
+      const dataMeshes =
+        ROOM_DATA.map(
+          createDataObject
+        );
+
+      /* ============================================================
+         PUNCH CARD CLOUD
+         ============================================================ */
+
+      const cardCloud =
+        new THREE.Group();
+
+      scene.add(cardCloud);
+
+      const punchMaterial =
+        new THREE.MeshStandardMaterial({
+          color: 0xe4d8b4,
+          roughness: .92,
+          metalness: 0,
+          side: THREE.DoubleSide
+        });
+
+      const punchGeo =
+        new THREE.PlaneGeometry(
+          .52,
+          .23
+        );
+
+      function addPunchHoles(mesh) {
+        const canvas =
+          document.createElement("canvas");
+
+        canvas.width = 256;
+        canvas.height = 110;
+
+        const ctx =
+          canvas.getContext("2d");
+
+        ctx.fillStyle = "#d9cca4";
+        ctx.fillRect(0,0,256,110);
+
+        ctx.strokeStyle = "#6d634d";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1,1,254,108);
+
+        ctx.fillStyle = "#453f33";
+
+        for (let row = 0; row < 5; row++) {
+          for (let col = 0; col < 18; col++) {
+            if (Math.random() > .62) {
+              ctx.fillRect(
+                12 + col * 13,
+                11 + row * 18,
+                6,
+                10
+              );
+            }
+          }
+        }
+
+        const tex =
+          new THREE.CanvasTexture(canvas);
+
+        tex.encoding =
+          THREE.sRGBEncoding;
+
+        mesh.material =
+          new THREE.MeshStandardMaterial({
+            map: tex,
+            roughness: .95,
+            side: THREE.DoubleSide
+          });
+      }
+
+      for (let i = 0; i < 70; i++) {
+        const card =
+          new THREE.Mesh(
+            punchGeo,
+            punchMaterial
+          );
+
+        addPunchHoles(card);
+
+        const theta =
+          Math.random() *
+          Math.PI * 2;
+
+        const radius =
+          2.2 +
+          Math.random() * 3.2;
+
+        card.position.set(
+          Math.cos(theta) * radius,
+          -3.7 + Math.random() * 7.5,
+          Math.sin(theta) * radius
+        );
+
+        card.rotation.set(
+          Math.random() * Math.PI,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI
+        );
+
+        card.userData.seed =
+          Math.random() * 100;
+
+        card.userData.speed =
+          .12 +
+          Math.random() * .3;
+
+        cardCloud.add(card);
+      }
+
+      /* ============================================================
+         CAMERA LOOK
+
+         Native swipe.
+         No OrbitControls.
+         Keeps the room feeling like Jack's eye.
+         ============================================================ */
+
+      let yaw = 0;
+      let pitch = 0;
+
+      let targetYaw = 0;
+      let targetPitch = 0;
+
+      const euler =
+        new THREE.Euler(
+          0,
+          0,
+          0,
+          "YXZ"
+        );
+
+      function applyCameraRotation() {
+        euler.set(
+          pitch,
+          yaw,
+          0
+        );
+
+        camera.quaternion
+          .setFromEuler(euler);
+      }
+
+      function clampPitch(v) {
+        return Math.max(
+          -Math.PI * .48,
+          Math.min(
+            Math.PI * .48,
+            v
+          )
+        );
+      }
+
+      let touching = false;
+      let moved = false;
+
+      let pointerX = 0;
+      let pointerY = 0;
+
+      renderer.domElement.addEventListener(
+        "pointerdown",
+        e => {
+          touching = true;
+          moved = false;
+
+          pointerX = e.clientX;
+          pointerY = e.clientY;
+
+          renderer.domElement
+            .setPointerCapture?.(
+              e.pointerId
+            );
+        }
+      );
+
+      renderer.domElement.addEventListener(
+        "pointermove",
+        e => {
+          if (!touching) return;
+
+          const dx =
+            e.clientX - pointerX;
+
+          const dy =
+            e.clientY - pointerY;
+
+          if (
+            Math.abs(dx) +
+            Math.abs(dy) > 3
+          ) {
+            moved = true;
+          }
+
+          pointerX = e.clientX;
+          pointerY = e.clientY;
+
+          targetYaw -= dx * .0042;
+
+          targetPitch =
+            clampPitch(
+              targetPitch -
+              dy * .0036
+            );
+        }
+      );
+
+      renderer.domElement.addEventListener(
+        "pointerup",
+        e => {
+          touching = false;
+
+          if (!moved) {
+            inspectAt(
+              e.clientX,
+              e.clientY
+            );
+          }
+        }
+      );
+
+      renderer.domElement.addEventListener(
+        "pointercancel",
+        () => {
+          touching = false;
+        }
+      );
+
+      /* ============================================================
+         VIEW SNAP
+         ============================================================ */
+
+      const VIEWPOINTS = {
+        front: {
+          yaw: 0,
+          pitch: 0
+        },
+
+        right: {
+          yaw: -Math.PI / 2,
+          pitch: 0
+        },
+
+        back: {
+          yaw: Math.PI,
+          pitch: 0
+        },
+
+        left: {
+          yaw: Math.PI / 2,
+          pitch: 0
+        },
+
+        up: {
+          yaw: 0,
+          pitch: -Math.PI / 2 + .04
+        }
+      };
+
+      function setView(name) {
+        const v =
+          VIEWPOINTS[name];
+
+        if (!v) return;
+
+        targetYaw = v.yaw;
+        targetPitch = v.pitch;
+
+        document
+          .querySelectorAll("[data-view]")
+          .forEach(btn => {
+            btn.classList.toggle(
+              "on",
+              btn.dataset.view === name
+            );
+          });
+
+        document
+          .getElementById("roomReadout")
+          .textContent =
+            name.toUpperCase();
+      }
+
+      document
+        .querySelectorAll("[data-view]")
+        .forEach(btn => {
+          btn.addEventListener(
+            "click",
+            () => setView(
+              btn.dataset.view
+            )
+          );
+        });
+
+      setView("front");
+
+      /* ============================================================
+         RAYCAST INSPECTION
+         ============================================================ */
+
+      const raycaster =
+        new THREE.Raycaster();
+
+      const mouse =
+        new THREE.Vector2();
+
+      let selected = null;
+
+      const notice =
+        document.getElementById("notice");
+
+      let noticeTimer = null;
+
+      function showNotice(html, ms = 2600) {
+        clearTimeout(noticeTimer);
+
+        notice.innerHTML = html;
+        notice.classList.add("show");
+
+        noticeTimer =
+          setTimeout(() => {
+            notice.classList.remove(
+              "show"
+            );
+          }, ms);
+      }
+
+      function inspectAt(x, y) {
+        mouse.x =
+          (x / innerWidth) * 2 - 1;
+
+        mouse.y =
+          -(y / innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(
+          mouse,
+          camera
+        );
+
+        const hits =
+          raycaster.intersectObjects(
+            interactiveObjects,
+            false
+          );
+
+        if (!hits.length) {
+          selected = null;
+          return;
+        }
+
+        const mesh =
+          hits[0].object;
+
+        const parent =
+          mesh.userData.parentObject;
+
+        if (!parent) return;
+
+        selected =
+          parent.userData.data;
+
+        document
+          .getElementById("jackLine")
+          .textContent =
+            "JACK / CLERK: " +
+            selected.title +
+            " selected.";
+
+        showNotice(
+          "<strong>" +
+          escapeHTML(selected.title) +
+          "</strong><br><br>" +
+          escapeHTML(selected.text)
+        );
+
+        appendTerminal(
+          "JACK",
+          "Inspection opened: " +
+          selected.title +
+          ". " +
+          selected.text,
+          "jack"
+        );
+      }
+
+      document
+        .getElementById("inspectBtn")
+        .addEventListener(
+          "click",
+          () => inspectAt(
+            innerWidth / 2,
+            innerHeight / 2
+          )
+        );
+
+      /* ============================================================
+         TERMINAL
+         ============================================================ */
+
+      const terminal =
+        document.getElementById(
+          "terminal"
+        );
+
+      const terminalBtn =
+        document.getElementById(
+          "terminalBtn"
+        );
+
+      const terminalLog =
+        document.getElementById(
+          "terminalLog"
+        );
+
+      const terminalInput =
+        document.getElementById(
+          "terminalInput"
+        );
+
+      function toggleTerminal(force) {
+        const open =
+          force !== undefined
+            ? !!force
+            : !terminal.classList
+                .contains("open");
+
+        terminal.classList.toggle(
+          "open",
+          open
+        );
+
+        terminalBtn.classList.toggle(
+          "on",
+          open
+        );
+
+        if (open) {
+          setTimeout(
+            () => terminalInput.focus(),
+            60
+          );
+        }
+      }
+
+      terminalBtn.addEventListener(
+        "click",
+        () => toggleTerminal()
+      );
+
+      function escapeHTML(s) {
+        return String(s)
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;");
+      }
+
+      function appendTerminal(
+        who,
+        text,
+        type
+      ) {
+        const div =
+          document.createElement("div");
+
+        div.className =
+          "termLine " +
+          (
+            type === "jack"
+              ? "termJack"
+              : type === "user"
+              ? "termUser"
+              : "termSystem"
+          );
+
+        div.textContent =
+          who + " > " + text;
+
+        terminalLog.appendChild(div);
+
+        terminal.scrollTop =
+          terminal.scrollHeight;
+      }
+
+      appendTerminal(
+        "SYSTEM",
+        "ROOM N°13 mounted.",
+        "system"
+      );
+
+      appendTerminal(
+        "JACK",
+        "Morning. I appear to be inside the cube.",
+        "jack"
+      );
+
+      appendTerminal(
+        "JACK",
+        "Tap anything you want me to inspect.",
+        "jack"
+      );
+
+      function localJackResponse(input) {
+        const q =
+          input.trim().toLowerCase();
+
+        if (!q) return "";
+
+        if (
+          q === "/help" ||
+          q === "help"
+        ) {
+          return (
+            "Commands: /room, /objects, /selected, " +
+            "/dream, /clear, /wake."
+          );
+        }
+
+        if (
+          q === "/room" ||
+          q.includes("where are")
+        ) {
+          return (
+            "Room N°13. A cubic memory habitat. " +
+            ROOM_DATA.length +
+            " classified objects currently mounted."
+          );
+        }
+
+        if (
+          q === "/objects" ||
+          q.includes("objects")
+        ) {
+          return ROOM_DATA
+            .map(x => x.title)
+            .join(" · ");
+        }
+
+        if (
+          q === "/selected"
+        ) {
+          return selected
+            ? (
+              selected.title +
+              ": " +
+              selected.text
+            )
+            : "Nothing selected.";
+        }
+
+        if (
+          q === "/dream" ||
+          q.includes("dream")
+        ) {
+          dream();
+          return (
+            "Dream cycle initiated. " +
+            "Spatial relations are temporarily plastic."
+          );
+        }
+
+        if (
+          q === "/wake"
+        ) {
+          wakeRoom();
+          return "Geometry restored.";
+        }
+
+        if (
+          q === "/clear"
+        ) {
+          terminalLog.innerHTML = "";
+          return "Cleared.";
+        }
+
+        if (q.includes("alice")) {
+          return (
+            "ALICE.v7 remains filed outside " +
+            "ordinary chronology."
+          );
+        }
+
+        if (q.includes("mabel")) {
+          return (
+            "Mabel is the oracle layer. " +
+            "She interprets. I file."
+          );
+        }
+
+        if (
+          q.includes("wardrobe") ||
+          q.includes("server")
+        ) {
+          return (
+            "The Wardrobe is the server habitat. " +
+            "Execution rights should remain narrow."
+          );
+        }
+
+        if (
+          q.includes("hello") ||
+          q.includes("morning") ||
+          q.includes("hi jack")
+        ) {
+          return (
+            "Morning. Room stable. " +
+            "Punch cards dry. Proceed."
+          );
+        }
+
+        return (
+          "HELD AS PENDING. " +
+          "I can file that utterance, " +
+          "but no remote intelligence endpoint " +
+          "is connected in this build."
+        );
+      }
+
+      function sendTerminal() {
+        const value =
+          terminalInput.value.trim();
+
+        if (!value) return;
+
+        appendTerminal(
+          "YOU",
+          value,
+          "user"
+        );
+
+        terminalInput.value = "";
+
+        const response =
+          localJackResponse(value);
+
+        setTimeout(() => {
+          appendTerminal(
+            "JACK",
+            response,
+            "jack"
+          );
+
+          document
+            .getElementById("jackLine")
+            .textContent =
+              "JACK / CLERK: " +
+              response;
+        }, 130);
+      }
+
+      document
+        .getElementById("sendBtn")
+        .addEventListener(
+          "click",
+          sendTerminal
+        );
+
+      terminalInput.addEventListener(
+        "keydown",
+        e => {
+          if (e.key === "Enter") {
+            sendTerminal();
+          }
+        }
+      );
+
+      /* ============================================================
+         DREAM MODE
+
+         Jack is allowed to dream spatially.
+         He does NOT write server code or mutate external files here.
+
+         This gives us the visual/architectural primitive first.
+         ============================================================ */
+
+      let dreaming = false;
+
+      const originalTransforms =
+        dataMeshes.map(group => ({
+          position:
+            group.position.clone(),
+          quaternion:
+            group.quaternion.clone()
+        }));
+
+      const dreamTargets =
+        [];
+
+      function createDreamTargets() {
+        dreamTargets.length = 0;
+
+        dataMeshes.forEach(
+          (mesh, i) => {
+            const theta =
+              i /
+              dataMeshes.length *
+              Math.PI * 2;
+
+            const radius =
+              2.3 +
+              (i % 3) * .7;
+
+            dreamTargets.push({
+              position:
+                new THREE.Vector3(
+                  Math.cos(theta) *
+                    radius,
+
+                  (
+                    (i % 5) - 2
+                  ) * .85,
+
+                  Math.sin(theta) *
+                    radius
+                )
+            });
+          }
+        );
+      }
+
+      createDreamTargets();
+
+      function dream() {
+        dreaming = !dreaming;
+
+        document
+          .getElementById("dreamBtn")
+          .classList.toggle(
+            "on",
+            dreaming
+          );
+
+        document
+          .getElementById("fieldState")
+          .textContent =
+            dreaming
+              ? "DREAMING"
+              : "STABLE";
+
+        appendTerminal(
+          "SYSTEM",
+          dreaming
+            ? "Dream geometry unlocked."
+            : "Dream geometry collapsing.",
+          "system"
+        );
+      }
+
+      function wakeRoom() {
+        dreaming = false;
+
+        document
+          .getElementById("dreamBtn")
+          .classList.remove("on");
+
+        document
+          .getElementById("fieldState")
+          .textContent =
+            "STABLE";
+      }
+
+      document
+        .getElementById("dreamBtn")
+        .addEventListener(
+          "click",
+          dream
+        );
+
+      /* ============================================================
+         CLOCK
+         ============================================================ */
+
+      const clockTime =
+        document.getElementById(
+          "clockTime"
+        );
+
+      const clockDate =
+        document.getElementById(
+          "clockDate"
+        );
+
+      function updateClock() {
+        const now = new Date();
+
+        clockTime.textContent =
+          now.toLocaleTimeString(
+            [],
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit"
+            }
+          );
+
+        clockDate.textContent =
+          now.toLocaleDateString(
+            [],
+            {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            }
+          );
+      }
+
+      updateClock();
+      setInterval(updateClock,1000);
+
+      /* ============================================================
+         ANIMATION
+         ============================================================ */
+
+      const clock =
+        new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(
+          animate
+        );
+
+        const dt =
+          Math.min(
+            clock.getDelta(),
+            .05
+          );
+
+        const t =
+          performance.now() *
+          .001;
+
+        yaw +=
+          (targetYaw - yaw) *
+          Math.min(
+            1,
+            dt * 8
+          );
+
+        pitch +=
+          (targetPitch - pitch) *
+          Math.min(
+            1,
+            dt * 8
+          );
+
+        applyCameraRotation();
+
+        pulseLight.intensity =
+          .56 +
+          Math.sin(t * 1.7) *
+          .11;
+
+        /* floating punch cards */
+
+        cardCloud.children.forEach(
+          card => {
+            const seed =
+              card.userData.seed;
+
+            const speed =
+              card.userData.speed;
+
+            card.rotation.y +=
+              dt * speed * .18;
+
+            card.rotation.z +=
+              dt * speed * .08;
+
+            card.position.y +=
+              Math.sin(
+                t * speed +
+                seed
+              ) *
+              dt *
+              .04;
+          }
+        );
+
+        /* spatial dream */
+
+        dataMeshes.forEach(
+          (mesh,i) => {
+            const target =
+              dreaming
+                ? dreamTargets[i].position
+                : originalTransforms[i]
+                    .position;
+
+            mesh.position.lerp(
+              target,
+              dreaming
+                ? .018
+                : .04
+            );
+
+            if (dreaming) {
+              mesh.rotation.y +=
+                dt *
+                (
+                  .05 +
+                  i * .002
+                );
+
+              mesh.rotation.z =
+                Math.sin(
+                  t * .4 +
+                  i
+                ) *
+                .08;
+            } else {
+              mesh.quaternion.slerp(
+                originalTransforms[i]
+                  .quaternion,
+                .06
+              );
+            }
+          }
+        );
+
+        renderer.render(
+          scene,
+          camera
+        );
+      }
+
+      animate();
+
+      /* ============================================================
+         RESIZE
+         ============================================================ */
+
+      window.addEventListener(
+        "resize",
+        () => {
+          camera.aspect =
+            innerWidth /
+            innerHeight;
+
+          camera
+            .updateProjectionMatrix();
+
+          renderer.setSize(
+            innerWidth,
+            innerHeight
+          );
+        }
+      );
+
+      /* ============================================================
+         EXPOSE JACK ROOM API
+
+         Later:
+           JACK.room.mount(...)
+           JACK.room.add(...)
+           JACK.room.remove(...)
+           JACK.room.feed(...)
+           JACK.say(...)
+
+         Server-side agent can write JSON.
+         Browser merely renders authorised state.
+         ============================================================ */
+
+      window.JACK = {
+        version:
+          "room-13.0",
+
+        room: {
+          data: ROOM_DATA,
+
+          select(id) {
+            const found =
+              ROOM_DATA.find(
+                x => x.id === id
+              );
+
+            if (!found) {
+              return false;
+            }
+
+            selected = found;
+
+            appendTerminal(
+              "JACK",
+              "Selected " +
+              found.title +
+              ".",
+              "jack"
+            );
+
+            return true;
+          },
+
+          list() {
+            return ROOM_DATA.map(
+              x => ({
+                id: x.id,
+                title: x.title,
+                type: x.type
+              })
+            );
+          },
+
+          dream,
+          wake: wakeRoom
+        },
+
+        say(text) {
+          appendTerminal(
+            "JACK",
+            String(text),
+            "jack"
+          );
+
+          document
+            .getElementById(
+              "jackLine"
+            )
+            .textContent =
+              "JACK / CLERK: " +
+              String(text);
+        },
+
+        system(text) {
+          appendTerminal(
+            "SYSTEM",
+            String(text),
+            "system"
+          );
+        }
+      };
+
+      console.log(
+        "JACK ROOM N°13 READY",
+        window.JACK
+      );
+
+    } catch (err) {
+      fail(
+        "ROOM INITIALISATION FAILED\n\n" +
+        (
+          err && err.stack
+            ? err.stack
+            : err
+        )
+      );
+    }
+  })();
+  </script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Put the ask-jack glyph on every HTML page: one <script> line before </body>.
+
+  scripts/ask-jack-inject            dry run (default): lists what would change
+  scripts/ask-jack-inject --apply    insert the tag where missing (idempotent)
+  scripts/ask-jack-inject --remove   take the tag back out
+
+Only touches a line that is a bare </body> in plain HTML context. Anything odd is
+listed as MANUAL and left alone. Skips endpoints, backups, lore, storage, email."""
+import os, re, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TAG = '<script src="/assets/ask-jack.js?v=1" defer></script>'
+MARK = '/assets/ask-jack.js'
+SKIP_DIRS = {'.git', 'node_modules', 'app', 'tests', 'lore', 'storage', 'scripts', 'vendor', 'graph'}
+SKIP_PREFIX = ('_backup', 'people/data')
+SKIP_FILES = {'inc/track.php', 'people/inc/mail.php'}
+args = set(sys.argv[1:])
+apply_, remove = '--apply' in args, '--remove' in args
+
+changed, manual, already = [], [], 0
+for d, dirs, files in os.walk(ROOT):
+    rel_d = os.path.relpath(d, ROOT)
+    dirs[:] = [x for x in dirs if x not in SKIP_DIRS and not x.startswith('_backup')]
+    for f in files:
+        if not f.endswith(('.php', '.html')):
+            continue
+        rel = os.path.normpath(os.path.join(rel_d, f))
+        if rel in SKIP_FILES or rel.startswith(SKIP_PREFIX) or '/mail' in '/' + rel:
+            continue
+        p = os.path.join(d, f)
+        try:
+            s = open(p, encoding='utf-8').read()
+        except Exception:
+            continue
+        if not re.search(r'</body>', s, re.I):
+            continue
+        if f.endswith('.php') and re.search(r'header\(\s*["\'](?:content-type|Content-Type)\s*:\s*(?:application/json|text/plain)', s, re.I):
+            manual.append((rel, 'sends non-HTML too')); continue
+        has = MARK in s
+        if remove:
+            if has:
+                new = re.sub(r'[ \t]*<script src="/assets/ask-jack\.js[^"]*" defer></script>\n', '', s)
+                changed.append(rel)
+                if apply_: open(p, 'w', encoding='utf-8').write(new)
+            continue
+        if has:
+            already += 1; continue
+        lines = s.split('\n')
+        idx = [i for i, l in enumerate(lines) if l.strip().lower() == '</body>']
+        if not idx:
+            manual.append((rel, '</body> not on its own line')); continue
+        i = idx[-1]
+        indent = re.match(r'\s*', lines[i]).group(0)
+        lines.insert(i, indent + TAG)
+        changed.append(rel)
+        if apply_: open(p, 'w', encoding='utf-8').write('\n'.join(lines))
+
+verb = ('removed from' if remove else 'inserted in') if apply_ else ('would remove from' if remove else 'would insert in')
+print(f'{verb} {len(changed)} files; already present: {already}')
+for r in sorted(changed): print('  ', r)
+for r, why in sorted(manual): print('   MANUAL', r, '-', why)
+if not apply_: print('(dry run — pass --apply to write)')

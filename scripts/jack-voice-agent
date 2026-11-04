@@ -1,0 +1,228 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+/**
+ * Give timetravellersguild.com its own ElevenLabs voice agent, pointed at
+ * Jack's one brain (/jack/llm). The ffilm agent it is copied from is only
+ * ever read, never changed.
+ *
+ * Reads ELEVENLABS_API_KEY and JACK_LLM_SECRET from the environment (or the
+ * private .env via ttg_env). Neither is printed. The copy's id, and the id of
+ * the stored line secret, are kept in storage/jack-voice/ttg-agent.json so a
+ * second run updates the same copy instead of making another.
+ *
+ * Usage:
+ *   scripts/jack-voice-agent             # dry run: show the change
+ *   scripts/jack-voice-agent --apply     # copy (once) and switch the copy
+ *
+ * Options: --from ID (agent to copy)   --url URL   --secret-id ID
+ *
+ * Pages use the copy once the host has JACK_VOICE_AGENT_ID set to its id.
+ * To go back, remove that line: the pages fall back to the ffilm agent.
+ */
+
+require_once dirname(__DIR__) . '/inc/env.php';
+
+const API = 'https://api.elevenlabs.io/v1/convai';
+const FFILM_AGENT = 'agent_8101m54eqp47ez6baj4ed5kv7tkv';
+const COPY_NAME = 'Jack · timetravellersguild.com';
+const HOSTNAME = 'timetravellersguild.com';
+const DEFAULT_URL = 'https://timetravellersguild.com/jack/llm';
+const REFUSED_TOOLS = ['lodge_to_tree'];
+/* Spoken by ElevenLabs before Jack's brain is asked anything, so it must already be Jack. */
+const FIRST_MESSAGE = 'Clerk’s desk. Jack speaking. What has entered the field?';
+/* Matches lodgeTestimony() in assets/jack-guild-tools.js, which posts through /now/jack. */
+const LODGE_TOOL = [
+    'type' => 'client',
+    'name' => 'lodge_testimony',
+    'description' => 'Lodge the visitor\'s account with the Guild desk as pending testimony. Not canon. Read it back first; call only after they say yes aloud. Speak the clerk text it returns.',
+    'expects_response' => true,
+    'response_timeout_secs' => 30,
+    'parameters' => [
+        'type' => 'object',
+        'properties' => [
+            'testimony' => ['type' => 'string', 'description' => 'The visitor\'s own words, not a paraphrase unless they asked for one.'],
+            'title' => ['type' => 'string', 'description' => 'A short heading for the slip.'],
+            'confirmed' => ['type' => 'boolean', 'description' => 'True only after the visitor said yes aloud.'],
+        ],
+        'required' => ['testimony', 'confirmed'],
+    ],
+];
+const ONE_LINE_PROMPT = 'You are the voice of Jack, clerk of the Time Travellers Guild. Jack\'s mind is served by the Guild\'s own endpoint; this prompt is not used.';
+
+$args = $argv;
+array_shift($args);
+$opt = static function (string $name, string $default = '') use ($args): string {
+    $i = array_search($name, $args, true);
+    return $i !== false && isset($args[$i + 1]) ? (string) $args[$i + 1] : $default;
+};
+$apply = in_array('--apply', $args, true);
+$from = $opt('--from', FFILM_AGENT);
+$url = $opt('--url', DEFAULT_URL);
+
+if (ttg_env('ELEVENLABS_API_KEY') === '') {
+    fwrite(STDERR, "ELEVENLABS_API_KEY is not set.\n");
+    exit(1);
+}
+
+/** @return array{status:int,data:mixed} */
+function el(string $method, string $path, ?array $body = null): array
+{
+    $ch = curl_init(API . $path);
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST => $method,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTPHEADER => ['xi-api-key: ' . ttg_env('ELEVENLABS_API_KEY'), 'Content-Type: application/json'],
+    ]);
+    if ($body !== null) {
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    }
+    $raw = curl_exec($ch);
+    $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    return ['status' => $status, 'data' => is_string($raw) ? json_decode($raw, true) : null];
+}
+
+function fail(string $what, array $res): never
+{
+    $msg = is_array($res['data']) ? json_encode($res['data']['detail'] ?? $res['data'], JSON_UNESCAPED_SLASHES) : '';
+    fwrite(STDERR, "$what failed (HTTP {$res['status']}) " . substr((string) $msg, 0, 600) . "\n");
+    exit(1);
+}
+
+function agent(string $id): array
+{
+    $got = el('GET', '/agents/' . rawurlencode($id));
+    if ($got['status'] !== 200 || !is_array($got['data'])) fail("Reading agent $id", $got);
+    return $got['data'];
+}
+
+$dir = dirname(__DIR__) . '/storage/jack-voice';
+@mkdir($dir, 0775, true);
+$stateFile = $dir . '/ttg-agent.json';
+$state = json_decode((string) @file_get_contents($stateFile), true);
+$state = is_array($state) ? $state : [];
+$saveState = static function () use (&$state, $stateFile): void {
+    file_put_contents($stateFile, json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
+};
+
+/* The source is read once and kept, so its prompt is on file. */
+$source = agent($from);
+$stamp = gmdate('Ymd\THis');
+file_put_contents($dir . '/agent-' . $from . '-' . $stamp . '.json', json_encode($source, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n");
+echo "Source (left alone): " . ($source['name'] ?? $from) . " ($from)\n";
+
+$copyId = (string) ($state['agent_id'] ?? '');
+if ($copyId === $from) {
+    fwrite(STDERR, "The saved copy id is the source agent. Refusing to change it. Fix $stateFile.\n");
+    exit(1);
+}
+if ($copyId !== '') {
+    $copy = agent($copyId);
+    echo "Copy (will be switched): " . ($copy['name'] ?? $copyId) . " ($copyId)\n";
+} else {
+    $copy = $source;
+    echo "Copy: none yet. Will duplicate the source as \"" . COPY_NAME . "\".\n";
+}
+$prompt = $copy['conversation_config']['agent']['prompt'] ?? [];
+
+/* Tools on the copy: keep everything but the ffilm relay. Tools are shared
+   across the workspace; dropping one from the copy leaves the source as it is. */
+$keep = [];
+$keptNames = [];
+foreach (is_array($prompt['tool_ids'] ?? null) ? $prompt['tool_ids'] : [] as $id) {
+    $t = el('GET', '/tools/' . rawurlencode((string) $id));
+    $name = (string) ($t['data']['tool_config']['name'] ?? '?');
+    $drop = in_array($name, REFUSED_TOOLS, true);
+    echo ($drop ? '  drop ' : '  keep ') . $name . " ($id)\n";
+    if (!$drop) {
+        $keep[] = (string) $id;
+        $keptNames[] = $name;
+    }
+}
+$needLodge = !in_array('lodge_testimony', $keptNames, true);
+if ($needLodge) echo "  add  lodge_testimony (client tool, lodges through /now/jack)\n";
+/* prompt.tools is the API's expanded view of tool_ids plus system tools
+   (end_call, language_detection); those stay as built-in tools. */
+
+echo "\nLLM on the copy: " . ($prompt['llm'] ?? '?') . " → custom-llm at $url\n";
+echo "Prompt on the copy: one line (the brain is Jack's own)\n";
+echo "First message on the copy: " . FIRST_MESSAGE . "\n";
+echo "Extra body from the page: on\n";
+echo "Allowed site: " . HOSTNAME . "\n";
+
+if (!$apply) {
+    echo "\nDry run. Add --apply to make the change. The source agent is never written.\n";
+    exit(0);
+}
+
+if ($copyId === '') {
+    $dup = el('POST', '/agents/' . rawurlencode($from) . '/duplicate', ['name' => COPY_NAME]);
+    if ($dup['status'] !== 200 || !is_string($dup['data']['agent_id'] ?? null)) fail('Duplicating the agent', $dup);
+    $copyId = $dup['data']['agent_id'];
+    $state = ['agent_id' => $copyId, 'source' => $from, 'created' => gmdate('c')];
+    $saveState();
+    echo "Made the copy: $copyId\n";
+}
+if ($copyId === $from) {
+    fwrite(STDERR, "Refusing to change the source agent.\n");
+    exit(1);
+}
+
+$secretId = $opt('--secret-id', (string) ($state['secret_id'] ?? ''));
+if ($secretId === '') {
+    $secret = ttg_env('JACK_LLM_SECRET');
+    if (strlen($secret) < 32) {
+        fwrite(STDERR, "JACK_LLM_SECRET must be set (32+ chars), the same value as on the host. The copy exists ($copyId) but is unchanged.\n");
+        exit(1);
+    }
+    $made = el('POST', '/secrets', ['type' => 'new', 'name' => 'JACK_LLM_SECRET ' . gmdate('Y-m-d H:i'), 'value' => $secret]);
+    if ($made['status'] !== 200 || !is_string($made['data']['secret_id'] ?? null)) fail('Storing the secret', $made);
+    $secretId = $made['data']['secret_id'];
+    $state['secret_id'] = $secretId;
+    $saveState();
+    echo "Stored the line secret in ElevenLabs ($secretId).\n";
+}
+
+if ($needLodge) {
+    $tool = el('POST', '/tools', ['tool_config' => LODGE_TOOL]);
+    if ($tool['status'] !== 200 || !is_string($tool['data']['id'] ?? null)) fail('Creating lodge_testimony (the copy is unchanged)', $tool);
+    $keep[] = $tool['data']['id'];
+    echo "Created lodge_testimony ({$tool['data']['id']}).\n";
+}
+
+$patch = [
+    'conversation_config' => ['agent' => [
+        'first_message' => FIRST_MESSAGE,
+        'prompt' => [
+            'llm' => 'custom-llm',
+            'custom_llm' => [
+                'url' => $url,
+                'api_key' => ['secret_id' => $secretId],
+                'api_type' => 'chat_completions',
+            ],
+            'prompt' => ONE_LINE_PROMPT,
+            'tool_ids' => $keep,
+        ],
+    ]],
+];
+$res = el('PATCH', '/agents/' . rawurlencode($copyId), $patch);
+if ($res['status'] !== 200) fail("Switching the copy ($copyId)", $res);
+$after = $res['data']['conversation_config']['agent']['prompt'] ?? [];
+echo "Copy switched: llm=" . ($after['llm'] ?? '?') . ' url=' . ($after['custom_llm']['url'] ?? '?') . ' tools=' . count($after['tool_ids'] ?? []) . "\n";
+
+/* Sent separately, so a refusal never undoes the switch above.
+   custom_llm_extra_body is the dashboard's Security > Overrides > Custom LLM extra body. */
+$extra = el('PATCH', '/agents/' . rawurlencode($copyId), ['platform_settings' => ['overrides' => ['custom_llm_extra_body' => true]]]);
+echo (($extra['data']['platform_settings']['overrides']['custom_llm_extra_body'] ?? null) === true)
+    ? "Extra body from the page: allowed.\n"
+    : "Could not confirm extra body. On the copy, in the dashboard: Security > Overrides > enable \"Custom LLM extra body\". Without it every call is anonymous and unremembered.\n";
+
+$allow = el('PATCH', '/agents/' . rawurlencode($copyId), ['platform_settings' => ['auth' => ['allowlist' => [['hostname' => HOSTNAME]]]]]);
+$hosts = array_map(static fn ($h) => (string) ($h['hostname'] ?? ''), $allow['data']['platform_settings']['auth']['allowlist'] ?? []);
+echo in_array(HOSTNAME, $hosts, true)
+    ? "Only " . HOSTNAME . " may start calls on the copy.\n"
+    : "Could not set the allowlist. On the copy, in the dashboard: Security > Allowlist > add " . HOSTNAME . ".\n";
+
+echo "\nNext, on the host: add JACK_VOICE_AGENT_ID=$copyId to ~/ttg-private/.env\n";

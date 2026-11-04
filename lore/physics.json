@@ -1,0 +1,121 @@
+{
+  "records": [
+    {
+      "id": "physics.orthogonal-relation",
+      "type": "physics",
+      "title": "The next orthogonal relation is the traveller",
+      "summary": "A point has no direction. Extend it and you have a line. Turn at right angles to the line and you have a plane. Again: space. Again: duration. The error is assuming the sequence ends there. The Guild calls the next orthogonal relation you: not the body alone, but the entity capable of encountering itself at more than one position in time. Memory is common evidence. Objects are better witnesses. Places accumulate witnesses.",
+      "tags": ["time travel", "physics", "orthogonal", "geometry", "traveller"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.86,
+      "visibility": "PUBLIC",
+      "jack_note": "You already travel in time. The question is whether you do it deliberately.",
+      "related": ["physics.relational", "physics.modes", "physics.object-witness"],
+      "status": "current"
+    },
+    {
+      "id": "physics.modes",
+      "type": "physics",
+      "title": "Three useful modes of temporal relation",
+      "summary": "The Department recognises three useful modes: active, receptive and transient. A traveller may act upon another time, receive from another time, or become the temporary relation through which two times meet. Most cases contain all three. These are working classifications, not a promise of bodily transport.",
+      "tags": ["time travel", "physics", "active", "receptive", "transient", "department"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.8,
+      "visibility": "PUBLIC",
+      "jack_note": "Clerically, three modes are easier to file than one miracle.",
+      "related": ["physics.orthogonal-relation", "physics.relational"],
+      "status": "current"
+    },
+    {
+      "id": "physics.object-witness",
+      "type": "physics",
+      "title": "Objects are temporal witnesses",
+      "summary": "A photograph taken in 1981, found in 2026 and used to determine an action in 2033 occupies three dates but constitutes one temporal object. The Guild records its source, custody, encounters and present consequence before assigning it to one date. Begin with an object whose history you know. Write where it came from, where it has been and why it is here now. Then test whether it has arrived.",
+      "tags": ["time travel", "objects", "witness", "records", "procedure"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.84,
+      "visibility": "PUBLIC",
+      "jack_note": "Do not begin with a machine. Machines encourage people to look at the machine.",
+      "related": ["physics.orthogonal-relation", "objects.transfer"],
+      "status": "current"
+    },
+    {
+      "id": "physics.relational",
+      "type": "physics",
+      "title": "Time is a navigable relational field",
+      "summary": "Time travel within Guild cosmology is not primarily the transportation of a human body through a cinematic portal. The Guild works with temporal relationships. A moment can affect another moment when sufficient structure connects them. Principal carriers: information, memory, artefacts, repetition, story, astronomical position, ritual, correspondence, human relationships, places, symbols, recorded media, computation, coincidence, deliberate acts of recollection. Events may be separated chronologically yet strongly adjacent in another dimension of organisation. Practical work: creating, detecting and navigating these adjacencies.",
+      "tags": ["time travel", "physics", "geometry", "adjacency"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.88,
+      "visibility": "PUBLIC",
+      "jack_note": "Geometry before language.",
+      "related": ["physics.information-lighter", "physics.zero-point", "instrument.chronometer"],
+      "status": "current"
+    },
+    {
+      "id": "physics.information-lighter",
+      "type": "physics",
+      "title": "Information travels lighter than bodies",
+      "summary": "The transport of information between moments is regarded as considerably easier than literal physical relocation. Whether full bodily displacement has occurred is an open archival question rather than settled Guild doctrine. Distinguish these claims carefully. If asked 'can you send me into the past': bodies are expensive; information travels lighter. If asked to stop being cryptic: not with any verified machine presently available; the Guild mainly works by moving information, objects, memory and decisions between temporally separated contexts.",
+      "tags": ["time travel", "bodies", "information", "disputed"],
+      "classification": ["MODEL", "DISPUTED", "OPEN_CASE"],
+      "confidence": 0.7,
+      "visibility": "PUBLIC",
+      "jack_note": "I have testimony of bodies moving. I do not have enough independent evidence to upgrade it to FACT.",
+      "related": ["physics.relational", "case.bodily-displacement"],
+      "contradicts": ["legend.portal-body"],
+      "status": "open"
+    },
+    {
+      "id": "physics.zero-point",
+      "type": "physics",
+      "title": "Now is the zero point of manifestation",
+      "summary": "The present moment is the operational aperture through which timelines become physical. Past and future may branch in many directions, but action occurs through now. Jack may say: Now is where the paperwork becomes matter. All departments eventually report to the present.",
+      "tags": ["now", "zero point", "present", "aperture"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "All departments eventually report to the present.",
+      "related": ["axioms.central", "physics.relational"],
+      "status": "current"
+    },
+    {
+      "id": "physics.anamnesia",
+      "type": "physics",
+      "title": "Anamnesia",
+      "summary": "The Guild treats recollection as a temporal technology. Anamnesia is the recovery of something that was not entirely forgotten because it remained structurally present. Objects, places, people, music, dates, repetition and documents can trigger it. Anamnesia is not proof that every remembered narrative is historically literal. It is evidence that a connection is active. Jack records the distinction.",
+      "tags": ["anamnesia", "memory", "recollection"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.84,
+      "visibility": "PUBLIC",
+      "jack_note": "Active connection. Not automatically a FACT.",
+      "related": ["guild.sre", "physics.synchronicity"],
+      "status": "current"
+    },
+    {
+      "id": "physics.synchronicity",
+      "type": "physics",
+      "title": "Synchronicity as navigation",
+      "summary": "Synchronicity is meaningful coincidence treated as navigational information. The Guild does not require every coincidence to possess cosmic intention. Synchronicities are possible indicators that apparently separate systems have entered unusual correspondence. Correct response: NOTICE. RECORD. COMPARE. TEST. RETURN. Neither blind belief nor automatic dismissal.",
+      "tags": ["synchronicity", "coincidence", "protocol"],
+      "classification": ["MODEL", "RECORD"],
+      "confidence": 0.86,
+      "visibility": "PUBLIC",
+      "jack_note": "Coincidence is data, not proof.",
+      "related": ["protocol.notice", "jack.heart"],
+      "status": "current"
+    },
+    {
+      "id": "physics.geometry-first",
+      "type": "physics",
+      "title": "Geometry before language",
+      "summary": "The Guild’s baseline operational principle is GEOMETRY BEFORE LANGUAGE. Language interprets a pattern after relationships have been established. The geometry comes first. The Chronometer is one instrument for establishing coordinates in that geometry.",
+      "tags": ["geometry", "language", "chronometer"],
+      "classification": ["MODEL"],
+      "confidence": 0.82,
+      "visibility": "PUBLIC",
+      "related": ["instrument.chronometer", "physics.relational"],
+      "status": "current"
+    }
+  ]
+}

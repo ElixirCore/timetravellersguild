@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+<title>Quill · Live Observatory</title>
+
+<style>
+:root {
+    --paper: #d8d0b0;
+    --ink: #29261f;
+    --night: #11110f;
+    --panel: #1a1a17;
+    --line: rgba(220,215,190,.24);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--night);
+    color: var(--paper);
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Consolas,
+        monospace;
+}
+
+body {
+    overflow: hidden;
+}
+
+#observatory {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    height: 52px;
+    flex: 0 0 52px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 18px;
+    background: rgba(10,10,9,.96);
+    border-bottom: 1px solid var(--line);
+    z-index: 20;
+}
+
+.brand {
+    font-size: 12px;
+    letter-spacing: .17em;
+    white-space: nowrap;
+}
+
+#status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: .1em;
+}
+
+#lamp {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #777;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.07);
+}
+
+body.live #lamp {
+    background: #b7d392;
+    box-shadow: 0 0 13px rgba(183,211,146,.65);
+}
+
+body.offline #lamp {
+    background: #906d67;
+}
+
+#stage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    background: #222;
+}
+
+#room {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #222;
+    pointer-events: none;
+}
+
+#quill {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 54px;
+    height: 63px;
+    transform:
+        translate(-50%, -50%);
+    z-index: 8;
+    transition:
+        left 1.2s ease,
+        top 1.2s ease;
+    pointer-events: none;
+}
+
+#quill .body {
+    position: absolute;
+    left: 8px;
+    top: 16px;
+    width: 38px;
+    height: 42px;
+    background: #ddd2ad;
+    border: 2px solid #514a3a;
+    border-radius:
+        55% 45% 48% 52%;
+    box-shadow:
+        0 5px 10px rgba(0,0,0,.22);
+}
+
+#quill .body::before,
+#quill .body::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #29261f;
+}
+
+#quill .body::before {
+    left: 10px;
+}
+
+#quill .body::after {
+    right: 10px;
+}
+
+#quill .feather {
+    position: absolute;
+    width: 13px;
+    height: 36px;
+    left: 30px;
+    top: 0;
+    background: #c6bb96;
+    border: 2px solid #514a3a;
+    border-radius:
+        80% 10% 80% 10%;
+    transform: rotate(22deg);
+    transform-origin: bottom;
+}
+
+#quill .name {
+    position: absolute;
+    top: 59px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 5px;
+    background: rgba(20,20,18,.78);
+    color: #eee8ca;
+    font-size: 9px;
+    letter-spacing: .12em;
+    white-space: nowrap;
+}
+
+#screenBox {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    width: min(36vw, 410px);
+    aspect-ratio: 3 / 2;
+    z-index: 12;
+    border: 2px solid #716c59;
+    background: #090909;
+    box-shadow:
+        0 14px 45px rgba(0,0,0,.48);
+    overflow: hidden;
+}
+
+#screenBox::before {
+    content: "QUILL'S SCREEN";
+    position: absolute;
+    left: 9px;
+    top: 7px;
+    z-index: 3;
+    padding: 3px 5px;
+    background: rgba(0,0,0,.7);
+    font-size: 9px;
+    letter-spacing: .14em;
+}
+
+#screen {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+#screenClosed {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            #0d0d0c 0,
+            #0d0d0c 2px,
+            #11110f 2px,
+            #11110f 4px
+        );
+    color: #777363;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-align: center;
+}
+
+body.screen-live #screenClosed {
+    display: none;
+}
+
+#offlineVeil {
+    position: absolute;
+    inset: 0;
+    display: none;
+    place-items: center;
+    z-index: 15;
+    pointer-events: none;
+    background: rgba(8,8,7,.42);
+}
+
+body.offline #offlineVeil {
+    display: grid;
+}
+
+#offlineCard {
+    padding: 13px 18px;
+    border: 1px solid rgba(230,220,190,.28);
+    background: rgba(12,12,10,.86);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-align: center;
+}
+
+footer {
+    position: absolute;
+    left: 14px;
+    bottom: 10px;
+    z-index: 14;
+    padding: 4px 6px;
+    background: rgba(10,10,9,.7);
+    color: rgba(230,225,205,.58);
+    font-size: 9px;
+    letter-spacing: .1em;
+}
+
+@media (max-width: 700px) {
+    .brand {
+        font-size: 10px;
+    }
+
+    #screenBox {
+        width: 46vw;
+        right: 9px;
+        bottom: 9px;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
+/* QUILL_OBSERVATORY_PANEL_V2 */
+
+#screenBox {
+    width:
+        min(
+            28vw,
+            340px
+        );
+
+    transition:
+        width .35s ease,
+        height .35s ease,
+        opacity .35s ease,
+        transform .35s ease;
+}
+
+
+/*
+ * No actual client window in Xephyr:
+ * become a little dormant terminal rather than covering
+ * Quill's furniture.
+ */
+body:not(.screen-live) #screenBox {
+    width: 210px;
+
+    aspect-ratio: 16 / 5;
+
+    opacity: .72;
+
+    transform:
+        translateY(0);
+}
+
+
+body:not(.screen-live) #screenClosed {
+    font-size: 9px;
+
+    letter-spacing: .16em;
+}
+
+
+/*
+ * Once a real program opens in the terrarium,
+ * the screen expands into an observation panel.
+ */
+body.screen-live #screenBox {
+    width:
+        min(
+            31vw,
+            390px
+        );
+
+    opacity: 1;
+}
+
+/* END_QUILL_OBSERVATORY_PANEL_V2 */
+
+
+/* QUILL_CURRENT_FIELD_LOG_V1 */
+
+#fieldLog {
+    position: absolute;
+
+    left: 18px;
+    bottom: 20px;
+
+    width:
+        min(
+            34vw,
+            430px
+        );
+
+    max-height: 31vh;
+
+    z-index: 13;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(174,180,163,.30);
+
+    background:
+        rgba(17,28,43,.91);
+
+    box-shadow:
+        0 13px 32px
+        rgba(0,0,0,.29);
+
+    backdrop-filter:
+        blur(4px);
+}
+
+
+#fieldLogHeader {
+    padding:
+        8px
+        11px;
+
+    border-bottom:
+        1px solid
+        rgba(174,180,163,.17);
+
+    color:
+        rgba(218,219,198,.70);
+
+    font-size: 9px;
+
+    letter-spacing: .16em;
+}
+
+
+#fieldLogLines {
+    max-height:
+        calc(31vh - 32px);
+
+    overflow-y: auto;
+
+    padding:
+        8px
+        11px
+        10px;
+
+    scrollbar-width: thin;
+}
+
+
+.field-turn {
+    display: grid;
+
+    grid-template-columns:
+        48px
+        1fr;
+
+    gap: 8px;
+
+    margin:
+        0
+        0
+        8px;
+
+    font-size: 10px;
+    line-height: 1.38;
+}
+
+
+.field-speaker {
+    color:
+        rgba(180,201,181,.75);
+
+    letter-spacing: .08em;
+}
+
+
+.field-turn.quill .field-speaker {
+    color:
+        rgba(199,191,229,.80);
+}
+
+
+.field-text {
+    color:
+        rgba(230,227,210,.83);
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+#fieldLog.empty {
+    opacity: .48;
+}
+
+
+@media (max-width: 760px) {
+    #fieldLog {
+        width: 54vw;
+        max-height: 25vh;
+    }
+
+    #fieldLogLines {
+        max-height:
+            calc(25vh - 32px);
+    }
+}
+
+/* END QUILL_CURRENT_FIELD_LOG_V1 */
+
+
+/* Desktop observatory: room with clear side panels */
+body { overflow: auto; }
+#observatory {
+  position: relative;
+  inset: auto;
+  min-width: 1050px;
+  height: 100vh;
+  min-height: 600px;
+}
+#stage {
+  display: grid;
+  grid-template-columns: minmax(230px,1fr) minmax(0,4fr) minmax(245px,1fr);
+  grid-template-rows: minmax(0,1fr) auto;
+  gap: 12px;
+  padding: 12px;
+}
+#roomViewport {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--line);
+}
+#fieldLog {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  left: auto;
+  bottom: auto;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#fieldLogLines { flex: 1; min-height: 0; max-height: none; }
+#screenBox, body.screen-live #screenBox, body:not(.screen-live) #screenBox {
+  position: relative;
+  grid-column: 3;
+  grid-row: 1;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  align-self: start;
+  opacity: 1;
+  transform: none;
+}
+footer {
+  position: static;
+  display: block;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: start;
+}
+
+
+/* QUILL_DESKTOP_CANON_FIGURE_V1: same silhouette at room scale. */
+#quill { width: 54px; height: 72px; }
+#quill .body {
+  left: 2px;
+  top: 7px;
+  width: 49px;
+  height: 59px;
+  background: #e8e0c4;
+  border: 1px solid #302f2c;
+  border-radius: 16px;
+}
+#quill .body::before,
+#quill .body::after {
+  top: 23px;
+  width: 5px;
+  height: 5px;
+  background: #141414;
+  border-radius: 50%;
+}
+#quill .body::before { left: 13px; }
+#quill .body::after { right: 13px; }
+#quill .feather {
+  left: 30px;
+  top: 0;
+  width: 17px;
+  height: 19px;
+  background: #d6ccab;
+  border: 1px solid #302f2c;
+  border-radius: 75% 80% 15% 35%;
+  transform: rotate(20deg);
+  transform-origin: center;
+}
+#quill .name {
+  top: 53px;
+  padding: 0;
+  background: transparent;
+  color: #39352e;
+  font: bold 7px monospace;
+  letter-spacing: .08em;
+}
+#quill .name::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 10px;
+  height: 5px;
+  border-bottom: 1px solid #302f2c;
+  border-radius: 0 0 50% 50%;
+  transform: translateX(-50%);
+}
+
+
+/* QUILL_PUBLIC_RESIZABLE_PANELS_V1
+   The public room, field log and computer are visitor-resizable windows. */
+#roomViewport,
+#fieldLog,
+#screenBox {
+  box-sizing: border-box;
+  overflow: hidden;
+  min-width: 150px;
+  min-height: 120px;
+}
+
+/* Preserve each panel's inner behaviour while its outer box changes size. */
+#roomViewport > #room {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#fieldLogLines {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: auto !important;
+}
+
+#screenBox,
+body.screen-live #screenBox,
+body:not(.screen-live) #screenBox {
+  aspect-ratio: auto !important;
+}
+
+#screenBox > #screen {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}
+
+/* Eight unobtrusive hit areas give genuine draggable edges/corners. */
+.quill-resize-handle {
+  position: absolute;
+  z-index: 60;
+  touch-action: none;
+  user-select: none;
+}
+
+.quill-resize-handle[data-dir="n"]  { top: 0; left: 10px; right: 10px; height: 7px; cursor: ns-resize; }
+.quill-resize-handle[data-dir="s"]  { bottom: 0; left: 10px; right: 10px; height: 9px; cursor: ns-resize; }
+.quill-resize-handle[data-dir="e"]  { top: 10px; right: 0; bottom: 10px; width: 9px; cursor: ew-resize; }
+.quill-resize-handle[data-dir="w"]  { top: 10px; left: 0; bottom: 10px; width: 9px; cursor: ew-resize; }
+.quill-resize-handle[data-dir="ne"] { top: 0; right: 0; width: 13px; height: 13px; cursor: nesw-resize; }
+.quill-resize-handle[data-dir="nw"] { top: 0; left: 0; width: 13px; height: 13px; cursor: nwse-resize; }
+.quill-resize-handle[data-dir="se"] { right: 0; bottom: 0; width: 15px; height: 15px; cursor: nwse-resize; }
+.quill-resize-handle[data-dir="sw"] { left: 0; bottom: 0; width: 15px; height: 15px; cursor: nesw-resize; }
+
+/* A small visible corner cue, without putting a chunky control over the room. */
+.quill-resizable-panel::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  opacity: .42;
+  background:
+    linear-gradient(135deg,
+      transparent 0 45%,
+      rgba(220,219,198,.8) 46% 52%,
+      transparent 53% 67%,
+      rgba(220,219,198,.8) 68% 74%,
+      transparent 75%);
+}
+
+#quillAboutLink {
+  color: rgba(226,224,207,.74);
+  text-decoration: none;
+  font: 10px/1.2 monospace;
+  letter-spacing: .13em;
+  white-space: nowrap;
+  margin-left: auto;
+  margin-right: 16px;
+}
+
+#quillAboutLink:hover,
+#quillAboutLink:focus-visible {
+  color: #f0eddc;
+  text-decoration: underline;
+  outline: none;
+}
+
+
+/* QUILL_PUBLIC_LETTER_FORM_V1 */
+#quillMailLink {
+  color: rgba(226,224,207,.74);
+  text-decoration: none;
+  font: 10px/1.2 monospace;
+  letter-spacing: .13em;
+  white-space: nowrap;
+  margin-right: 16px;
+}
+
+#quillMailLink:hover,
+#quillMailLink:focus-visible {
+  color: #f0eddc;
+  text-decoration: underline;
+  outline: none;
+}
+
+
+/* Read-only hotspots are a parent overlay; the sandboxed room remains inert. */
+#objectHotspots{position:absolute;inset:0;z-index:16;pointer-events:none;overflow:hidden}
+.object-hotspot{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border:1px solid #d9cb9eaa;border-radius:50%;color:#f1e8c9;background:#161614aa;pointer-events:auto;cursor:pointer;font:12px monospace;touch-action:manipulation}
+.object-hotspot:hover,.object-hotspot:focus-visible{background:#3c3828;border-color:#f1e8c9}
+#objectTooltip{position:absolute;z-index:50;left:50%;top:55%;width:min(300px,calc(100% - 20px));max-height:70%;overflow:auto;transform:translate(-50%,-50%);padding:14px;background:#171714f5;color:#ede4c9;border:1px solid #d9cb9e;font:11px/1.5 ui-monospace,monospace;box-shadow:0 8px 25px #0009}
+#objectTooltip[hidden]{display:none}#objectTooltip h2{font-size:12px;margin:0 20px 8px 0}#objectTooltip dl{display:grid;grid-template-columns:54px 1fr;gap:4px;margin:0}#objectTooltip dt{color:#b7ab90}#objectTooltip dd{margin:0;overflow-wrap:anywhere}#objectTooltipClose{float:right;background:transparent;color:#ede4c9;border:0;font-size:18px;cursor:pointer}
+#quill{pointer-events:auto;cursor:pointer}#quill:focus-visible{outline:2px solid #d9cb9e}
+</style>
+</head>
+
+<body class="offline">
+
+<div id="observatory">
+
+<header>
+    <div class="brand">
+        QUILL · LIVE OBSERVATORY
+    </div>
+  <a id="quillAboutLink" href="/quill/about/">ABOUT QUILL</a>
+  <a id="quillMailLink" href="/quill/mail/">LEAVE A LETTER</a>
+
+    <div id="status">
+        <span id="lamp"></span>
+        <span id="statusText">
+            CONNECTING
+        </span>
+    </div>
+</header>
+
+<div id="stage">
+<div id="roomViewport">
+
+    <!--
+        Intentionally sandboxed with NO permissions.
+        The outside world can look in.
+        The published room cannot execute scripts here.
+    -->
+    <iframe
+        id="room"
+        sandbox=""
+        title="Quill's Quarters"
+    ></iframe>
+
+    <div id="quill">
+        <div class="feather"></div>
+        <div class="body"></div>
+        <div class="name">QUILL</div>
+    </div>
+
+    <div id="objectHotspots" aria-label="Read-only room object descriptions"></div><section id="objectTooltip" role="dialog" aria-modal="false" aria-labelledby="objectTooltipTitle" hidden><button id="objectTooltipClose" type="button" aria-label="Close object description">×</button><h2 id="objectTooltipTitle"></h2><div id="objectTooltipFacts"></div></section><div id="offlineVeil">
+        <div id="offlineCard">
+            QUILL'S STATION IS OFFLINE
+            <br><br>
+            <span id="lastSeen">
+                waiting for signal
+            </span>
+        </div>
+    </div>
+
+
+    </div>
+<div id="screenBox">
+        <img
+            id="screen"
+            alt="Quill's contained computer screen"
+        >
+        <div id="screenClosed">
+            SCREEN CLOSED
+        </div>
+    </div>
+
+    
+<div
+        id="fieldLog"
+        class="empty"
+    >
+        <div id="fieldLogHeader">
+            CURRENT FIELD LOG
+        </div>
+
+        <div id="fieldLogLines">
+            <div class="field-turn">
+                <div class="field-speaker">
+                    —
+                </div>
+
+                <div class="field-text">
+                    no conversation yet
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        PUBLIC OBSERVATION WINDOW · NO CONTROL CHANNEL
+    </footer>
+
+</div>
+</div>
+
+
+<script>
+(() => {
+    const room = document.getElementById('room');
+    const screen = document.getElementById('screen');
+    const quill = document.getElementById('quill');
+
+    const statusText =
+        document.getElementById('statusText');
+
+    const lastSeen =
+        document.getElementById('lastSeen');
+
+    let roomHash = null;
+    let screenHash = null;
+
+
+    function setOffline(status) {
+        document.body.classList.remove('live');
+        document.body.classList.add('offline');
+
+        statusText.textContent = 'OFFLINE';
+
+        if (
+            status
+            && status.last_seen
+        ) {
+            const d = new Date(
+                status.last_seen * 1000
+            );
+
+            lastSeen.textContent =
+                'last contact ' +
+                d.toLocaleString();
+        }
+    }
+
+
+    function setLive() {
+        document.body.classList.remove('offline');
+        document.body.classList.add('live');
+
+        statusText.textContent = 'LIVE';
+    }
+
+
+    async function poll() {
+        let status;
+
+        try {
+            const response = await fetch(
+                './live/status.json?t='
+                + Date.now(),
+                {
+                    cache: 'no-store'
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    'no status'
+                );
+            }
+
+            status = await response.json();
+
+        } catch (error) {
+            setOffline(null);
+            return;
+        }
+
+
+        const age =
+            (Date.now() / 1000)
+            - Number(
+                status.last_seen || 0
+            );
+
+        if (
+            Number.isFinite(age)
+            && age < 15
+        ) {
+            setLive();
+        } else {
+            setOffline(status);
+        }
+
+
+        /*
+         * Reload room only when the rendered room itself changes.
+         * Quill's movement is handled separately and smoothly.
+         */
+        if (
+            status.room_hash
+            && status.room_hash !== roomHash
+        ) {
+            roomHash = status.room_hash;
+
+            room.src =
+                './live/room.html?v='
+                + encodeURIComponent(
+                    roomHash
+                );
+        }
+
+
+        /*
+         * Actual persisted Quill position.
+         */
+        if (status.quill) {
+            const x = Math.max(
+                0,
+                Math.min(
+                    100,
+                    Number(status.quill.x)
+                )
+            );
+
+            const y = Math.max(
+                0,
+                Math.min(
+                    100,
+                    Number(status.quill.y)
+                )
+            );
+
+            if (Number.isFinite(x)) {
+                quill.style.left = x + '%';
+            }
+
+            if (Number.isFinite(y)) {
+                quill.style.top = y + '%';
+            }
+
+            quill.dataset.pose =
+                status.quill.pose || '';
+        }
+
+
+        /*
+         * Contained Xephyr display.
+         */
+        if (
+            status.screen_available
+            && status.screen_hash
+        ) {
+            document.body.classList.add(
+                'screen-live'
+            );
+
+            if (
+                status.screen_hash
+                !== screenHash
+            ) {
+                screenHash =
+                    status.screen_hash;
+
+                screen.src =
+                    './live/screen.webp?v='
+                    + encodeURIComponent(
+                        screenHash
+                    );
+            }
+
+        } else {
+            document.body.classList.remove(
+                'screen-live'
+            );
+        }
+    }
+
+
+
+    async function pollFieldLog() {
+        const panel =
+            document.getElementById(
+                'fieldLog'
+            );
+
+        const lines =
+            document.getElementById(
+                'fieldLogLines'
+            );
+
+        if (!panel || !lines) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                './live/chat.json?t='
+                + Date.now(),
+                {
+                    cache: 'no-store'
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    'no chat'
+                );
+            }
+
+            const data =
+                await response.json();
+
+            const turns =
+                Array.isArray(data.turns)
+                ? data.turns
+                : [];
+
+            lines.textContent = '';
+
+            if (!turns.length) {
+
+                panel.classList.add(
+                    'empty'
+                );
+
+                const row =
+                    document.createElement(
+                        'div'
+                    );
+
+                row.className =
+                    'field-turn';
+
+                const who =
+                    document.createElement(
+                        'div'
+                    );
+
+                who.className =
+                    'field-speaker';
+
+                who.textContent = '—';
+
+                const text =
+                    document.createElement(
+                        'div'
+                    );
+
+                text.className =
+                    'field-text';
+
+                text.textContent =
+                    'no conversation yet';
+
+                row.append(
+                    who,
+                    text
+                );
+
+                lines.appendChild(
+                    row
+                );
+
+                return;
+            }
+
+            panel.classList.remove(
+                'empty'
+            );
+
+            for (
+                const turn
+                of turns
+            ) {
+                const speaker =
+                    turn.speaker === 'Quill'
+                    ? 'Quill'
+                    : 'Toby';
+
+                const row =
+                    document.createElement(
+                        'div'
+                    );
+
+                row.className =
+                    'field-turn '
+                    + (
+                        speaker === 'Quill'
+                        ? 'quill'
+                        : 'toby'
+                    );
+
+                const who =
+                    document.createElement(
+                        'div'
+                    );
+
+                who.className =
+                    'field-speaker';
+
+                who.textContent =
+                    speaker.toUpperCase();
+
+                const text =
+                    document.createElement(
+                        'div'
+                    );
+
+                text.className =
+                    'field-text';
+
+                /*
+                 * textContent is deliberate:
+                 * published conversation cannot inject HTML.
+                 */
+                text.textContent =
+                    String(
+                        turn.text || ''
+                    );
+
+                row.append(
+                    who,
+                    text
+                );
+
+                lines.appendChild(
+                    row
+                );
+            }
+
+            lines.scrollTop =
+                lines.scrollHeight;
+
+        } catch (error) {
+            // Leave the last successfully received
+            // current-feed view on screen.
+        }
+    }
+
+
+    poll();
+    pollFieldLog();
+
+    setInterval(
+        poll,
+        3000
+    );
+
+    setInterval(
+        pollFieldLog,
+        3000
+    );
+})();
+</script>
+
+
+<script id="QUILL_PUBLIC_RESIZABLE_PANELS_V1">
+(() => {
+  const IDS = ['fieldLog', 'roomViewport', 'screenBox'];
+  const DIRS = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
+  const MIN = {
+    fieldLog: {w: 180, h: 150},
+    roomViewport: {w: 300, h: 220},
+    screenBox: {w: 210, h: 140}
+  };
+
+  function number(value) {
+    const n = Number.parseFloat(value);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function storageKey(id) {
+    return 'quill-public-panel-v1:' + id;
+  }
+
+  function clampSize(id, width, height) {
+    const min = MIN[id];
+    const maxW = Math.max(min.w, window.innerWidth * 0.88);
+    const maxH = Math.max(min.h, window.innerHeight * 0.84);
+    return {
+      width: Math.min(maxW, Math.max(min.w, width)),
+      height: Math.min(maxH, Math.max(min.h, height))
+    };
+  }
+
+  function save(panel) {
+    try {
+      localStorage.setItem(storageKey(panel.id), JSON.stringify({
+        width: number(panel.style.width),
+        height: number(panel.style.height),
+        left: number(panel.style.left),
+        top: number(panel.style.top)
+      }));
+    } catch (_) {}
+  }
+
+  function restore(panel) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey(panel.id)) || 'null');
+      if (!saved) return;
+      const size = clampSize(panel.id, saved.width, saved.height);
+      panel.style.width = size.width + 'px';
+      panel.style.height = size.height + 'px';
+      panel.style.left = number(saved.left) + 'px';
+      panel.style.top = number(saved.top) + 'px';
+    } catch (_) {}
+  }
+
+  function install(panel) {
+    if (!panel || panel.dataset.resizableInstalled === '1') return;
+    panel.dataset.resizableInstalled = '1';
+    panel.classList.add('quill-resizable-panel');
+    panel.style.position = 'relative';
+
+    restore(panel);
+
+    for (const dir of DIRS) {
+      const handle = document.createElement('span');
+      handle.className = 'quill-resize-handle';
+      handle.dataset.dir = dir;
+      handle.setAttribute('aria-hidden', 'true');
+      panel.appendChild(handle);
+
+      handle.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0 && event.pointerType !== 'touch') return;
+        event.preventDefault();
+        handle.setPointerCapture(event.pointerId);
+
+        const rect = panel.getBoundingClientRect();
+        const computed = getComputedStyle(panel);
+        const start = {
+          x: event.clientX,
+          y: event.clientY,
+          width: rect.width,
+          height: rect.height,
+          left: computed.left === 'auto' ? 0 : number(computed.left),
+          top: computed.top === 'auto' ? 0 : number(computed.top)
+        };
+
+        const move = (e) => {
+          const dx = e.clientX - start.x;
+          const dy = e.clientY - start.y;
+
+          let width = start.width;
+          let height = start.height;
+          let left = start.left;
+          let top = start.top;
+
+          if (dir.includes('e')) width = start.width + dx;
+          if (dir.includes('s')) height = start.height + dy;
+          if (dir.includes('w')) {
+            width = start.width - dx;
+            left = start.left + dx;
+          }
+          if (dir.includes('n')) {
+            height = start.height - dy;
+            top = start.top + dy;
+          }
+
+          const size = clampSize(panel.id, width, height);
+
+          if (dir.includes('w')) left = start.left + (start.width - size.width);
+          if (dir.includes('n')) top = start.top + (start.height - size.height);
+
+          panel.style.width = size.width + 'px';
+          panel.style.height = size.height + 'px';
+          panel.style.left = left + 'px';
+          panel.style.top = top + 'px';
+        };
+
+        const done = () => {
+          handle.removeEventListener('pointermove', move);
+          handle.removeEventListener('pointerup', done);
+          handle.removeEventListener('pointercancel', done);
+          save(panel);
+        };
+
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('pointerup', done);
+        handle.addEventListener('pointercancel', done);
+      });
+    }
+  }
+
+  for (const id of IDS) install(document.getElementById(id));
+})();
+</script>
+
+
+<script id="QUILL_PUBLIC_OBJECT_TOOLTIPS_STAGE_V1">
+(()=>{
+ const viewport=document.querySelector('#roomViewport'),frame=document.querySelector('#room'),quill=document.querySelector('#quill');
+ const layer=document.querySelector('#objectHotspots'),tip=document.querySelector('#objectTooltip'),title=document.querySelector('#objectTooltipTitle'),facts=document.querySelector('#objectTooltipFacts');
+ const cache=new Map(); let catalog={};let currentId=null;
+ const keys=[['what','WHAT'],['who','WHO'],['where','WHERE'],['when','WHEN'],['why','WHY']];
+ function open(id){
+  if(currentId===id&&!tip.hidden){tip.hidden=true;currentId=null;return}
+  currentId=id;title.textContent=id==='quill'?'QUILL':catalog[id]?.what||'NO RECORD';facts.replaceChildren();
+  if(id==='quill'){let p=document.createElement('p');p.textContent='Quill is shy of strangers';facts.appendChild(p)}
+  else for(const [key,label] of keys){let row=document.createElement('div');let strong=document.createElement('strong');strong.textContent=label+' · ';row.appendChild(strong);row.appendChild(document.createTextNode(catalog[id]?.[key]||'NO RECORD'));facts.appendChild(row)}
+  tip.hidden=false;
+ }
+ function sync(){
+  // Source room reloads every 2s. Inspect its published HTML as data; do not lift the iframe sandbox.
+  fetch('./live/room.html',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()}).then(text=>{
+   const doc=new DOMParser().parseFromString(text,'text/html');
+   const room=doc.querySelector('.room'),box=frame.getBoundingClientRect(),view=viewport.getBoundingClientRect();
+   if(!room||!box.width||!box.height)return;
+   const rects=[...doc.querySelectorAll('.object[data-id]')].map(el=>({id:el.dataset.id,name:el.getAttribute('title')||'',left:parseFloat(el.style.left),top:parseFloat(el.style.top),scale:parseFloat(el.style.getPropertyValue('--scale'))||1}));
+   const css=getComputedStyle(frame),actualWidth=Math.min(box.width*.94,960),roomWidth=actualWidth;
+   // .frame is centered; .room is 4:3 with a 10px border. Position relative to iframe viewport.
+   const roomHeight=roomWidth*.75,ox=box.left-view.left+(box.width-roomWidth)/2,oy=box.top-view.top+(box.height-(roomHeight+25))/2+25;
+   const seen=new Set();
+   for(const obj of rects){if(!Number.isFinite(obj.left)||!Number.isFinite(obj.top))continue;seen.add(obj.id);let b=cache.get(obj.id);if(!b){b=document.createElement('button');b.className='object-hotspot';b.type='button';b.setAttribute('aria-label','Read '+obj.name);b.textContent='?';b.onclick=()=>open(obj.id);layer.appendChild(b);cache.set(obj.id,b)}
+    b.style.left=(ox+roomWidth*obj.left/100)+'px';b.style.top=(oy+roomHeight*obj.top/100)+'px';b.title=obj.name;
+   }
+   for(const [id,b] of cache)if(!seen.has(id)){b.remove();cache.delete(id)}
+  }).catch(()=>{});
+ }
+ quill.tabIndex=0;quill.setAttribute('role','button');quill.setAttribute('aria-label','About Quill');quill.onclick=()=>open('quill');quill.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open('quill')}};
+ document.querySelector('#objectTooltipClose').onclick=()=>{tip.hidden=true;currentId=null};
+ fetch('./2-objects.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(d=>{if(d&&d.version===1&&d.objects&&typeof d.objects==='object')catalog=d.objects}).catch(()=>{catalog={}});
+ addEventListener('resize',sync);setInterval(sync,4000);sync();
+})();
+</script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

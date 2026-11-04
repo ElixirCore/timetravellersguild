@@ -1,0 +1,541 @@
+{
+  "nav": [
+    {
+      "label": "tree",
+      "href": "/now"
+    },
+    {
+      "label": "hub",
+      "href": "/hub/"
+    },
+    {
+      "label": "join",
+      "href": "/join/"
+    },
+    {
+      "label": "department",
+      "href": "/department/"
+    },
+    {
+      "label": "people",
+      "href": "/people/"
+    },
+    {
+      "label": "watch",
+      "href": "/watch/"
+    },
+    {
+      "label": "triangla",
+      "href": "/triangla/"
+    },
+    {
+      "label": "cardiff",
+      "href": "/cardiff/"
+    }
+  ],
+  "rooms": [
+    {
+      "slug": "jack",
+      "title": "Jack / Clerk",
+      "kicker": "the desk",
+      "year": 1951,
+      "u": 0.12,
+      "copy": "The clerk of the field. Unsigned slips, punch cards, a voice at the desk. He does not write canon.",
+      "signal": "What happens as a result?",
+      "coord": "5081",
+      "access": "open",
+      "status": "on duty",
+      "href": "/jack",
+      "continue": "Address the clerk",
+      "continue_href": "/jack",
+      "note": "The desk. Punch cards. Not a chatbot.",
+      "confirmed": true,
+      "links": [
+        "station",
+        "people"
+      ]
+    },
+    {
+      "slug": "station",
+      "title": "Station XIII",
+      "kicker": "the instrument",
+      "year": 2026,
+      "u": 0.16,
+      "copy": "51.46 °N, 3.19 °W. The public instrument of the Guild. It does not predict. It computes. The Ffilm is begun here.",
+      "signal": "The machine does not predict. It measures relation.",
+      "coord": "XIII",
+      "access": "open",
+      "status": "standing",
+      "href": "/station/",
+      "continue": "Enter the hub",
+      "continue_href": "/hub/",
+      "note": "The instrument. It does not predict. It computes.",
+      "confirmed": true,
+      "links": [
+        "hub",
+        "chronometer",
+        "film",
+        "people",
+        "join"
+      ]
+    },
+    {
+      "slug": "hub",
+      "title": "Hub 2033",
+      "kicker": "public interface",
+      "year": 2026,
+      "u": 0.22,
+      "copy": "Clockwork navigation for Station XIII. Eleven stations in free orbit. Drag, pinch, rotate, tap.",
+      "signal": "Every station is local. The network is not.",
+      "coord": "XIII / 2033",
+      "access": "open",
+      "status": "running",
+      "href": "/hub/",
+      "note": "The public front door. Mission, events, and the pathways in.",
+      "confirmed": true,
+      "nav": false,
+      "tree": false,
+      "links": [
+        "station",
+        "chronometer",
+        "film",
+        "people",
+        "elsewhen"
+      ]
+    },
+    {
+      "slug": "chronometer",
+      "title": "Chronometer",
+      "kicker": "instrument №13",
+      "year": 2026,
+      "u": 0.3,
+      "copy": "Geocentric dial and orrery — Rose of Venus, syzygy thread, temporal throttle. Instrument №13 of the Guild.",
+      "signal": "The machine does not predict. It measures relation.",
+      "coord": "13A / 07.31",
+      "access": "open",
+      "status": "running",
+      "href": "/chronometer/",
+      "continue": "Open Chronometer",
+      "continue_href": "/chronometer/",
+      "note": "Contemplative chronometer on the Guild plate. Civilian biwheel rebuild continues at chronometer.online.",
+      "confirmed": true,
+      "links": [
+        "station",
+        "watch",
+        "research",
+        "calendar",
+        "film"
+      ]
+    },
+    {
+      "slug": "join",
+      "title": "Join",
+      "kicker": "arrival",
+      "year": 2026,
+      "u": 0.26,
+      "copy": "Pop-up workshops that use the instruments of time travel — orreries, star-charts, oral history, film — to help people become makers of their own futures.",
+      "signal": "Time travel isn't a destination. It's a way of reading where you stand.",
+      "coord": "CIC",
+      "access": "open",
+      "status": "standing",
+      "href": "/join/",
+      "note": "Set your coordinates. Tell the Guild where and when you'd like to arrive.",
+      "confirmed": true,
+      "links": [
+        "people",
+        "commons",
+        "missions",
+        "station"
+      ]
+    },
+    {
+      "slug": "department",
+      "title": "Department of Excess Time",
+      "kicker": "Welsh Government",
+      "year": 1951,
+      "u": 0.24,
+      "copy": "An executive department established in 1951. It exists to safeguard the nation’s temporal welfare. The Department administers consequences. It does not create causes.",
+      "signal": "Members of the public are encouraged to continue with their ordinary affairs.",
+      "coord": "DET",
+      "access": "open",
+      "status": "standing",
+      "href": "/department/",
+      "note": "Welsh Government. Established 1951. Serving Wales and the United Kingdom.",
+      "confirmed": true,
+      "links": [
+        "join",
+        "station",
+        "archive",
+        "research"
+      ]
+    },
+    {
+      "slug": "people",
+      "title": "People",
+      "kicker": "cast register",
+      "year": 2026,
+      "u": 0.34,
+      "copy": "The Guild is made of partial records. Each profile is one projection of a larger field. Thousands of partial biographies, affiliations, encounters and traces.",
+      "signal": "The cast is the world. The world is not background.",
+      "coord": "P-∞",
+      "access": "layered",
+      "status": "growing",
+      "href": "/people/",
+      "note": "No single person contains the whole story.",
+      "confirmed": true,
+      "links": [
+        "commons",
+        "join",
+        "station"
+      ]
+    },
+    {
+      "slug": "watch",
+      "title": "Watch",
+      "kicker": "instrument №14",
+      "year": 2026,
+      "u": 0.42,
+      "copy": "Plates from the archive, set in orbit. Drag the picture to wind the reel; turn the brass to bend the light.",
+      "signal": "The playhead moves like a body in an elliptical orbit.",
+      "coord": "W-14",
+      "access": "open",
+      "status": "standing",
+      "href": "/watch/",
+      "note": "Archive plates in orbit. Wind the reel, cut the light.",
+      "confirmed": true,
+      "links": [
+        "archive",
+        "film",
+        "cardiff",
+        "feed"
+      ]
+    },
+    {
+      "slug": "feed",
+      "title": "Feed∞",
+      "kicker": "instrument №15",
+      "year": 2026,
+      "u": 0.44,
+      "copy": "Media, machine interpretation and encounter become field state, then the next state. Observation alters navigation.",
+      "signal": "The next plate is chosen by what was seen, not by the clock.",
+      "coord": "F-∞",
+      "access": "open",
+      "status": "standing",
+      "href": "/feed/",
+      "note": "A four-dimensional cultural navigation instrument. Residue survives. Raw hand movement does not.",
+      "confirmed": true,
+      "links": [
+        "archive",
+        "watch"
+      ]
+    },
+    {
+      "slug": "triangla",
+      "title": "Triangla",
+      "kicker": "finger drum",
+      "year": 2026,
+      "u": 0.5,
+      "copy": "The finger drum with three sides. Front, back, blueprint — an instrument you turn in the hands.",
+      "signal": "Three sides. One stroke. The count holds.",
+      "coord": "Δ",
+      "access": "open",
+      "status": "standing",
+      "href": "/triangla/",
+      "note": "The finger drum with three sides.",
+      "confirmed": true,
+      "links": [
+        "research",
+        "join",
+        "watch"
+      ]
+    },
+    {
+      "slug": "film",
+      "title": "The Film",
+      "kicker": "ffilm transmission",
+      "year": 2026,
+      "u": 0.58,
+      "copy": "A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records.",
+      "signal": "A film is a machine for remembering an event that has not yet happened.",
+      "coord": "F-2033",
+      "access": "screening",
+      "status": "forming",
+      "href": "/film/",
+      "note": "The Ffilm is begun. Records, plates and witnesses are still arriving.",
+      "confirmed": true,
+      "links": [
+        "watch",
+        "signals",
+        "people",
+        "station"
+      ]
+    },
+    {
+      "slug": "commons",
+      "title": "Commons",
+      "kicker": "public chamber",
+      "year": 2026,
+      "u": 0.64,
+      "copy": "The social layer: local chapters, witnesses, operators, travellers, archivists and accidental participants.",
+      "signal": "No one enters the Guild alone, even when they arrive by themselves.",
+      "coord": "C-001",
+      "access": "member",
+      "status": "inhabited",
+      "href": "/commons/",
+      "note": "The room that holds the people who hold the Guild.",
+      "confirmed": true,
+      "links": [
+        "people",
+        "join",
+        "stations"
+      ]
+    },
+    {
+      "slug": "calendar",
+      "title": "Calendar",
+      "kicker": "event index",
+      "year": 2026,
+      "u": 0.7,
+      "copy": "Observed conjunctions, departures, public sessions, Guild meetings, eclipse windows and unclaimed dates.",
+      "signal": "Some dates are appointments. Others are coordinates.",
+      "coord": "T+ / T−",
+      "access": "open",
+      "status": "live",
+      "href": "/calendar/",
+      "note": "The tree computes the next 120 days of sky. This chamber keeps the human dates beside them.",
+      "confirmed": true,
+      "links": [
+        "missions",
+        "signals",
+        "chronometer"
+      ]
+    },
+    {
+      "slug": "archive",
+      "title": "Archive",
+      "kicker": "records office",
+      "year": 2014,
+      "u": 0.55,
+      "copy": "Documents, minutes, photographs, reports, corrections and evidence that should not exist in the same timeline.",
+      "signal": "Contradiction is not error. It is evidence of overlap.",
+      "coord": "A-000",
+      "access": "partial",
+      "status": "unstable",
+      "href": "/archive/",
+      "note": "Holdings are cited by catalogue mark. Some are on public deposit. Some are not.",
+      "confirmed": true,
+      "links": [
+        "cardiff",
+        "watch",
+        "research",
+        "feed"
+      ]
+    },
+    {
+      "slug": "stations",
+      "title": "Stations",
+      "kicker": "field network",
+      "year": 2026,
+      "u": 0.76,
+      "copy": "Physical sites and temporary embassies distributed through Wales and elsewhere. Each station keeps its own clock.",
+      "signal": "Every station is local. The network is not.",
+      "coord": "XIII+",
+      "access": "varied",
+      "status": "expanding",
+      "href": "/stations/",
+      "note": "Station XIII stands. Cribarth is reading. Other clocks are still being set.",
+      "confirmed": true,
+      "links": [
+        "station",
+        "people",
+        "cardiff"
+      ]
+    },
+    {
+      "slug": "research",
+      "title": "Research",
+      "kicker": "geometry before language",
+      "year": 2026,
+      "u": 0.82,
+      "copy": "Papers, falsifiable models, astronomical mechanics, narrative geometry and the mathematics beneath the instruments.",
+      "signal": "Structure first. Interpretation later.",
+      "coord": "R-13",
+      "access": "open",
+      "status": "review",
+      "href": "/research/",
+      "note": "The arithmetic of Instrument №13, the drum, the tree’s axis.",
+      "confirmed": true,
+      "links": [
+        "chronometer",
+        "triangla",
+        "archive"
+      ]
+    },
+    {
+      "slug": "missions",
+      "title": "Missions",
+      "kicker": "active fieldwork",
+      "year": 2026,
+      "u": 0.88,
+      "copy": "Small actions in ordinary places. Some are public. Some only become visible when several records are compared.",
+      "signal": "A mission is a story with its destination removed.",
+      "coord": "M-2033",
+      "access": "assigned",
+      "status": "active",
+      "href": "/missions/",
+      "note": "Work in ordinary places. The record is the comparison.",
+      "confirmed": true,
+      "links": [
+        "join",
+        "calendar",
+        "commons"
+      ]
+    },
+    {
+      "slug": "signals",
+      "title": "Signals",
+      "kicker": "live reception",
+      "year": 2029,
+      "u": 0.62,
+      "copy": "Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender.",
+      "signal": "Every signal is also an invitation to misread it.",
+      "coord": "S-88.13",
+      "access": "open",
+      "status": "receiving",
+      "href": "/signals/",
+      "note": "A moment fixed by the sky, sent to nobody in particular, in the cause of peace.",
+      "confirmed": true,
+      "links": [
+        "film",
+        "elsewhen",
+        "calendar"
+      ]
+    },
+    {
+      "slug": "elsewhen",
+      "title": "Elsewhen",
+      "kicker": "unresolved",
+      "year": 2033,
+      "u": 0.94,
+      "copy": "Pages not yet attached to a stable chronology. Some may belong to 2033. Some may only appear to. Unplaced lights from 2014, 2019, 2031 live here until somebody claims them.",
+      "signal": "Elsewhen is not another time. It is time without permission.",
+      "coord": "E-?",
+      "access": "unknown",
+      "status": "drifting",
+      "href": "/elsewhen/",
+      "note": "The furthest thing currently claimed, and the unsigned hours still burning.",
+      "confirmed": true,
+      "links": [
+        "signals",
+        "hub",
+        "archive"
+      ]
+    },
+    {
+      "slug": "cardiff",
+      "title": "On the Founding at Cardiff",
+      "kicker": "archive note",
+      "year": 2008,
+      "u": 0.88,
+      "copy": "Third revision. An archival note on the cross-temporal founding of the Time Travellers Guild at Cardiff. Where the Guild first wrote itself down.",
+      "signal": "Everything below 2008 is root.",
+      "coord": "ARC/FND/13",
+      "access": "open",
+      "status": "stood",
+      "href": "/cardiff/",
+      "note": "Where the Guild first wrote itself down. Everything below this is root.",
+      "confirmed": true,
+      "links": [
+        "archive",
+        "stations",
+        "station"
+      ]
+    },
+    {
+      "slug": "door",
+      "title": "The Door",
+      "kicker": "gate",
+      "year": 2026,
+      "u": 0.1,
+      "copy": "Knock. Three doors stand open. One is a room. One is an instrument. One is locked, and does not open for knocking — it opens for knowing.",
+      "signal": "The Guild works by position, not by name.",
+      "coord": "GATE",
+      "access": "open",
+      "status": "standing",
+      "href": "/door.html",
+      "note": "The gated entrance. Two doors posted. The third assembled from the reading.",
+      "confirmed": true,
+      "nav": false,
+      "links": [
+        "join",
+        "hub",
+        "cardiff"
+      ]
+    }
+  ],
+  "lights": [
+    {
+      "name": "Time travel at Tipi Valley",
+      "year": 1981,
+      "state": "stood",
+      "note": "Time travel happened. Coordinates 2033–1981–276.",
+      "href": "/n/tipi-valley-2033-1981-276/"
+    },
+    {
+      "name": "The mythology",
+      "year": 2008,
+      "state": "stood",
+      "note": "Where the Guild first wrote itself down. Everything below this is root.",
+      "href": "/cardiff/"
+    },
+    {
+      "name": "Unplaced",
+      "year": 2014,
+      "state": "stood",
+      "note": "A light with an hour but no address. Left burning until somebody claims it.",
+      "href": "/elsewhen/"
+    },
+    {
+      "name": "Unplaced",
+      "year": 2019,
+      "state": "stood",
+      "note": "Logged, unsigned, unplaced.",
+      "href": "/elsewhen/"
+    },
+    {
+      "name": "Station XIII",
+      "year": 2026,
+      "state": "standing",
+      "note": "51.46 °N, 3.19 °W. The instrument runs here, and the Ffilm is begun.",
+      "href": "/hub/"
+    },
+    {
+      "name": "Cribarth",
+      "year": 2026,
+      "state": "standing",
+      "note": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed.",
+      "href": "/stations/"
+    },
+    {
+      "name": "The transmission",
+      "year": 2029,
+      "state": "intends",
+      "note": "A moment fixed by the sky, sent to nobody in particular, in the cause of peace.",
+      "href": "/signals/"
+    },
+    {
+      "name": "Unplaced",
+      "year": 2031,
+      "state": "intends",
+      "note": "A branch the Guild intends to stand on. Not yet an address.",
+      "href": "/elsewhen/"
+    },
+    {
+      "name": "Unplaced",
+      "year": 2033,
+      "state": "intends",
+      "note": "The furthest thing currently claimed.",
+      "href": "/elsewhen/"
+    }
+  ]
+}

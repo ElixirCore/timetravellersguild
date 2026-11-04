@@ -1,0 +1,46 @@
+{
+  "records": [
+    {
+      "id": "object.punchcard",
+      "type": "object",
+      "title": "Punched card",
+      "summary": "Jack’s nervous tissue. Every hole is information and sensation. Sorting is thought. The public punchcard tarot is a hopper of seventy-eight inherited batch labels: a working slip, not fortune, not the Oracle.",
+      "objects": ["punchcard"],
+      "tags": ["card", "punch", "hopper", "tarot"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.88,
+      "visibility": "PUBLIC",
+      "related": ["jack.identity", "instrument.cube"],
+      "status": "current"
+    },
+    {
+      "id": "object.tickertape",
+      "type": "object",
+      "title": "Ticker tape",
+      "summary": "A carrier of Jack’s sensation and a public working of the desk. Wait punches are live only. Tape is not canon. It is the clerk thinking out loud in holes.",
+      "objects": ["ticker tape"],
+      "tags": ["tape", "ticker", "9-bit"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.8,
+      "visibility": "PUBLIC",
+      "related": ["jack.identity"],
+      "status": "current"
+    },
+    {
+      "id": "object.milk-float-apparatus",
+      "type": "object",
+      "title": "Milk-float Time Machine apparatus",
+      "summary": "Apparatus described by participants as a functional Time Machine, last associated with Gillett Square, Christmas morning 2012. Last seen: unknown after reported confiscation or removal. Temporal function: disputed vehicle of adjacency. Archival status: missing.",
+      "date_start": "2012-12-25",
+      "places": ["Gillett Square"],
+      "objects": ["milk float"],
+      "tags": ["milk float", "time machine", "missing"],
+      "classification": ["TESTIMONY", "OPEN_CASE", "DISPUTED"],
+      "confidence": 0.5,
+      "visibility": "PUBLIC",
+      "jack_note": "Someone has removed page four.",
+      "related": ["event.gillett-square.2012-12-25", "case.gillett-milk-float"],
+      "status": "missing"
+    }
+  ]
+}

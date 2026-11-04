@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>JACK / ROOM — timetravellersguild.com</title>
+<meta name="theme-color" content="#f1e4c4">
+<meta name="description" content="Meet Jack. Clerk of the Time Travellers Guild, at his desk in the cube.">
+<link rel="canonical" href="https://timetravellersguild.com/jack/body/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="JACK / ROOM — timetravellersguild.com">
+<meta property="og:description" content="Meet Jack. Clerk of the Time Travellers Guild, at his desk in the cube.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/jack.png">
+<meta property="og:url" content="https://timetravellersguild.com/jack/body/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="css/jack.css?v=17">
+</head>
+<body>
+<noscript>
+  <p>JACK / BODY requires a browser that can run ordinary JavaScript. The room will not move without it.</p>
+</noscript>
+
+<canvas id="stage" aria-label="The room"></canvas>
+<div id="crt" aria-hidden="true"></div>
+
+<p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a></p>
+
+<aside id="proprio" aria-label="Proprioception">
+  <p data-limb="head"><b>HEAD</b> <span id="limbHead">YAW 000 · FOCUS —</span></p>
+  <p data-limb="heart"><b>HEART</b> <span id="limbHeart">P 0.00 · E 1.00</span></p>
+  <p data-limb="leftArm"><b>L.ARM</b> <span id="limbLeftArm">REACH · INSPECT</span></p>
+  <p data-limb="rightArm"><b>R.ARM</b> <span id="limbRightArm">SCALPEL IDLE</span></p>
+  <p data-limb="leftLeg"><b>L.LEG</b> <span id="limbLeftLeg">LATERAL</span></p>
+  <p data-limb="rightLeg"><b>R.LEG</b> <span id="limbRightLeg">DEPTH</span></p>
+</aside>
+
+<div id="loop" aria-label="Core loop">
+  <span data-phase="SENSE">SENSE</span>
+  <span data-phase="ORIENT">ORIENT</span>
+  <span data-phase="MOVE">MOVE</span>
+  <span data-phase="FOCUS">FOCUS</span>
+  <span data-phase="REACH">REACH</span>
+  <span data-phase="INSPECT">INSPECT</span>
+  <span data-phase="CARD">CARD</span>
+  <span data-phase="OPERATE">OPERATE</span>
+  <span data-phase="VOICE">VOICE</span>
+  <span data-phase="WRITE">WRITE</span>
+</div>
+
+<div id="crosshair" aria-hidden="true"></div>
+<p id="focusLine">FOCUS —</p>
+<p id="hint">WALK INTO A DOOR · DRAG TO LOOK · Q LOOK BEHIND</p>
+<p id="modeMark" class="sr">MODE <span id="modeWord">ROOM</span></p>
+
+<section id="console" aria-label="Meeting the clerk">
+  <header class="meet-head">
+    <canvas id="jackPet" width="96" height="96" aria-label="Jack, clerk at his desk"></canvas>
+    <div class="meet-who">
+      <p class="meet-name">JACK</p>
+      <p id="jackForm">AT HIS DESK</p>
+      <p id="clerkLine">COMING TO THE DESK…</p>
+    </div>
+    <div class="meet-ops">
+      <a class="meet-engine" href="/jack/room/engine/">ENGINE</a>
+      <a class="meet-engine" href="/jack/map/">MAP</a>
+      <a class="meet-engine" href="/jack/">DESK</a>
+      <button type="button" id="btnAnamnesia" data-op="anamnesia">ANAMNESIA</button>
+      <button type="button" id="btnMachine" aria-pressed="false">MACHINE</button>
+    </div>
+  </header>
+  <div id="tape" role="log" aria-live="polite" aria-label="Punchcard ribbon">
+    <div id="tapeTrack"></div>
+  </div>
+  <aside id="mabelReadout" hidden aria-label="Mabel recurrence readout">
+    <p class="who">MABEL</p>
+    <p>The aperture is a projection. I have not proposed a molecule.</p>
+  </aside>
+  <div id="brain" hidden>
+    <p class="brain-band"><span>PUNCHCARD BRAIN</span><span>IPO</span><span>FDE</span><span>CLIENT–SERVER</span></p>
+    <div id="brainGrid"></div>
+  </div>
+  <div id="talkLog" role="log" aria-live="polite" aria-label="Conversation with the clerk">
+    <p id="talkWait" class="talk-wait">The clerk is coming to the desk…</p>
+  </div>
+  <div class="meet-in">
+    <label class="sr" for="consoleIn">Speak to Jack</label>
+    <textarea id="consoleIn" rows="3" maxlength="2000" autocomplete="off" spellcheck="false" placeholder="SPEAK TO JACK…"></textarea>
+    <button type="button" id="btnAsk" data-op="ask">ASK</button>
+  </div>
+  <nav id="ops" aria-label="Machine operations">
+    <button type="button" id="btnInspect" data-op="inspect">INSPECT</button>
+    <button type="button" id="btnScalpel" data-op="scalpel">SCALPEL</button>
+    <button type="button" id="btnHopper" data-op="hopper">HOPPER</button>
+    <button type="button" id="btnCard" data-op="card">CARD</button>
+    <button type="button" id="btnVoice" data-op="voice">VOICE</button>
+  </nav>
+</section>
+
+<aside id="bench" hidden>
+  <header class="bench-head">
+    <p>BENCH · HIS CASE TABLE · SOURCE MEMORY UNTOUCHED</p>
+    <button type="button" id="btnLeaveBench">RETURN TO ROOM</button>
+  </header>
+  <div class="bench-grid">
+    <section id="reel" aria-label="Context reel">
+      <h2>CONTEXT REEL</h2>
+      <div id="reelTrack"></div>
+    </section>
+    <section id="cardPanel" aria-label="Working punchcard">
+      <h2>WORKING PUNCHCARD</h2>
+      <div id="punchCard" class="punch"></div>
+    </section>
+    <section id="scalpelPanel" aria-label="Scalpel">
+      <h2>SCALPEL</h2>
+      <p id="scalpelStatus">MARK · ALTER · PUNCH</p>
+      <button type="button" id="btnPunch">PUNCH DERIVED CARD</button>
+      <button type="button" id="btnWrite">WRITE BACK TO WORLD</button>
+    </section>
+    <section id="voicePanel" aria-label="Voice">
+      <h2>VOICE</h2>
+      <p id="voiceOut">—</p>
+    </section>
+    <section id="provPanel" aria-label="Provenance">
+      <h2>PROVENANCE</h2>
+      <ol id="provList"></ol>
+    </section>
+    <section id="pressurePanel" aria-label="Context pressure">
+      <h2>CONTEXT PRESSURE</h2>
+      <div id="pressureBar" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <i id="pressureFill"></i>
+      </div>
+      <p id="pressureNote">Unresolved tension is a reading, not a diagnosis.</p>
+    </section>
+  </div>
+</aside>
+
+<aside id="hopperTray" hidden>
+  <header class="hopper-head">
+    <p>PUNCHCARD TAROT · THREE STATIONS · NOT CANON</p>
+    <button type="button" id="btnHopperClose">CLOSE</button>
+  </header>
+  <p id="hopperLoad" hidden>PUNCHING SLIPS</p>
+  <div id="hopperGrid"></div>
+</aside>
+
+<aside id="inspectSheet" hidden>
+  <header>
+    <p id="inspectKind">INSPECTION</p>
+    <button type="button" id="btnCloseInspect">CLOSE</button>
+  </header>
+  <h2 id="inspectTitle"></h2>
+  <pre id="inspectBody"></pre>
+  <p id="inspectProv"></p>
+</aside>
+
+<aside id="debug" hidden>
+  <p>DEBUG · LOCAL STATE ONLY · NO KEYS IN THE BROWSER</p>
+  <button type="button" id="btnExport">EXPORT STATE</button>
+  <button type="button" id="btnReset">RESET BODY</button>
+  <pre id="debugDump"></pre>
+</aside>
+
+<audio id="jackAudio" hidden playsinline></audio>
+
+<script src="js/state.js?v=18"></script>
+<script src="js/textures.js"></script>
+<script src="js/sprite.js"></script>
+<script src="/assets/jack-voice.js?v=1"></script>
+<script src="js/api.js?v=18"></script>
+<script src="js/body.js?v=18"></script>
+<script src="js/world.js?v=19"></script>
+<script src="js/doors.js"></script>
+<script src="js/aperture.js"></script>
+<script src="js/mabel.js?v=1"></script>
+<script src="js/tape.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/cards.js"></script>
+<script src="/jack/tarot/js/tarot.js"></script>
+<script src="js/hopper.js?v=18"></script>
+<script src="js/input.js?v=19"></script>
+<script src="js/app.js?v=19"></script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

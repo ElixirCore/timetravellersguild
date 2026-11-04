@@ -102,6 +102,10 @@ body.jack-busy .ibm-punches b.on,
   font-family:var(--label);font-size:.62rem;letter-spacing:.16em;font-weight:600;
   text-transform:uppercase;transform:rotate(-4deg);
 }
+.jack-stamp.feathered{border-color:var(--gold);color:var(--gold)}
+.jack-stamp.ruffled{border-color:var(--scarlet);color:var(--scarlet)}
+.jack-stamp.molting{border-color:var(--navy);color:var(--navy)}
+.jack-stamp.bare{border-color:var(--parch-dim, #948d80);color:var(--parch-dim, #948d80)}
 
 .jack-room #jackTalk,.jack-room #jackHear{
   background:var(--paper);border:1.5px solid var(--navy);color:var(--navy);
@@ -109,7 +113,29 @@ body.jack-busy .ibm-punches b.on,
   text-transform:uppercase;padding:.5rem .7rem;cursor:pointer;
 }
 .jack-room #jackTalk[aria-pressed="true"]{background:var(--scarlet);border-color:var(--scarlet);color:var(--paper)}
+.jack-room #jackHear[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--paper)}
 .jack-room .jack-actions{flex-wrap:wrap}
+.jack-room #jackProcess.jack-reader{
+  margin-left:-1rem;margin-right:-1rem;margin-bottom:0;
+}
+.jack-room #jackForm{
+  position:sticky;
+  bottom:calc(3.85rem + env(safe-area-inset-bottom));
+  z-index:32;
+  margin:1rem -1rem 0;
+  padding:.75rem 1rem .9rem;
+  background:var(--paper);
+  border-top:2px solid var(--navy);
+}
+.jack-room #dock{z-index:20}
+
+.doors{display:flex;flex-wrap:wrap;gap:8px;margin:1rem 0 0}
+.door{display:inline-block;padding:.5rem .75rem .4rem;border:2px solid var(--navy);
+  background:var(--paper);color:var(--navy);text-decoration:none;letter-spacing:.12em;
+  text-transform:uppercase;font-size:.7rem;min-width:6.4rem;text-align:left}
+.door b{display:block;font-size:.58rem;letter-spacing:.16em;color:var(--scarlet);font-weight:400}
+.door:hover{background:var(--navy);color:var(--paper)}
+.door:hover b{color:var(--paper)}
 
 @media (prefers-reduced-motion:reduce){
   body.jack-busy .feed-card,body.jack-busy .ibm-punches b{animation:none}

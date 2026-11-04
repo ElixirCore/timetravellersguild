@@ -1,0 +1,60 @@
+{
+  "source": "atlas.json",
+  "records": [
+    {
+      "id": "abercrave",
+      "title": "Abercrave",
+      "summary": "A live point in the Guild field.",
+      "kind": "field-station",
+      "status": "canon",
+      "when": "now",
+      "year": 2026,
+      "lat": 51.795,
+      "lng": -3.708,
+      "url": "",
+      "raw": []
+    },
+    {
+      "id": "gillett-square",
+      "title": "Gillett Square",
+      "summary": "A public square can be a temporal instrument.",
+      "kind": "square",
+      "status": "pending",
+      "when": "2026",
+      "year": 2026,
+      "lat": 51.5462,
+      "lng": -0.0758,
+      "url": "/square/",
+      "raw": []
+    },
+    {
+      "id": "greenwich",
+      "title": "Greenwich",
+      "summary": "Zero is a convention. Relation is the machine.",
+      "kind": "meridian",
+      "status": "canon",
+      "when": "1884 → now",
+      "year": 1884,
+      "lat": 51.4769,
+      "lng": 0.0005,
+      "url": "",
+      "raw": []
+    }
+  ],
+  "edges": [
+    {
+      "from": "abercrave",
+      "to": "gillett-square",
+      "type": "field",
+      "status": "pending",
+      "label": "public relation"
+    },
+    {
+      "from": "gillett-square",
+      "to": "greenwich",
+      "type": "time",
+      "status": "pending",
+      "label": "measured against"
+    }
+  ]
+}

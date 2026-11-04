@@ -100,3 +100,11 @@ function ttg_eleven_voice_id(): string {
     }
     return $id;
 }
+
+function ttg_eleven_model(): string {
+    $model = ttg_env('ELEVENLABS_MODEL', 'eleven_multilingual_v2');
+    if ($model === '' || !preg_match('/^[A-Za-z0-9._-]{3,64}$/', $model)) {
+        return 'eleven_multilingual_v2';
+    }
+    return $model;
+}

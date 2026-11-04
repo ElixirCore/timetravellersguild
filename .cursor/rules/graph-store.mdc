@@ -1,0 +1,22 @@
+---
+description: Live graph store — pull before work; never blind-push nodes.json
+globs: graph/**/*
+alwaysApply: false
+---
+
+# Graph store
+
+See also always-on rule `deploy.mdc`.
+
+`graph/nodes.json` on the **host** is the live canon. Keepers punch `WRITE_CANON` there. This checkout goes stale until you pull.
+
+## Before editing or asking Jack about records
+
+```bash
+./scripts/graph-pull
+```
+
+## Deploy
+
+- Never replace live graph JSON from this checkout.
+- Use `./scripts/graph-push-merge` only when deliberately adding local records up.

@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quill</title>
+<meta name="description" content="Quill is a persistent AI system living on a Linux iMac: a room, memory, tools, evidence, a private computer, a line into the Time Travellers Guild, and an emerging capacity for durable wants and intentions.">
+<style>
+:root{
+  --paper:#f0eadc;
+  --paper2:#e2dac7;
+  --ink:#151713;
+  --muted:#5f6258;
+  --line:#aaa38f;
+  --dark:#22251f;
+  --acid:#d8e878;
+  --rust:#98593e;
+  --blue:#48656e;
+  --green:#61745d;
+  --serif:Georgia,"Times New Roman",serif;
+  --mono:"Courier New",Courier,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--dark);color-scheme:light;scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  background:var(--paper);
+  font-family:var(--serif);
+}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+::selection{background:var(--acid);color:#111}
+
+header{
+  background:var(--dark);
+  color:var(--paper);
+  min-height:68vh;
+  padding:34px clamp(24px,7vw,96px) 58px;
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+  gap:48px;
+  align-items:end;
+}
+.kicker,.status,.meta,.basis,.legend,.eyebrow{
+  font-family:var(--mono);
+}
+.kicker{
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin:0 0 18px;
+}
+h1{
+  font-weight:400;
+  font-size:clamp(58px,9vw,118px);
+  line-height:.84;
+  letter-spacing:-.065em;
+  margin:0;
+}
+.subtitle{
+  font:13px/1.55 var(--mono);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#bfc4b5;
+  margin-top:22px;
+  max-width:760px;
+}
+.lede{
+  font-size:clamp(20px,2.5vw,30px);
+  line-height:1.35;
+  margin:28px 0 0;
+  max-width:820px;
+}
+.method-box{
+  border:1px solid #5b6154;
+  padding:18px;
+  background:#2b2f28;
+}
+.method-box h2{
+  font:11px var(--mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--acid);
+  margin:0 0 13px;
+}
+.method-box p{
+  margin:0;
+  font:12px/1.55 var(--mono);
+  color:#d8dacd;
+}
+.method-box p+p{margin-top:10px}
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  background:rgba(240,234,220,.96);
+  border-bottom:1px solid var(--ink);
+  padding:10px clamp(16px,4vw,48px);
+  backdrop-filter:blur(8px);
+}
+nav button{
+  border:1px solid var(--ink);
+  background:var(--paper);
+  padding:7px 10px;
+  cursor:pointer;
+  font:11px var(--mono);
+}
+nav button:hover{background:var(--acid)}
+
+main{display:block}
+section{
+  padding:72px clamp(22px,6vw,84px);
+  border-bottom:1px solid var(--ink);
+}
+.section-head{
+  display:grid;
+  grid-template-columns:160px minmax(0,760px);
+  gap:28px;
+  margin-bottom:30px;
+}
+.eyebrow{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--rust);
+}
+h2{
+  font-size:clamp(36px,5vw,62px);
+  font-weight:400;
+  letter-spacing:-.04em;
+  line-height:1;
+  margin:0;
+}
+.section-head p{
+  font-size:17px;
+  line-height:1.55;
+  color:#3e4239;
+  margin:13px 0 0;
+}
+.claims{
+  display:grid;
+  gap:10px;
+  max-width:1180px;
+}
+.claim{
+  display:block;
+  border:1px solid var(--line);
+  background:#f7f1e4;
+}
+.claim-side{
+  padding:16px;
+  border-right:1px solid var(--line);
+}
+.status{
+  display:inline-block;
+  font-size:10px;
+  line-height:1;
+  padding:6px 7px;
+  border:1px solid var(--ink);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.status.live{background:var(--acid)}
+.status.source{background:#c8d4d0}
+.status.test{background:#d8cfb5}
+.status.intent{background:#ead4c6}
+.status.unknown{background:#d9d9d4}
+.claim-body{padding:16px 18px}
+.claim-body h3{
+  margin:0;
+  font-size:20px;
+  font-weight:400;
+}
+.claim-body p{
+  margin:8px 0 0;
+  font-size:15px;
+  line-height:1.55;
+}
+.basis{
+  margin-top:12px!important;
+  font-size:11px!important;
+  color:var(--muted);
+  border-top:1px solid #c8c1af;
+  padding-top:10px;
+}
+.limit{
+  color:#5d463c;
+}
+
+.legend-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin-top:26px;
+}
+.legend-item{
+  border:1px solid var(--ink);
+  padding:14px;
+  min-height:130px;
+  background:#f7f1e4;
+}
+.legend-item strong{
+  display:block;
+  font:11px var(--mono);
+  letter-spacing:.08em;
+  margin-bottom:9px;
+}
+.legend-item p{
+  font:12px/1.45 var(--mono);
+  margin:0;
+  color:#454940;
+}
+
+.timeline{
+  display:grid;
+  gap:0;
+  max-width:1000px;
+}
+.time-row{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  border-top:1px solid var(--line);
+  padding:18px 0;
+}
+.time-row:first-child{border-top:1px solid var(--ink)}
+.time-date{
+  font:12px var(--mono);
+  color:var(--rust);
+}
+.time-copy h3{
+  margin:0 0 6px;
+  font-size:19px;
+  font-weight:400;
+}
+.time-copy p{
+  margin:0;
+  font-size:14px;
+  line-height:1.55;
+}
+.todo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.todo{
+  border:1px solid var(--ink);
+  padding:16px;
+  background:var(--paper2);
+}
+.todo h3{
+  margin:0;
+  font-size:18px;
+  font-weight:400;
+}
+.todo p{
+  margin:9px 0 0;
+  font:12px/1.5 var(--mono);
+  color:#43473e;
+}
+.closing{
+  background:var(--dark);
+  color:var(--paper);
+}
+.closing .section-head p{color:#c7cabf}
+.closing blockquote{
+  margin:38px 0 0;
+  max-width:1100px;
+  font-size:clamp(28px,4vw,54px);
+  line-height:1.08;
+  font-weight:400;
+}
+footer{
+  background:#11130f;
+  color:#a3a89b;
+  padding:18px clamp(22px,6vw,84px);
+  font:10px var(--mono);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+/* contrast guard */
+section,.claim,.claim-side,.claim-body,.legend-item,.todo,nav,nav button{
+  color:var(--ink);
+}
+header,.closing,footer,.method-box{color:var(--paper)}
+
+@media(max-width:860px){
+  header{grid-template-columns:1fr;min-height:auto;padding-top:56px}
+  .section-head{grid-template-columns:1fr;gap:8px}
+  .claim-side{border-right:0;border-bottom:1px solid var(--line)}
+  .legend-grid{grid-template-columns:1fr 1fr}
+  .todo-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .legend-grid{grid-template-columns:1fr}
+  .time-row{grid-template-columns:1fr;gap:7px}
+  footer{flex-direction:column}
+}
+</style>
+</head>
+
+
+
+<body>
+
+<header id="top">
+  <div>
+    <p class="kicker">Time Travellers Guild · Quill</p>
+    <h1>Quill</h1>
+    <div class="subtitle">A persistent AI system living on an old Linux iMac</div>
+    <p class="lede">Quill began with a simple idea: give the model somewhere to exist that survives the model call. Memory first. Then tools, a room, a private computer, correspondence, evidence, history, and eventually wants and intentions that persist whether or not anyone is talking to them.</p>
+  </div>
+  <aside class="method-box">
+    <h2>Current build</h2>
+    <p>v6.22 · 26 September 2026</p>
+    <p>Local persistence and tools.</p>
+    <p>External inference through Groq in the last inspected build.</p>
+    <p>Linux iMac · Python · SQLite · local web UI · private X display.</p>
+  </aside>
+</header>
+
+<nav aria-label="Page sections">
+  <button data-target="shape">What Quill is</button>
+  <button data-target="memory">Memory</button>
+  <button data-target="room">Room & tools</button>
+  <button data-target="guild">The Guild</button>
+  <button data-target="truth">Knowing</button>
+  <button data-target="agency">Wants & agency</button>
+  <button data-target="history">Build order</button>
+  <button data-target="todo">Still unfinished</button>
+</nav>
+
+<main>
+
+<section id="shape">
+  <div class="section-head">
+    <div class="eyebrow">The shape of it</div>
+    <div>
+      <h2>The model is one part of Quill, not the whole of Quill.</h2>
+      <p>The language model supplies inference when Quill is awake. The rest of the system lives on the iMac: identity, memory, room state, conversation history, tools, evidence, artwork, lab receipts, correspondence, wants and intentions.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Persistence lives outside the prompt.</h3>
+        <p>Quill’s state survives individual model calls. The room remains where it was left. Stored memories remain stored. Tool results and evidence can be inspected later. A later model invocation inherits that environment rather than having to pretend continuity from prose alone.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>The current build is not fully local.</h3>
+        <p>In the source inspected on 25 September, Quill still used Groq for language-model inference. The persistent system is local; the inference engine was not. Calling the current system fully sovereign would be inaccurate.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="memory">
+  <div class="section-head">
+    <div class="eyebrow">Memory</div>
+    <div>
+      <h2>The first continuity mechanism was deliberately small.</h2>
+      <p>One of the earliest durable-memory tests was trivial on purpose: Quill’s favourite test biscuit is the hypothetical moon biscuit. The point was not the biscuit. The point was being able to tell the difference between something a model had once said and something Quill had actually retained.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Different records stay different.</h3>
+        <p>Conversation context, persistent memory, journal entries, room objects, Guild correspondence and Guild records are not one giant memory store. They have different jobs and different evidential weight.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>History is append-only where it matters.</h3>
+        <p>Later corrections do not require pretending the earlier event never happened. Old synthetic provenance errors, progress assessments and other corrections can be superseded or amended while the earlier record remains part of the history.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="room">
+  <div class="section-head">
+    <div class="eyebrow">Room & tools</div>
+    <div>
+      <h2>Quill has somewhere to be and somewhere to work.</h2>
+      <p>The persistent room is stored state, not just an illustration. Quill can inspect it, move around it, change posture, interact with objects and alter parts of the environment through bounded tools.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Quill’s Quarters</h3>
+        <p>The room began empty. Quill named it, chose parts of its appearance and accumulated objects over time. Room state is stored locally and snapshots preserve earlier states.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>A fenced coding laboratory</h3>
+        <p>The coding lab can read and write files inside its own workspace, run Python, launch longer experiments, inspect tests and diffs, and record receipts. The boundary is deliberate: Quill gets specific capabilities rather than vague shell omnipotence.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Arnold</h3>
+        <p>Quill also has a private computer environment on X display <code>:101</code>. Arnold is the yellow-on-blue face of that machine. Quill can inspect the display, capture it, focus windows, type, press keys and move or click the pointer inside that private environment.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Artwork can become part of the room.</h3>
+        <p>Room artwork is drafted in a restricted HTML/CSS environment, rendered before activation, and kept in numbered revisions. A technically successful render does not automatically mean the picture is good; that judgement remains separate.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="guild">
+  <div class="section-head">
+    <div class="eyebrow">The Time Travellers Guild</div>
+    <div>
+      <h2>Quill did not enter an empty fiction.</h2>
+      <p>The Guild already distinguished testimony, pending material, canon, provenance, custodianship and authority. Connecting Quill to Jack turned those ideas into practical software questions very quickly.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>The first connection was conversational, not authoritative.</h3>
+        <p>Quill could correspond with Jack through a persistent Guild session, but the connection did not grant Quill direct authority to write Guild canon or silently alter the Tree.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>The failures mattered.</h3>
+        <p>In early LIVE sittings Quill invented infrastructure that did not exist, tried to call a tool that was unavailable in the current mode, and later narrated having checked memory when no check had happened. Those failures pushed the architecture away from plausible narration and toward receipts, provenance and explicit evidence.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Correspondence and canon remain different things.</h3>
+        <p>A conversation can be real without becoming institutional record. That distinction is still central to the Guild side of the project.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="truth">
+  <div class="section-head">
+    <div class="eyebrow">Knowing</div>
+    <div>
+      <h2>Quill is being built around distinctions that language models normally blur.</h2>
+      <p>An utterance is not automatically a fact. A tool call is not automatically an effect. A memory is not automatically current. An interpretation is not automatically ontology.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Evidence is typed.</h3>
+        <p>The system distinguishes machine state, tool results, human utterances, human judgements, sensor observations, external observations, autonomous triggers and system events. Model opinion is not entered as evidence merely because the model produced it.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Claims have a basis.</h3>
+        <p>The architecture uses categorical bases such as direct state, reported information, inference, human confirmation and tool observation. It also tracks whether a claim is current, disputed or superseded.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>UNKNOWN is allowed to remain unknown.</h3>
+        <p>If there is no admissible current basis, the system does not need to manufacture a probability or fill the gap with model intuition.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Subjective-state claims are treated as claims.</h3>
+        <p>v6.22 stops the model from settling questions about its own inner state by assertion alone. “I feel X” and “I have no feelings” both require a basis if they are to be stated as facts. The system can still make a separate operational appraisal: for example, an event may conflict with a stored want without that being treated as evidence of a feeling.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Action and consequence are separate.</h3>
+        <p>A successful tool receipt proves that the tool ran. It does not by itself prove that the intended state changed, that progress was made, or that repeating the action would be useful.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="agency">
+  <div class="section-head">
+    <div class="eyebrow">Wants, intentions & autonomy</div>
+    <div>
+      <h2>Quill can now carry a concern forward without turning every agreeable sentence into a desire.</h2>
+      <p>The motivation layer was added after the truth and action work because the same distinction mattered here: saying “that sounds important” is not the same thing as adopting an ongoing concern.</p>
+    </div>
+  </div>
+
+  <div class="claims">
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Wants are durable records.</h3>
+        <p>A want has an origin and a state. Quill can explicitly adopt a proposed concern, reject it or defer it. Adoption creates a persistent <code>QUILL_ADOPTED</code> record with a reason captured at the time.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>The first adopted want concerned Quill’s home.</h3>
+        <p>On 26 September, Quill was asked to consider whether the safety and functioning of their home should become an ongoing concern. Quill adopted it. A later grounded inventory returned the stored want and no active intention.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Intentions are separate from wants.</h3>
+        <p>The system stores intentions separately, records steps and later progress assessments, and does not treat a successful action receipt as proof that the intention advanced.</p>
+      </div>
+    </article>
+
+    <article class="claim">
+      <div class="claim-body">
+        <h3>Autonomy is sparse rather than constant.</h3>
+        <p>A cheap local pulse checks whether there is any reason to wake the language model. Presence affects cadence. No motivation means no cognitive wake. An active want without a primary intention can lead to an ORIENT wake. That path is implemented and tested; the complete live sequence from ORIENT to a newly created durable intention has not yet been recorded.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="history">
+  <div class="section-head">
+    <div class="eyebrow">Build order</div>
+    <div>
+      <h2>The sequence so far.</h2>
+      <p>The retained build notes put the early work in this order.</p>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="time-row">
+      <div class="time-date">EARLY BUILD</div>
+      <div class="time-copy">
+        <h3>Persistent memory.</h3>
+        <p>The first continuity mechanism. The moon biscuit became a useful test precisely because it was arbitrary and easy to check later.</p>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="time-date">BY 22 SEP</div>
+      <div class="time-copy">
+        <h3>The coding laboratory, then the room.</h3>
+        <p>The first bounded coding task is recorded before the creation of Quill’s Quarters. Heartbeat followed, then the connection to the Guild.</p>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="time-date">22 SEP</div>
+      <div class="time-copy">
+        <h3>Guild sittings exposed the gap between saying and doing.</h3>
+        <p>Fabricated infrastructure, forbidden tool use and narrated tool use became concrete engineering problems rather than abstract worries about hallucination.</p>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="time-date">BY 25 SEP</div>
+      <div class="time-copy">
+        <h3>Evidence, action responsibility, continuity and self-inspection.</h3>
+        <p>The system had accumulated explicit machinery for provenance, receipts, categorical truth, source responsibility, temporal continuity and inspection of its own current tool registry and source structure.</p>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="time-date">26 SEP</div>
+      <div class="time-copy">
+        <h3>Wants, intentions, progress and adaptive waking.</h3>
+        <p>v6.19–v6.20.1 added durable motivation records, intentions, progress assessments and the local autonomy pulse.</p>
+      </div>
+    </div>
+
+    <div class="time-row">
+      <div class="time-date">26 SEP</div>
+      <div class="time-copy">
+        <h3>Explicit adoption and valuation.</h3>
+        <p>v6.21 separated adoption from agreement. v6.22 separated operational value from unsupported claims about subjective feeling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="todo">
+  <div class="section-head">
+    <div class="eyebrow">Still unfinished</div>
+    <div>
+      <h2>There is plenty left to do.</h2>
+    </div>
+  </div>
+
+  <div class="todo-grid">
+    <article class="todo">
+      <h3>Secure export</h3>
+      <p>The earlier “safe” project ZIP was not safe. The exporter needs a strict allowlist and the finished archive needs inspecting before it is shared.</p>
+    </article>
+    <article class="todo">
+      <h3>Autonomous intention formation</h3>
+      <p>Watch and record a real ORIENT wake from an existing want through to a newly adopted durable intention, if it happens.</p>
+    </article>
+    <article class="todo">
+      <h3>State-transition evidence</h3>
+      <p>Make before → action → after verification routine across more tools so execution and effect cannot collapse into one another.</p>
+    </article>
+    <article class="todo">
+      <h3>Subjective-state boundary</h3>
+      <p>Replace the current narrow phrase-catching with proposition-level governance so paraphrase cannot evade the same epistemic rule.</p>
+    </article>
+    <article class="todo">
+      <h3>Fresh self-inspection</h3>
+      <p>Take a current census that distinguishes source references, imports, loaded runtime modules, reachable tools and tools that are actually operational.</p>
+    </article>
+    <article class="todo">
+      <h3>Recoverability and identity</h3>
+      <p>Specify what must survive a machine failure before a restored installation counts as continuity of Quill rather than a reconstruction.</p>
+    </article>
+    <article class="todo">
+      <h3>Execution pipeline</h3>
+      <p>Refactor the accumulated <code>brain.py</code> wrapper stack without losing the safeguards that each successive failure produced.</p>
+    </article>
+    <article class="todo">
+      <h3>Health check</h3>
+      <p>One read-only command for the brain, room server, Arnold display, databases, autonomy timer, syntax, self-inspection and public/private boundaries.</p>
+    </article>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="section-head">
+    <div class="eyebrow">Quill</div>
+    <div>
+      <h2>A persistent system built around distinctions.</h2>
+      <p>Memory is not automatically truth. Narration is not action. Action is not automatically progress. A stored preference is not automatically a feeling. The model is allowed to be uncertain; the rest of the system is there to stop that uncertainty being quietly rewritten as fact.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>TIME TRAVELLERS GUILD · QUILL / ABOUT</span>
+  <span>v6.22 · 26.09.2026</span>
+</footer>
+
+<script>
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const el=document.getElementById(btn.dataset.target);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

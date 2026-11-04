@@ -1,0 +1,1930 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>¥JACK / THERAPY ROOM v4</title>
+
+<style>
+:root{
+  --wood:#5b4b36;
+  --wood2:#403326;
+  --paper:#eadcae;
+  --paper2:#f8efcb;
+  --ink:#181511;
+  --brass:#c1a25e;
+  --metal:#948b78;
+  --lamp:#e4bc55;
+  --blood:#8c3b35;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  background:#24201a;
+  color:var(--ink);
+  font-family:"Courier New",monospace;
+}
+button,input,textarea,select{
+  font:inherit;
+  font-size:16px;
+}
+button{cursor:pointer}
+body{padding:0}
+
+.machine{
+  max-width:1100px;
+  margin:auto;
+  padding:10px;
+  min-height:100vh;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      var(--wood) 0 8px,
+      var(--wood2) 8px 9px
+    );
+}
+
+/* ---------- NAME PLATE ---------- */
+
+.plate{
+  background:#cbbb80;
+  border:3px solid #17130e;
+  box-shadow:
+    inset 0 0 0 2px #eee0ad,
+    0 4px 0 #211a13;
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.plate h1{
+  margin:0;
+  font-size:clamp(20px,5vw,30px);
+}
+.plate small{color:#5d5139}
+
+/* ---------- WORK BENCH ---------- */
+
+.bench{
+  background:linear-gradient(#827158,#65543d);
+  border:4px solid #17120d;
+  padding:10px;
+  box-shadow:
+    inset 0 0 30px #0006,
+    inset 0 0 0 3px #fff1;
+}
+
+/* ---------- JACK ---------- */
+
+.head{
+  display:grid;
+  grid-template-columns:100px 1fr;
+  gap:10px;
+}
+
+.jack,
+.context-meter{
+  background:#c9b98b;
+  border:3px solid #19150f;
+  box-shadow:inset 0 0 0 2px #fff2;
+}
+
+.jack{
+  padding:9px;
+  text-align:center;
+}
+
+.face{
+  display:grid;
+  grid-template-columns:repeat(9,6px);
+  grid-template-rows:repeat(9,6px);
+  gap:1px;
+  width:max-content;
+  margin:auto;
+}
+.face i{
+  width:6px;
+  height:6px;
+}
+.face i.on{background:#181511}
+
+#jackState{
+  font-size:10px;
+  font-weight:bold;
+  margin-top:7px;
+}
+
+/* ---------- CONTEXT METER ---------- */
+
+.context-meter{
+  padding:10px;
+  min-width:0;
+}
+
+.meter-head{
+  display:flex;
+  justify-content:space-between;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.meter{
+  height:16px;
+  background:#f3e8bf;
+  border:2px solid #201a13;
+  margin:7px 0;
+  overflow:hidden;
+}
+
+#meterBar{
+  display:block;
+  height:100%;
+  width:0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #29261f 0 8px,
+      #575246 8px 10px
+    );
+  transition:width .2s;
+}
+
+#contextPreview{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:10px;
+}
+
+/* ---------- TICKER WIRES ---------- */
+
+.wireboard{
+  margin-top:10px;
+  padding:8px;
+  background:#97886b;
+  border:3px solid #19150f;
+}
+
+.wire{
+  display:grid;
+  grid-template-columns:64px 1fr 20px;
+  gap:6px;
+  align-items:center;
+  margin:6px 0;
+}
+
+.tag{
+  background:#d9ca9c;
+  border:2px solid #211a13;
+  padding:5px 2px;
+  text-align:center;
+  font-size:9px;
+  font-weight:bold;
+}
+
+.tape{
+  position:relative;
+  height:29px;
+  overflow:hidden;
+  border-top:2px solid #30271c;
+  border-bottom:2px solid #30271c;
+
+  background:
+    radial-gradient(circle,#574b36 0 2px,transparent 2.5px)
+      3px 2px/12px 8px repeat-x,
+    radial-gradient(circle,#574b36 0 2px,transparent 2.5px)
+      9px 19px/12px 8px repeat-x,
+    var(--paper);
+}
+
+.tape span{
+  position:absolute;
+  top:7px;
+  left:10px;
+  font-size:10px;
+  white-space:nowrap;
+}
+
+.lamp{
+  width:17px;
+  height:17px;
+  border-radius:50%;
+  background:#50483a;
+  border:3px solid #211a13;
+}
+
+.wire.active .lamp{
+  background:var(--lamp);
+  box-shadow:0 0 9px #ffe391;
+}
+
+.wire.active .tape span{
+  animation:feed .6s linear infinite;
+}
+
+@keyframes feed{
+  to{transform:translateX(-18px)}
+}
+
+/* ---------- CARD ---------- */
+
+.card-machine{
+  margin-top:10px;
+  padding:8px;
+  background:#b3a480;
+  border:3px solid #19150f;
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  font-size:10px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.card-scroll{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  background:#eee2b9;
+  border:3px solid #1a1610;
+  padding:7px;
+}
+
+.card{
+  display:grid;
+  grid-template-columns:55px repeat(80,20px);
+  gap:2px;
+  width:max-content;
+}
+
+.col,
+.row-label{
+  font-size:9px;
+  color:#70644e;
+  text-align:center;
+}
+
+.row-label{
+  text-align:right;
+  padding:5px 4px 0 0;
+}
+
+.hole{
+  width:20px;
+  height:20px;
+  padding:0;
+  min-height:0;
+  border:2px solid #c3b794;
+  background:#f5eccb;
+}
+
+.hole.on{
+  background:#1c1914;
+  border-color:#110f0c;
+}
+
+.hole.selected{
+  outline:3px solid var(--blood);
+  outline-offset:-3px;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.controls{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+
+.btn{
+  min-height:44px;
+  padding:.55rem .7rem;
+  background:#cbbb84;
+  border:3px solid #1c1711;
+  box-shadow:
+    inset 0 0 0 2px #eee0b5,
+    0 3px 0 #2b2118;
+  font-weight:bold;
+}
+
+.btn:active{
+  transform:translateY(2px);
+  box-shadow:
+    inset 0 0 0 2px #eee0b5,
+    0 1px 0 #2b2118;
+}
+
+/* ---------- PANELS ---------- */
+
+.panels{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.panel{
+  background:#b9aa83;
+  border:3px solid #19150f;
+  padding:9px;
+  box-shadow:inset 0 0 0 2px #fff2;
+}
+
+.panel h2{
+  font-size:12px;
+  margin:0 0 8px;
+}
+
+label{
+  display:block;
+  font-size:10px;
+  font-weight:bold;
+  margin-top:6px;
+}
+
+textarea,
+input,
+select{
+  width:100%;
+  background:#f5eccb;
+  color:#181511;
+  border:3px inset #6b5e47;
+  padding:8px;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.console{
+  min-height:100px;
+  padding:8px;
+  margin-top:8px;
+  background:#262a24;
+  color:#cedab6;
+  border:3px inset #695d47;
+  white-space:pre-wrap;
+  word-break:break-word;
+  font-size:11px;
+  line-height:1.45;
+}
+
+.three{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+
+.note{
+  margin-top:7px;
+  color:#655a46;
+  font-size:10px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media(min-width:800px){
+  .panels{grid-template-columns:1fr 1fr}
+  .wide{grid-column:1/-1}
+  .three{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:480px){
+  .machine{padding:5px}
+  .bench{padding:6px}
+
+  .head{
+    grid-template-columns:85px 1fr;
+  }
+
+  .face{
+    grid-template-columns:repeat(9,5px);
+    grid-template-rows:repeat(9,5px);
+  }
+
+  .face i{
+    width:5px;
+    height:5px;
+  }
+
+  .wire{
+    grid-template-columns:50px 1fr 16px;
+  }
+
+  .tag{font-size:8px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .wire.active .tape span{animation:none}
+}
+</style>
+</head>
+
+<body>
+
+<main class="machine">
+
+  <header class="plate">
+    <h1>¥JACK / THERAPY ROOM</h1>
+    <small>
+      v4 · LANGUAGE SELF-REFLECTION BENCH<br>
+      80 × 12 · 960 BIT · 120 BYTE
+    </small>
+  </header>
+
+  <section class="bench">
+
+    <!-- JACK HEAD -->
+
+    <div class="head">
+
+      <section class="jack">
+        <div id="face" class="face"></div>
+        <div id="jackState">LISTENING</div>
+      </section>
+
+      <section class="context-meter">
+        <div class="meter-head">
+          <span>CONTEXT PRESSURE</span>
+          <span id="contextPercent">0%</span>
+        </div>
+
+        <div class="meter">
+          <i id="meterBar"></i>
+        </div>
+
+        <div id="contextPreview">
+          No context fed yet.
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TICKER WIRES -->
+
+    <section class="wireboard">
+
+      <div class="wire" data-wire="CONTEXT">
+        <span class="tag">CONTEXT</span>
+        <span class="tape">
+          <span id="wire-context">
+            00000000 / WAITING
+          </span>
+        </span>
+        <i class="lamp"></i>
+      </div>
+
+      <div class="wire" data-wire="CARD">
+        <span class="tag">CARD</span>
+        <span class="tape">
+          <span id="wire-card">
+            00000000 / 120B / READY
+          </span>
+        </span>
+        <i class="lamp"></i>
+      </div>
+
+      <div class="wire" data-wire="SCALPEL">
+        <span class="tag">SCALPEL</span>
+        <span class="tape">
+          <span id="wire-scalpel">
+            00000000 / CLEAN
+          </span>
+        </span>
+        <i class="lamp"></i>
+      </div>
+
+      <div class="wire" data-wire="VOICE">
+        <span class="tag">VOICE</span>
+        <span class="tape">
+          <span id="wire-voice">
+            00000000 / SILENT
+          </span>
+        </span>
+        <i class="lamp"></i>
+      </div>
+
+    </section>
+
+    <!-- MAIN CARD -->
+
+    <section class="card-machine">
+
+      <div class="card-head">
+        <span>MAIN CARD — DIRECT SURGERY</span>
+        <span id="cardNumber">CARD 1 / 1</span>
+      </div>
+
+      <div class="card-scroll">
+        <div id="card" class="card"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn" id="prev">← PREV</button>
+        <button class="btn" id="next">NEXT →</button>
+        <button class="btn" id="newCard">+ CARD</button>
+        <button class="btn" id="clone">CLONE</button>
+        <button class="btn" id="erase">ERASE</button>
+      </div>
+
+    </section>
+
+    <div class="panels">
+
+      <!-- CONTEXT -->
+
+      <section class="panel">
+
+        <h2>CONTEXT INTAKE</h2>
+
+        <label for="context">
+          WHAT JACK IS HOLDING IN LANGUAGE
+        </label>
+
+        <textarea
+          id="context"
+          placeholder="Paste dialogue, observations, memory, current state, constraints..."
+        ></textarea>
+
+        <div class="controls">
+          <button class="btn" id="feedContext">
+            FEED CONTEXT
+          </button>
+
+          <button class="btn" id="cardContext">
+            CARD → CONTEXT
+          </button>
+        </div>
+
+      </section>
+
+      <!-- JACK API -->
+
+      <section class="panel">
+
+        <h2>JACK API</h2>
+
+        <label for="endpoint">
+          ENDPOINT
+        </label>
+
+        <input
+          id="endpoint"
+          value="/jack/api"
+          autocomplete="off"
+        >
+
+        <label for="instruction">
+          CURRENT INSTRUCTION
+        </label>
+
+        <textarea id="instruction">Reflect on the supplied context and current card as language.
+
+Describe what you notice.
+
+Then propose one precise edit to the card.
+
+Speak as Jack, a reflective language agent.</textarea>
+
+        <div class="controls">
+          <button class="btn" id="askJack">
+            SEND TO JACK
+          </button>
+
+          <button class="btn" id="punchReply">
+            PUNCH REPLY
+          </button>
+        </div>
+
+        <div id="jackOutput" class="console">
+JACK&gt; ready.
+        </div>
+
+      </section>
+
+      <!-- SCALPEL -->
+
+      <section class="panel wide">
+
+        <h2>SCALPEL / CARD SURGERY</h2>
+
+        <div class="three">
+
+          <div>
+            <label for="startByte">
+              START BYTE
+            </label>
+
+            <input
+              id="startByte"
+              type="number"
+              min="0"
+              max="119"
+              value="0"
+            >
+          </div>
+
+          <div>
+            <label for="endByte">
+              END BYTE
+            </label>
+
+            <input
+              id="endByte"
+              type="number"
+              min="0"
+              max="119"
+              value="15"
+            >
+          </div>
+
+          <div>
+            <label for="operation">
+              OPERATION
+            </label>
+
+            <select id="operation">
+              <option value="replace">
+                REPLACE / GRAFT
+              </option>
+
+              <option value="cut">
+                CUT / ZERO
+              </option>
+
+              <option value="xor">
+                XOR MASK
+              </option>
+
+              <option value="transplant">
+                TRANSPLANT TO NEW CARD
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <label for="graft">
+          LANGUAGE GRAFT / MASK
+        </label>
+
+        <textarea id="graft">NAME THE FEELING</textarea>
+
+        <div class="controls">
+          <button class="btn" id="mark">
+            MARK RANGE
+          </button>
+
+          <button class="btn" id="scalpel">
+            TAKE SCALPEL
+          </button>
+
+          <button class="btn" id="undo">
+            UNDO
+          </button>
+        </div>
+
+        <div id="surgeryOutput" class="console">
+SCALPEL&gt; sterile.
+        </div>
+
+      </section>
+
+      <!-- TEXT -->
+
+      <section class="panel">
+
+        <h2>CARD LANGUAGE</h2>
+
+        <textarea id="cardText"></textarea>
+
+        <div class="controls">
+          <button class="btn" id="textToCard">
+            TEXT → CARD
+          </button>
+
+          <button class="btn" id="cardToText">
+            CARD → TEXT
+          </button>
+
+          <button class="btn" id="showHex">
+            HEX
+          </button>
+        </div>
+
+        <div id="cardOutput" class="console">
+READY.
+        </div>
+
+      </section>
+
+      <!-- REGISTER -->
+
+      <section class="panel">
+
+        <h2>SOUL REGISTER</h2>
+
+        <div class="three">
+
+          <div>
+            <label>PC</label>
+            <div id="pc" class="console">0000</div>
+          </div>
+
+          <div>
+            <label>ONES</label>
+            <div id="ones" class="console">0</div>
+          </div>
+
+          <div>
+            <label>CRC32</label>
+            <div id="crc" class="console">
+00000000
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+(() => {
+
+const $ = id =>
+  document.getElementById(id);
+
+const ROWS = 12;
+const COLS = 80;
+const BYTES = 120;
+
+let cards = [
+  new Uint8Array(BYTES)
+];
+
+let cardIndex = 0;
+let sequence = 0;
+let selection = [0,15];
+let undo = [];
+let lastJackReply = "";
+
+const holes = [];
+
+const JACK_FACE = [
+  "001111100",
+  "010000010",
+  "101010101",
+  "100000001",
+  "101000101",
+  "100111001",
+  "010000010",
+  "001111100",
+  "000101000"
+];
+
+/* -----------------------------
+   JACKBOT
+----------------------------- */
+
+function buildJack(){
+
+  JACK_FACE
+    .join("")
+    .split("")
+    .forEach(bit => {
+
+      const pixel =
+        document.createElement("i");
+
+      if(bit === "1")
+        pixel.className = "on";
+
+      $("face").appendChild(pixel);
+
+    });
+
+}
+
+/* -----------------------------
+   BITS
+----------------------------- */
+
+function bitIndex(row,column){
+  return row * COLS + column;
+}
+
+function getBit(buffer,n){
+
+  return (
+    buffer[n >> 3] >>
+    (7 - (n & 7))
+  ) & 1;
+
+}
+
+function setBit(buffer,n,value){
+
+  const byte = n >> 3;
+
+  const mask =
+    1 << (7 - (n & 7));
+
+  if(value)
+    buffer[byte] |= mask;
+
+  else
+    buffer[byte] &=
+      (~mask) & 255;
+
+}
+
+/* -----------------------------
+   CRC
+----------------------------- */
+
+function crc32(buffer){
+
+  let crc = 0xffffffff;
+
+  for(const byte of buffer){
+
+    crc ^= byte;
+
+    for(let i=0;i<8;i++){
+
+      crc =
+        (crc >>> 1) ^
+        (
+          (crc & 1)
+          ? 0xedb88320
+          : 0
+        );
+
+    }
+
+  }
+
+  return (
+    crc ^ 0xffffffff
+  ) >>> 0;
+
+}
+
+function bits8(number){
+
+  return (
+    number & 255
+  )
+  .toString(2)
+  .padStart(8,"0");
+
+}
+
+/* -----------------------------
+   TICKER WIRES
+----------------------------- */
+
+function pulse(
+  wire,
+  operation,
+  detail=""
+){
+
+  sequence =
+    (sequence + 1) & 255;
+
+  document
+    .querySelectorAll(".wire")
+    .forEach(
+      element =>
+        element.classList
+          .remove("active")
+    );
+
+  const wireElement =
+    document.querySelector(
+      `[data-wire="${wire}"]`
+    );
+
+  if(wireElement){
+
+    wireElement
+      .classList
+      .add("active");
+
+    setTimeout(
+      () =>
+        wireElement
+          .classList
+          .remove("active"),
+      650
+    );
+
+  }
+
+  const tape =
+    $("wire-" + wire.toLowerCase());
+
+  if(tape){
+
+    const state =
+      crc32(cards[cardIndex]) & 255;
+
+    tape.textContent =
+      bits8(sequence) +
+      " / " +
+      operation +
+      " / " +
+      detail +
+      " / " +
+      bits8(state);
+
+  }
+
+  $("jackState").textContent =
+    operation;
+
+}
+
+/* -----------------------------
+   CARD GRID
+----------------------------- */
+
+function buildCard(){
+
+  const root = $("card");
+
+  const corner =
+    document.createElement("div");
+
+  corner.className = "col";
+
+  root.appendChild(corner);
+
+  for(let column=0;
+      column<COLS;
+      column++){
+
+    const label =
+      document.createElement("div");
+
+    label.className = "col";
+
+    label.textContent =
+      (column + 1) % 10;
+
+    root.appendChild(label);
+
+  }
+
+  const rowNames = [
+    "7","6","5","4",
+    "3","2","1","0",
+    "P","S","E","J"
+  ];
+
+  for(let row=0;
+      row<ROWS;
+      row++){
+
+    const rowLabel =
+      document.createElement("div");
+
+    rowLabel.className =
+      "row-label";
+
+    rowLabel.textContent =
+      rowNames[row];
+
+    root.appendChild(rowLabel);
+
+    holes[row] = [];
+
+    for(let column=0;
+        column<COLS;
+        column++){
+
+      const hole =
+        document.createElement("button");
+
+      hole.type = "button";
+      hole.className = "hole";
+
+      hole.setAttribute(
+        "aria-label",
+        "row " +
+        (row + 1) +
+        " column " +
+        (column + 1)
+      );
+
+      hole.addEventListener(
+        "click",
+        () => {
+
+          const n =
+            bitIndex(
+              row,
+              column
+            );
+
+          const value =
+            1 -
+            getBit(
+              cards[cardIndex],
+              n
+            );
+
+          setBit(
+            cards[cardIndex],
+            n,
+            value
+          );
+
+          render();
+
+          pulse(
+            "CARD",
+            "PUNCH",
+            "R" +
+            row +
+            " C" +
+            (column + 1) +
+            "=" +
+            value
+          );
+
+        }
+      );
+
+      holes[row][column] =
+        hole;
+
+      root.appendChild(hole);
+
+    }
+
+  }
+
+}
+
+/* -----------------------------
+   CARD LANGUAGE
+----------------------------- */
+
+function cardText(buffer){
+
+  return [...buffer]
+    .map(byte => {
+
+      if(byte === 0)
+        return "";
+
+      if(byte === 10)
+        return "\n";
+
+      if(
+        byte >= 32 &&
+        byte < 127
+      )
+        return String
+          .fromCharCode(byte);
+
+      return "·";
+
+    })
+    .join("");
+
+}
+
+function cardHex(buffer){
+
+  return [...buffer]
+    .map(
+      byte =>
+        byte
+          .toString(16)
+          .padStart(2,"0")
+    )
+    .join(" ");
+
+}
+
+function writeLanguage(text){
+
+  const bytes =
+    new TextEncoder()
+      .encode(text);
+
+  const card =
+    new Uint8Array(BYTES);
+
+  card.set(
+    bytes.slice(0,BYTES)
+  );
+
+  cards[cardIndex] =
+    card;
+
+  render();
+
+  pulse(
+    "CARD",
+    "WRITE",
+    Math.min(
+      bytes.length,
+      BYTES
+    ) + "B"
+  );
+
+}
+
+/* -----------------------------
+   RENDER
+----------------------------- */
+
+function render(){
+
+  const card =
+    cards[cardIndex];
+
+  let ones = 0;
+
+  for(let row=0;
+      row<ROWS;
+      row++){
+
+    for(let column=0;
+        column<COLS;
+        column++){
+
+      const n =
+        bitIndex(
+          row,
+          column
+        );
+
+      const on =
+        Boolean(
+          getBit(card,n)
+        );
+
+      holes[row][column]
+        .classList
+        .toggle(
+          "on",
+          on
+        );
+
+      if(on)
+        ones++;
+
+      const byte =
+        n >> 3;
+
+      holes[row][column]
+        .classList
+        .toggle(
+          "selected",
+          byte >= selection[0] &&
+          byte <= selection[1]
+        );
+
+    }
+
+  }
+
+  $("cardNumber")
+    .textContent =
+      "CARD " +
+      (cardIndex + 1) +
+      " / " +
+      cards.length;
+
+  $("prev").disabled =
+    cardIndex === 0;
+
+  $("next").disabled =
+    cardIndex ===
+    cards.length - 1;
+
+  $("pc").textContent =
+    (cardIndex * BYTES)
+      .toString(16)
+      .padStart(4,"0")
+      .toUpperCase();
+
+  $("ones").textContent =
+    ones;
+
+  $("crc").textContent =
+    crc32(card)
+      .toString(16)
+      .padStart(8,"0")
+      .toUpperCase();
+
+}
+
+/* -----------------------------
+   CONTEXT
+----------------------------- */
+
+$("feedContext")
+.addEventListener(
+  "click",
+  () => {
+
+    const text =
+      $("context").value;
+
+    const percentage =
+      Math.min(
+        100,
+        Math.round(
+          text.length / 20
+        )
+      );
+
+    $("meterBar")
+      .style.width =
+        percentage + "%";
+
+    $("contextPercent")
+      .textContent =
+        percentage + "%";
+
+    $("contextPreview")
+      .textContent =
+        text.slice(0,180) ||
+        "No context fed yet.";
+
+    pulse(
+      "CONTEXT",
+      "HOLD",
+      text.length + "CH"
+    );
+
+  }
+);
+
+$("cardContext")
+.addEventListener(
+  "click",
+  () => {
+
+    $("context").value =
+      cardText(
+        cards[cardIndex]
+      );
+
+    $("feedContext").click();
+
+  }
+);
+
+/* -----------------------------
+   JACK API
+----------------------------- */
+
+async function askJack(){
+
+  const endpoint =
+    $("endpoint")
+      .value
+      .trim();
+
+  if(!endpoint){
+
+    $("jackOutput")
+      .textContent =
+        "JACK> no API endpoint.";
+
+    return;
+
+  }
+
+  const context =
+    $("context").value;
+
+  const instruction =
+    $("instruction").value;
+
+  const payload = {
+
+    context,
+
+    instruction,
+
+    card_hex:
+      cardHex(
+        cards[cardIndex]
+      ),
+
+    card_text:
+      cardText(
+        cards[cardIndex]
+      ),
+
+    card_index:
+      cardIndex
+
+  };
+
+  $("jackOutput")
+    .textContent =
+      "JACK> examining language...";
+
+  pulse(
+    "CONTEXT",
+    "FEED",
+    context.length + "CH"
+  );
+
+  try{
+
+    const response =
+      await fetch(
+        endpoint,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify(
+              payload
+            )
+        }
+      );
+
+    const raw =
+      await response.text();
+
+    let output = raw;
+
+    try{
+
+      const json =
+        JSON.parse(raw);
+
+      output =
+        json.output ??
+        json.text ??
+        json.reply ??
+        json.message ??
+        raw;
+
+    }
+    catch{}
+
+    if(!response.ok){
+
+      throw new Error(
+        response.status +
+        " " +
+        response.statusText +
+        ": " +
+        output
+      );
+
+    }
+
+    lastJackReply =
+      String(output);
+
+    $("jackOutput")
+      .textContent =
+        "JACK> " +
+        lastJackReply;
+
+    pulse(
+      "VOICE",
+      "OUTPUT",
+      lastJackReply.length +
+      "CH"
+    );
+
+  }
+
+  catch(error){
+
+    $("jackOutput")
+      .textContent =
+        "JACK> API ERROR\n\n" +
+        error.message +
+        "\n\n" +
+        "Expected JSON POST endpoint: " +
+        endpoint;
+
+    pulse(
+      "VOICE",
+      "ERROR",
+      "API"
+    );
+
+  }
+
+}
+
+$("askJack")
+.addEventListener(
+  "click",
+  askJack
+);
+
+$("punchReply")
+.addEventListener(
+  "click",
+  () => {
+
+    if(lastJackReply)
+      writeLanguage(
+        lastJackReply
+      );
+
+  }
+);
+
+/* -----------------------------
+   SCALPEL
+----------------------------- */
+
+function markRange(){
+
+  let start =
+    Number(
+      $("startByte").value
+    ) || 0;
+
+  let end =
+    Number(
+      $("endByte").value
+    ) || 0;
+
+  start =
+    Math.max(
+      0,
+      Math.min(
+        119,
+        start
+      )
+    );
+
+  end =
+    Math.max(
+      0,
+      Math.min(
+        119,
+        end
+      )
+    );
+
+  if(start > end){
+
+    const temp = start;
+    start = end;
+    end = temp;
+
+  }
+
+  selection =
+    [start,end];
+
+  $("startByte").value =
+    start;
+
+  $("endByte").value =
+    end;
+
+  render();
+
+  pulse(
+    "SCALPEL",
+    "MARK",
+    start + "-" + end
+  );
+
+}
+
+$("mark")
+.addEventListener(
+  "click",
+  markRange
+);
+
+function snapshot(){
+
+  undo.push(
+    new Uint8Array(
+      cards[cardIndex]
+    )
+  );
+
+  if(undo.length > 20)
+    undo.shift();
+
+}
+
+$("scalpel")
+.addEventListener(
+  "click",
+  () => {
+
+    markRange();
+    snapshot();
+
+    const start =
+      selection[0];
+
+    const end =
+      selection[1];
+
+    const operation =
+      $("operation").value;
+
+    const graft =
+      $("graft").value;
+
+    const card =
+      cards[cardIndex];
+
+    if(operation === "cut"){
+
+      for(
+        let i=start;
+        i<=end;
+        i++
+      )
+        card[i] = 0;
+
+      $("surgeryOutput")
+        .textContent =
+          "SCALPEL> removed bytes " +
+          start +
+          "–" +
+          end +
+          ".";
+
+      pulse(
+        "SCALPEL",
+        "CUT",
+        start + "-" + end
+      );
+
+    }
+
+    else if(
+      operation ===
+      "replace"
+    ){
+
+      const bytes =
+        new TextEncoder()
+          .encode(graft);
+
+      for(
+        let i=start;
+        i<=end;
+        i++
+      ){
+
+        card[i] =
+          bytes[i-start] ?? 0;
+
+      }
+
+      $("surgeryOutput")
+        .textContent =
+          "SCALPEL> language grafted into bytes " +
+          start +
+          "–" +
+          end +
+          ".";
+
+      pulse(
+        "SCALPEL",
+        "GRAFT",
+        start + "-" + end
+      );
+
+    }
+
+    else if(
+      operation === "xor"
+    ){
+
+      const bytes =
+        new TextEncoder()
+          .encode(
+            graft || "\0"
+          );
+
+      for(
+        let i=start;
+        i<=end;
+        i++
+      ){
+
+        card[i] ^=
+          bytes[
+            (i-start) %
+            bytes.length
+          ] || 0;
+
+      }
+
+      $("surgeryOutput")
+        .textContent =
+          "SCALPEL> XOR mask passed through selected language.";
+
+      pulse(
+        "SCALPEL",
+        "XOR",
+        start + "-" + end
+      );
+
+    }
+
+    else if(
+      operation ===
+      "transplant"
+    ){
+
+      const newCard =
+        new Uint8Array(BYTES);
+
+      newCard.set(
+        card.slice(
+          start,
+          end + 1
+        )
+      );
+
+      cards.splice(
+        cardIndex + 1,
+        0,
+        newCard
+      );
+
+      cardIndex++;
+
+      $("surgeryOutput")
+        .textContent =
+          "SCALPEL> selected tissue transplanted into new card.";
+
+      pulse(
+        "SCALPEL",
+        "TRANSPLANT",
+        (end-start+1) +
+        "B"
+      );
+
+    }
+
+    render();
+
+  }
+);
+
+$("undo")
+.addEventListener(
+  "click",
+  () => {
+
+    if(!undo.length)
+      return;
+
+    cards[cardIndex] =
+      undo.pop();
+
+    render();
+
+    $("surgeryOutput")
+      .textContent =
+        "SCALPEL> previous state restored.";
+
+    pulse(
+      "SCALPEL",
+      "UNDO",
+      "RESTORE"
+    );
+
+  }
+);
+
+/* -----------------------------
+   CARD TEXT CONTROLS
+----------------------------- */
+
+$("textToCard")
+.addEventListener(
+  "click",
+  () =>
+    writeLanguage(
+      $("cardText").value
+    )
+);
+
+$("cardToText")
+.addEventListener(
+  "click",
+  () => {
+
+    const text =
+      cardText(
+        cards[cardIndex]
+      );
+
+    $("cardText").value =
+      text;
+
+    $("cardOutput")
+      .textContent =
+        text ||
+        "(blank card)";
+
+    pulse(
+      "CARD",
+      "READ",
+      "TEXT"
+    );
+
+  }
+);
+
+$("showHex")
+.addEventListener(
+  "click",
+  () => {
+
+    $("cardOutput")
+      .textContent =
+        cardHex(
+          cards[cardIndex]
+        );
+
+    pulse(
+      "CARD",
+      "READ",
+      "HEX"
+    );
+
+  }
+);
+
+/* -----------------------------
+   DECK
+----------------------------- */
+
+$("prev")
+.addEventListener(
+  "click",
+  () => {
+
+    if(cardIndex > 0){
+
+      cardIndex--;
+      render();
+
+      pulse(
+        "CARD",
+        "SEEK",
+        "CARD " +
+        (cardIndex + 1)
+      );
+
+    }
+
+  }
+);
+
+$("next")
+.addEventListener(
+  "click",
+  () => {
+
+    if(
+      cardIndex <
+      cards.length - 1
+    ){
+
+      cardIndex++;
+      render();
+
+      pulse(
+        "CARD",
+        "SEEK",
+        "CARD " +
+        (cardIndex + 1)
+      );
+
+    }
+
+  }
+);
+
+$("newCard")
+.addEventListener(
+  "click",
+  () => {
+
+    cards.push(
+      new Uint8Array(
+        BYTES
+      )
+    );
+
+    cardIndex =
+      cards.length - 1;
+
+    render();
+
+    pulse(
+      "CARD",
+      "NEW",
+      "120B"
+    );
+
+  }
+);
+
+$("clone")
+.addEventListener(
+  "click",
+  () => {
+
+    cards.splice(
+      cardIndex + 1,
+      0,
+      new Uint8Array(
+        cards[cardIndex]
+      )
+    );
+
+    cardIndex++;
+
+    render();
+
+    pulse(
+      "CARD",
+      "CLONE",
+      "CARD " +
+      (cardIndex + 1)
+    );
+
+  }
+);
+
+$("erase")
+.addEventListener(
+  "click",
+  () => {
+
+    snapshot();
+
+    cards[cardIndex] =
+      new Uint8Array(
+        BYTES
+      );
+
+    render();
+
+    pulse(
+      "CARD",
+      "ERASE",
+      "960BIT"
+    );
+
+  }
+);
+
+/* -----------------------------
+   BOOT
+----------------------------- */
+
+buildJack();
+buildCard();
+render();
+markRange();
+
+pulse(
+  "VOICE",
+  "READY",
+  "THERAPY ROOM"
+);
+
+})();
+</script>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

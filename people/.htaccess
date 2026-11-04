@@ -1,0 +1,19 @@
+Options -Indexes
+DirectoryIndex index.php
+
+RewriteEngine On
+RewriteRule ^auth/?$ auth/index.php [L]
+RewriteRule ^profile/?$ profile/index.php [L]
+RewriteRule ^knock/?$ knock.php [L]
+RewriteRule ^([a-z0-9-]+)/?$ view.php?slug=$1 [L,QSA]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+<FilesMatch "\.(sqlite|ini|log)$">
+  Require all denied
+</FilesMatch>

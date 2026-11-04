@@ -1,0 +1,15 @@
+{
+    "id": "jobj_nest_lining",
+    "kind": "nest",
+    "title": "The lining",
+    "when": 1951,
+    "where": "desk",
+    "with": "clerk",
+    "under": "open",
+    "protected": true,
+    "retired": false,
+    "created_at": "2026-09-06T01:30:18+00:00",
+    "updated_at": "2026-09-06T01:30:18+00:00",
+    "box": null,
+    "card": ""
+}

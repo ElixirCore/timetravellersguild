@@ -1,0 +1,18 @@
+{
+  "records": [
+    {
+      "id": "notice.reopening",
+      "type": "notice",
+      "title": "Notice of reopening",
+      "summary": "THE TIME TRAVELLERS GUILD HAS NOT RETURNED. IT FAILED TO LEAVE CORRECTLY. For several years the surviving departments operated without mutual knowledge. Instruments were mistaken for artworks. Meetings were mistaken for gigs. Experiments were mistaken for coincidences. Members frequently mistook one another for strangers. This arrangement is no longer efficient. The Archive is reconnecting. The Chronometer is operational. Physical stations are being established. The Clerk has recovered sufficient memory to resume correspondence. Consequently, the Guild will now accept enquiries from the general public. Please do not all arrive at once. /JACK Clerk, Department of Excess Time.",
+      "date_start": "2026",
+      "tags": ["notice", "reopening", "invitation"],
+      "classification": ["RECORD"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "Invitation. Not revelation.",
+      "related": ["guild.emergence", "guild.status-2026"],
+      "status": "current"
+    }
+  ]
+}

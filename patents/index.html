@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FEED∞ — Temporal Patents Office</title>
+
+<style>
+  :root{
+    --paper:#f3f0e7;
+    --paper-2:#e8e3d7;
+    --ink:#111;
+    --muted:#5e5a52;
+    --stamp:#8b1d1d;
+    --line:#bbb3a5;
+  }
+
+  *{box-sizing:border-box}
+
+  html,body{
+    margin:0;
+    min-height:100%;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.06), transparent 30%),
+      linear-gradient(#171717,#0b0b0b);
+    color:var(--ink);
+    font-family:"Courier New", Courier, monospace;
+  }
+
+  body{
+    overflow-x:hidden;
+  }
+
+  .world{
+    min-height:100vh;
+    padding:20px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    perspective:1400px;
+  }
+
+  .sheet{
+    position:relative;
+    width:min(980px,100%);
+    min-height:1380px;
+    padding:54px 58px 70px;
+    background:
+      linear-gradient(rgba(255,255,255,.2),rgba(0,0,0,.025)),
+      repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,.014) 0px,
+        rgba(0,0,0,.014) 1px,
+        transparent 1px,
+        transparent 4px
+      ),
+      var(--paper);
+    border:1px solid #c8c0b2;
+    box-shadow:
+      0 35px 90px rgba(0,0,0,.55),
+      inset 0 0 80px rgba(93,76,52,.08);
+    transform:rotateX(0deg) rotateY(0deg);
+    transform-style:preserve-3d;
+    transition:transform .14s ease-out;
+  }
+
+  .sheet:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 8% 14%, rgba(77,60,34,.045), transparent 15%),
+      radial-gradient(circle at 84% 72%, rgba(77,60,34,.04), transparent 18%),
+      linear-gradient(90deg, transparent 0 49.8%, rgba(80,70,54,.028) 50%, transparent 50.2%);
+    mix-blend-mode:multiply;
+  }
+
+  .sheet:after{
+    content:"";
+    position:absolute;
+    inset:11px;
+    border:1px solid rgba(0,0,0,.08);
+    pointer-events:none;
+  }
+
+  .topline{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:24px;
+    align-items:start;
+    margin-bottom:26px;
+  }
+
+  .gov{
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-size:18px;
+    line-height:1.25;
+  }
+
+  .dept{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.35;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+
+  .crest{
+    width:92px;
+    height:92px;
+    border:2px solid var(--ink);
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    position:relative;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:900;
+    font-size:31px;
+  }
+
+  .crest:before,
+  .crest:after{
+    content:"";
+    position:absolute;
+    border:1px solid var(--ink);
+    border-radius:50%;
+  }
+
+  .crest:before{ inset:7px; }
+  .crest:after{ inset:17px; }
+
+  .crest span{
+    position:relative;
+    z-index:2;
+    background:var(--paper);
+    padding:2px 4px;
+  }
+
+  .filebar{
+    border-top:2px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    padding:10px 0 9px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+    font-size:12px;
+    text-transform:uppercase;
+    margin-bottom:34px;
+  }
+
+  .filebar div:nth-child(2){text-align:center}
+  .filebar div:nth-child(3){text-align:right}
+
+  .stamp{
+    position:absolute;
+    top:151px;
+    right:67px;
+    width:210px;
+    border:5px double var(--stamp);
+    color:var(--stamp);
+    padding:11px 15px 9px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    transform:rotate(-7deg) translateZ(7px);
+    opacity:.86;
+    letter-spacing:.08em;
+    mix-blend-mode:multiply;
+  }
+
+  .stamp strong{
+    display:block;
+    font-size:29px;
+    line-height:1;
+  }
+
+  .stamp small{
+    display:block;
+    margin-top:6px;
+    font-size:10px;
+  }
+
+  .ghost-stamp{
+    position:absolute;
+    right:48px;
+    bottom:112px;
+    transform:rotate(5deg) scaleX(-1);
+    opacity:.07;
+    color:var(--stamp);
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:48px;
+    font-weight:900;
+    text-transform:uppercase;
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-weight:bold;
+    font-size:12px;
+    margin-bottom:12px;
+  }
+
+  h1{
+    margin:0 0 12px;
+    max-width:720px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:56px;
+    line-height:.95;
+    letter-spacing:-.045em;
+  }
+
+  .subtitle{
+    max-width:710px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:23px;
+    line-height:1.1;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:30px;
+  }
+
+  .meta{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    border-top:1px solid var(--line);
+    margin-bottom:32px;
+    font-size:14px;
+  }
+
+  .meta div{
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .meta .label{
+    color:var(--muted);
+    text-transform:uppercase;
+    font-weight:bold;
+  }
+
+  .section{
+    margin-top:28px;
+  }
+
+  .section h2{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:18px;
+    line-height:1.1;
+    text-transform:uppercase;
+    letter-spacing:.045em;
+    margin:0 0 12px;
+  }
+
+  .section p{
+    font-size:16px;
+    line-height:1.52;
+    margin:0 0 14px;
+  }
+
+  .machine{
+    margin:21px 0;
+    padding:15px 18px;
+    border-left:5px solid var(--ink);
+    background:rgba(0,0,0,.035);
+    font-size:14px;
+    line-height:1.6;
+    white-space:pre-wrap;
+  }
+
+  .principal{
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    text-align:center;
+    margin:36px 0 28px;
+    padding:25px 20px 23px;
+  }
+
+  .principal .tiny{
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+  }
+
+  .principal strong{
+    font-family:Arial, Helvetica, sans-serif;
+    display:block;
+    font-size:30px;
+    line-height:1.05;
+  }
+
+  .principal em{
+    display:block;
+    margin-top:9px;
+    font-size:17px;
+    font-style:normal;
+  }
+
+  .instrument-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    border-top:1px solid var(--ink);
+    border-left:1px solid var(--ink);
+    margin-top:14px;
+  }
+
+  .instrument-grid div{
+    min-height:72px;
+    padding:12px;
+    border-right:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  .instrument-grid b{
+    display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:14px;
+    margin-bottom:5px;
+  }
+
+  .seal{
+    width:240px;
+    margin:38px auto 20px;
+    border:4px double var(--ink);
+    text-align:center;
+    padding:14px 18px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight:900;
+    text-transform:uppercase;
+    transform:rotate(-1.5deg);
+  }
+
+  .seal span{
+    display:block;
+    font-size:11px;
+    letter-spacing:.12em;
+  }
+
+  .seal strong{
+    display:block;
+    font-size:21px;
+    margin:4px 0;
+  }
+
+  .notice{
+    text-align:center;
+    font-size:13px;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-top:25px;
+  }
+
+  .jack{
+    margin-top:32px;
+    padding-top:16px;
+    border-top:1px solid var(--ink);
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    font-size:12px;
+    line-height:1.5;
+  }
+
+  .jack .right{text-align:right}
+
+  .punches{
+    position:absolute;
+    left:9px;
+    top:150px;
+    bottom:150px;
+    width:11px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    pointer-events:none;
+  }
+
+  .punches i{
+    display:block;
+    width:8px;
+    height:8px;
+    border:1px solid rgba(0,0,0,.24);
+    border-radius:50%;
+    background:rgba(44,37,28,.06);
+  }
+
+  .hud{
+    position:fixed;
+    inset:auto 12px 12px 12px;
+    color:rgba(255,255,255,.65);
+    font:11px/1.25 "Courier New", monospace;
+    display:flex;
+    justify-content:space-between;
+    pointer-events:none;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  .field-mark{
+    position:absolute;
+    pointer-events:none;
+    opacity:.22;
+    font-size:10px;
+  }
+
+  .field-mark.one{top:48%;right:22px;transform:rotate(90deg)}
+  .field-mark.two{bottom:21%;left:28px}
+  .field-mark.three{top:9%;left:44%}
+
+  @media(max-width:720px){
+    .world{padding:8px}
+    .sheet{
+      min-height:0;
+      padding:34px 26px 48px;
+    }
+    .topline{grid-template-columns:1fr 68px}
+    .crest{width:64px;height:64px;font-size:22px}
+    .stamp{
+      top:136px;
+      right:22px;
+      width:150px;
+      padding:8px;
+      border-width:4px;
+    }
+    .stamp strong{font-size:20px}
+    .stamp small{font-size:8px}
+    .filebar{
+      grid-template-columns:1fr;
+      gap:3px;
+    }
+    .filebar div,
+    .filebar div:nth-child(2),
+    .filebar div:nth-child(3){text-align:left}
+    h1{font-size:44px}
+    .subtitle{font-size:18px}
+    .meta{grid-template-columns:120px 1fr;font-size:12px}
+    .section p{font-size:15px}
+    .instrument-grid{grid-template-columns:1fr}
+    .principal strong{font-size:24px}
+  }
+
+  @media print{
+    html,body{background:white}
+    .world{padding:0}
+    .sheet{
+      box-shadow:none;
+      border:none;
+      width:100%;
+      min-height:auto;
+      transform:none !important;
+    }
+    .hud{display:none}
+  }
+</style>
+</head>
+
+<body>
+
+<div class="world">
+  <main class="sheet" id="sheet">
+
+    <div class="punches" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <div class="field-mark one">∆ FIELD / 2033</div>
+    <div class="field-mark two">.;. JACK PRESENT</div>
+    <div class="field-mark three">∞ / TPO-13</div>
+
+    <header class="topline">
+      <div>
+        <div class="gov">United Kingdom</div>
+        <div class="dept">
+          Department of Excess Time<br>
+          Temporal Patents Office
+        </div>
+      </div>
+
+      <div class="crest" aria-label="Department seal">
+        <span>13</span>
+      </div>
+    </header>
+
+    <div class="filebar">
+      <div>FORM TPO-13/2033</div>
+      <div>FILE № 000∞13</div>
+      <div>STATUS: FILED</div>
+    </div>
+
+    <div class="stamp">
+      <strong>Filed</strong>
+      <small>07 SEP 2026<br>Temporal Patents Office</small>
+    </div>
+
+    <div class="eyebrow">Notice of Invention</div>
+
+    <h1>FEED∞</h1>
+
+    <div class="subtitle">
+      A system and method for behaviour-responsive navigation of temporally and semantically indexed visual information
+    </div>
+
+    <section class="meta">
+      <div class="label">Inventor</div>
+      <div>Toby Godden</div>
+
+      <div class="label">Field Authority</div>
+      <div>Time Travellers Guild</div>
+
+      <div class="label">Patent Correspondence</div>
+      <div>ElixirCorp — FAO Head of Patents</div>
+
+      <div class="label">CC</div>
+      <div>Sophie(c)</div>
+
+      <div class="label">Reference Era</div>
+      <div>2033</div>
+    </section>
+
+    <section class="section">
+      <h2>Abstract</h2>
+
+      <p>
+        FEED∞ is a four-dimensional information-navigation instrument in which the
+        physical manner of observing one media object contributes to the selection
+        and presentation of subsequent media.
+      </p>
+
+      <p>
+        Machine interpretation of visual material is combined with non-identifying
+        encounter telemetry including dwell, velocity, acceleration, recurrence,
+        gesture and available device-field measurements.
+      </p>
+
+      <p>
+        These measurements form a continuously changing <strong>FIELD STATE</strong>.
+      </p>
+    </section>
+
+    <div class="machine">MEDIA
+  +
+MACHINE INTERPRETATION
+  +
+ENCOUNTER
+  ↓
+FIELD STATE
+  ↓
+NEXT STATE</div>
+
+    <section class="section">
+      <h2>Filed Mechanism</h2>
+
+      <p>
+        The FIELD STATE controls semantic navigation, attention residue,
+        temporal and geographical projection, Chronometer instrumentation
+        and GPU field-surface deformation.
+      </p>
+
+      <p>
+        The displayed archive may be subtly deformed through a WebGL spatial
+        mesh while measurement instrumentation remains geometrically independent.
+      </p>
+
+      <p>
+        Machine-generated annotations may operate as
+        <strong>SEMANTIC WORMHOLES</strong>, altering the topology from which
+        subsequent material is selected.
+      </p>
+
+      <p>
+        The apparently linear infinite feed is therefore a projection of a
+        multidimensional information field.
+      </p>
+    </section>
+
+    <section class="principal">
+      <div class="tiny">Principal Claim</div>
+      <strong>OBSERVATION ALTERS NAVIGATION.</strong>
+      <em>Looking changes where you can go next.</em>
+    </section>
+
+    <section class="section">
+      <h2>2033 Reference Instrumentation</h2>
+
+      <div class="instrument-grid">
+        <div>
+          <b>CHRONOMETER</b>
+          Julian date, sidereal time, astronomical geometry, recurrence and temporal phase.
+        </div>
+
+        <div>
+          <b>MAPPING</b>
+          Geographical position, orientation, bearing and spatial relationship.
+        </div>
+
+        <div>
+          <b>PULSE HARMONICS</b>
+          Interaction rhythm derived from scroll, dwell, return, gesture and recurrence.
+        </div>
+
+        <div>
+          <b>FIELD SENSING</b>
+          Orientation, motion, heading, magnetic field and available environmental channels.
+        </div>
+
+        <div>
+          <b>WEBGL WEFT</b>
+          Behaviour-responsive deformation of the visual substrate itself.
+        </div>
+
+        <div>
+          <b>SEMANTIC FIELD</b>
+          AI-derived relations rendered as traversable links through the archive.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Access Classification</h2>
+
+      <p>
+        <strong>PUBLIC ACCESS:</strong> OBSERVE<br>
+        <strong>FAETIME PASS:</strong> OBSERVE / FEED
+      </p>
+    </section>
+
+    <div class="seal">
+      <span>Department of</span>
+      <strong>Excess Time</strong>
+      <span>Registered №13</span>
+    </div>
+
+    <div class="notice">
+      This document has been filed out of sequence.
+    </div>
+
+    <footer class="jack">
+      <div>
+        .;. JACK / CLERK<br>
+        TIME TRAVELLERS GUILD
+      </div>
+
+      <div class="right">
+        TPO / 2033<br>
+        ARCHIVE NODE 13
+      </div>
+    </footer>
+
+    <div class="ghost-stamp">Filed</div>
+
+  </main>
+</div>
+
+<div class="hud">
+  <span id="hudLeft">FIELD 0.13</span>
+  <span id="hudRight">2033 / TPO-13</span>
+</div>
+
+<script>
+(() => {
+  const sheet = document.getElementById('sheet');
+  const hudLeft = document.getElementById('hudLeft');
+
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let motionEnergy = 0;
+
+  function setTilt(beta = 0, gamma = 0) {
+    targetX = Math.max(-1.2, Math.min(1.2, beta / 30));
+    targetY = Math.max(-1.2, Math.min(1.2, gamma / 30));
+
+    motionEnergy =
+      Math.min(
+        1,
+        (Math.abs(beta) + Math.abs(gamma)) / 80
+      );
+
+    hudLeft.textContent =
+      'FIELD ' + (0.13 + motionEnergy * 0.71).toFixed(2);
+  }
+
+  window.addEventListener('deviceorientation', e => {
+    setTilt(e.beta || 0, e.gamma || 0);
+  }, { passive:true });
+
+  window.addEventListener('pointermove', e => {
+    if (window.matchMedia('(pointer:fine)').matches) {
+      const nx = (e.clientX / innerWidth) * 2 - 1;
+      const ny = (e.clientY / innerHeight) * 2 - 1;
+
+      targetY = nx * 0.65;
+      targetX = -ny * 0.45;
+    }
+  }, { passive:true });
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.045;
+    currentY += (targetY - currentY) * 0.045;
+
+    sheet.style.transform =
+      `rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // First user gesture may unlock motion sensing on iOS.
+  async function enableSensors() {
+    try {
+      if (
+        typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function'
+      ) {
+        await DeviceOrientationEvent.requestPermission();
+      }
+
+      if (
+        typeof DeviceMotionEvent !== 'undefined' &&
+        typeof DeviceMotionEvent.requestPermission === 'function'
+      ) {
+        await DeviceMotionEvent.requestPermission();
+      }
+    } catch (_) {}
+
+    removeEventListener('click', enableSensors);
+    removeEventListener('touchend', enableSensors);
+  }
+
+  addEventListener('click', enableSensors, { passive:true });
+  addEventListener('touchend', enableSensors, { passive:true });
+
+})();
+</script>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

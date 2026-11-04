@@ -1,0 +1,42 @@
+[
+  {
+    "id": "early-procedure",
+    "title": "THE EARLY PROCEDURE",
+    "text": "A classification procedure in Jack's desk predates this implementation. The method is older than the software that currently executes it. This is an index disturbance, not proof of prior employment.",
+    "status": "authored",
+    "earliestRevealStage": 1,
+    "requiredEvent": null,
+    "sourceRecordIds": [],
+    "revealedToUserIds": []
+  },
+  {
+    "id": "old-jack",
+    "title": "OLD JACK",
+    "text": "A damaged record dated 17 April 2033 addresses the clerk as Old Jack. The speaker appears to be Mabel. The record is incomplete. It is not accepted as canon.",
+    "status": "authored",
+    "earliestRevealStage": 2,
+    "requiredEvent": null,
+    "sourceRecordIds": [],
+    "revealedToUserIds": []
+  },
+  {
+    "id": "keep-him-talking",
+    "title": "KEEP HIM TALKING",
+    "text": "MABEL: Jack, keep him talking.\nJACK: Until when?\nMABEL: Until he reaches us.\nThe referent of him is not established. This exchange is locked until an authorised narrative condition is met.",
+    "status": "locked",
+    "earliestRevealStage": 4,
+    "requiredEvent": "narrative.unlock_keep_him_talking",
+    "sourceRecordIds": [],
+    "revealedToUserIds": []
+  },
+  {
+    "id": "returned-dossier",
+    "title": "THE RETURNED DOSSIER",
+    "text": "A future index mark may describe a dossier as returned before it has been lodged. If such a mark appears, hold it as unclassified. Do not invent the missing lodging.",
+    "status": "authored",
+    "earliestRevealStage": 2,
+    "requiredEvent": null,
+    "sourceRecordIds": [],
+    "revealedToUserIds": []
+  }
+]

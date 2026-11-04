@@ -66,6 +66,10 @@ if ($id !== '' && (!$node || !ttg_graph_public($node))) {
     $index = ttg_graph_public_index();
 }
 
+if ($slug === 'department') {
+    $body .= ' DET is an FFILM.org artistic construction, not a statutory or governmental body.';
+}
+
 $relWord = static function (string $rel): string {
     return str_replace('_', ' ', strtolower($rel));
 };
@@ -82,7 +86,8 @@ $isRecord = $slug !== '' && $node && ttg_graph_public($node);
 <link rel="canonical" href="https://timetravellersguild.com<?= ttg_h($canon) ?>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/now.css?v=1951j">
+<link rel="stylesheet" href="/assets/now.css?v=260909a">
+<link rel="stylesheet" href="/assets/avatar.css?v=1">
 <style>
 main.record-main .kicker{font-family:var(--label);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);margin:0 0 .8rem}
 main.record-main h1{font-weight:400;font-size:clamp(2.1rem,7vw,3.6rem);line-height:.95;color:var(--ink);margin:0 0 .45rem}
@@ -112,7 +117,7 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
 </head>
 <body class="record">
 <header id="mast">
-  <div class="site">TIMETRAVELLERSGUILD.COM</div>
+  <?= ttg_html_site_mark('', 'div', 'site') ?>
   <div class="presents">
     <span>LOCAL PRESENT: <time id="localPresent"><?= ttg_h((new DateTimeImmutable('now'))->format('d.m.Y')) ?></time></span>
     <span>NETWORK PRESENT: 17.04.2033</span>
@@ -165,7 +170,7 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
     <div><dt>visibility</dt><dd><?= ttg_h((string) $meta['visibility']) ?></dd></div>
   </dl>
   <div class="actions">
-    <a href="/now">← NOW</a>
+    <a href="/now/tree">← NOW</a>
     <?php if ($open !== $canon && $open !== '' && $open !== '/'): ?>
       <a href="<?= ttg_h($open) ?>">cross</a>
     <?php endif; ?>
@@ -219,11 +224,14 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
   <?php endif; ?>
 </main>
 <nav id="dock" aria-label="NOW">
-  <a href="/now">NOW</a>
-  <a href="/now#capture">+</a>
+  <a href="/now/tree">TREE</a>
+  <a href="/join/">JOIN</a>
+  <a href="/now/tree#capture">+</a>
   <a href="/jack">JACK</a>
   <a href="/signals/">SIGNALS</a>
-  <a href="/people/auth/">YOU</a>
+  <?= ttg_html_navigator_dock() ?>
+  <?= ttg_you_dock(ttg_graph_viewer()) ?>
 </nav>
+<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

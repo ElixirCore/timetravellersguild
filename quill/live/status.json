@@ -1,0 +1,13 @@
+{
+    "last_seen": 1792149577,
+    "last_seen_iso": "2026-10-16T11:19:37+00:00",
+    "room_name": "Quill's Quarters",
+    "room_hash": "4accedebf7f72a87d9239f52f240155f2f635e73899e6f8cf364e17f579ed43c",
+    "screen_hash": "b5948ffedef58918e29f8421b529b1304db6748f0a834e1dcfa44bec0193db99",
+    "screen_available": true,
+    "quill": {
+        "x": 20,
+        "y": 20,
+        "pose": ""
+    }
+}

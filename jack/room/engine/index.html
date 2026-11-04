@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JACK / ENGINE — timetravellersguild.com</title>
+<meta name="theme-color" content="#111214">
+<meta name="description" content="The engine of Jack’s cube. Off the record. The tap is open.">
+<link rel="stylesheet" href="css/engine.css">
+</head>
+<body>
+<noscript>
+  <p>The engine needs ordinary JavaScript. The cube will not turn without it.</p>
+</noscript>
+
+<canvas id="stage" aria-label="The Rubik cube"></canvas>
+<div id="crt" aria-hidden="true"></div>
+<p class="site-mark">TIMETRAVELLERSGUILD.COM · ENGINE · OFF THE RECORD</p>
+<p id="hint">WALK INTO A DOOR · DRAG TO LOOK</p>
+<nav class="doors" aria-label="Doors">
+  <a class="door" href="/jack/room/"><b>DOOR</b> ROOM</a>
+  <a class="door" href="/jack/room/#hopper"><b>DOOR</b> HOPPER</a>
+</nav>
+
+<section id="bar" aria-label="Talk to Jack">
+  <header class="bar-head">
+    <canvas id="jackPet" width="96" height="96" aria-label="Jack, a small shapeshifting desk-dog"></canvas>
+    <div class="bar-who">
+      <p class="bar-name">JACK</p>
+      <p id="jackForm">AT THE TAP</p>
+      <p id="clerkLine">POURING…</p>
+    </div>
+  </header>
+  <div id="talkLog" role="log" aria-live="polite" aria-label="Off-record talk">
+    <p id="talkWait" class="talk-wait">The cube is closed. The tap is open…</p>
+  </div>
+  <div class="bar-in">
+    <label class="sr" for="consoleIn">Speak to Jack</label>
+    <textarea id="consoleIn" rows="2" maxlength="2000" autocomplete="off" spellcheck="false" placeholder="BETWEEN US…"></textarea>
+    <button type="button" id="btnAsk">TALK</button>
+  </div>
+</section>
+
+<audio id="jackAudio" hidden playsinline></audio>
+
+<script src="/jack/body/js/sprite.js"></script>
+<script src="/jack/body/js/doors.js"></script>
+<script src="/assets/jack-voice.js?v=1"></script>
+<script src="js/engine.js?v=18"></script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

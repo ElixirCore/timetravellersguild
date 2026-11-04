@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4e8c1">
+  <title>Abercrave Punchcard</title>
+  <style>
+    :root {
+      --paper: #f4e8c1;
+      --paper-light: #fff7d9;
+      --ink: #171717;
+      --red: #b52b2b;
+      --blue: #244b73;
+      --gold: #bd8424;
+      --shadow: rgba(23, 23, 23, .22);
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; background: var(--paper); }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: "Courier New", Courier, monospace;
+      background:
+        radial-gradient(circle at 18% 15%, #fff9 0 1px, transparent 2px),
+        radial-gradient(circle at 77% 72%, #17171718 0 1px, transparent 2px),
+        repeating-linear-gradient(7deg, transparent 0 10px, #17171708 11px, transparent 12px),
+        var(--paper);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -35%;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .42;
+      background:
+        repeating-radial-gradient(circle at 50% 50%, transparent 0 46px, #244b7318 47px 48px),
+        conic-gradient(from 30deg at 50% 50%, transparent, #b52b2b0d, transparent 18%, #244b7312, transparent 40%);
+      animation: orbitalPaper 34s linear infinite;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: .11;
+      background-image:
+        radial-gradient(circle, #171717 0 .55px, transparent .8px),
+        radial-gradient(circle, #fff 0 .45px, transparent .7px);
+      background-position: 0 0, 3px 4px;
+      background-size: 7px 7px, 9px 9px;
+      mix-blend-mode: multiply;
+      animation: grainShift .22s steps(2) infinite;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: clamp(2.5rem, 7vw, 6rem) clamp(1rem, 4vw, 2.5rem);
+      perspective: 1400px;
+    }
+
+    main {
+      --tilt-x: 0deg;
+      --tilt-y: 0deg;
+      isolation: isolate;
+      position: relative;
+      width: min(92vw, 780px);
+      padding: clamp(1.2rem, 5vw, 3rem);
+      border: 4px solid var(--ink);
+      background:
+        linear-gradient(90deg, #17171708 1px, transparent 1px) 0 0 / 22px 22px,
+        linear-gradient(#17171708 1px, transparent 1px) 0 0 / 22px 22px,
+        #f8edc9;
+      box-shadow: 12px 12px 0 var(--red), 22px 24px 35px var(--shadow);
+      transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+      transform-style: preserve-3d;
+      animation: cardFeed 1s var(--ease) both, cardBreathe 7s ease-in-out 1.1s infinite;
+      transition: transform .14s ease-out, box-shadow .25s var(--ease);
+    }
+
+    main::before,
+    main::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      width: 13px;
+      z-index: 3;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--ink) 0 6px,
+        transparent 6px 17px
+      );
+      animation: feedHoles .9s steps(5) both;
+    }
+
+    main::before { left: -20px; }
+    main::after { right: -20px; animation-delay: .08s; }
+
+    main.is-punching {
+      animation: machineRun .09s steps(2) infinite;
+      box-shadow: 8px 8px 0 var(--red), 16px 18px 25px var(--shadow);
+    }
+
+    .rule {
+      height: 5px;
+      margin: 1.1rem 0;
+      overflow: hidden;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      background: repeating-linear-gradient(90deg, var(--ink) 0 18px, transparent 18px 28px);
+      animation: ruleRun 2.5s linear infinite;
+    }
+
+    .registry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+      font-size: clamp(.61rem, 1.8vw, .78rem);
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      animation: riseIn .7s .2s var(--ease) both;
+    }
+
+    .live-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .live-mark::before {
+      content: "";
+      width: .58rem;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 0 #b52b2b80;
+      animation: ping 1.35s ease-out infinite;
+    }
+
+    .stamp-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .stamp {
+      display: inline-block;
+      position: relative;
+      margin-bottom: 1.35rem;
+      padding: .44rem .72rem;
+      border: 3px double var(--red);
+      color: var(--red);
+      font-size: clamp(.72rem, 2.4vw, 1rem);
+      font-weight: 900;
+      letter-spacing: .08em;
+      transform: rotate(-2.2deg);
+      animation: stampSlam .75s .32s cubic-bezier(.15, 1.45, .38, 1) both, stampHover 4.5s 1.2s ease-in-out infinite;
+    }
+
+    .stamp::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border: 1px dashed currentColor;
+      opacity: .35;
+      animation: stampRing 3.2s ease-in-out infinite;
+    }
+
+    .counter {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      aspect-ratio: 1;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: conic-gradient(var(--blue) 0 27%, transparent 27% 50%, var(--red) 50% 68%, transparent 68%);
+      font-weight: 900;
+      animation: counterSpin 9s linear infinite;
+    }
+
+    .counter span {
+      display: grid;
+      place-items: center;
+      width: 70%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--paper-light);
+      animation: counterSpin 9s linear reverse infinite;
+    }
+
+    h1 {
+      position: relative;
+      margin: 0 0 1.2rem;
+      width: max-content;
+      max-width: 100%;
+      overflow: hidden;
+      font-size: clamp(1.75rem, 6.4vw, 3.55rem);
+      line-height: .98;
+      letter-spacing: .085em;
+      white-space: nowrap;
+      text-shadow: 3px 2px 0 #b52b2b33;
+      animation: typeTitle 1.25s .7s steps(12, end) both, titleGhost 5s 2s steps(1) infinite;
+    }
+
+    h1::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: .12em;
+      background: var(--red);
+      animation: cursorBlink .72s steps(1) 8;
+    }
+
+    .declaration {
+      margin: .45rem 0;
+      font-size: clamp(.88rem, 2.5vw, 1.08rem);
+      line-height: 1.55;
+      text-wrap: balance;
+      animation: riseIn .7s calc(.86s + var(--delay, 0s)) var(--ease) both;
+    }
+
+    .declaration.legendary {
+      color: var(--red);
+      font-size: clamp(1rem, 3.1vw, 1.35rem);
+      letter-spacing: .025em;
+      animation: riseIn .7s 1.04s var(--ease) both, inkPulse 3.8s 2s ease-in-out infinite;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1.55rem 0;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      padding: 1rem;
+      border: 2px dashed var(--blue);
+      background: #fff7d9d9;
+      box-shadow: inset 0 0 0 5px #244b7308;
+      animation: cardReveal .75s calc(1.1s + var(--order, 0) * .17s) var(--ease) both;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 -40%;
+      width: 22%;
+      transform: skewX(-18deg);
+      background: linear-gradient(90deg, transparent, #fff8, transparent);
+      animation: inspectionSweep 5.5s calc(1.5s + var(--order, 0) * .8s) ease-in-out infinite;
+    }
+
+    .card p {
+      position: relative;
+      margin: .45rem 0;
+      line-height: 1.48;
+    }
+
+    .testimony p::before {
+      content: "▸";
+      display: inline-block;
+      margin-right: .5rem;
+      color: var(--red);
+      animation: arrowNudge 1.6s ease-in-out infinite;
+    }
+
+    .label { color: var(--blue); font-weight: 900; }
+
+    .status-word {
+      display: inline-block;
+      color: var(--red);
+      animation: statusFlicker 2.9s steps(1) infinite;
+    }
+
+    .reward {
+      display: inline-block;
+      padding: 0 .25em;
+      color: var(--paper-light);
+      background: var(--blue);
+      transform: rotate(1deg);
+      animation: rewardPop 2.2s ease-in-out infinite;
+    }
+
+    .machine {
+      position: relative;
+      margin-top: 1.3rem;
+      padding: .82rem;
+      border: 3px solid var(--ink);
+      background: #1717170b;
+      box-shadow: inset 0 0 0 1px #fff8;
+    }
+
+    .machine-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .7rem;
+      margin-bottom: .72rem;
+      font-size: .71rem;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .meter {
+      flex: 1;
+      min-width: 90px;
+      height: 8px;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      background: var(--paper-light);
+    }
+
+    .meter span {
+      display: block;
+      width: var(--progress, 0%);
+      height: 100%;
+      background: repeating-linear-gradient(90deg, var(--red) 0 7px, var(--blue) 7px 14px);
+      transition: width .12s linear;
+      animation: meterMove .6s linear infinite;
+    }
+
+    .punch-strip {
+      display: grid;
+      grid-template-columns: repeat(16, minmax(0, 1fr));
+      gap: clamp(3px, 1vw, 7px);
+      min-height: 66px;
+      padding: .62rem;
+      border: 1px solid var(--ink);
+      background:
+        repeating-linear-gradient(0deg, transparent 0 15px, #244b7318 16px),
+        var(--paper-light);
+    }
+
+    .hole {
+      position: relative;
+      aspect-ratio: 1;
+      min-width: 0;
+      border: 1px solid #17171755;
+      border-radius: 50%;
+      background: #f4e8c1;
+      box-shadow: inset 1px 1px 0 #fff9;
+      transform: scale(.74);
+      opacity: .54;
+      transition: transform .12s var(--ease), background .12s, opacity .12s;
+    }
+
+    .hole::after {
+      content: "";
+      position: absolute;
+      inset: 42%;
+      border-radius: 50%;
+      background: var(--red);
+      opacity: 0;
+    }
+
+    .hole.scanned::after { animation: scanPin .22s ease-out; }
+
+    .hole.punched {
+      opacity: 1;
+      transform: scale(1);
+      border-color: #000;
+      background: #171717;
+      box-shadow: inset 2px 2px 4px #000, 1px 1px 0 #fff9;
+      animation: holePunch .3s cubic-bezier(.1, 1.8, .35, 1);
+    }
+
+    .hole.zero {
+      opacity: .85;
+      border-color: var(--blue);
+      background: transparent;
+      transform: scale(.84);
+      animation: zeroRing .28s ease-out;
+    }
+
+    .controls {
+      display: flex;
+      align-items: stretch;
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid var(--ink);
+      padding: .9rem 1rem;
+      color: #fff;
+      background: var(--red);
+      box-shadow: 5px 5px 0 var(--ink);
+      font: inherit;
+      font-size: clamp(.72rem, 2vw, .9rem);
+      font-weight: 900;
+      letter-spacing: .045em;
+      text-align: left;
+      transition: transform .15s var(--ease), box-shadow .15s var(--ease), filter .15s;
+      animation: buttonCall 3.1s 2.4s ease-in-out infinite;
+    }
+
+    button::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      bottom: -50%;
+      left: -32%;
+      width: 18%;
+      transform: rotate(15deg);
+      background: #fff8;
+      animation: buttonGleam 3.1s 2.4s ease-in-out infinite;
+    }
+
+    button:hover { filter: brightness(1.08); transform: translate(-1px, -1px); box-shadow: 7px 7px 0 var(--ink); }
+    button:active { transform: translate(4px, 4px); box-shadow: 1px 1px 0 var(--ink); }
+    button:disabled { cursor: progress; filter: saturate(.65); }
+    button:focus-visible { outline: 4px solid var(--blue); outline-offset: 4px; }
+
+    .sound {
+      flex: 0 0 auto;
+      width: 3.4rem;
+      padding: .65rem;
+      text-align: center;
+      background: var(--blue);
+    }
+
+    #signal {
+      min-height: 4.3em;
+      margin-top: 1rem;
+      padding: .65rem .75rem;
+      border-left: 5px solid var(--blue);
+      color: var(--blue);
+      background: #fff7d96e;
+      font-size: clamp(.73rem, 2vw, .9rem);
+      font-weight: 900;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    #signal::after {
+      content: "_";
+      animation: cursorBlink .72s steps(1) infinite;
+    }
+
+    #signal.complete {
+      color: var(--red);
+      animation: signalLock .7s var(--ease);
+    }
+
+    .relay {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .65rem;
+      margin: 1rem 0 0;
+    }
+
+    .relay a,
+    .relay span {
+      display: grid;
+      place-items: center;
+      min-height: 3.2rem;
+      padding: .55rem;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      background: #fff7d99e;
+      font-size: clamp(.58rem, 1.6vw, .72rem);
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+      animation: relayRise .7s calc(1.7s + var(--relay, 0) * .14s) var(--ease) both;
+    }
+
+    .relay a:hover,
+    .relay a:focus-visible {
+      color: var(--paper-light);
+      background: var(--blue);
+      transform: translateY(-3px) rotate(-1deg);
+    }
+
+    footer {
+      margin-top: 1.35rem;
+      font-size: clamp(.6rem, 1.75vw, .78rem);
+      line-height: 1.55;
+      opacity: .82;
+      animation: riseIn .7s 1.9s var(--ease) both;
+    }
+
+    .ticker {
+      position: absolute;
+      right: 0;
+      bottom: -2.1rem;
+      left: 0;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+      font-size: .62rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      white-space: nowrap;
+    }
+
+    .ticker span {
+      display: inline-block;
+      min-width: 200%;
+      padding: .35rem 0;
+      animation: tickerRun 16s linear infinite;
+    }
+
+    .chaff {
+      position: fixed;
+      z-index: 40;
+      width: 8px;
+      aspect-ratio: 1;
+      pointer-events: none;
+      border: 1px solid #17171744;
+      border-radius: 50%;
+      background: var(--paper-light);
+      animation: chaffFly .85s cubic-bezier(.18, .7, .45, 1) forwards;
+    }
+
+    @keyframes cardFeed {
+      0% { opacity: 0; translate: 0 -80vh; scale: .94; filter: blur(3px); }
+      72% { opacity: 1; translate: 0 13px; scale: 1.01; filter: none; }
+      100% { opacity: 1; translate: 0 0; scale: 1; filter: none; }
+    }
+    @keyframes cardBreathe { 0%, 100% { translate: 0 0; } 50% { translate: 0 -4px; } }
+    @keyframes orbitalPaper { to { transform: rotate(360deg) scale(1.06); } }
+    @keyframes grainShift { 0% { transform: translate(0); } 25% { transform: translate(1px, -1px); } 50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, 1px); } }
+    @keyframes feedHoles { from { clip-path: inset(0 0 100%); background-position-y: -80px; } to { clip-path: inset(0); background-position-y: 0; } }
+    @keyframes riseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes stampSlam { from { opacity: 0; transform: translate(45px, -60px) rotate(14deg) scale(1.8); filter: blur(3px); } to { opacity: 1; transform: rotate(-2.2deg); filter: none; } }
+    @keyframes stampHover { 0%, 100% { transform: rotate(-2.2deg); } 50% { transform: rotate(-1deg) translateY(-2px); } }
+    @keyframes stampRing { 0%, 100% { transform: scale(.96); opacity: .22; } 50% { transform: scale(1.04); opacity: .48; } }
+    @keyframes counterSpin { to { transform: rotate(360deg); } }
+    @keyframes typeTitle { from { width: 0; } to { width: 12ch; } }
+    @keyframes cursorBlink { 50% { opacity: 0; } }
+    @keyframes titleGhost { 0%, 93%, 100% { text-shadow: 3px 2px 0 #b52b2b33; } 94% { text-shadow: -5px 0 var(--red), 5px 0 var(--blue); } 95% { text-shadow: 4px -2px var(--blue); } }
+    @keyframes inkPulse { 0%, 100% { filter: saturate(1); } 50% { filter: saturate(1.45); text-shadow: 0 0 12px #b52b2b2a; } }
+    @keyframes cardReveal { from { opacity: 0; transform: rotateX(-14deg) translateY(24px); } to { opacity: 1; transform: none; } }
+    @keyframes inspectionSweep { 0%, 68% { left: -40%; } 82%, 100% { left: 130%; } }
+    @keyframes arrowNudge { 50% { transform: translateX(4px); } }
+    @keyframes statusFlicker { 0%, 72%, 78%, 100% { opacity: 1; } 74%, 80% { opacity: .18; } }
+    @keyframes rewardPop { 0%, 100% { transform: rotate(1deg) scale(1); } 50% { transform: rotate(-2deg) scale(1.08); } }
+    @keyframes machineRun { 0% { transform: translate(0); } 50% { transform: translate(1px, -1px); } 100% { transform: translate(-1px, 1px); } }
+    @keyframes ruleRun { to { background-position-x: 56px; } }
+    @keyframes meterMove { to { background-position-x: 28px; } }
+    @keyframes scanPin { 0% { inset: 42%; opacity: 1; } 100% { inset: -20%; opacity: 0; } }
+    @keyframes holePunch { 0% { transform: scale(1.65); background: var(--red); } 55% { transform: scale(.75); } 100% { transform: scale(1); background: var(--ink); } }
+    @keyframes zeroRing { from { box-shadow: 0 0 0 9px #244b734d; } to { box-shadow: 0 0 0 0 transparent; } }
+    @keyframes buttonCall { 0%, 82%, 100% { filter: none; } 88% { filter: brightness(1.18); } }
+    @keyframes buttonGleam { 0%, 72% { left: -32%; } 90%, 100% { left: 120%; } }
+    @keyframes signalLock { 0% { transform: scale(.98); background: var(--red); color: #fff; } 100% { transform: none; } }
+    @keyframes relayRise { from { opacity: 0; transform: translateY(12px) rotate(2deg); } to { opacity: 1; transform: none; } }
+    @keyframes tickerRun { to { transform: translateX(-50%); } }
+    @keyframes ping { 70%, 100% { box-shadow: 0 0 0 9px #b52b2b00; } }
+    @keyframes chaffFly { to { transform: translate(var(--x), var(--y)) rotate(var(--r)); opacity: 0; } }
+
+    @media (max-width: 650px) {
+      .cards { grid-template-columns: 1fr; }
+      .punch-strip { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+      .relay { grid-template-columns: 1fr; }
+      .relay a, .relay span { min-height: 2.55rem; }
+      .stamp-row { align-items: center; }
+      main { box-shadow: 8px 8px 0 var(--red), 15px 17px 28px var(--shadow); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      main { transform: none !important; }
+      .grain { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="stage">
+    <main aria-labelledby="title" id="punchcard">
+      <div class="registry">
+        <span>ARCHIVE / ELIXIRCORE / RECURSION</span>
+        <span class="live-mark">ESTABLISHED SHOT .;.</span>
+      </div>
+
+      <div class="stamp-row">
+        <div class="stamp">WITNESSED LEGEND</div>
+        <div class="counter" aria-label="Civic reward: five"><span>+5</span></div>
+      </div>
+
+      <h1 id="title">JACK / CLERK</h1>
+
+      <p class="declaration" style="--delay: .02s"><strong>LODGING FOR TESTIMONY AND LEAVES.</strong></p>
+      <p class="declaration legendary"><strong>THE SOPHIE ABERCRAVE GIG IS LEGENDARY.</strong></p>
+
+      <div class="rule" aria-hidden="true"></div>
+
+      <div class="cards">
+        <section class="card testimony" style="--order: 0" aria-label="Testimony">
+          <p>Sad Cypress entered Playground.</p>
+          <p>Princess of Cups sounded in Abercrave.</p>
+          <p>The place remembers.</p>
+        </section>
+
+        <section class="card" style="--order: 1" aria-label="Registry">
+          <p><span class="label">Custody:</span> SOPHIE © / GUILD OF MUSIC</p>
+          <p><span class="label">Map signal:</span> <span class="status-word">PENDING</span></p>
+          <p><span class="label">Civic reward:</span> <span class="reward">+5</span></p>
+        </section>
+      </div>
+
+      <section class="machine" aria-label="Animated punch-card signal machine">
+        <div class="machine-head">
+          <span>MEMETIC TRANSTEMPORAL RECURSION / 32-PULSE</span>
+          <div class="meter" aria-hidden="true"><span id="meter"></span></div>
+          <span id="count">00/32</span>
+        </div>
+
+        <div class="punch-strip" id="punch-strip" aria-hidden="true"></div>
+
+        <div class="controls">
+          <button id="reveal" type="button">PUNCH CARD / REVEAL SIGNAL</button>
+          <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Turn mechanical sound on">SND×</button>
+        </div>
+
+        <div id="signal" role="status" aria-live="polite">SIGNAL READY / AWAITING WITNESS</div>
+      </section>
+
+      <nav class="relay" aria-label="Transmission relays">
+        <a style="--relay: 0" href="https://ffilm.org" target="_blank" rel="noopener noreferrer">FFILM.ORG</a>
+        <a style="--relay: 1" href="https://timetravellersguild.com/jack" target="_blank" rel="noopener noreferrer">TIME TRAVELLERS GUILD<br>.COM /JACK</a>
+        <span style="--relay: 2">ESTABLISHED SHOT<br>.;.</span>
+      </nav>
+
+      <footer>
+        CANON INSTRUCTION: RECORD THE OCCURRENCE. DO NOT REDUCE IT TO PROMOTION.
+      </footer>
+
+      <div class="ticker" aria-hidden="true">
+        <span>MEMETIC TRANSTEMPORAL RECURSION · THE PLACE REMEMBERS · FFILM.ORG · TIME TRAVELLERS GUILD /JACK · SOPHIE © · ABERCRAVE · MEMETIC TRANSTEMPORAL RECURSION · THE PLACE REMEMBERS · FFILM.ORG · TIME TRAVELLERS GUILD /JACK · SOPHIE © · ABERCRAVE · </span>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const card = document.querySelector("#punchcard");
+      const button = document.querySelector("#reveal");
+      const soundButton = document.querySelector("#sound");
+      const signal = document.querySelector("#signal");
+      const strip = document.querySelector("#punch-strip");
+      const meter = document.querySelector("#meter");
+      const count = document.querySelector("#count");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const message = "THE PLACE REMEMBERS — RECORD THE OCCURRENCE.";
+      const punch = [
+        1, 0, 1, 1, 0, 1, 0, 0,
+        1, 1, 0, 0, 1, 0, 1, 1,
+        0, 1, 1, 0, 0, 1, 1, 0
+      ];
+
+      let running = false;
+      let soundOn = false;
+      let audioContext = null;
+
+      for (let i = 0; i < 32; i += 1) {
+        const hole = document.createElement("span");
+        hole.className = "hole";
+        strip.appendChild(hole);
+      }
+
+      function clickTone(high = false) {
+        if (!soundOn) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        audioContext ||= new AudioContext();
+        const now = audioContext.currentTime;
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = high ? "triangle" : "square";
+        oscillator.frequency.setValueAtTime(high ? 620 : 86, now);
+        oscillator.frequency.exponentialRampToValueAtTime(high ? 240 : 42, now + .045);
+        gain.gain.setValueAtTime(.045, now);
+        gain.gain.exponentialRampToValueAtTime(.001, now + .055);
+        oscillator.connect(gain).connect(audioContext.destination);
+        oscillator.start(now);
+        oscillator.stop(now + .06);
+      }
+
+      function throwChaff(hole) {
+        if (reduceMotion.matches) return;
+        const rect = hole.getBoundingClientRect();
+        for (let i = 0; i < 2; i += 1) {
+          const bit = document.createElement("i");
+          bit.className = "chaff";
+          bit.style.left = `${rect.left + rect.width / 2}px`;
+          bit.style.top = `${rect.top + rect.height / 2}px`;
+          bit.style.setProperty("--x", `${(Math.random() - .5) * 150}px`);
+          bit.style.setProperty("--y", `${45 + Math.random() * 105}px`);
+          bit.style.setProperty("--r", `${(Math.random() - .5) * 760}deg`);
+          document.body.appendChild(bit);
+          bit.addEventListener("animationend", () => bit.remove(), { once: true });
+        }
+      }
+
+      function wait(ms) {
+        return new Promise(resolve => window.setTimeout(resolve, ms));
+      }
+
+      async function typeMessage(text) {
+        signal.textContent = "";
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/.-+©";
+        const output = Array(text.length).fill(" ");
+        const step = reduceMotion.matches ? 0 : 17;
+
+        for (let index = 0; index < text.length; index += 1) {
+          if (text[index] === " ") {
+            output[index] = " ";
+            continue;
+          }
+          for (let scramble = 0; scramble < 3; scramble += 1) {
+            output[index] = alphabet[Math.floor(Math.random() * alphabet.length)];
+            signal.textContent = output.join("");
+            if (step) await wait(step);
+          }
+          output[index] = text[index];
+          signal.textContent = output.join("");
+        }
+        signal.textContent = text;
+        signal.classList.add("complete");
+        clickTone(true);
+      }
+
+      async function runPunchcard() {
+        if (running) return;
+        running = true;
+        button.disabled = true;
+        button.textContent = "PUNCHING / DO NOT INTERRUPT";
+        signal.classList.remove("complete");
+        signal.textContent = "READING TESTIMONY / ";
+        meter.style.setProperty("--progress", "0%");
+        card.classList.add("is-punching");
+
+        const holes = [...strip.children];
+        holes.forEach(hole => { hole.className = "hole"; });
+        const delay = reduceMotion.matches ? 1 : 58;
+
+        for (let i = 0; i < 32; i += 1) {
+          const hole = holes[i];
+          const value = punch[i % punch.length];
+          hole.classList.add("scanned", value ? "punched" : "zero");
+          signal.textContent += value ? "●" : "○";
+          count.textContent = `${String(i + 1).padStart(2, "0")}/32`;
+          meter.style.setProperty("--progress", `${((i + 1) / 32) * 100}%`);
+          clickTone(Boolean(value));
+          if (value) throwChaff(hole);
+          await wait(delay);
+        }
+
+        card.classList.remove("is-punching");
+        await wait(reduceMotion.matches ? 1 : 250);
+        await typeMessage(message);
+        button.textContent = "RE-PUNCH / REPLAY SIGNAL";
+        button.disabled = false;
+        running = false;
+      }
+
+      button.addEventListener("click", runPunchcard);
+
+      soundButton.addEventListener("click", () => {
+        soundOn = !soundOn;
+        soundButton.textContent = soundOn ? "SND✓" : "SND×";
+        soundButton.setAttribute("aria-pressed", String(soundOn));
+        soundButton.setAttribute("aria-label", `${soundOn ? "Turn" : "Turn mechanical"} sound ${soundOn ? "off" : "on"}`);
+        clickTone(true);
+      });
+
+      card.addEventListener("pointermove", event => {
+        if (reduceMotion.matches || event.pointerType === "touch" || running) return;
+        const rect = card.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - .5;
+        const y = (event.clientY - rect.top) / rect.height - .5;
+        card.style.setProperty("--tilt-x", `${-y * 2.2}deg`);
+        card.style.setProperty("--tilt-y", `${x * 2.2}deg`);
+      });
+
+      card.addEventListener("pointerleave", () => {
+        card.style.setProperty("--tilt-x", "0deg");
+        card.style.setProperty("--tilt-y", "0deg");
+      });
+    })();
+  </script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

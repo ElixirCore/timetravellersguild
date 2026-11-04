@@ -1,0 +1,597 @@
+/* JACK / CUBE — manila stock, navy stamps, the cube on the blotter. */
+:root{
+  --paper:#d9cb9e;
+  --paper-2:#cfc19a;
+  --well:#efe6c8;
+  --ink:#161814;
+  --navy:#1e3a5f;
+  --scarlet:#c41e3a;
+  --gold:#c9a227;
+  --dim:#6f6754;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --vv-top:0px;
+  --vv-height:100dvh;
+  --kb:0px;
+  --font:"Courier New", Courier, "Lucida Console", monospace;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font);
+  font-size:13px;
+  line-height:1.4;
+  touch-action:manipulation;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  touch-action:none;
+}
+
+#grain{
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 38%, transparent 16%, rgba(30,58,95,.12) 78%, rgba(22,24,20,.18) 100%),
+    repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(22,24,20,.03) 3px);
+}
+
+noscript{
+  position:relative;
+  z-index:20;
+  display:block;
+  margin:24px 14px;
+}
+
+noscript a{color:var(--navy)}
+
+.site-mark{
+  position:absolute;
+  z-index:6;
+  left:12px;
+  top:calc(10px + var(--safe-t));
+  margin:0;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--scarlet);
+  font-size:10px;
+  pointer-events:none;
+}
+.site-mark a{
+  color:inherit;
+  text-decoration:none;
+  pointer-events:auto;
+}
+.site-mark a:hover,
+.site-mark a:focus-visible{
+  text-decoration:underline;
+}
+
+#hud{
+  position:absolute;
+  z-index:6;
+  right:12px;
+  left:12px;
+  top:calc(28px + var(--safe-t));
+  display:flex;
+  gap:6px;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  pointer-events:none;
+}
+
+.badge{
+  padding:.35rem .55rem;
+  border:1.5px solid var(--navy);
+  background:var(--paper);
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+#hud a{
+  pointer-events:auto;
+  color:var(--navy);
+  text-decoration:none;
+}
+
+#hud a:hover,
+#hud a:focus-visible{
+  background:var(--scarlet);
+  border-color:var(--scarlet);
+  color:var(--paper);
+}
+
+#roundBadge{
+  color:var(--scarlet);
+}
+
+/* -----------------------------------------------------
+   JACK
+----------------------------------------------------- */
+
+#jackLayer{
+  position:absolute;
+  z-index:7;
+  left:12px;
+  top:calc(58px + var(--safe-t));
+  width:min(240px, 46vw);
+  pointer-events:none;
+}
+
+#jack{
+  position:relative;
+  width:112px;
+  height:112px;
+  animation:floatJack 4s ease-in-out infinite;
+}
+
+@keyframes floatJack{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+.jackCard{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 25% 20%, var(--ink) 0 4px, transparent 5px),
+    radial-gradient(circle at 50% 20%, var(--ink) 0 4px, transparent 5px),
+    radial-gradient(circle at 75% 20%, var(--ink) 0 4px, transparent 5px),
+    linear-gradient(180deg, var(--well), var(--paper-2));
+  border:1.5px solid var(--navy);
+  clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px);
+}
+
+.jackCard:before{
+  content:"/JACK";
+  position:absolute;
+  top:11px;
+  left:10px;
+  color:var(--scarlet);
+  font-size:10px;
+  letter-spacing:.16em;
+}
+
+.jackFace{
+  position:absolute;
+  left:22px;
+  right:22px;
+  top:40px;
+  height:42px;
+}
+
+.eye{
+  position:absolute;
+  top:3px;
+  width:10px;
+  height:10px;
+  background:var(--ink);
+}
+
+.eye.left{left:8px}
+.eye.right{right:8px}
+
+#jack.talking .eye{
+  height:5px;
+  top:6px;
+}
+
+.mouth{
+  position:absolute;
+  width:28px;
+  height:4px;
+  background:var(--ink);
+  left:50%;
+  bottom:5px;
+  transform:translateX(-50%);
+  transition:.12s;
+}
+
+#jack.talking .mouth{
+  height:12px;
+}
+
+.holeRow{
+  position:absolute;
+  bottom:8px;
+  left:10px;
+  right:10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.hole{
+  width:6px;
+  height:12px;
+  background:var(--ink);
+}
+
+#speech{
+  position:relative;
+  margin-top:8px;
+  background:var(--well);
+  color:var(--ink);
+  border:1.5px solid var(--navy);
+  padding:.65rem .75rem;
+  font-size:13px;
+  line-height:1.45;
+  min-height:3.2rem;
+  max-height:8.5rem;
+  overflow:auto;
+}
+
+/* -----------------------------------------------------
+   CHAT
+----------------------------------------------------- */
+
+#board{
+  position:fixed;
+  z-index:10;
+  left:10px;
+  right:10px;
+  bottom:calc(10px + var(--safe-b));
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:8px;
+  pointer-events:none;
+  max-height:calc(var(--vv-height) - 16px);
+  overflow:hidden;
+}
+
+#board > *{
+  pointer-events:auto;
+}
+
+#chatDock{
+  pointer-events:auto;
+  flex:0 0 auto;
+  order:2;
+}
+
+#chatLog{
+  width:100%;
+  max-height:7.4rem;
+  overflow:auto;
+  margin:0 auto 0;
+  padding:.45rem .75rem;
+  background:var(--well);
+  border:2px solid var(--navy);
+  border-bottom:0;
+  font-size:12px;
+  line-height:1.4;
+  user-select:text;
+  touch-action:pan-y;
+}
+
+.msg{margin:2px 0 6px}
+.msg .who{color:var(--dim)}
+.msg.jack .who{color:var(--scarlet)}
+.msg.mabel .who{color:#638B94}
+
+#mabelPsychic{
+  position:absolute;
+  z-index:8;
+  left:50%;
+  top:22%;
+  transform:translate(-50%,0);
+  margin:0;
+  max-width:min(26rem,calc(100vw - 28px));
+  padding:.65rem .85rem;
+  border:2px solid #638B94;
+  background:#e8eef0;
+  color:#1a2438;
+  font-size:13px;
+  letter-spacing:.04em;
+  text-align:center;
+  pointer-events:none;
+}
+#mabelPsychic[hidden]{display:none}
+
+#chatForm{
+  width:100%;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr auto;
+  background:var(--paper);
+  border:2px solid var(--navy);
+}
+
+#chatInput{
+  min-width:0;
+  height:2.8rem;
+  border:0;
+  background:var(--paper);
+  color:var(--ink);
+  padding:0 .75rem;
+  font:inherit;
+  font-size:16px;
+  outline:none;
+  user-select:text;
+  touch-action:manipulation;
+  caret-color:var(--scarlet);
+}
+
+#chatInput::placeholder{color:var(--dim)}
+
+#sendBtn{
+  width:4.8rem;
+  border:0;
+  border-left:2px solid var(--navy);
+  background:var(--navy);
+  color:var(--paper);
+  font:inherit;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  min-height:2.8rem;
+}
+
+#sendBtn:active{
+  background:var(--scarlet);
+  border-color:var(--scarlet);
+}
+
+/* -----------------------------------------------------
+   CUBE CONTROLS
+----------------------------------------------------- */
+
+#controls{
+  width:100%;
+  display:grid;
+  gap:6px;
+  background:var(--paper);
+  border:2px solid var(--navy);
+  padding:.55rem;
+  flex:1 1 auto;
+  min-height:0;
+  overflow:auto;
+  order:1;
+}
+
+.row{
+  display:grid;
+  gap:6px;
+}
+
+.three{grid-template-columns:repeat(3,1fr)}
+.two{grid-template-columns:repeat(2,1fr)}
+
+button{
+  appearance:none;
+  background:var(--paper);
+  color:var(--ink);
+  border:1.5px solid var(--navy);
+  border-radius:0;
+  min-height:2.6rem;
+  padding:.4rem .45rem;
+  font:inherit;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+button:active{
+  background:var(--scarlet);
+  color:var(--paper);
+  border-color:var(--scarlet);
+}
+
+button.on{
+  color:var(--paper);
+  background:var(--navy);
+  border-color:var(--navy);
+}
+
+#nextBtn{
+  display:none;
+  background:var(--navy);
+  color:var(--paper);
+  border-color:var(--navy);
+  letter-spacing:.12em;
+}
+
+body.kb-open #jackLayer,
+body.kb-open #hud,
+body.kb-open .site-mark,
+body.kb-open #controls{
+  opacity:.18;
+  pointer-events:none;
+}
+
+body.kb-open #controls{
+  display:none;
+}
+
+body.kb-open #board{
+  bottom:calc(100% - var(--vv-top) - var(--vv-height));
+  max-height:calc(var(--vv-height) - 10px);
+}
+
+body.kb-open #chatLog{
+  max-height:min(8rem, 28vh);
+}
+
+/* -----------------------------------------------------
+   ERROR
+----------------------------------------------------- */
+
+#err{
+  position:absolute;
+  z-index:100;
+  left:10px;
+  right:10px;
+  top:calc(70px + var(--safe-t));
+  display:none;
+  background:var(--paper);
+  color:var(--scarlet);
+  border:2px solid var(--scarlet);
+  padding:.65rem .75rem;
+  white-space:pre-wrap;
+  font-size:12px;
+}
+
+/* desktop */
+
+@media(min-width:800px){
+  #jackLayer{
+    width:240px;
+    top:calc(52px + var(--safe-t));
+  }
+
+  #board{
+    left:50%;
+    right:auto;
+    width:min(42rem, calc(100vw - 24px));
+    transform:translateX(-50%);
+  }
+
+  #controls{
+    align-self:flex-end;
+    width:13.6rem;
+    flex:0 0 auto;
+  }
+}
+
+/* mobile */
+
+@media(max-width:720px){
+  .site-mark{
+    max-width:58vw;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  #hud{
+    top:calc(8px + var(--safe-t));
+    left:auto;
+    width:auto;
+    max-width:58vw;
+    flex-wrap:nowrap;
+  }
+
+  #hud .badge{
+    padding:.28rem .4rem;
+    font-size:9px;
+    letter-spacing:.08em;
+  }
+
+  #jackLayer{
+    left:10px;
+    right:10px;
+    top:calc(40px + var(--safe-t));
+    width:auto;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+
+  #jack{
+    flex:none;
+    width:72px;
+    height:72px;
+  }
+
+  .jackFace{
+    top:28px;
+    left:14px;
+    right:14px;
+    height:28px;
+  }
+
+  .eye{
+    width:7px;
+    height:7px;
+  }
+
+  .mouth{width:18px}
+
+  .jackCard:before{
+    font-size:8px;
+    top:6px;
+    left:6px;
+  }
+
+  .holeRow{
+    bottom:5px;
+    left:6px;
+    right:6px;
+  }
+
+  .hole{
+    width:4px;
+    height:8px;
+  }
+
+  #speech{
+    flex:1 1 auto;
+    margin-top:0;
+    min-height:0;
+    max-height:4.8rem;
+    font-size:12px;
+    padding:.5rem .6rem;
+  }
+
+  #controls{
+    grid-template-columns:1fr 1fr;
+  }
+
+  #axisRow,
+  #nextBtn{
+    grid-column:1 / -1;
+  }
+
+  #chatLog{
+    max-height:4.8rem;
+  }
+}
+
+@media(max-height:560px){
+  #jackLayer{
+    top:calc(36px + var(--safe-t));
+  }
+
+  #jack{
+    width:56px;
+    height:56px;
+  }
+
+  #speech{
+    font-size:11px;
+    padding:.4rem .5rem;
+    max-height:3.6rem;
+  }
+
+  #chatLog{
+    max-height:3.4rem;
+  }
+
+  #controls{
+    padding:.4rem;
+    gap:4px;
+  }
+
+  button{
+    min-height:2.3rem;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  #jack{animation:none}
+  .mouth{transition:none}
+}

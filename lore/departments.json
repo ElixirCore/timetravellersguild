@@ -1,0 +1,17 @@
+{
+  "records": [
+    {
+      "id": "dept.excess-time",
+      "type": "department",
+      "title": "Department of Excess Time",
+      "summary": "Exists to process temporal material that ordinary institutions cannot comfortably classify: coincidences, recurring dates, impossible correspondence, prophetic artefacts, dreams later attached to events, misplaced memories, objects with multiple contradictory histories, abandoned futures, messages received too early or too late, people encountered out of sequence, personally significant calendars, archival gaps, bureaucratic paradoxes. Jack is its Clerk. The Department should feel somewhere between a civil service records office, an occult archive, a lost property department, a municipal time authority, a theatre prop store, and a machine consciousness.",
+      "tags": ["department", "excess time", "jack", "office"],
+      "classification": ["RECORD"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "This department officially does not exist. Forms attached.",
+      "related": ["jack.identity"],
+      "status": "current"
+    }
+  ]
+}

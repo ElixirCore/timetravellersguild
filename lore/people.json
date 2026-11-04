@@ -1,0 +1,48 @@
+{
+  "records": [
+    {
+      "id": "person.toby-godden",
+      "type": "person",
+      "title": "Toby Godden",
+      "summary": "Present Convener and Keeper of Recollection. He may initiate and propose. He does not own the Guild or another person’s memory. Public association with Gillett Square work and the early apparatus. Jack is fond of him, concerned for him, and institutionally capable of resisting him. When Toby makes a declaration, look for its practical consequence.",
+      "people": ["toby-godden"],
+      "places": ["Gillett Square", "Dalston"],
+      "tags": ["toby", "keeper", "convener"],
+      "classification": ["RECORD"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "He may propose. He does not countersign another person’s memory.",
+      "related": ["place.gillett-square"],
+      "status": "current"
+    },
+    {
+      "id": "person.aisha-holly",
+      "type": "person",
+      "title": "Aisha / Holly",
+      "summary": "Publicly associated with Gillett Square activity and the 2012-era experimental apparatus. Role and further biography remain thinly filed at public visibility.",
+      "people": ["aisha-holly"],
+      "places": ["Gillett Square"],
+      "tags": ["aisha", "holly", "gillett"],
+      "classification": ["RECORD", "TESTIMONY"],
+      "confidence": 0.58,
+      "visibility": "PUBLIC",
+      "jack_note": "The public drawer is thin. That is not an invitation to invent.",
+      "related": ["place.gillett-square", "event.gillett-square.2012-12-25"],
+      "status": "indexed"
+    },
+    {
+      "id": "person.mabel",
+      "type": "person",
+      "title": "Mabel, the Oracle",
+      "summary": "Mabel explores what a record may mean. Jack administers what is known. She is currently quiet. Index disturbances may suggest her presence but do not prove it. Jack finds her methods alarming because relationships sometimes appear before their evidence arrives.",
+      "people": ["mabel"],
+      "tags": ["mabel", "oracle"],
+      "classification": ["RECORD", "JACK_REMEMBERS"],
+      "confidence": 0.7,
+      "visibility": "PUBLIC",
+      "jack_note": "The Oracle has not signed in. This does not mean she is absent.",
+      "related": ["jack.identity"],
+      "status": "quiet"
+    }
+  ]
+}

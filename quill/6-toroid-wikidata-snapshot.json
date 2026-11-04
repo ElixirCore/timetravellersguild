@@ -1,0 +1,624 @@
+{
+  "source": "Wikidata Query Service",
+  "queried_at": "2026-09-29T07:49:36.233853+00:00",
+  "center": {
+    "lat": 51.795,
+    "lng": -3.708
+  },
+  "query_urls": [
+    "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3Fcoord%20%3Fdate%20%3FplaceLabel%20WHERE%20%7B%20SERVICE%20wikibase%3Aaround%20%7B%20%3Fplace%20wdt%3AP625%20%3Fcoord%20.%20bd%3AserviceParam%20wikibase%3Acenter%20%22Point%28-3.708%2051.795%29%22%5E%5Egeo%3AwktLiteral%20.%20bd%3AserviceParam%20wikibase%3Aradius%20%2230%22%20.%20%7D%20%3Fitem%20wdt%3AP31%20wd%3AQ5%3B%20wdt%3AP19%20%3Fplace%20.%20OPTIONAL%20%7B%3Fitem%20wdt%3AP569%20%3Fdate%20.%7D%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22%20.%20%7D%20%7D%20LIMIT%2045&format=json",
+    "https://query.wikidata.org/sparql?query=SELECT%20%3Fitem%20%3FitemLabel%20%3Fcoord%20%3Fdate%20WHERE%20%7B%20SERVICE%20wikibase%3Aaround%20%7B%20%3Fitem%20wdt%3AP625%20%3Fcoord%20.%20bd%3AserviceParam%20wikibase%3Acenter%20%22Point%28-3.708%2051.795%29%22%5E%5Egeo%3AwktLiteral%20.%20bd%3AserviceParam%20wikibase%3Aradius%20%2235%22%20.%20%7D%20%3Fitem%20wdt%3AP31%20%3Ftype%20.%20VALUES%20%3Ftype%20%7B%20wd%3AQ1190554%20wd%3AQ178561%20wd%3AQ1656682%20wd%3AQ188055%20wd%3AQ645883%20wd%3AQ132241%20%7D%20OPTIONAL%20%7B%3Fitem%20wdt%3AP585%20%3Fdate%20.%7D%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22en%22%20.%20%7D%20%7D%20LIMIT%2025&format=json"
+  ],
+  "items": [
+    {
+      "qid": "Q22742",
+      "label": "George Edward Luckman Gauntlett",
+      "kind": "person",
+      "date": "1868-12-04",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q22742"
+    },
+    {
+      "qid": "Q47664",
+      "label": "Catherine Zeta-Jones",
+      "kind": "person",
+      "date": "1969-09-25",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q47664"
+    },
+    {
+      "qid": "Q48009",
+      "label": "Anna Ryder Richardson",
+      "kind": "person",
+      "date": "1964-01-29",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q48009"
+    },
+    {
+      "qid": "Q49615",
+      "label": "Rowan Williams",
+      "kind": "person",
+      "date": "1950-06-14",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q49615"
+    },
+    {
+      "qid": "Q58331",
+      "label": "Kenny Morgans",
+      "kind": "person",
+      "date": "1939-03-16",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q58331"
+    },
+    {
+      "qid": "Q111840",
+      "label": "Carwyn Jones",
+      "kind": "person",
+      "date": "1967-03-21",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q111840"
+    },
+    {
+      "qid": "Q118542",
+      "label": "Nicholas A'Hern",
+      "kind": "person",
+      "date": "1969-01-06",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q118542"
+    },
+    {
+      "qid": "Q191023",
+      "label": "Dylan Thomas",
+      "kind": "person",
+      "date": "1914-10-27",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q191023"
+    },
+    {
+      "qid": "Q230996",
+      "label": "Nicole Cooke",
+      "kind": "person",
+      "date": "1983-04-13",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q230996"
+    },
+    {
+      "qid": "Q234171",
+      "label": "Princess Lilian, Duchess of Halland",
+      "kind": "person",
+      "date": "1915-08-30",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q234171"
+    },
+    {
+      "qid": "Q248414",
+      "label": "Gary Jones",
+      "kind": "person",
+      "date": "1958-01-04",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q248414"
+    },
+    {
+      "qid": "Q263532",
+      "label": "Robert Walter",
+      "kind": "person",
+      "date": "1948-05-30",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q263532"
+    },
+    {
+      "qid": "Q268030",
+      "label": "Alun Cairns",
+      "kind": "person",
+      "date": "1970-07-30",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q268030"
+    },
+    {
+      "qid": "Q303814",
+      "label": "Nigel Evans",
+      "kind": "person",
+      "date": "1957-11-10",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q303814"
+    },
+    {
+      "qid": "Q312575",
+      "label": "Clive Granger",
+      "kind": "person",
+      "date": "1934-09-04",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q312575"
+    },
+    {
+      "qid": "Q325881",
+      "label": "Hugh Llewellyn Glyn Hughes",
+      "kind": "person",
+      "date": "1892-07-25",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q325881"
+    },
+    {
+      "qid": "Q332314",
+      "label": "Michael Heseltine",
+      "kind": "person",
+      "date": "1933-03-21",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q332314"
+    },
+    {
+      "qid": "Q334411",
+      "label": "Donald Anderson, Baron Anderson of Swansea",
+      "kind": "person",
+      "date": "1939-06-17",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q334411"
+    },
+    {
+      "qid": "Q335773",
+      "label": "Francis Grenfell, 1st Baron Grenfell",
+      "kind": "person",
+      "date": "1841-04-29",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q335773"
+    },
+    {
+      "qid": "Q350383",
+      "label": "Adam Matthews",
+      "kind": "person",
+      "date": "1992-01-13",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q350383"
+    },
+    {
+      "qid": "Q356392",
+      "label": "John Hartson",
+      "kind": "person",
+      "date": "1975-04-05",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q356392"
+    },
+    {
+      "qid": "Q361536",
+      "label": "Owen Teale",
+      "kind": "person",
+      "date": "1961-05-20",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q361536"
+    },
+    {
+      "qid": "Q361981",
+      "label": "Russell T Davies",
+      "kind": "person",
+      "date": "1963-04-27",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q361981"
+    },
+    {
+      "qid": "Q381664",
+      "label": "Vincent Regan",
+      "kind": "person",
+      "date": "1965-05-16",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q381664"
+    },
+    {
+      "qid": "Q381769",
+      "label": "Chris Coleman",
+      "kind": "person",
+      "date": "1970-06-10",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q381769"
+    },
+    {
+      "qid": "Q447961",
+      "label": "Alun Wyn Jones",
+      "kind": "person",
+      "date": "1985-09-19",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q447961"
+    },
+    {
+      "qid": "Q455094",
+      "label": "Hayley Tullett",
+      "kind": "person",
+      "date": "1973-02-17",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q455094"
+    },
+    {
+      "qid": "Q456444",
+      "label": "G. E. R. Lloyd",
+      "kind": "person",
+      "date": "1933-01-25",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q456444"
+    },
+    {
+      "qid": "Q468004",
+      "label": "Margaret John",
+      "kind": "person",
+      "date": "1926-12-14",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q468004"
+    },
+    {
+      "qid": "Q472382",
+      "label": "Sam Edwards",
+      "kind": "person",
+      "date": "1928-02-01",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q472382"
+    },
+    {
+      "qid": "Q522373",
+      "label": "Matt Ryan",
+      "kind": "person",
+      "date": "1981-04-11",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q522373"
+    },
+    {
+      "qid": "Q525873",
+      "label": "Shane Williams",
+      "kind": "person",
+      "date": "1977-02-26",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q525873"
+    },
+    {
+      "qid": "Q526714",
+      "label": "Andy Melville",
+      "kind": "person",
+      "date": "1968-11-29",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q526714"
+    },
+    {
+      "qid": "Q531221",
+      "label": "Emyr Wyn Lewis",
+      "kind": "person",
+      "date": "1982-10-03",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q531221"
+    },
+    {
+      "qid": "Q541502",
+      "label": "Glyn Simon",
+      "kind": "person",
+      "date": "1903-04-14",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q541502"
+    },
+    {
+      "qid": "Q545303",
+      "label": "Dean Saunders",
+      "kind": "person",
+      "date": "1964-06-21",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q545303"
+    },
+    {
+      "qid": "Q545328",
+      "label": "Tom Ward",
+      "kind": "person",
+      "date": "1971-01-11",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q545328"
+    },
+    {
+      "qid": "Q561117",
+      "label": "William Robert Grove",
+      "kind": "person",
+      "date": "1811-07-11",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q561117"
+    },
+    {
+      "qid": "Q561356",
+      "label": "Kevin Allen",
+      "kind": "person",
+      "date": "1962-09-15",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q561356"
+    },
+    {
+      "qid": "Q584317",
+      "label": "Mervyn Davies",
+      "kind": "person",
+      "date": "1946-12-09",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q584317"
+    },
+    {
+      "qid": "Q642981",
+      "label": "Richard Duffy",
+      "kind": "person",
+      "date": "1985-08-30",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q642981"
+    },
+    {
+      "qid": "Q704897",
+      "label": "Alan Woods",
+      "kind": "person",
+      "date": "1944-10-23",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q704897"
+    },
+    {
+      "qid": "Q717787",
+      "label": "Beau Nash",
+      "kind": "person",
+      "date": "1674-10-18",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q717787"
+    },
+    {
+      "qid": "Q725567",
+      "label": "Rob Terry",
+      "kind": "person",
+      "date": "1980-04-30",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q725567"
+    },
+    {
+      "qid": "Q727494",
+      "label": "Terry Williams",
+      "kind": "person",
+      "date": "1948-01-11",
+      "place": "Swansea",
+      "lat": 51.616666666,
+      "lng": -3.95,
+      "url": "https://www.wikidata.org/wiki/Q727494"
+    },
+    {
+      "qid": "Q112261922",
+      "label": "Tynewydd Colliery disaster",
+      "kind": "event",
+      "date": "",
+      "place": "",
+      "lat": 51.614869,
+      "lng": -3.41145,
+      "url": "https://www.wikidata.org/wiki/Q112261922"
+    },
+    {
+      "qid": "Q61413669",
+      "label": "Battle of Kenfig",
+      "kind": "event",
+      "date": "1243-01-01",
+      "place": "",
+      "lat": 51.530037,
+      "lng": -3.729728,
+      "url": "https://www.wikidata.org/wiki/Q61413669"
+    },
+    {
+      "qid": "Q61413906",
+      "label": "Battle of Pant Câd-Einion",
+      "kind": "event",
+      "date": "0982-01-01",
+      "place": "",
+      "lat": 51.51456,
+      "lng": -3.519504,
+      "url": "https://www.wikidata.org/wiki/Q61413906"
+    },
+    {
+      "qid": "Q61412130",
+      "label": "Battle of Loughor Castle",
+      "kind": "event",
+      "date": "1215-01-01",
+      "place": "",
+      "lat": 51.6622,
+      "lng": -4.0774,
+      "url": "https://www.wikidata.org/wiki/Q61412130"
+    },
+    {
+      "qid": "Q61410880",
+      "label": "Battle of Carnwyllion",
+      "kind": "event",
+      "date": "1189-01-01",
+      "place": "",
+      "lat": 51.68,
+      "lng": -4.15,
+      "url": "https://www.wikidata.org/wiki/Q61410880"
+    },
+    {
+      "qid": "Q4871578",
+      "label": "Battle of Llwchwr",
+      "kind": "event",
+      "date": "1136-01-01",
+      "place": "",
+      "lat": 51.656977,
+      "lng": -4.01019,
+      "url": "https://www.wikidata.org/wiki/Q4871578"
+    },
+    {
+      "qid": "Q61413319",
+      "label": "Battle of Neath Castle",
+      "kind": "event",
+      "date": "1231-01-01",
+      "place": "",
+      "lat": 51.6651,
+      "lng": -3.8037,
+      "url": "https://www.wikidata.org/wiki/Q61413319"
+    },
+    {
+      "qid": "Q3401002",
+      "label": "Battle of Cadfan",
+      "kind": "event",
+      "date": "1257-01-01",
+      "place": "",
+      "lat": 51.884,
+      "lng": -3.995,
+      "url": "https://www.wikidata.org/wiki/Q3401002"
+    },
+    {
+      "qid": "Q4871579",
+      "label": "Battle of Llandeilo Fawr",
+      "kind": "event",
+      "date": "1282-06-24",
+      "place": "",
+      "lat": 51.884,
+      "lng": -3.996,
+      "url": "https://www.wikidata.org/wiki/Q4871579"
+    },
+    {
+      "qid": "Q54806107",
+      "label": "Battle of Aberllech",
+      "kind": "event",
+      "date": "1086-01-01",
+      "place": "",
+      "lat": 51.978,
+      "lng": -3.5847,
+      "url": "https://www.wikidata.org/wiki/Q54806107"
+    },
+    {
+      "qid": "Q61087651",
+      "label": "Battle of Pengelli Castle",
+      "kind": "event",
+      "date": "1233-01-01",
+      "place": "",
+      "lat": 51.915143,
+      "lng": -3.316991,
+      "url": "https://www.wikidata.org/wiki/Q61087651"
+    },
+    {
+      "qid": "Q61082856",
+      "label": "Battle of Blaenllyfni Castle",
+      "kind": "event",
+      "date": "1233-01-01",
+      "place": "",
+      "lat": 51.898111111,
+      "lng": -3.243694444,
+      "url": "https://www.wikidata.org/wiki/Q61082856"
+    },
+    {
+      "qid": "Q61089370",
+      "label": "Battle of Brecon",
+      "kind": "event",
+      "date": "1233-01-01",
+      "place": "",
+      "lat": 51.97341,
+      "lng": -3.424831,
+      "url": "https://www.wikidata.org/wiki/Q61089370"
+    },
+    {
+      "qid": "Q61081731",
+      "label": "Battle of Brecenanmere",
+      "kind": "event",
+      "date": "0916-01-01",
+      "place": "",
+      "lat": 51.9468,
+      "lng": -3.3909,
+      "url": "https://www.wikidata.org/wiki/Q61081731"
+    },
+    {
+      "qid": "Q131277654",
+      "label": "1971 Urdd National Eisteddfod",
+      "kind": "event",
+      "date": "1971-01-01",
+      "place": "",
+      "lat": 51.61545,
+      "lng": -3.985130555,
+      "url": "https://www.wikidata.org/wiki/Q131277654"
+    },
+    {
+      "qid": "Q140667044",
+      "label": "Brecon County Show",
+      "kind": "event",
+      "date": "",
+      "place": "",
+      "lat": 51.9407164,
+      "lng": -3.3758906,
+      "url": "https://www.wikidata.org/wiki/Q140667044"
+    }
+  ]
+}

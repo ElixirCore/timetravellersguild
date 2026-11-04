@@ -49,6 +49,9 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 .card dt{color:var(--ink-2)} .card dd{margin:0;word-break:break-word}
 .card pre{white-space:pre-wrap;font:11px/1.4 var(--f);margin:0}
 .card .x{position:absolute;top:6px;right:8px;border:0;background:none;font-size:16px;padding:0 4px}
+.card-stamp{margin-top:10px;text-align:right}
+.card-stamp button{font:600 11px/1 var(--f);letter-spacing:.1em;color:var(--paper-2);background:var(--red);border:1px solid var(--ink);padding:5px 10px;cursor:pointer}
+.card-stamp button:disabled{opacity:.55;cursor:default}
 .maplibregl-ctrl-group{border-radius:0!important;border:1px solid var(--ink);box-shadow:none!important;background:var(--paper-2)!important}
 .maplibregl-ctrl-attrib{font:10px var(--f);background:rgba(232,220,182,.85)!important}
 .askbtn{position:fixed;z-index:3;top:12px;right:58px;font-weight:600;letter-spacing:.12em;padding:7px 12px;background:var(--red);color:var(--paper-2);border:1px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
@@ -68,13 +71,49 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 .ask .hint{font-size:10px;color:var(--ink-2);padding:0 12px 8px}
 .ask .sugg{display:flex;flex-wrap:wrap;gap:6px}
 .ask .sugg button{font-size:11px;text-align:left}
+/* search */
+.search-row{margin-bottom:2px}
+.search-row input{flex:1;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:4px 6px;min-width:0}
+/* guide button */
+.guidebtn{position:fixed;z-index:3;top:48px;right:58px;font:inherit;font-weight:600;letter-spacing:.12em;padding:7px 12px;
+  background:var(--ink);color:var(--paper-2);border:1px solid var(--paper-2);box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+.guidebtn[aria-pressed=true]{background:var(--red);border-color:var(--ink)}
+/* guide panel — sits between the left sidebar and right buttons */
+.guide{position:fixed;z-index:4;left:344px;right:72px;bottom:36px;
+  max-height:38dvh;
+  display:none;flex-direction:column;
+  background:rgba(23,21,18,.92);color:var(--paper-2);
+  border:1px solid var(--ink);box-shadow:4px 4px 0 var(--red);backdrop-filter:blur(2px)}
+.guide.open{display:flex}
+.guide header{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid rgba(232,220,182,.15);flex:0 0 auto}
+.guide header h2{margin:0;font-size:11px;letter-spacing:.18em;text-transform:uppercase;flex:1}
+#guide-status{font-size:11px;letter-spacing:.06em;color:var(--red-2)}
+.guide .x{background:none;border:0;color:var(--paper-2);font-size:16px;padding:0 4px;cursor:pointer;flex:0 0 auto}
+#guide-log{flex:1;overflow:auto;padding:10px 14px;display:flex;flex-direction:column;gap:3px;min-height:0}
+.guide-line{font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.guide-line.me{color:rgba(217,203,158,.5);text-align:right;font-style:italic}
+.guide-line.ai{color:var(--paper-2)}
+.guide-line.tool{font-size:10px;letter-spacing:.1em;color:rgba(179,38,30,.7);padding:1px 0}
+/* runs list */
+.runs-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}
+.run-item{display:flex;align-items:baseline;gap:6px;padding:5px 6px;border-left:2px solid var(--rule);cursor:pointer;font-size:12px}
+.run-item:hover,.run-item.active{border-left-color:#c8902a;background:rgba(200,144,42,.08)}
+.run-item .run-name{flex:1;font-weight:600;color:var(--ink)}
+.run-item .run-meta{font-size:10px;color:var(--ink-2)}
+.run-item .run-del{border:0;background:none;padding:0 2px;font-size:12px;color:var(--ink-2);cursor:pointer;line-height:1}
+.run-item .run-del:hover{color:var(--red)}
+/* mic pulse */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.guide-status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red-2);margin-right:5px;animation:pulse 1.4s ease-in-out infinite}
 @media (max-width:640px){
   .askbtn{top:12px;right:56px}
+  .guidebtn{top:48px;right:56px}
   .ask{top:8px;right:8px;left:8px;width:auto;bottom:auto;height:62dvh}
   .panel{top:auto;bottom:0;left:0;width:100%;max-height:55dvh;box-shadow:0 -3px 0 var(--ink);border-width:1px 0 0}
   .panel.closed>*:not(.toggle){display:none}
   .toggle{display:block;width:100%;margin-bottom:8px}
   .card{bottom:auto;top:12px}
+  .guide{bottom:auto;top:8px;left:8px;right:8px;transform:none;width:auto;max-height:50dvh}
 }
 </style>
 </head>
@@ -85,6 +124,11 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <button class="toggle" id="toggle" type="button" aria-expanded="true">Layers ▾</button>
   <h1>Passport Map</h1>
   <p class="sub" id="holder">Loading record…</p>
+  <div class="row search-row">
+    <input id="search" type="text" placeholder="Fly to a place…" autocomplete="off" aria-label="Search for a place">
+    <button type="button" id="search-go">↵</button>
+  </div>
+  <div class="st" id="search-st"></div>
 
   <h2>Topology</h2>
   <div class="row"><label><input type="checkbox" id="l-terrain" checked> 3D terrain</label></div>
@@ -117,6 +161,13 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <h2>Guild</h2>
   <div class="row"><label><input type="checkbox" id="l-route" checked> Time-lines between stamps</label></div>
   <div class="row"><label><input type="checkbox" id="l-pods" checked> TimePods</label></div>
+  <div class="row"><label><input type="checkbox" id="l-trail" checked> Guide trail</label></div>
+  <div class="row"><label><input type="checkbox" id="l-run" checked> Active run</label></div>
+  <div class="row"><label><input type="checkbox" id="l-graph" checked> Field places</label></div>
+  <div class="st" id="st-graph"></div>
+
+  <h2>Saved runs</h2>
+  <ul class="runs-list" id="runs-list"><li class="empty" style="display:block;cursor:default">No runs saved yet.</li></ul>
   <div class="st" id="st-pods"></div>
   <div class="row"><span>Until</span><input type="range" id="t" min="0" max="0" step="1" value="0" aria-label="Show stamps up to"><span class="v" id="t-v">—</span></div>
   <div class="seg"><button type="button" id="b-play" aria-pressed="false">▶ Replay route</button></div>
@@ -125,6 +176,7 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
 </aside>
 
+<button class="guidebtn" id="guidebtn" type="button" aria-pressed="false" aria-controls="guide">GUIDE</button>
 <button class="askbtn" id="askbtn" type="button" aria-expanded="false" aria-controls="ask">ASK</button>
 <section class="ask" id="ask" aria-label="Ask the map">
   <header><h2>Ask the map</h2><button type="button" id="ask-x" aria-label="Close">×</button></header>
@@ -141,6 +193,14 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="hint">Answers come from an OpenAI model via this site. It sees the map view, the point you tapped and, when it asks, your stamp places and dates.</div>
 </section>
 
+<section class="guide" id="guide" aria-label="Voice guide">
+  <header>
+    <h2>THE GUIDE</h2>
+    <span id="guide-status">tap GUIDE to connect</span>
+    <button class="x" id="guide-x" type="button" aria-label="Close">×</button>
+  </header>
+  <div id="guide-log" aria-live="polite"></div>
+</section>
 <div class="card" id="card" role="dialog" aria-live="polite"><button class="x" id="card-x" type="button" aria-label="Close">×</button><div id="card-b"></div></div>
 
 <script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
@@ -154,6 +214,7 @@ const CFG = Object.assign({
   pods: 'timepods.json',             // [{name, lng, lat, note}]
   proxy: 'proxy.php',                // same-origin relay for BGS, Cadw and place lookups
   agent: 'agent.php',                // same-origin relay to OpenAI (holds the key)
+  trail: '/map/trail.php',           // guide trail: saved fly_to destinations
   centre: [-3.70, 51.80],            // Upper Swansea Valley (start view only)
   zoom: 10.5,
   dem: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
@@ -191,7 +252,12 @@ const style = {
     route: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     stamps: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     pods: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
-    pins: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
+    pins: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    trail: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    'trail-route': { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    'run-route': { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    'run-points': { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    'graph-places': { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
   },
   layers: [
     { id: 'bg', type: 'background', paint: { 'background-color': '#d9cb9e' } },
@@ -213,6 +279,11 @@ const style = {
     { id: 'pods-label', type: 'symbol', source: 'pods',
       layout: { 'text-field': ['get', 'name'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top' },
       paint: { 'text-color': '#7a1712', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.5 } },
+    { id: 'graph-places', type: 'circle', source: 'graph-places',
+      paint: { 'circle-radius': 10, 'circle-color': '#1a3a6e', 'circle-stroke-color': '#7fb0d8', 'circle-stroke-width': 2.5 } },
+    { id: 'graph-places-label', type: 'symbol', source: 'graph-places',
+      layout: { 'text-field': ['get', 'title'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.5], 'text-anchor': 'top', 'text-max-width': 10 },
+      paint: { 'text-color': '#1a3a6e', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } },
     { id: 'stamps', type: 'circle', source: 'stamps',
       paint: { 'circle-radius': 9, 'circle-color': '#e8dcb6', 'circle-stroke-color': '#b3261e', 'circle-stroke-width': 3 } },
     { id: 'stamps-n', type: 'symbol', source: 'stamps',
@@ -221,6 +292,19 @@ const style = {
     { id: 'stamps-label', type: 'symbol', source: 'stamps',
       layout: { 'text-field': ['get', 'place'], 'text-font': CFG.font, 'text-size': 12, 'text-offset': [0, 1.4], 'text-anchor': 'top' },
       paint: { 'text-color': '#1b1a17', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } },
+    { id: 'run-route', type: 'line', source: 'run-route', layout: { 'line-cap': 'round', 'line-join': 'round', visibility: 'visible' },
+      paint: { 'line-color': '#c8902a', 'line-width': 2.5, 'line-opacity': 0.9 } },
+    { id: 'run-points', type: 'circle', source: 'run-points', layout: { visibility: 'visible' },
+      paint: { 'circle-radius': 8, 'circle-color': '#c8902a', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 2 } },
+    { id: 'run-labels', type: 'symbol', source: 'run-points', layout: { 'text-field': ['get', 'label'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.4], 'text-anchor': 'top' },
+      paint: { 'text-color': '#7a5010', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.5 } },
+    { id: 'trail-route', type: 'line', source: 'trail-route', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#c8902a', 'line-width': 1.8, 'line-dasharray': [3, 2], 'line-opacity': 0.6 } },
+    { id: 'trail', type: 'circle', source: 'trail',
+      paint: { 'circle-radius': 7, 'circle-color': '#c8902a', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 2, 'circle-opacity': 0.9 } },
+    { id: 'trail-label', type: 'symbol', source: 'trail',
+      layout: { 'text-field': ['get', 'label'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top' },
+      paint: { 'text-color': '#7a5010', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.5 } },
     { id: 'pins', type: 'circle', source: 'pins',
       paint: { 'circle-radius': 6, 'circle-color': '#1b1a17', 'circle-stroke-color': '#e0483e', 'circle-stroke-width': 3 } },
     { id: 'pins-label', type: 'symbol', source: 'pins',
@@ -268,6 +352,9 @@ $('l-sam').onchange = (e) => { vis(['sam-fill', 'sam-line'], e.target.checked); 
 $('l-lb').onchange = (e) => { vis(['lb'], e.target.checked); heritage(); };
 $('l-route').onchange = (e) => vis(['route', 'route-glow'], e.target.checked);
 $('l-pods').onchange = (e) => vis(['pods', 'pods-label'], e.target.checked);
+$('l-trail').onchange = (e) => vis(['trail', 'trail-label', 'trail-route'], e.target.checked);
+$('l-run').onchange   = (e) => vis(['run-route', 'run-points', 'run-labels'], e.target.checked);
+$('l-graph').onchange = (e) => vis(['graph-places', 'graph-places-label'], e.target.checked);
 
 const press = (on) => ['b-tilt', 'b-flat'].forEach((id) => $(id).setAttribute('aria-pressed', String(id === on)));
 $('b-tilt').onclick = () => { press('b-tilt'); map.easeTo({ pitch: 60, duration: 900 }); };
@@ -328,20 +415,64 @@ map.on('moveend', heritage);
 
 /* ---------- info card ---------- */
 const card = (html) => { $('card-b').innerHTML = html; $('card').style.display = 'block'; };
-$('card-x').onclick = () => { $('card').style.display = 'none'; };
+$('card-x').onclick = () => { $('card').style.display = 'none'; [...$('stamps').children].forEach((li) => li.style.background = ''); };
 const SKIP = /^(geom|the_geom|shape|objectid|fid|easting|northing|.*_cy)$/i;
 const dl = (props, prefer) => {
   const keys = prefer.filter((k) => props[k] != null && props[k] !== '').concat(Object.keys(props).filter((k) => !prefer.includes(k) && !SKIP.test(k) && props[k] != null && props[k] !== ''));
   return '<dl>' + keys.map((k) => '<dt>' + esc(k) + '</dt><dd>' + esc(props[k]) + '</dd>').join('') + '</dl>';
 };
 map.on('click', async (e) => {
-  const hit = map.queryRenderedFeatures(e.point, { layers: ['stamps', 'pods', 'sam-fill', 'lb'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'sam-fill', 'lb', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
   if (hit) {
     const p = hit.properties || {};
-    if (hit.layer.id === 'stamps') return card('<h3>' + esc(p.n + '. ' + p.place) + '</h3><dl><dt>Line</dt><dd>' + esc(p.line || '—') + '</dd><dt>Inked</dt><dd>' + esc(p.inked || '—') + '</dd>' + (p.approx ? '<dt>Position</dt><dd>looked up from the place name</dd>' : '') + '</dl>');
-    if (hit.layer.id === 'pods') return card('<h3>TimePod · ' + esc(p.name) + '</h3>' + (p.note ? '<p>' + esc(p.note) + '</p>' : ''));
-    if (hit.layer.id === 'sam-fill') return card('<h3>' + esc(p.Name || 'Scheduled monument') + '</h3>' + dl(p, ['SAMNumber', 'Period', 'SiteType', 'BroadClass', 'Community', 'UnitaryAuthority', 'DesignationDate', 'Report']));
-    if (hit.layer.id === 'lb') return card('<h3>Listed building</h3>' + dl(p, []));
+    if (hit.layer.id === 'graph-places') {
+      const coords = hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 13), pitch: 62, duration: 1200 });
+      const treeLink = p.href ? '<dt>Field node</dt><dd><a href="' + esc(p.href) + '" target="_blank" style="color:var(--red)">' + esc(p.title) + ' ↗</a></dd>' : '';
+      const lng = coords ? +coords[0].toFixed(5) : null, lat = coords ? +coords[1].toFixed(5) : null;
+      const stampBtn = '<div class="card-stamp"><button onclick="addToPassport(this,' + JSON.stringify(p.title) + ',' + lng + ',' + lat + ')">+ Passport</button></div>';
+      return card('<h3>' + esc(p.title) + '</h3><dl>' + treeLink + (p.body ? '<dt>Record</dt><dd>' + esc(p.body) + '</dd>' : '') + '</dl>' + stampBtn);
+    }
+    if (hit.layer.id === 'stamps') {
+      const coords = hit.geometry?.coordinates || hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 13), pitch: 62, duration: 1200 });
+      // highlight list item
+      const idx = (p.n || 1) - 1;
+      const items = $('stamps').children;
+      [...items].forEach((li, i) => li.style.background = i === idx ? 'rgba(179,38,30,.13)' : '');
+      const target = items[idx]; if (target) { target.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+      return card('<h3>' + esc(p.n + '. ' + p.place) + '</h3><dl><dt>Line</dt><dd>' + esc(p.line || '—') + '</dd><dt>Inked</dt><dd>' + esc(p.inked || '—') + '</dd>' + (p.approx ? '<dt>Position</dt><dd>looked up from the place name</dd>' : '') + '</dl>');
+    }
+    if (hit.layer.id === 'pods') {
+      const coords = hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 14), pitch: 60, duration: 1200 });
+      return card('<h3>TimePod · ' + esc(p.name) + '</h3>' + (p.note ? '<p>' + esc(p.note) + '</p>' : ''));
+    }
+    if (hit.layer.id === 'sam-fill') {
+      const c = centroid(hit.geometry);
+      if (c) map.flyTo({ center: c, zoom: Math.max(map.getZoom(), 14), pitch: 60, duration: 1200 });
+      return card('<h3>' + esc(p.Name || 'Scheduled monument') + '</h3>' + dl(p, ['SAMNumber', 'Period', 'SiteType', 'BroadClass', 'Community', 'UnitaryAuthority', 'DesignationDate', 'Report']));
+    }
+    if (hit.layer.id === 'lb') {
+      const coords = hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 16), pitch: 55, duration: 1200 });
+      return card('<h3>Listed building</h3>' + dl(p, []));
+    }
+    if (hit.layer.id === 'run-points') {
+      const coords = hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 13), pitch: 62, duration: 1200 });
+      const p = hit.properties || {};
+      const ts = p.created_at ? new Date(p.created_at * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+      const treeLink = p.tree_slug ? '<dt>Field node</dt><dd><a href="/now/tree#' + esc(p.tree_slug) + '" target="_blank" style="color:var(--red)">' + esc(p.tree_title || p.tree_slug) + ' ↗</a></dd>' : '';
+      return card('<h3>' + esc(p.run_name || 'Run') + ' · ' + esc(p.label) + '</h3><dl>' + (ts ? '<dt>Established</dt><dd>' + esc(ts) + '</dd>' : '') + treeLink + '</dl>');
+    }
+    if (hit.layer.id === 'trail') {
+      const coords = hit.geometry?.coordinates;
+      if (coords) map.flyTo({ center: coords, zoom: Math.max(map.getZoom(), 13), pitch: 62, duration: 1200 });
+      const ts = p.created_at ? new Date(p.created_at * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+      const treeLink = p.tree_slug ? '<dt>Field node</dt><dd><a href="/now/tree#' + esc(p.tree_slug) + '" target="_blank" style="color:var(--red)">' + esc(p.tree_title || p.tree_slug) + ' ↗</a></dd>' : '';
+      return card('<h3>Guide trail · ' + esc(p.label) + '</h3><dl>' + (ts ? '<dt>Established</dt><dd>' + esc(ts) + '</dd>' : '') + treeLink + (p.note ? '<dt>Note</dt><dd>' + esc(p.note) + '</dd>' : '') + '</dl>');
+    }
   }
   if ($('l-geo').checked) {
     const layer = $('geo-layer').value;
@@ -393,7 +524,7 @@ function dropPin(lng, lat, label) {
   const src = map.getSource('pins'); if (!src) return;
   src.setData({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [lng, lat] }, properties: { label: label || '' } }] });
 }
-['stamps', 'pods', 'sam-fill', 'lb'].forEach((l) => {
+['graph-places', 'stamps', 'pods', 'sam-fill', 'lb', 'pins', 'trail', 'run-points'].forEach((l) => {
   map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
 });
@@ -461,6 +592,21 @@ $('b-play').onclick = () => {
   }, 1900);
 };
 
+async function loadGraphPlaces() {
+  try {
+    const r = await fetch('/map/places.php', { credentials: 'same-origin', cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    const places = Array.isArray(j.places) ? j.places.filter((p) => p.lat != null && p.lng != null) : [];
+    map.getSource('graph-places').setData({ type: 'FeatureCollection', features: places.map((p) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [+p.lng, +p.lat] },
+      properties: { title: p.title || '', body: p.body || '', href: p.href || '', slug: p.slug || '' }
+    })) });
+    status('st-graph', places.length + ' place' + (places.length !== 1 ? 's' : '') + ' in the field');
+  } catch (e) { status('st-graph', 'Could not load field places.', true); }
+}
+
 async function loadPods() {
   try {
     const r = await fetch(CFG.pods, { cache: 'no-store' });
@@ -469,6 +615,125 @@ async function loadPods() {
     map.getSource('pods').setData({ type: 'FeatureCollection', features: pods.map((p) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+p.lng, +p.lat] }, properties: { name: p.name || 'TimePod', note: p.note || '' } })) });
     status('st-pods', pods.length ? pods.length + ' on the network' : 'None listed yet (add them to timepods.json).');
   } catch (e) { status('st-pods', 'No timepods.json found.', true); }
+}
+
+/* ---------- guide trail ---------- */
+let TRAIL = [];
+function paintTrail() {
+  const feats = TRAIL.map((t) => ({ type: 'Feature',
+    geometry: { type: 'Point', coordinates: [+t.lng, +t.lat] },
+    properties: { label: t.label, note: t.note || '', tree_slug: t.tree_slug || '', tree_title: t.tree_title || '', created_at: +t.created_at } }));
+  map.getSource('trail').setData({ type: 'FeatureCollection', features: feats });
+  map.getSource('trail-route').setData({ type: 'FeatureCollection', features: feats.length > 1 ? [{ type: 'Feature',
+    geometry: { type: 'LineString', coordinates: feats.map((f) => f.geometry.coordinates) }, properties: {} }] : [] });
+}
+async function loadTrail() {
+  try {
+    const r = await fetch(CFG.trail, { credentials: 'same-origin', cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    TRAIL = Array.isArray(j.trail) ? j.trail : [];
+    paintTrail();
+  } catch (_) {}
+}
+async function saveTrailPoint(label, lng, lat, note = '') {
+  try {
+    const body = { label, lng, lat, note };
+    if (activeRunId) body.run_id = activeRunId;
+    const r = await fetch(CFG.trail, { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json();
+    if (j.ok) {
+      const pt = { label, lng, lat, note, run_id: activeRunId || null, tree_slug: j.tree_slug || '', tree_title: j.tree_title || '', created_at: Math.floor(Date.now() / 1000) };
+      TRAIL.push(pt); paintTrail();
+      // also refresh run display if we're in a run
+      if (activeRunId) {
+        const run = RUNS.find((r2) => r2.id === activeRunId);
+        if (run) { run.points.push(pt); paintRun(activeRunId); renderRunsList(); }
+        else loadRuns(); // run not in local cache yet
+      }
+    }
+  } catch (_) {}
+}
+
+/* ---------- guide runs ---------- */
+let activeRunId = null, activeRunName = '', RUNS = [], runPlaying = 0, selectedRunId = null;
+
+function paintRun(runId) {
+  selectedRunId = runId;
+  const run = RUNS.find((r) => r.id === runId);
+  const pts = run ? run.points : [];
+  const feats = pts.map((t) => ({ type: 'Feature',
+    geometry: { type: 'Point', coordinates: [+t.lng, +t.lat] },
+    properties: { label: t.label, tree_slug: t.tree_slug || '', tree_title: t.tree_title || '',
+                  run_name: run ? run.name : '', created_at: +t.created_at } }));
+  map.getSource('run-points').setData({ type: 'FeatureCollection', features: feats });
+  map.getSource('run-route').setData({ type: 'FeatureCollection', features: feats.length > 1 ? [{
+    type: 'Feature', geometry: { type: 'LineString', coordinates: feats.map((f) => f.geometry.coordinates) }, properties: {} }] : [] });
+  if ($('l-run') && !$('l-run').checked) { $('l-run').checked = true; $('l-run').dispatchEvent(new Event('change')); }
+  // highlight list item
+  document.querySelectorAll('.run-item').forEach((el) => el.classList.toggle('active', +el.dataset.runId === runId));
+}
+
+function replayRun(runId) {
+  if (runPlaying) { clearInterval(runPlaying); runPlaying = 0; }
+  const run = RUNS.find((r) => r.id === runId); if (!run || !run.points.length) return;
+  paintRun(runId);
+  let i = 0;
+  map.flyTo({ center: [+run.points[0].lng, +run.points[0].lat], zoom: 12, pitch: 60, duration: 1300 });
+  runPlaying = setInterval(() => {
+    i++; if (i >= run.points.length) { clearInterval(runPlaying); runPlaying = 0; return; }
+    map.flyTo({ center: [+run.points[i].lng, +run.points[i].lat], zoom: 13, pitch: 62, duration: 1600 });
+  }, 2200);
+}
+
+function renderRunsList() {
+  const ul = $('runs-list'); if (!ul) return;
+  if (!RUNS.length) { ul.innerHTML = '<li class="empty" style="display:block;cursor:default">No runs saved yet.</li>'; return; }
+  ul.innerHTML = '';
+  RUNS.forEach((r) => {
+    const li = document.createElement('li'); li.className = 'run-item'; li.dataset.runId = r.id;
+    const d = new Date(r.created_at * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    li.innerHTML = '<span class="run-name">' + esc(r.name) + '</span>' +
+      '<span class="run-meta">' + r.points.length + ' pts · ' + esc(d) + '</span>' +
+      '<button class="run-del" title="Delete run" data-rid="' + r.id + '">✕</button>';
+    li.onclick = (e) => { if (e.target.classList.contains('run-del')) return; selectedRunId === r.id ? replayRun(r.id) : paintRun(r.id); };
+    li.querySelector('.run-del').onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm('Delete run "' + r.name + '"?')) return;
+      await fetch('/map/run.php', { method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'delete', run_id: r.id }) });
+      loadRuns();
+    };
+    ul.appendChild(li);
+  });
+}
+
+async function loadRuns() {
+  try {
+    const r = await fetch('/map/run.php', { credentials: 'same-origin', cache: 'no-store' });
+    if (!r.ok) return;
+    const j = await r.json();
+    RUNS = Array.isArray(j.runs) ? j.runs : [];
+    renderRunsList();
+    // repaint selected run if still exists
+    if (selectedRunId && RUNS.find((r) => r.id === selectedRunId)) paintRun(selectedRunId);
+    else if (selectedRunId) { map.getSource('run-points').setData({ type: 'FeatureCollection', features: [] }); map.getSource('run-route').setData({ type: 'FeatureCollection', features: [] }); selectedRunId = null; }
+  } catch (_) {}
+}
+
+async function apiStartRun(name) {
+  const r = await fetch('/map/run.php', { method: 'POST', credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'start', name }) });
+  const j = await r.json();
+  if (j.ok) { activeRunId = j.run_id; activeRunName = name; }
+  return j;
+}
+
+async function apiEndRun() {
+  activeRunId = null; activeRunName = '';
+  loadRuns();
+  return { ok: true };
 }
 
 /* ---------- the agent: OpenAI via agent.php, tools run here ---------- */
@@ -515,8 +780,46 @@ const TOOLS = {
     if (typeof a.geology === 'string') { if (a.geology === 'off') setBox('l-geo', false); else if (GEO[a.geology]) { $('geo-layer').value = GEO[a.geology]; $('geo-layer').dispatchEvent(new Event('change')); setBox('l-geo', true); } }
     return { ok: true, layers: view().layers };
   },
-  set_camera: async (a) => { const o = { duration: 1000 }; if (a.pitch != null) o.pitch = num(a.pitch, 0, 75); if (a.bearing != null) o.bearing = Number(a.bearing) % 360; map.easeTo(o); return { ok: true }; }
+  set_camera: async (a) => { const o = { duration: 1000 }; if (a.pitch != null) o.pitch = num(a.pitch, 0, 75); if (a.bearing != null) o.bearing = Number(a.bearing) % 360; map.easeTo(o); return { ok: true }; },
+  start_run: async (a) => {
+    const name = String(a.name || '').trim().slice(0, 120);
+    if (!name) throw new Error('name required');
+    return await apiStartRun(name);
+  },
+  end_run: async () => apiEndRun(),
+  add_stamp: async (a) => {
+    const name = String(a.name || '').trim().slice(0, 120);
+    if (!name) throw new Error('name required');
+    let lng = a.lng != null ? LNG(a.lng) : null, lat = a.lat != null ? LAT(a.lat) : null;
+    // geocode if no coords given
+    if (lng == null || lat == null) {
+      const r2 = await fetch(P({ src: 'place', q: name }));
+      if (r2.ok) { const j2 = await r2.json(); if (j2.lng != null) { lng = j2.lng; lat = j2.lat; } }
+    }
+    const body = { name, line: String(a.line || ''), inked: String(a.inked || '') };
+    if (lng != null && lat != null) { body.lng = lng; body.lat = lat; }
+    const r = await fetch('/map/stamp.php', { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json();
+    if (j.error) throw new Error(j.error);
+    if (!j.duplicate) loadRecord(); // refresh stamp list on the map
+    return j;
+  }
 };
+async function addToPassport(btn, name, lng, lat) {
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const body = { name, line: 'Field place', inked: '' };
+    if (lng != null) { body.lng = lng; body.lat = lat; }
+    const r = await fetch('/map/stamp.php', { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const j = await r.json();
+    if (j.duplicate) { btn.textContent = 'already stamped'; }
+    else if (j.error) { btn.textContent = 'error'; btn.disabled = false; }
+    else { btn.textContent = 'stamped ✓'; loadRecord(); }
+  } catch (e) { btn.textContent = 'failed'; btn.disabled = false; }
+}
+window.addToPassport = addToPassport;
 function drawLine(coords) {
   if (!map.getSource('probe')) {
     map.addSource('probe', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
@@ -525,7 +828,8 @@ function drawLine(coords) {
   map.getSource('probe').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords }, properties: {} });
 }
 const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geology_at: 'asked the BGS about the rock', elevation_at: 'read the height',
-  terrain_profile: 'traced a height profile', heritage_near: 'searched Cadw records', my_stamps: 'read your stamps', fly_to: 'moved the map', set_layers: 'switched layers', set_camera: 'turned the camera' };
+  terrain_profile: 'traced a height profile', heritage_near: 'searched Cadw records', my_stamps: 'read your stamps', fly_to: 'moved the map', set_layers: 'switched layers', set_camera: 'turned the camera',
+  add_stamp: 'inked a place slip', start_run: 'started a run', end_run: 'ended the run' };
 let convo = '', busy = false;
 const log = (cls, text) => { const d = document.createElement('div'); d.className = 'msg ' + cls; d.textContent = text; $('log').appendChild(d); $('log').scrollTop = 1e9; return d; };
 async function post(body) {
@@ -567,7 +871,182 @@ $('ask-q').onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preven
 document.querySelectorAll('.ask .sugg button').forEach((b) => { b.onclick = () => ask(b.textContent); });
 window.ttgAsk = ask;
 
-map.on('load', () => { loadRecord(); loadPods(); heritage(); });
+/* ---------- place search ---------- */
+async function searchFly(q) {
+  q = q.trim().slice(0, 80);
+  if (!q) return;
+  status('search-st', '…');
+  try {
+    const r = await fetch(P({ src: 'place', q }));
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (j.lng == null) { status('search-st', 'Not found.', true); return; }
+    map.flyTo({ center: [j.lng, j.lat], zoom: 13, pitch: 60, duration: 1500 });
+    dropPin(j.lng, j.lat, j.label || q);
+    status('search-st', '');
+  } catch (e) { status('search-st', e.message, true); }
+}
+$('search').onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); searchFly($('search').value); } };
+$('search-go').onclick = () => searchFly($('search').value);
+
+/* ---------- live voice guide (WebRTC + gpt-live-1) ---------- */
+let livePC = null, liveDC = null, liveStream = null, liveAudioEl = null;
+let guideActive = false;
+// Active transcript segments keyed by start_ms (or monotonic counter)
+const liveSegs = new Map(); let segCounter = 0;
+// Pending function calls accumulating arguments
+const pendingCalls = new Map();
+
+const setGuideStatus = (txt, dot = false) => {
+  const el = $('guide-status'); if (!el) return;
+  el.innerHTML = dot ? '<span class="guide-status-dot"></span>' + esc(txt) : esc(txt);
+};
+
+function guideAppend(cls, text) {
+  const d = document.createElement('div'); d.className = 'guide-line ' + cls;
+  d.textContent = text; $('guide-log').appendChild(d);
+  $('guide-log').scrollTop = 1e9; return d;
+}
+
+function upsertSeg(speaker, delta, startMs) {
+  const key = startMs ?? ('c' + segCounter++);
+  if (!liveSegs.has(key)) liveSegs.set(key, { el: guideAppend(speaker, ''), text: '' });
+  const seg = liveSegs.get(key);
+  seg.text += delta; seg.el.textContent = seg.text;
+  $('guide-log').scrollTop = 1e9;
+}
+
+async function runLiveTool(callId, name, argsStr) {
+  let result;
+  try {
+    const fn = TOOLS[name];
+    if (!fn) throw new Error('unknown tool: ' + name);
+    const args = JSON.parse(argsStr || '{}');
+    result = await fn(args);
+    guideAppend('tool', '· ' + (LABEL[name] || name));
+    // persist every guide fly_to as a trail point
+    if (name === 'fly_to' && result.ok && args.lng != null && args.lat != null) {
+      saveTrailPoint(String(args.label || '').slice(0, 120) || 'unlabelled', +args.lng, +args.lat);
+    }
+  } catch (e) {
+    result = { error: String(e.message) };
+    guideAppend('tool', '· ' + (LABEL[name] || name) + ' — ' + e.message);
+  }
+  if (!liveDC || liveDC.readyState !== 'open') return;
+  // Standard Realtime API: submit output then trigger continuation
+  liveDC.send(JSON.stringify({ type: 'conversation.item.create',
+    item: { type: 'function_call_output', call_id: callId, output: JSON.stringify(result) } }));
+  liveDC.send(JSON.stringify({ type: 'response.create' }));
+}
+
+function handleLiveEvent(evt) {
+  const t = evt.type || '';
+
+  // Session ready
+  if (t === 'session.created' || t === 'session.started') {
+    setGuideStatus('connected · speak', true); return;
+  }
+
+  // User speech — Live API format
+  if (t === 'session.input_transcript.delta') { upsertSeg('me', evt.delta || '', evt.start_ms); return; }
+  // Agent speech — Live API format
+  if (t === 'session.output_transcript.delta') { upsertSeg('ai', evt.delta || '', evt.start_ms); return; }
+
+  // User speech — Realtime API format
+  if (t === 'conversation.item.input_audio_transcription.delta') { upsertSeg('me', evt.delta || '', null); return; }
+  // Agent speech — Realtime API format
+  if (t === 'response.audio_transcript.delta') { upsertSeg('ai', evt.delta || '', null); return; }
+
+  // Tool call — arguments accumulate
+  if (t === 'response.output_item.added' && evt.item?.type === 'function_call') {
+    pendingCalls.set(evt.item.call_id, { name: evt.item.name, args: '' }); return;
+  }
+  if (t === 'response.function_call_arguments.delta') {
+    const pc = pendingCalls.get(evt.call_id); if (pc) pc.args += evt.delta || ''; return;
+  }
+  if (t === 'response.function_call_arguments.done') {
+    const pc = pendingCalls.get(evt.call_id);
+    if (pc) { pendingCalls.delete(evt.call_id); runLiveTool(evt.call_id, pc.name, evt.arguments ?? pc.args); }
+    return;
+  }
+
+  // Tool call — compact/Live API format
+  if (t === 'function_call' || t === 'tool_call') {
+    runLiveTool(evt.call_id || evt.id, evt.name, evt.arguments || '{}'); return;
+  }
+
+  // Session lifecycle
+  if (t === 'session.close') { setGuideStatus('closing…'); return; }
+  if (t === 'session.closed' || t === 'session.expired') { stopGuide(); return; }
+
+  // Error
+  if (t === 'error') { guideAppend('tool', '! ' + (evt.error?.message || JSON.stringify(evt.error))); return; }
+}
+
+async function startGuide() {
+  if (guideActive) return;
+  $('guide-log').innerHTML = ''; liveSegs.clear(); pendingCalls.clear();
+  $('guide').classList.add('open');
+  $('guidebtn').setAttribute('aria-pressed', 'true');
+  setGuideStatus('requesting mic…');
+
+  try {
+    liveStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    livePC = new RTCPeerConnection();
+    liveStream.getAudioTracks().forEach((t) => livePC.addTrack(t, liveStream));
+
+    // Remote audio
+    livePC.ontrack = (e) => {
+      if (!liveAudioEl) { liveAudioEl = document.createElement('audio'); liveAudioEl.autoplay = true; document.body.appendChild(liveAudioEl); }
+      liveAudioEl.srcObject = e.streams[0];
+    };
+
+    // Data channel opened by server
+    livePC.ondatachannel = (e) => {
+      if (e.channel.label !== 'oai-events') return;
+      liveDC = e.channel;
+      liveDC.onmessage = (ev) => { try { handleLiveEvent(JSON.parse(ev.data)); } catch (_) {} };
+      liveDC.onclose = () => { if (guideActive) stopGuide(); };
+    };
+
+    setGuideStatus('opening session…');
+    const offer = await livePC.createOffer();
+    await livePC.setLocalDescription(offer);
+
+    const r = await fetch(CFG.live || 'live.php', { method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sdp: offer.sdp }) });
+    const j = await r.json();
+    if (j.error) throw new Error(j.error);
+    if (!j.sdp) throw new Error('No answer SDP from server.');
+
+    await livePC.setRemoteDescription({ type: 'answer', sdp: j.sdp });
+    guideActive = true;
+    setGuideStatus('waiting…');
+
+  } catch (e) {
+    setGuideStatus('error: ' + e.message);
+    stopGuide(true);
+  }
+}
+
+function stopGuide(keepPanel = false) {
+  guideActive = false;
+  if (liveStream) { liveStream.getTracks().forEach((t) => t.stop()); liveStream = null; }
+  if (livePC)     { livePC.close(); livePC = null; }
+  if (liveAudioEl){ liveAudioEl.srcObject = null; }
+  liveDC = null;
+  if (!keepPanel) {
+    $('guide').classList.remove('open');
+    $('guidebtn').setAttribute('aria-pressed', 'false');
+  }
+  setGuideStatus('disconnected');
+}
+
+$('guidebtn').onclick = () => { if (guideActive) stopGuide(); else startGuide(); };
+$('guide-x').onclick  = () => stopGuide();
+window.ttgGuide = { start: startGuide, stop: stopGuide };
+
+map.on('load', () => { loadRecord(); loadPods(); loadTrail(); loadRuns(); loadGraphPlaces(); heritage(); });
 
 })();
 </script>

@@ -1,0 +1,70 @@
+{
+  "records": [
+    {
+      "id": "place.gillett-square",
+      "type": "place",
+      "title": "Gillett Square, Dalston, London",
+      "summary": "Historic operational site, playground, public square, meeting point, experimental station. Significant period: 2012 era. Known associations: Time Travellers Guild activity, experimental apparatus, public-space performance, Aisha / Holly, Toby, milk float, early Time Machine work. A place accumulates temporal density through repeated events.",
+      "places": ["Gillett Square", "Dalston", "London"],
+      "people": ["toby-godden", "aisha-holly"],
+      "tags": ["gillett", "dalston", "square", "2012", "station"],
+      "classification": ["RECORD", "FACT"],
+      "confidence": 0.92,
+      "visibility": "PUBLIC",
+      "jack_note": "The square is real. The case on the float is not closed.",
+      "related": ["event.gillett-square.2012-12-25", "place.dalston"],
+      "status": "active"
+    },
+    {
+      "id": "place.dalston",
+      "type": "place",
+      "title": "Dalston",
+      "summary": "London neighbourhood containing Gillett Square. A Guild density of public-space work and early apparatus.",
+      "places": ["Dalston", "London"],
+      "tags": ["dalston", "london"],
+      "classification": ["FACT", "RECORD"],
+      "confidence": 0.95,
+      "visibility": "PUBLIC",
+      "related": ["place.gillett-square"],
+      "status": "current"
+    },
+    {
+      "id": "place.ystradgynlais",
+      "type": "place",
+      "title": "Ystradgynlais",
+      "summary": "Welsh town in the Guild place index. Temporal density through repeated events, people and objects. Not automatically a Station unless deliberately opened.",
+      "places": ["Ystradgynlais"],
+      "tags": ["ystradgynlais", "wales"],
+      "classification": ["RECORD"],
+      "confidence": 0.7,
+      "visibility": "PUBLIC",
+      "related": ["place.abercrave"],
+      "status": "indexed"
+    },
+    {
+      "id": "place.abercrave",
+      "type": "place",
+      "title": "Abercrave",
+      "summary": "Welsh place in the Guild index, associated with ridge finds and unclassified objects. Documentary evidence exists as proposed leaves, not necessarily canon.",
+      "places": ["Abercrave"],
+      "tags": ["abercrave", "wales"],
+      "classification": ["RECORD", "OPEN_CASE"],
+      "confidence": 0.6,
+      "visibility": "PUBLIC",
+      "related": ["place.ystradgynlais"],
+      "status": "indexed"
+    },
+    {
+      "id": "lex.station",
+      "type": "place",
+      "title": "Station",
+      "summary": "A Station is a place where Guild activity becomes deliberately accessible. Stations can be physical, digital, temporary, mobile or ceremonial. A website can be a station. A public square can be a station. A room can be a station. A festival can temporarily become a station. A person should not generally be called a station.",
+      "tags": ["station", "lexicon"],
+      "classification": ["RECORD"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "You are not a station. You may stand in one.",
+      "status": "current"
+    }
+  ]
+}

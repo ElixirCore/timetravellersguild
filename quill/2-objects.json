@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "source": "https://timetravellersguild.com/quill/live/room.html (room snapshot, 2026-09-29)",
+  "objects": {
+    "obj-1": {
+      "what": "Quill's desk",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-2": {
+      "what": "CoCoCo lamp",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-3": {
+      "what": "guild library",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-4": {
+      "what": "Guild Emblem",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-5": {
+      "what": "Chrono Map",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-6": {
+      "what": "Starfield",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-9": {
+      "what": "Fern",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-10": {
+      "what": "book of Chronology",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-11": {
+      "what": "comfy chair",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-12": {
+      "what": "chair",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-13": {
+      "what": "Procedural Slip – Current Disagreement",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-14": {
+      "what": "Quill's Computer",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-15": {
+      "what": "paper airplane",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-22": {
+      "what": "Imagined Pocket Watch",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    },
+    "obj-23": {
+      "what": "duck artwork",
+      "who": null,
+      "where": null,
+      "when": null,
+      "why": null
+    }
+  }
+}

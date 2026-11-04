@@ -1,0 +1,16 @@
+-- Intended MariaDB shape. This host stores aperture turns as
+-- storage/jack/aperture-dialogues.json. Do not treat either as canon.
+
+-- CREATE TABLE aperture_dialogues (
+--   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--   public_id CHAR(26) NOT NULL UNIQUE,
+--   conversation_id VARCHAR(120) NOT NULL,
+--   initiator_agent ENUM('JACK', 'MABEL') NOT NULL,
+--   target_agent ENUM('JACK', 'MABEL') NOT NULL,
+--   context_slug VARCHAR(160) NULL,
+--   jack_state_json JSON NOT NULL,
+--   mabel_state_json JSON NOT NULL,
+--   hyper_vector_json JSON NOT NULL,
+--   turn_status ENUM('PENDING', 'ACCEPTED_PROPOSAL', 'HALTED_BY_CLERK', 'RESOLVED') NOT NULL DEFAULT 'PENDING',
+--   created_at DATETIME NOT NULL
+-- );

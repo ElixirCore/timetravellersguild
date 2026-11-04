@@ -1,0 +1,13 @@
+# Sophie: web versions of photos. Names are random and never change, so cache hard.
+Options -Indexes
+DirectoryIndex disabled
+<FilesMatch "\.(?i:php\d*|phtml|phar|pl|py|cgi|sh|s?html?|svg|js)$">
+  Require all denied
+</FilesMatch>
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+</IfModule>
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=31536000, immutable"
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>

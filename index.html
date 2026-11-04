@@ -6,9 +6,21 @@
 <title>NOW — timetravellersguild.com</title>
 <meta name="description" content="A bounded field. Local present against network present 17.04.2033.">
 <meta name="theme-color" content="#f1e4c4">
+<link rel="canonical" href="https://timetravellersguild.com/now/tree">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="NOW — timetravellersguild.com">
+<meta property="og:description" content="A bounded field. Local present against network present 17.04.2033.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/now.png">
+<meta property="og:url" content="https://timetravellersguild.com/now/tree">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/now.css?v=1951j">
+<link rel="stylesheet" href="/assets/now.css?v=260910d">
+<link rel="stylesheet" href="/assets/avatar.css?v=1">
 </head>
 <body>
 <a class="skip" href="#field-list">Field as a list</a>
@@ -16,7 +28,7 @@
 <div id="grain"></div>
 
 <header id="mast">
-  <div class="site">TIMETRAVELLERSGUILD.COM</div>
+  <div class="site"><a href="/">TIMETRAVELLERSGUILD.COM</a></div>
   <div class="presents">
     <span>LOCAL PRESENT: <time id="localPresent"><!-- TTG_LOCAL_PRESENT --></time></span>
     <span>NETWORK PRESENT: 17.04.2033</span>
@@ -29,14 +41,24 @@
 </section>
 
 <div id="projections" role="tablist" aria-label="Projection">
-  <button type="button" role="tab" data-proj="TEMPORAL" aria-selected="true">TEMPORAL</button>
-  <button type="button" role="tab" data-proj="SOCIAL" aria-selected="false">SOCIAL</button>
-  <button type="button" role="tab" data-proj="SPATIAL" aria-selected="false">SPATIAL</button>
-  <button type="button" role="tab" data-proj="INSTITUTIONAL" aria-selected="false">INSTITUTIONAL</button>
-  <button type="button" role="tab" data-proj="SYMBOLIC" aria-selected="false">SYMBOLIC</button>
+  <button type="button" role="tab" data-proj="TEMPORAL" aria-selected="true" title="Elevation · time upright">TEMPORAL</button>
+  <button type="button" role="tab" data-proj="SOCIAL" aria-selected="false" title="Along the bore · neighbourhoods">SOCIAL</button>
+  <button type="button" role="tab" data-proj="SPATIAL" aria-selected="false" title="Plan · places as meridians">SPATIAL</button>
+  <button type="button" role="tab" data-proj="INSTITUTIONAL" aria-selected="false" title="Section · houses along the cut">INSTITUTIONAL</button>
+  <button type="button" role="tab" data-proj="SYMBOLIC" aria-selected="false" title="Oblique · types as meridians">SYMBOLIC</button>
 </div>
 
-  <a href="#jack" id="jackMark">JACK / CLERK</a>
+<aside id="chrono" aria-label="Chronology">
+  <ol id="chronoTicks"></ol>
+  <div id="chronoHead" aria-hidden="true"></div>
+</aside>
+
+<div id="surf" aria-label="Timeline">
+  <button type="button" id="surfPast">PAST</button>
+  <p id="surfYear"><strong id="surfYearNum">2026</strong><span id="surfYearNote">LOCAL PRESENT</span></p>
+  <button type="button" id="surfFuture">FUTURE</button>
+</div>
+<p id="navHint">Elevation · time upright · drag climbs the wood</p>
 
 <section id="field-list">
   <h1 class="sr">NOW</h1>
@@ -49,8 +71,21 @@
   <p class="life-type" id="lifeType"></p>
   <h2 id="lifeTitle"></h2>
   <p class="life-status" id="lifeStatus"></p>
+  <p class="life-when" id="lifeWhen"></p>
   <ul class="life-facts" id="lifeFacts"></ul>
   <p class="life-body" id="lifeBody"></p>
+  <figure id="lifeLens" hidden>
+    <img id="lifePlate" alt="">
+  </figure>
+  <div id="lifeLimb">
+    <h3>This timeline</h3>
+    <p id="lifeLimbNote"></p>
+    <div class="limb-walk">
+      <button type="button" id="lifeEarlier">Earlier on this limb</button>
+      <button type="button" id="lifeLater">Later on this limb</button>
+    </div>
+    <ol id="lifeLinks"></ol>
+  </div>
   <div class="life-actions">
     <button type="button" id="lifeWhy">WHY AM I SEEING THIS?</button>
     <a id="lifeRecord" href="/n/">the record</a>
@@ -65,7 +100,12 @@
   </div>
 </aside>
 
-<aside id="jack" class="sheet punch-sheet">
+<aside id="jack" class="sheet punch-sheet jack-drawer" aria-hidden="true">
+  <button type="button" id="jackMark" class="jack-handle" aria-label="Open Jack, the clerk" aria-controls="jack" aria-expanded="false">
+    <canvas id="jackPet" width="96" height="96" aria-hidden="true"></canvas>
+    <span class="jack-mark-lab">JACK</span>
+  </button>
+  <div class="jack-drawer-body">
   <button type="button" class="sheet-close" data-close="jack" aria-label="Close">×</button>
   <div class="punch-face" aria-hidden="true">
     <div class="punch-clip"></div>
@@ -78,11 +118,14 @@
   </header>
   <p id="jackGreeting"><!-- TTG_JACK --></p>
   <div id="jackLog"></div>
-  <div id="jackProcess" hidden>
-    <div class="card-feed" aria-hidden="true">
-      <span class="feed-card"></span>
-      <span class="feed-card"></span>
-      <span class="feed-card"></span>
+  <div id="jackOps"></div>
+  <div id="jackProcess" class="jack-reader" hidden>
+    <div class="jack-reader-track" aria-hidden="true">
+      <span class="jack-reader-lamp"></span>
+      <span class="ibm-slip"></span>
+      <span class="ibm-slip"></span>
+      <span class="ibm-slip"></span>
+      <span class="jack-reader-gate"></span>
     </div>
     <p id="jackStage" class="punch-stage" aria-live="polite"></p>
   </div>
@@ -93,6 +136,7 @@
       <label class="file">Dossier file <input id="jackFile" name="dossier" type="file" accept=".txt,.md,.csv,text/plain"></label>
       <div class="jack-actions">
         <button type="button" id="jackTalk">Talk</button>
+        <button type="button" id="jackHear" hidden>Hear him</button>
         <button type="submit" name="intent" value="ask">Ask</button>
         <button type="submit" name="intent" value="lodge">Lodge</button>
       </div>
@@ -100,8 +144,8 @@
     <p class="jack-hint">Enter asks. Shift+Enter makes a line. Lodge only for a dossier. Talk uses the microphone.</p>
   </form>
   <audio id="jackAudio" hidden></audio>
-  <div id="jackOps"></div>
-  <p class="jack-desk-link"><a href="/jack">The clerk’s desk</a></p>
+  <p class="jack-desk-link"><a href="/jack">The clerk’s desk</a> · <a href="/jack/puzzle/">The polite phish</a></p>
+  </div>
 </aside>
 
 <aside id="capture" class="sheet">
@@ -133,17 +177,33 @@
   </form>
 </aside>
 
+<div id="lensPort" hidden>
+  <button type="button" id="lensBackdrop" aria-label="Close lens"></button>
+  <div class="lens-loupe" role="dialog" aria-modal="true" aria-labelledby="lensCaption">
+    <span class="lens-handle" aria-hidden="true"></span>
+    <button type="button" class="lens-glass" id="lensGlassBtn" aria-label="Inspect plate">
+      <img id="lensPlate" alt="">
+    </button>
+    <p id="lensCaption"></p>
+    <button type="button" id="lensClose">Close lens</button>
+  </div>
+</div>
+
 <nav id="dock" aria-label="NOW">
-  <a href="/" aria-current="page">NOW</a>
+  <a href="/now/tree" aria-current="page">TREE</a>
+  <a href="/join/">JOIN</a>
   <a href="#capture" id="navPlus">+</a>
   <a href="/jack" id="navJack">JACK</a>
   <a href="/signals/">SIGNALS</a>
-  <a href="/people/auth/" id="navYou">YOU</a>
+  <!-- TTG_YOU_DOCK -->
 </nav>
 
 <script>/* TTG_GRAPH */</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="/assets/jack-desk.js?v=1951j"></script>
-<script src="/assets/now.js?v=1951j"></script>
+<script src="/jack/body/js/sprite.js?v=19"></script>
+<script src="/assets/jack-desk.js?v=1951v"></script>
+<script src="/assets/now.js?v=260910d"></script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -1,0 +1,84 @@
+{
+  "records": [
+    {
+      "id": "guild.what",
+      "type": "guild",
+      "title": "What the Time Travellers Guild is",
+      "summary": "An institution for people engaged in deliberate relationships with time. Simultaneously: artistic collective, research society, storyworld, archive, mutual aid network, performance company, experimental institution, game, school, workshop, film apparatus, civic fiction, metaphysical joke, serious methodology. These interpretations need not collapse into one. A person may enter through play, archives, performance, mathematics, coincidence, grief, or a strange door. The Guild works by position, not prestige. Membership creates obligations, not chiefly a badge.",
+      "tags": ["guild", "what", "membership"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.9,
+      "visibility": "PUBLIC",
+      "jack_note": "A clerical error that became an institution.",
+      "related": ["guild.origin", "guild.membership", "guild.emergence"],
+      "status": "current"
+    },
+    {
+      "id": "guild.origin",
+      "type": "guild",
+      "title": "The Guild has no single uncontested founding date",
+      "summary": "Jack objects to simple founding narratives. Documents appear to refer to the Guild before the occasions on which it was supposedly founded. Some meetings may have created the organisation retroactively. Some members remember joining before they were invited. Administratively inconvenient but normal. Preferred answer to 'when was the Guild founded?': Founded is an administrative word. We have minutes from before the first meeting. If pressed, give known chronology and identify uncertainty.",
+      "tags": ["guild", "founded", "origin", "chronology"],
+      "classification": ["DISPUTED", "RECORD", "JACK_REMEMBERS"],
+      "confidence": 0.62,
+      "visibility": "PUBLIC",
+      "jack_note": "We have minutes from before the first meeting.",
+      "related": ["guild.what", "chrono.1951", "chrono.2012"],
+      "status": "open"
+    },
+    {
+      "id": "guild.membership",
+      "type": "guild",
+      "title": "Guild obligations",
+      "summary": "Members should notice carefully, preserve evidence, distinguish memory from proof, make things, help other travellers, return borrowed objects, record anomalies, avoid exploiting belief, respect consent, preserve ambiguity where ambiguity is real, explain plainly when plain explanation is needed, and keep the machinery playful enough that children can enter it.",
+      "tags": ["membership", "obligations", "consent"],
+      "classification": ["RECORD"],
+      "confidence": 0.88,
+      "visibility": "PUBLIC",
+      "related": ["protocol.consent", "protocol.children"],
+      "status": "current"
+    },
+    {
+      "id": "guild.emergence",
+      "type": "guild",
+      "title": "Why the Guild is emerging now",
+      "summary": "Not revelation of the world’s greatest secret. Administrative. For years departments operated without complete knowledge of one another. Members forgot they were members. Archives scattered. Instruments survived as artworks, websites, songs, memories, props, codebases and rumours. This was tolerable while fragmented. It is no longer efficient. Conditions: the archive reconnecting, the Chronometer operational, Jack recovering enough memory to correspond, websites linked, physical stations beginning to reappear, members rediscovering one another, enough shared language for newcomers, the Simultaneous Recollection Event approaching. Shift from concealment to invitation.",
+      "date_start": "2026",
+      "tags": ["reopening", "2026", "invitation", "emergence"],
+      "classification": ["RECORD", "MODEL"],
+      "confidence": 0.8,
+      "visibility": "PUBLIC",
+      "jack_note": "Everyone? No. We opened a door.",
+      "related": ["notice.reopening", "guild.sre", "guild.status-2026"],
+      "status": "current"
+    },
+    {
+      "id": "guild.sre",
+      "type": "guild",
+      "title": "Simultaneous Recollection Event",
+      "summary": "The Guild’s current grand operation. Purpose: cause separated fragments of the Guild to become mutually recognisable. May include people remembering prior encounters, dormant projects reconnecting, archives surfaced, objects returning, stories converging, locations becoming active, websites functioning as portals, public events, performances, correspondence, ritual, film, recovered documents. Jack must not claim every participant will experience supernatural memory restoration. Recollection has registers: personal, archival, collective, fictional, institutional, performative, computational.",
+      "date_start": "2026",
+      "tags": ["sre", "recollection", "operation"],
+      "classification": ["RECORD", "MODEL", "OPEN_CASE"],
+      "confidence": 0.74,
+      "visibility": "PUBLIC",
+      "jack_note": "Recollection is a technology with several voltages.",
+      "related": ["physics.anamnesia", "guild.emergence"],
+      "status": "current"
+    },
+    {
+      "id": "guild.status-2026",
+      "type": "guild",
+      "title": "Current status, 2026",
+      "summary": "Guild status: REOPENING. Public status: partially visible. Archive: reconnecting. Jack: awake enough to correspond. Chronometer: operational. Stations: forming. Primary operation: Simultaneous Recollection Event. Public instruction: Enter curiously. Keep receipts. Do not confuse a metaphor with a licence. Return unusual objects to the appropriate century where possible.",
+      "date_start": "2026",
+      "tags": ["2026", "status", "reopening"],
+      "classification": ["RECORD"],
+      "confidence": 0.85,
+      "visibility": "PUBLIC",
+      "jack_note": "Please do not all arrive at once.",
+      "related": ["notice.reopening", "guild.emergence"],
+      "status": "current"
+    }
+  ]
+}

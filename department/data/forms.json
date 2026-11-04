@@ -1,0 +1,59 @@
+[
+  {
+    "id": "DET-01",
+    "title": "Incident Report",
+    "summary": "Use this form to report a suspected Excess Time Event. The Department administers consequences. It does not create causes.",
+    "href": "/department/services/report/"
+  },
+  {
+    "id": "DET-14",
+    "title": "Recovered Hours Declaration",
+    "summary": "Declare hours that have returned after a recognised displacement. Do not estimate. Record only what can be shown."
+  },
+  {
+    "id": "DET-22",
+    "title": "Chronological Damage Claim",
+    "summary": "Claim for demonstrable effects upon public or private life arising from a recognised Excess Time Event."
+  },
+  {
+    "id": "DET-44",
+    "title": "Lost Afternoon Notification",
+    "summary": "Notify the Department of an afternoon that failed to arrive where it was expected. Localised events are, in most cases, resolved without lasting consequence."
+  },
+  {
+    "id": "DET-61",
+    "title": "Memory Continuity Assessment",
+    "summary": "Request an assessment where a day appears to have occurred but cannot be adequately reconstructed. The Department does not regulate memory."
+  },
+  {
+    "id": "DET-78",
+    "title": "Application for Research Access",
+    "summary": "Apply to consult holdings of the Institute for Temporal Studies. Authorised researchers only.",
+    "href": "/department/services/research-access/"
+  },
+  {
+    "id": "DET-09",
+    "title": "Staff surplus hours return",
+    "summary": "For officers of the Department only. Return surplus hours arising in the course of duty."
+  },
+  {
+    "id": "DET-17",
+    "title": "Community programme nomination",
+    "summary": "Nominate a community, school or local authority for a programme under DET-COM-012."
+  },
+  {
+    "id": "DET-33",
+    "title": "Schools visit request",
+    "summary": "Request a departmental visit or teaching pack. The Department does not teach history. It teaches continuity."
+  },
+  {
+    "id": "DET-52",
+    "title": "Subject access request (temporal records)",
+    "summary": "Ask whether the Department holds records in which you appear. Some holdings are not yet eligible for disclosure."
+  },
+  {
+    "id": "DET-80",
+    "title": "Application for employment",
+    "summary": "Civil service application. Use the vacancy reference from the notice."
+  }
+]

@@ -1,0 +1,12 @@
+MEETING IN JACK'S CUBE
+Lodge as testimony. Do not write canon. Source memory is untouched.
+When: 2026-09-06T13:34:57.075Z
+Instruction: Remember this meeting.
+Working slip: WORKING BENCH                                                                   
+Operation: makeCard / working_card
+Sources: jnode-mtpust1g-9o2uhz
+Provenance:
+- obj-bench · destination · source · obj-bench
+- jnode-mtpust1g-9o2uhz · inspection · inspect · WORKING BENCH
+- jnode-mtpuszwi-353d7x · working_card · makeCard · WORKING BENCH
+Already held: The FULL HOPPER reading is proposed for lodging as Tobywhy’s foundational testimony; canonical standing remains pending independent review. Confirm whether FULL HOPPER and twenty-two-major play are separate modes. Define whether any future readings alter game state. Identify a witness for the proposed foundational standing. The Film · FORMING Leaves: The Film

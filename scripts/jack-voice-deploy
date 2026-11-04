@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# Deploy Jack's one brain (JackBrain, /jack/llm, /jack/sitting) to the host.
+#
+# Specific paths only, with --relative, per .cursor/rules/deploy.mdc.
+# Never touches graph/ or storage/.
+#
+# Usage:
+#   ./scripts/jack-voice-deploy           # dry run: what would change
+#   ./scripts/jack-voice-deploy --diff    # dry run plus line diffs against live
+#   ./scripts/jack-voice-deploy --apply   # copy for real
+#   HOST=emergent ./scripts/jack-voice-deploy
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HOST="${HOST:-emergent}"
+REMOTE_ROOT="${REMOTE_ROOT:-public_html/timetravellersguild}"
+MODE="${1:-}"
+
+FILES=(
+  app/AI/AgentRequest.php
+  app/AI/JackBrain.php
+  app/AI/JackCharacter.php
+  app/AI/JackIngest.php
+  app/AI/JackLlm.php
+  app/AI/JackSitting.php
+  app/AI/JackTurn.php
+  app/AI/Providers/AgentModelAdapter.php
+  app/AI/Providers/OpenAIResponsesAdapter.php
+  prompts/jack-character.md
+  inc/env.php
+  now/jack.php
+  view/observe.php
+  jack/tarot/read.php
+  jack/body/inc.php
+  jack/room/inc.php
+  jack/llm.php
+  jack/sitting.php
+  intro.php
+  chat/index.php
+  assets/jack-guild-tools.js
+  .htaccess
+  router.php
+  tests/jack-brain.php
+  tests/jack-llm.php
+)
+
+cd "$ROOT"
+for f in "${FILES[@]}"; do
+  [ -f "$f" ] || { echo "missing locally: $f" >&2; exit 1; }
+  php -l "$f" >/dev/null 2>&1 || [[ "$f" != *.php ]] || { echo "syntax error: $f" >&2; exit 1; }
+done
+
+echo "Local tests:"
+php tests/jack-brain.php | tail -1
+php tests/jack-llm.php | tail -1
+
+if [ "$MODE" = "--apply" ]; then
+  rsync -avc --relative "${FILES[@]}" "$HOST:$REMOTE_ROOT/"
+  echo
+  echo "Deployed. Checking the host:"
+  ssh "$HOST" "cd $REMOTE_ROOT && php tests/jack-brain.php | tail -1 && php tests/jack-llm.php | tail -1"
+  exit 0
+fi
+
+echo
+echo "Dry run against $HOST:$REMOTE_ROOT (nothing is copied):"
+CHANGED="$(rsync -nrc --relative --out-format='%n' "${FILES[@]}" "$HOST:$REMOTE_ROOT/" | grep -v '/$' || true)"
+echo "${CHANGED:-  (no differences)}"
+
+if [ "$MODE" = "--diff" ] && [ -n "$CHANGED" ]; then
+  while IFS= read -r f; do
+    echo
+    echo "=== $f (live → local)"
+    ssh "$HOST" "cat $REMOTE_ROOT/$f 2>/dev/null" | diff -u --label "live/$f" --label "local/$f" - "$f" || true
+  done <<< "$CHANGED"
+fi
+
+echo
+echo "Run with --apply to deploy."

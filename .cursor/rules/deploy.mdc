@@ -1,0 +1,25 @@
+---
+description: Deploy rules — never wipe live graph or TTG root
+alwaysApply: true
+---
+
+# Deploy (emergent → public_html/timetravellersguild)
+
+## Hard bans
+
+- **Never** rsync or copy local `graph/nodes.json`, `graph/edges.json`, `graph/pending.json`, `graph/pending-edges.json`, or `graph/punches.jsonl` onto the host as a full replace. Live punches (Black Swan, Nerys, …) live only there until pulled.
+- **Never** dump a flat file list onto the TTG root (that overwrote `index.php` before). Rsync **specific paths** with `--relative` from the repo root.
+- Prefer PHP/assets/tests deploys without touching `graph/`.
+
+## Graph workflow
+
+```bash
+./scripts/graph-pull              # live → local before graph/Jack work
+./scripts/graph-push-merge        # local → live only as a union; never shrinks canon
+```
+
+If a record is missing locally, pull first. Do not “fix” live by uploading a smaller `nodes.json`.
+
+## After deploy
+
+Verify with a targeted check (curl/grep/ssh), not by assuming the laptop copy is authoritative.

@@ -1,0 +1,19 @@
+# CHRONOS — served from /box/
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Force trailing slash so relative module imports resolve under /box/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^$ /box/ [R=301,L]
+</IfModule>
+
+# Cache static assets lightly; HTML always revalidated
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>

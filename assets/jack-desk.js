@@ -126,15 +126,37 @@
     }
   }
 
+  function startReading() {
+    var sheet = $('jack');
+    var proc = $('jackProcess');
+    var hear = $('jackHear');
+    if (sheet) sheet.classList.add('reading');
+    if (proc) proc.hidden = false;
+    setStage('Reading the last slip aloud.');
+    if (hear) hear.setAttribute('aria-pressed', 'true');
+  }
+
+  function stopReading() {
+    var sheet = $('jack');
+    var proc = $('jackProcess');
+    var hear = $('jackHear');
+    if (sheet) sheet.classList.remove('reading');
+    if (proc && sheet && !sheet.classList.contains('working')) proc.hidden = true;
+    if (!sheet || !sheet.classList.contains('working')) setStage('');
+    if (hear) hear.setAttribute('aria-pressed', 'false');
+  }
+
   function speakText(text, opts) {
     opts = opts || {};
     var g = graph();
     var voiceOn = !!(g.jack && g.jack.voice) || opts.force;
-    if (!voiceOn || !text) return;
+    if (!voiceOn) return;
+    if (!text && !opts.queued) return;
     var endpoint = g.jack_speak || '/jack/speak';
     var data = new FormData();
     data.set('csrf', g.csrf || '');
-    data.set('text', text);
+    if (text) data.set('text', text);
+    startReading();
     fetch(endpoint, {
       method: 'POST',
       body: data,
@@ -145,20 +167,41 @@
       if (ct.indexOf('audio/') !== 0) return null;
       return res.blob();
     }).then(function (blob) {
-      if (!blob || !blob.size) return;
+      if (!blob || !blob.size) {
+        stopReading();
+        return;
+      }
       var audio = $('jackAudio');
-      if (!audio) return;
+      if (!audio) {
+        stopReading();
+        return;
+      }
       revokeAudio();
       audioUrl = URL.createObjectURL(blob);
       audio.src = audioUrl;
-      var play = audio.play();
-      if (play && play.catch) play.catch(function () {});
       audio.onended = function () {
+        stopReading();
         if (listening && rec) {
           try { rec.start(); } catch (e) {}
         }
       };
-    }).catch(function () {});
+      audio.onerror = function () { stopReading(); };
+      var play = audio.play();
+      if (play && play.catch) play.catch(function () { stopReading(); });
+    }).catch(function () { stopReading(); });
+  }
+
+  function setupHear() {
+    var hear = $('jackHear');
+    var g = graph();
+    if (!hear) return;
+    if (!(g.jack && g.jack.voice)) return;
+    hear.hidden = false;
+    if (hear.getAttribute('data-jack-hear-bound')) return;
+    hear.setAttribute('data-jack-hear-bound', '1');
+    hear.addEventListener('click', function () {
+      speakText('', { force: true, queued: true });
+    });
   }
 
   function defaultOps(ops, hooks) {
@@ -170,17 +213,41 @@
       d.className = 'proposal';
       var p = document.createElement('p');
       p.textContent = op.label || '';
+      d.appendChild(p);
+      if (op.context) {
+        var ctx = document.createElement('p');
+        ctx.className = 'ctx';
+        ctx.textContent = op.context;
+        d.appendChild(ctx);
+      }
       var row = document.createElement('div');
       row.className = 'row';
-      d.appendChild(p);
       d.appendChild(row);
       var acc = document.createElement('button');
       acc.type = 'button'; acc.textContent = 'Accept';
       var dis = document.createElement('button');
       dis.type = 'button'; dis.textContent = 'Dismiss';
       acc.addEventListener('click', function () {
-        if (hooks && hooks.onOp) hooks.onOp(op);
-        else if (op.kind === 'OPEN' && op.href) location.href = op.href;
+        if (hooks && hooks.onOp) {
+          hooks.onOp(op);
+          d.remove();
+          return;
+        }
+        if (hooks && hooks.room) {
+          if (op.kind === 'FOCUS' && op.slug) {
+            var note = document.createElement('p');
+            note.className = 'op';
+            var a = document.createElement('a');
+            a.href = '/n/' + encodeURIComponent(op.slug) + '/';
+            a.textContent = op.label || ('Record ' + op.slug);
+            note.appendChild(a);
+            var log = $('jackLog');
+            if (log) log.appendChild(note);
+          }
+          d.remove();
+          return;
+        }
+        if (op.kind === 'OPEN' && op.href) location.href = op.href;
         else if (op.kind === 'FOCUS' && op.slug) location.href = '/n/' + encodeURIComponent(op.slug) + '/';
         else if (op.kind === 'CAPTURE') location.href = '/now#capture';
         else if (op.kind === 'PEEL') location.href = '/now';
@@ -255,8 +322,7 @@
     var form = $('jackForm');
     if (!form || form.getAttribute('data-jack-bound')) return;
     form.setAttribute('data-jack-bound', '1');
-    buildFace();
-    setupTalk();
+    if (opts.room) form.setAttribute('action', '/jack');
 
     var ask = form.querySelector('button[value="ask"]');
     var qEl = $('jackQ');
@@ -271,6 +337,7 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
       var qBox = $('jackQ');
       var q = (qBox && qBox.value ? qBox.value : '').trim();
       var fileEl = $('jackFile');
@@ -312,7 +379,7 @@
           else defaultOps((j && j.ops) || [], opts);
           if (opts.onNodes) opts.onNodes((j && j.nodes) || []);
           if (opts.onEdges) opts.onEdges((j && j.edges) || []);
-          if (j && j.voice !== false) speakText(text);
+          if (j && j.voice !== false) speakText('', { queued: true });
         })
         .catch(function () {
           stopProcess();
@@ -323,6 +390,10 @@
       if (qBox) qBox.value = '';
       if (fileEl) fileEl.value = '';
     });
+
+    buildFace();
+    setupTalk();
+    setupHear();
   }
 
   global.TTG_JACK_DESK = { mount: mount, speak: speakText };

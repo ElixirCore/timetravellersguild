@@ -1,0 +1,897 @@
+{
+ "source": "https://timetravellersguild.com/now/tree",
+ "collected": "2026-11-04",
+ "about": "Compressed digest of the public tree. Each entry's gist is the lead sentence from its node page, unaltered. Left out: 17 media entries, 1 held film fragment, 1 sealed item. Canon is the keeper's own statement. The narrative is a summary written only from these entries.",
+ "narrative": "timetravellersguild.com (British spelling, no \"the\") is the public face of the Time Travellers Guild. Its tree sets a local present (04.11.2026, \"pre-travel civilisation\") against a network present of 17.04.2033. Roots: the Department of Excess Time, established 1951 and headquartered at Cathays Park, Cardiff, which administers consequences and does not create causes; the site states it is an FFILM.org artistic construction, not a statutory or governmental body. In 1981 time travel happened at Tipi Valley, coordinates 2033–1981–276 (origin 2033, destination 1981, mark 276). In 2008 the Guild first wrote itself down at Cardiff, and the founding record is completed. 2026 is the dense branch. Station XIII (51.46 °N, 3.19 °W) runs the Chronometer, Instrument №13, which stamps moments, measures relation and does not predict. Cribarth, the sleeping giant above the valley, gave three nights of readings from 21 March 2026 in which two instrument tables disagreed; the rule is not to force a single reading. Abercrave is the village at the head of the valley, and the Swansea Valley holds Cribarth, Abercrave and more than one sealed container. A Mabel notice reads this recurrence as a pattern, not a cause. A Welsh Government mug was first observed on 3 September 2026, a moment the Chronometer stamped. The Film is forming across live performance, dome projection, testimony and recovered records. The Grimoire's study leaves read the Rede as three things at once: a social ethic, a description of ritual movement (circle clockwise while the moon grows, counterclockwise while it wanes) and a calendar of moon and wind. Its practices: pair \"live and let live\" with fair exchange; restrain speech and listen carefully; test an intention by asking who is affected, whose choice is displaced and what fair exchange would be; and keep a partial page's gap visible rather than finishing another person's poem. Ahead: signals are being received (2029), a transmission fixed by the sky and sent to nobody in particular in the cause of peace is intended and scheduled for 2029, and Elsewhen (2033) holds what is not yet placed in any chronology.",
+ "canon": [
+  "The Guild's time machines are the red phonebox network (TimePods). Pods stay red.",
+  "The Guild is not affiliated with the TARDIS. Doctor Who is a BBC show in the Guild's world, so a blue phonebox is only ever a TV prop.",
+  "Jack is a punchcard entity from the 1950s foundation of the Department of Excess Time. Austerity cuts made him unemployed and he now works as the Guild's clerk."
+ ],
+ "entries": [
+  {
+   "year": "1951",
+   "title": "Department of Excess Time",
+   "type": "INSTITUTION",
+   "status": "ACTIVE",
+   "observed": "Cathays Park, Cardiff",
+   "href": "/n/department/",
+   "gist": "Welsh Government. Established 1951. It administers consequences. It does not create causes. DET is an FFILM.org artistic construction, not a statutory or governmental body.",
+   "importance": 0.9
+  },
+  {
+   "year": "1981",
+   "title": "Time travel at Tipi Valley",
+   "type": "EVENT",
+   "status": "ACTIVE",
+   "observed": "Tipi Valley",
+   "href": "/n/tipi-valley-2033-1981-276/",
+   "gist": "Time travel happened. Coordinates 2033–1981–276. Tipi Valley.",
+   "importance": 0.88
+  },
+  {
+   "year": "1981",
+   "title": "Tipi Valley",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Tipi Valley",
+   "href": "/n/tipi-valley/",
+   "gist": "A valley of tents. The coordinate names the place.",
+   "importance": 0.8
+  },
+  {
+   "year": "2008",
+   "title": "Cardiff",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Cardiff",
+   "href": "/n/cardiff/",
+   "gist": "Where the Guild first wrote itself down. Headquarters of the Department, Cathays Park.",
+   "importance": 0.84
+  },
+  {
+   "year": "2008",
+   "title": "Founding record",
+   "type": "MISSION",
+   "status": "COMPLETED",
+   "observed": "Cardiff",
+   "href": "/n/mission-founding-record/",
+   "gist": "Write the Guild down at Cardiff. Completed. The fruit remains on the tree.",
+   "importance": 0.71
+  },
+  {
+   "year": "2008",
+   "title": "The mythology",
+   "type": "EVENT",
+   "status": "ACTIVE",
+   "observed": "Cardiff",
+   "href": "/n/mythology-2008/",
+   "gist": "The Guild first wrote itself down. Everything below this is root.",
+   "importance": 0.78
+  },
+  {
+   "year": "2026",
+   "title": "Chronometer",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "observed": "Station XIII",
+   "href": "/n/chronometer/",
+   "gist": "Instrument №13. Stamps moments. The machine does not predict. It measures relation.",
+   "importance": 0.86
+  },
+  {
+   "year": "2026",
+   "title": "Station XIII",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Cardiff",
+   "href": "/n/station-xiii/",
+   "gist": "51.46 °N, 3.19 °W. The instrument runs here. It does not predict. It computes.",
+   "importance": 0.88
+  },
+  {
+   "year": "2026",
+   "title": "Stations",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "",
+   "href": "/n/stations/",
+   "gist": "Physical sites. Each station keeps its own clock.",
+   "importance": 0.6
+  },
+  {
+   "year": "2026",
+   "title": "The Film",
+   "type": "FILM FRAGMENT",
+   "status": "FORMING",
+   "observed": "",
+   "href": "/n/film/",
+   "gist": "A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records.",
+   "importance": 0.7
+  },
+  {
+   "year": "2026",
+   "title": "Abercrave",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Abercrave",
+   "href": "/n/abercrave/",
+   "gist": "Village at the head of the valley. Ordinary address. Unusual neighbourhood.",
+   "importance": 0.83
+  },
+  {
+   "year": "2026",
+   "title": "Cribarth",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Swansea Valley",
+   "href": "/n/cribarth/",
+   "gist": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed.",
+   "importance": 0.82
+  },
+  {
+   "year": "2026",
+   "title": "Swansea Valley",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "observed": "Swansea Valley",
+   "href": "/n/swansea-valley/",
+   "gist": "The valley that holds Cribarth, Abercrave, and more than one sealed container.",
+   "importance": 0.85
+  },
+  {
+   "year": "2026",
+   "title": "Valley reading",
+   "type": "MISSION",
+   "status": "ACTIVE",
+   "observed": "Cribarth",
+   "href": "/n/mission-valley-reading/",
+   "gist": "Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading.",
+   "importance": 0.8
+  },
+  {
+   "year": "2026",
+   "title": "Observation · the tables disagreed",
+   "type": "MOMENT",
+   "status": "OBSERVED",
+   "observed": "Cribarth",
+   "href": "/n/observation-tables-disagreed/",
+   "gist": "Third night. Cribarth. Two instruments, two readings, one hill.",
+   "importance": 0.79
+  },
+  {
+   "year": "2026",
+   "title": "DET-01",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "Cathays Park, Cardiff",
+   "href": "/n/det-01/",
+   "gist": "Public notice. Classification of excess-time events. Issued by the Department. A summary, not the case file.",
+   "importance": 0.87
+  },
+  {
+   "year": "2026",
+   "title": "Mabel Notice · Recurrence along the valley",
+   "type": "SIGNAL",
+   "status": "INTERPRETIVE",
+   "observed": "",
+   "href": "/n/mabel-notice-013/",
+   "gist": "Sealed containers, disagreed tables, and DET paper occupy the same neighbourhood. This is a pattern, not a cause.",
+   "importance": 0.77
+  },
+  {
+   "year": "2026",
+   "title": "Moment · 03 September 2026",
+   "type": "MOMENT",
+   "status": "STAMPED",
+   "observed": "Cardiff",
+   "href": "/n/moment-2026-09-03/",
+   "gist": "Chronometer-stamped. Local present. Pre-travel civilisation.",
+   "importance": 0.81
+  },
+  {
+   "year": "2026",
+   "title": "Welsh Government Mug",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "observed": "Cardiff",
+   "href": "/n/welsh-government-mug/",
+   "gist": "A physical artefact. First observed 3 September 2026. Custody and location may be exact, approximate, hidden or unknown.",
+   "importance": 0.64
+  },
+  {
+   "year": "2026",
+   "title": "Departmental response",
+   "type": "SIGNAL",
+   "status": "ACTIVE",
+   "observed": "Cathays Park, Cardiff",
+   "href": "/n/det-response/",
+   "gist": "The Department has a public surface. Notices, forms, and ordinary affairs.",
+   "importance": 0.69
+  },
+  {
+   "year": "2026",
+   "title": "Circling with the moon",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-moon-circling/",
+   "gist": "The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.",
+   "importance": 0.83
+  },
+  {
+   "year": "2026",
+   "title": "Conduct, ritual and season in one verse",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-verse-form/",
+   "gist": "Behaviour, ritual and seasonal observation are held together in images and rhythm rather than separated into a rulebook. Rhyme makes the instructions easier to remember.",
+   "importance": 0.82
+  },
+  {
+   "year": "2026",
+   "title": "Guild practice: test an intention",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-test-intention/",
+   "gist": "Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim.",
+   "importance": 0.86
+  },
+  {
+   "year": "2026",
+   "title": "Live and let live, with fair exchange",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-reciprocity/",
+   "gist": "The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange.",
+   "importance": 0.84
+  },
+  {
+   "year": "2026",
+   "title": "Restraint in speech, careful listening",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-restraint/",
+   "gist": "Other visible lines ask for restraint in what is said and care in what is heard.",
+   "importance": 0.83
+  },
+  {
+   "year": "2026",
+   "title": "The Rede: a shape for conduct",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/grimoire-rede/",
+   "gist": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind.",
+   "importance": 0.88
+  },
+  {
+   "year": "2026",
+   "title": "The partial page",
+   "type": "DOCUMENT",
+   "status": "PUBLISHED",
+   "observed": "The Grimoire",
+   "href": "/n/rede-partial-page/",
+   "gist": "The photographed page stops during the poem. The Grimoire does not pretend to hold the whole Rede, and keeps the gap visible.",
+   "importance": 0.82
+  },
+  {
+   "year": "2029",
+   "title": "Scheduled transmission",
+   "type": "SIGNAL",
+   "status": "SCHEDULED",
+   "observed": "",
+   "href": "/n/scheduled-transmission/",
+   "gist": "Not yet sent. Unlock: after timestamp. Cause of peace. Nobody in particular.",
+   "importance": 0.73
+  },
+  {
+   "year": "2029",
+   "title": "Signals",
+   "type": "SIGNAL",
+   "status": "RECEIVING",
+   "observed": "",
+   "href": "/n/signals/",
+   "gist": "Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender.",
+   "importance": 0.68
+  },
+  {
+   "year": "2029",
+   "title": "The transmission",
+   "type": "EVENT",
+   "status": "INTENDS",
+   "observed": "",
+   "href": "/n/the-transmission/",
+   "gist": "A moment fixed by the sky, sent to nobody in particular, in the cause of peace.",
+   "importance": 0.74
+  },
+  {
+   "year": "2033",
+   "title": "Elsewhen",
+   "type": "UNKNOWN",
+   "status": "UNRESOLVED",
+   "observed": "",
+   "href": "/n/elsewhen/",
+   "gist": "Time without permission. Pages not yet attached to a stable chronology.",
+   "importance": 0.66
+  }
+ ],
+ "machine": {
+  "about": "TIME MACHINE №13 (timetravellersguild.com/machine/) is the Guild's instrument for operating its graph. Its state is a public JSON endpoint, /api/machine/state, taking the parameters t, k, mind, matter, dc, focus. A reading returns a field of nodes and edges, up to 48 'cards' ranked by importance, a media feed, and a single emergy value E.",
+  "checked": "2026-11-04",
+  "equation": "E = M / R^(κ·ΔC)  (as printed by the endpoint; this file does not define M or R because the page text does not)",
+  "params": {
+   "mind": "MIND, attention aperture. Higher widens graph association; lower gives literal, selected records only.",
+   "matter": "MATTER, evidential weight. Higher privileges dated places, documents and canon; lower admits hypothesis and pending slips.",
+   "dc": "ΔC, contextual distance trim. The dc URL value names the axis the gauge reads: TIME, PLACE, PEOPLE, INSTITUTIONS or SYMBOLS.",
+   "k": "κ, context constant, range 0 to 3.33. High κ penalises loose association; only tightly evidenced routes survive.",
+   "t": "Machine present. Set earlier than the real present it reads an earlier cut of the ledger; later, cards dated after the local present appear as ghosts. 2033-04-17 is the network present."
+  },
+  "emergy_words": "display value below 0.25 quiet, below 0.45 warming, below 0.7 working, below 0.88 hot, otherwise saturated (from the page script)",
+  "reading_example": {
+   "url": "mind=0.803&matter=0.680&k=1.130&t=2026-11-04T05:32:48Z&dc=PLACE",
+   "nodes": 95,
+   "edges": 330,
+   "active_cards": 44,
+   "beyond_cards": 4,
+   "emergy_display": 0.509564,
+   "emergy_raw": 0.8477,
+   "word": "working",
+   "mind_effective": 0.80195,
+   "matter_effective": 0.733932,
+   "delta_context": 0.15875,
+   "note": "Machine present was 53 minutes behind local present, so it reads the field as it stands now. Effective mind and matter differ slightly from the knob settings; this file does not know why."
+  },
+  "beyond_now": [
+   "The transmission",
+   "Scheduled transmission",
+   "Signals",
+   "Elsewhen"
+  ],
+  "cards": [
+   [
+    "quantum-tin-013",
+    0.94,
+    "QUANTUM_TIN",
+    "SEALED",
+    "Swansea Valley",
+    "2026-08-12"
+   ],
+   [
+    "department",
+    0.9,
+    "INSTITUTION",
+    "ACTIVE",
+    "Cathays Park, Cardiff",
+    "1951-03-01"
+   ],
+   [
+    "station-xiii",
+    0.88,
+    "PLACE",
+    "ACTIVE",
+    "Cardiff",
+    "2026-01-01"
+   ],
+   [
+    "tipi-valley-2033-1981-276",
+    0.88,
+    "EVENT",
+    "ACTIVE",
+    "Tipi Valley",
+    "2026-10-16"
+   ],
+   [
+    "grimoire-rede",
+    0.88,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "det-01",
+    0.87,
+    "DOCUMENT",
+    "PUBLISHED",
+    "Cathays Park, Cardiff",
+    "2026-09-01"
+   ],
+   [
+    "chronometer",
+    0.86,
+    "OBJECT",
+    "ACTIVE",
+    "Station XIII",
+    "2008-11-12"
+   ],
+   [
+    "rede-test-intention",
+    0.86,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "swansea-valley",
+    0.85,
+    "PLACE",
+    "ACTIVE",
+    "Swansea Valley",
+    "2026-03-21"
+   ],
+   [
+    "cardiff",
+    0.84,
+    "PLACE",
+    "ACTIVE",
+    "Cardiff",
+    "2008-01-01"
+   ],
+   [
+    "rede-reciprocity",
+    0.84,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "abercrave",
+    0.83,
+    "PLACE",
+    "ACTIVE",
+    "Abercrave",
+    "2026-03-21"
+   ],
+   [
+    "rede-restraint",
+    0.83,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "rede-moon-circling",
+    0.83,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "cribarth",
+    0.82,
+    "PLACE",
+    "ACTIVE",
+    "Swansea Valley",
+    "2026-03-21"
+   ],
+   [
+    "rede-verse-form",
+    0.82,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "rede-partial-page",
+    0.82,
+    "DOCUMENT",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "moment-2026-09-03",
+    0.81,
+    "MOMENT",
+    "STAMPED",
+    "Cardiff",
+    "2026-09-03"
+   ],
+   [
+    "mission-valley-reading",
+    0.8,
+    "MISSION",
+    "ACTIVE",
+    "Cribarth",
+    "2026-03-21"
+   ],
+   [
+    "tipi-valley",
+    0.8,
+    "PLACE",
+    "ACTIVE",
+    "Tipi Valley",
+    "2026-10-16"
+   ],
+   [
+    "rede-source-photograph",
+    0.8,
+    "MEDIA",
+    "PUBLISHED",
+    "The Grimoire",
+    "2026-09-30"
+   ],
+   [
+    "observation-tables-disagreed",
+    0.79,
+    "MOMENT",
+    "OBSERVED",
+    "Cribarth",
+    "2026-03-23"
+   ],
+   [
+    "mythology-2008",
+    0.78,
+    "EVENT",
+    "ACTIVE",
+    "Cardiff",
+    "2008-01-01"
+   ],
+   [
+    "mabel-notice-013",
+    0.77,
+    "SIGNAL",
+    "INTERPRETIVE",
+    "unplaced",
+    "2026-09-02"
+   ],
+   [
+    "film-fragment-cribarth",
+    0.76,
+    "FILM_FRAGMENT",
+    "HELD",
+    "Cribarth",
+    "2026-03-23"
+   ],
+   [
+    "the-transmission",
+    0.74,
+    "EVENT",
+    "INTENDS",
+    "unplaced",
+    "2029-01-01"
+   ],
+   [
+    "scheduled-transmission",
+    0.73,
+    "SIGNAL",
+    "SCHEDULED",
+    "unplaced",
+    "2029-01-01"
+   ],
+   [
+    "archive",
+    0.72,
+    "MEDIA",
+    "ACTIVE",
+    "unplaced",
+    "2014-01-01"
+   ],
+   [
+    "mission-founding-record",
+    0.71,
+    "MISSION",
+    "COMPLETED",
+    "Cardiff",
+    "2008-01-01"
+   ],
+   [
+    "film",
+    0.7,
+    "FILM_FRAGMENT",
+    "FORMING",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "det-response",
+    0.69,
+    "SIGNAL",
+    "ACTIVE",
+    "Cathays Park, Cardiff",
+    "2026-09-03"
+   ],
+   [
+    "signals",
+    0.68,
+    "SIGNAL",
+    "RECEIVING",
+    "unplaced",
+    "2029-01-01"
+   ],
+   [
+    "field-issue-13",
+    0.67,
+    "MEDIA",
+    "HELD",
+    "undisclosed",
+    "2026-09-03"
+   ],
+   [
+    "elsewhen",
+    0.66,
+    "UNKNOWN",
+    "UNRESOLVED",
+    "unplaced",
+    "2033-01-01"
+   ],
+   [
+    "welsh-government-mug",
+    0.64,
+    "OBJECT",
+    "ACTIVE",
+    "Cardiff",
+    "2026-09-03"
+   ],
+   [
+    "instrument-13",
+    0.63,
+    "OBJECT",
+    "ACTIVE",
+    "Station XIII",
+    "2008-11-12"
+   ],
+   [
+    "missions",
+    0.62,
+    "MISSION",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "stations",
+    0.6,
+    "PLACE",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "watch",
+    0.58,
+    "OBJECT",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "join",
+    0.56,
+    "MISSION",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "feed",
+    0.56,
+    "OBJECT",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "triangla",
+    0.54,
+    "OBJECT",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "guild",
+    0.52,
+    "INSTITUTION",
+    "ACTIVE",
+    "unplaced",
+    "2008-01-01"
+   ],
+   [
+    "commons",
+    0.5,
+    "SIGNAL",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "research",
+    0.5,
+    "MEDIA",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "tobywhy",
+    0.48,
+    "PERSON",
+    "ACTIVE",
+    "Wales",
+    "2008-01-01"
+   ],
+   [
+    "calendar",
+    0.46,
+    "EVENT",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ],
+   [
+    "door",
+    0.44,
+    "PLACE",
+    "ACTIVE",
+    "unplaced",
+    "2026-01-01"
+   ]
+  ]
+ },
+ "entries_not_in_digest": [
+  {
+   "slug": "quantum-tin-013",
+   "title": "Quantum Tin №013",
+   "type": "QUANTUM_TIN",
+   "status": "SEALED",
+   "place": "Swansea Valley",
+   "date": "2026-08-12",
+   "importance": 0.94
+  },
+  {
+   "slug": "rede-source-photograph",
+   "title": "Walking the Path / Rede of the Wicca (photograph)",
+   "type": "MEDIA",
+   "status": "PUBLISHED",
+   "place": "The Grimoire",
+   "date": "2026-09-30",
+   "importance": 0.8
+  },
+  {
+   "slug": "film-fragment-cribarth",
+   "title": "Film fragment · Cribarth, third night",
+   "type": "FILM_FRAGMENT",
+   "status": "HELD",
+   "place": "Cribarth",
+   "date": "2026-03-23",
+   "importance": 0.76
+  },
+  {
+   "slug": "archive",
+   "title": "Archive",
+   "type": "MEDIA",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2014-01-01",
+   "importance": 0.72
+  },
+  {
+   "slug": "field-issue-13",
+   "title": "Field Issue 13",
+   "type": "MEDIA",
+   "status": "HELD",
+   "place": "undisclosed",
+   "date": "2026-09-03",
+   "importance": 0.67
+  },
+  {
+   "slug": "instrument-13",
+   "title": "Instrument №13",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "place": "Station XIII",
+   "date": "2008-11-12",
+   "importance": 0.63
+  },
+  {
+   "slug": "missions",
+   "title": "Missions",
+   "type": "MISSION",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.62
+  },
+  {
+   "slug": "watch",
+   "title": "Watch",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.58
+  },
+  {
+   "slug": "join",
+   "title": "Join",
+   "type": "MISSION",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.56
+  },
+  {
+   "slug": "feed",
+   "title": "Feed∞",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.56
+  },
+  {
+   "slug": "triangla",
+   "title": "Triangla",
+   "type": "OBJECT",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.54
+  },
+  {
+   "slug": "guild",
+   "title": "The Time Travellers Guild",
+   "type": "INSTITUTION",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2008-01-01",
+   "importance": 0.52
+  },
+  {
+   "slug": "commons",
+   "title": "Commons",
+   "type": "SIGNAL",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.5
+  },
+  {
+   "slug": "research",
+   "title": "Research",
+   "type": "MEDIA",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.5
+  },
+  {
+   "slug": "tobywhy",
+   "title": "Tobywhy",
+   "type": "PERSON",
+   "status": "ACTIVE",
+   "place": "Wales",
+   "date": "2008-01-01",
+   "importance": 0.48
+  },
+  {
+   "slug": "calendar",
+   "title": "Calendar",
+   "type": "EVENT",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.46
+  },
+  {
+   "slug": "door",
+   "title": "The Door",
+   "type": "PLACE",
+   "status": "ACTIVE",
+   "place": "unplaced",
+   "date": "2026-01-01",
+   "importance": 0.44
+  }
+ ]
+}

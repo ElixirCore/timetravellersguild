@@ -1,0 +1,7722 @@
+<!--
+  filename: index.html
+
+  /jack/room — V2
+  ================================================================
+
+  V2 RULES
+
+  HUMAN
+    camera + mobile swoop
+
+  JACK
+    clerk + independent inhabitant
+    moveTo / lookAt / inspect / project / follow / stop
+
+  WENDY WIGNOSIS III
+    The Projectionist
+    5D / Anamnesia projection
+
+  CLAUDBOT
+    feral moon child
+    scout / cursor
+
+  ARCHIVE
+    screenshot fragments become room material
+
+  INPUT
+    TYPE TO JACK is a first-class mobile control.
+    When the Jack terminal is open, room gestures cannot steal focus.
+
+  This file has:
+    - no build system
+    - no framework
+    - Three.js from CDN only
+    - runtime screenshot loader: choose screenshots from phone
+    - procedural placeholder evidence if no screenshots loaded
+    - explicit permissions for Jack
+    - window.JACK debug API
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="
+      width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      viewport-fit=cover
+    "
+  >
+
+  <title>/jack/room — V2</title>
+
+  <style>
+
+    :root {
+
+      color-scheme: dark;
+
+      --bg: #020302;
+      --ink: rgba(255,255,255,.96);
+      --muted: rgba(255,255,255,.57);
+
+      --green: #83ff97;
+      --cyan: #6ce8ff;
+      --amber: #ffd36f;
+      --pink: #ff7bdd;
+      --violet: #b39aff;
+      --red: #ff7676;
+
+      --panel: rgba(0,0,0,.63);
+      --panel2: rgba(4,9,7,.91);
+
+      --line: rgba(255,255,255,.13);
+      --lineHot: rgba(131,255,151,.54);
+
+      --mono:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    }
+
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    html,
+    body {
+
+      width: 100%;
+      height: 100%;
+
+      margin: 0;
+
+      overflow: hidden;
+
+      background: #000;
+    }
+
+
+    body {
+
+      font-family: var(--mono);
+
+      color: var(--ink);
+
+      background:
+        radial-gradient(
+          circle at 50% 45%,
+          rgba(42,110,91,.14),
+          transparent 42%
+        ),
+        #000;
+
+      touch-action: none;
+
+      user-select: none;
+      -webkit-user-select: none;
+
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    canvas#roomCanvas {
+
+      position: fixed;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      display: block;
+
+      z-index: 1;
+
+      touch-action: none;
+    }
+
+
+    button,
+    input {
+
+      font: inherit;
+    }
+
+
+    button {
+
+      appearance: none;
+
+      min-height: 42px;
+
+      padding:
+        8px
+        10px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 10px;
+
+      background:
+        rgba(12,17,14,.94);
+
+      color: white;
+
+      font-size: 10px;
+      font-weight: 900;
+
+      touch-action: manipulation;
+    }
+
+
+    button:active {
+
+      transform:
+        translateY(1px);
+    }
+
+
+    button.on {
+
+      border-color:
+        var(--green);
+
+      color:
+        var(--green);
+
+      background:
+        rgba(30,60,37,.95);
+
+      box-shadow:
+        0 0 18px
+        rgba(131,255,151,.12);
+    }
+
+
+    button:focus-visible,
+    input:focus-visible {
+
+      outline:
+        2px solid
+        var(--green);
+
+      outline-offset:
+        2px;
+    }
+
+
+    /* ============================================================
+       ERROR
+       ============================================================ */
+
+    #error {
+
+      position: fixed;
+
+      z-index: 1000;
+
+      top:
+        max(
+          8px,
+          env(safe-area-inset-top)
+        );
+
+      left: 8px;
+      right: 8px;
+
+      display: none;
+
+      max-height: 60vh;
+
+      overflow: auto;
+
+      padding: 12px;
+
+      border:
+        1px solid
+        rgba(255,100,100,.65);
+
+      border-radius: 14px;
+
+      background:
+        rgba(100,0,0,.96);
+
+      color: #ffe0e0;
+
+      white-space: pre-wrap;
+
+      font:
+        11px/1.5
+        var(--mono);
+
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+
+    /* ============================================================
+       TOP HUD
+       ============================================================ */
+
+    #topHUD {
+
+      position: fixed;
+
+      z-index: 20;
+
+      top:
+        max(
+          8px,
+          env(safe-area-inset-top)
+        );
+
+      left: 8px;
+      right: 8px;
+
+      display: grid;
+
+      gap: 7px;
+
+      padding: 9px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 15px;
+
+      background:
+        var(--panel);
+
+      backdrop-filter:
+        blur(10px);
+
+      -webkit-backdrop-filter:
+        blur(10px);
+
+      pointer-events: none;
+    }
+
+
+    .topLine {
+
+      display: flex;
+
+      align-items: flex-start;
+      justify-content: space-between;
+
+      gap: 10px;
+    }
+
+
+    .brandTitle {
+
+      font-size: 15px;
+      font-weight: 950;
+
+      letter-spacing: .035em;
+    }
+
+
+    .brandSub {
+
+      margin-top: 3px;
+
+      color: var(--muted);
+
+      font-size: 9px;
+      line-height: 1.35;
+    }
+
+
+    #clock {
+
+      color: var(--green);
+
+      text-align: right;
+
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+
+    #telemetry {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          5,
+          minmax(0,1fr)
+        );
+
+      gap: 5px;
+    }
+
+
+    .datum {
+
+      min-width: 0;
+
+      padding: 5px 6px;
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+
+      border-radius: 8px;
+
+      background:
+        rgba(255,255,255,.035);
+    }
+
+
+    .datumLabel {
+
+      color: var(--muted);
+
+      font-size: 7px;
+
+      letter-spacing: .1em;
+    }
+
+
+    .datumValue {
+
+      margin-top: 2px;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+
+      font-size: 9px;
+    }
+
+
+    #jackStrip {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+    }
+
+
+    #jackLamp {
+
+      width: 8px;
+      height: 8px;
+
+      flex: 0 0 auto;
+
+      border-radius: 50%;
+
+      background: var(--green);
+
+      box-shadow:
+        0 0 14px
+        rgba(131,255,151,.9);
+    }
+
+
+    #jackLine {
+
+      min-width: 0;
+
+      flex: 1;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+
+      color:
+        rgba(255,255,255,.85);
+
+      font-size: 9px;
+    }
+
+
+    /* ============================================================
+       CLAUDBOT
+       ============================================================ */
+
+    #claudbotHUD {
+
+      position: fixed;
+
+      z-index: 22;
+
+      top: 144px;
+      right: 10px;
+
+      display: grid;
+
+      justify-items: center;
+
+      gap: 4px;
+
+      width: 76px;
+
+      pointer-events: none;
+    }
+
+
+    #claudCanvas {
+
+      display: block;
+
+      width: 58px;
+      height: 58px;
+
+      image-rendering: pixelated;
+
+      border:
+        1px solid
+        rgba(255,255,255,.1);
+
+      border-radius: 9px;
+
+      background:
+        #07110e;
+    }
+
+
+    #claudLabel {
+
+      padding:
+        3px
+        5px;
+
+      border-radius:
+        99px;
+
+      background:
+        rgba(0,0,0,.7);
+
+      color:
+        var(--amber);
+
+      font-size: 7px;
+
+      letter-spacing: .08em;
+    }
+
+
+    /* ============================================================
+       CROSSHAIR
+       ============================================================ */
+
+    #crosshair {
+
+      position: fixed;
+
+      z-index: 8;
+
+      left: 50%;
+      top: 50%;
+
+      width: 17px;
+      height: 17px;
+
+      transform:
+        translate(-50%,-50%);
+
+      opacity: .42;
+
+      pointer-events: none;
+    }
+
+
+    #crosshair::before,
+    #crosshair::after {
+
+      content: "";
+
+      position: absolute;
+
+      background:
+        rgba(255,255,255,.78);
+    }
+
+
+    #crosshair::before {
+
+      left: 8px;
+
+      width: 1px;
+      height: 17px;
+    }
+
+
+    #crosshair::after {
+
+      top: 8px;
+
+      width: 17px;
+      height: 1px;
+    }
+
+
+    /* ============================================================
+       NOTICE
+       ============================================================ */
+
+    #notice {
+
+      position: fixed;
+
+      z-index: 40;
+
+      left: 50%;
+      top: 50%;
+
+      width:
+        min(
+          84vw,
+          430px
+        );
+
+      transform:
+        translate(-50%,-50%);
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      padding: 14px;
+
+      border:
+        1px solid
+        rgba(131,255,151,.38);
+
+      border-radius: 14px;
+
+      background:
+        rgba(0,0,0,.9);
+
+      text-align: center;
+
+      font-size: 10px;
+      line-height: 1.5;
+
+      transition:
+        opacity
+        140ms ease;
+    }
+
+
+    #notice.show {
+
+      opacity: 1;
+    }
+
+
+    /* ============================================================
+       TERMINAL
+       ============================================================ */
+
+    #terminal {
+
+      position: fixed;
+
+      z-index: 30;
+
+      left: 8px;
+      right: 8px;
+
+      bottom:
+        calc(
+          max(
+            8px,
+            env(safe-area-inset-bottom)
+          )
+          + 108px
+        );
+
+      display: grid;
+
+      grid-template-rows:
+        minmax(0,1fr)
+        auto;
+
+      max-height: 38dvh;
+
+      opacity: 0;
+
+      transform:
+        translateY(9px);
+
+      pointer-events: none;
+
+      padding: 9px;
+
+      border:
+        1px solid
+        rgba(131,255,151,.28);
+
+      border-radius: 13px;
+
+      background:
+        rgba(0,8,3,.94);
+
+      backdrop-filter:
+        blur(8px);
+
+      -webkit-backdrop-filter:
+        blur(8px);
+
+      transition:
+        opacity
+        130ms ease,
+        transform
+        130ms ease;
+    }
+
+
+    #terminal.open {
+
+      opacity: 1;
+
+      transform:
+        translateY(0);
+
+      pointer-events: auto;
+    }
+
+
+    #terminalLog {
+
+      min-height: 40px;
+
+      overflow: auto;
+
+      padding-bottom: 4px;
+
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+
+    .termLine {
+
+      margin:
+        0
+        0
+        5px;
+
+      white-space:
+        pre-wrap;
+
+      font-size: 10px;
+
+      line-height: 1.42;
+    }
+
+
+    .termJack {
+      color: var(--green);
+    }
+
+
+    .termWendy {
+      color: var(--pink);
+    }
+
+
+    .termClaud {
+      color: var(--amber);
+    }
+
+
+    .termHuman {
+      color: #fff;
+    }
+
+
+    .termSystem {
+      color: var(--cyan);
+    }
+
+
+    #terminalInputRow {
+
+      position: sticky;
+
+      bottom: 0;
+
+      z-index: 3;
+
+      display: grid;
+
+      gap: 5px;
+
+      margin-top: 7px;
+
+      padding-top: 8px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0,8,3,0),
+          rgba(0,8,3,.98)
+          18%
+        );
+    }
+
+
+    #terminalInputLabel {
+
+      color: var(--green);
+
+      font-size: 9px;
+      font-weight: 950;
+
+      letter-spacing: .12em;
+    }
+
+
+    #terminalInputShell {
+
+      display: grid;
+
+      grid-template-columns:
+        auto
+        minmax(0,1fr)
+        auto;
+
+      align-items: center;
+
+      gap: 6px;
+
+      min-height: 50px;
+
+      padding:
+        5px
+        5px
+        5px
+        9px;
+
+      border:
+        1px solid
+        rgba(131,255,151,.5);
+
+      border-radius: 12px;
+
+      background:
+        rgba(0,0,0,.94);
+    }
+
+
+    #terminalInputShell:focus-within {
+
+      border-color:
+        var(--green);
+
+      box-shadow:
+        0 0 0 2px
+        rgba(131,255,151,.12),
+        0 0 22px
+        rgba(131,255,151,.12);
+    }
+
+
+    #terminalPrompt {
+
+      color:
+        var(--green);
+
+      font-size: 16px;
+      font-weight: 950;
+    }
+
+
+    #terminalInput {
+
+      width: 100%;
+
+      min-width: 0;
+      min-height: 38px;
+
+      padding:
+        7px
+        2px;
+
+      border: 0;
+
+      outline: 0;
+
+      background:
+        transparent;
+
+      color: white;
+
+      caret-color:
+        var(--green);
+
+      font-size: 16px;
+
+      line-height: 1.2;
+
+      touch-action:
+        manipulation;
+
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+
+    #terminalInput::placeholder {
+
+      color:
+        rgba(255,255,255,.42);
+    }
+
+
+    #terminalInputHelp {
+
+      color: var(--muted);
+
+      font-size: 8px;
+    }
+
+
+    #sendBtn {
+
+      min-width: 62px;
+
+      border-color:
+        rgba(131,255,151,.5);
+
+      color:
+        var(--green);
+    }
+
+
+    /* ============================================================
+       BOTTOM CONTROLS
+       ============================================================ */
+
+    #bottomHUD {
+
+      position: fixed;
+
+      z-index: 31;
+
+      left: 8px;
+      right: 8px;
+
+      bottom:
+        max(
+          8px,
+          env(safe-area-inset-bottom)
+        );
+
+      display: grid;
+
+      gap: 5px;
+
+      padding: 7px;
+
+      border:
+        1px solid
+        var(--line);
+
+      border-radius: 15px;
+
+      background:
+        var(--panel2);
+
+      backdrop-filter:
+        blur(10px);
+
+      -webkit-backdrop-filter:
+        blur(10px);
+    }
+
+
+    #viewButtons {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(5,1fr);
+
+      gap: 4px;
+    }
+
+
+    #actionButtons {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(5,1fr);
+
+      gap: 4px;
+    }
+
+
+    #viewButtons button,
+    #actionButtons button {
+
+      min-width: 0;
+
+      padding:
+        6px
+        3px;
+
+      font-size: 8px;
+    }
+
+
+    /* ============================================================
+       DEBUG
+       ============================================================ */
+
+    #debugPanel {
+
+      position: fixed;
+
+      z-index: 50;
+
+      top: 178px;
+      left: 8px;
+
+      display: none;
+
+      width:
+        min(
+          80vw,
+          390px
+        );
+
+      max-height:
+        48vh;
+
+      overflow: auto;
+
+      padding: 10px;
+
+      border:
+        1px solid
+        rgba(108,232,255,.3);
+
+      border-radius: 12px;
+
+      background:
+        rgba(0,10,14,.94);
+
+      color:
+        rgba(255,255,255,.85);
+
+      white-space: pre-wrap;
+
+      font:
+        9px/1.42
+        var(--mono);
+
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+
+    #debugPanel.open {
+
+      display: block;
+    }
+
+
+    /* ============================================================
+       SCREENSHOT LOADER
+       ============================================================ */
+
+    #textureInput {
+
+      position: fixed;
+
+      width: 1px;
+      height: 1px;
+
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @media
+    (max-width: 600px) {
+
+      #telemetry {
+
+        grid-template-columns:
+          repeat(3,minmax(0,1fr));
+      }
+
+
+      .brandSub {
+
+        display: none;
+      }
+
+
+      #claudbotHUD {
+
+        top: 131px;
+      }
+
+    }
+
+
+    @media
+    (max-height: 700px) {
+
+      #telemetry {
+
+        display: none;
+      }
+
+
+      #claudbotHUD {
+
+        top: 80px;
+      }
+
+
+      #terminal {
+
+        max-height:
+          30dvh;
+      }
+
+    }
+
+
+    @media
+    (min-width: 850px) {
+
+      #topHUD {
+
+        width: 640px;
+
+        right: auto;
+      }
+
+
+      #bottomHUD,
+      #terminal {
+
+        width: 520px;
+
+        left: auto;
+      }
+
+
+      #claudbotHUD {
+
+        right: 540px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div
+    id="error"
+    role="alert"
+  ></div>
+
+
+  <div id="topHUD">
+
+    <div class="topLine">
+
+      <div>
+
+        <div class="brandTitle">
+          /jack/room
+        </div>
+
+        <div class="brandSub">
+          V2 · ANAMNESIA · WENDY WIGNOSIS III · SCREENSHOT MATTER
+        </div>
+
+      </div>
+
+
+      <div id="clock">
+
+        <div id="clockTime">
+          --:--:--
+        </div>
+
+        <div id="clockDate">
+          ---
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="telemetry">
+
+      <div class="datum">
+
+        <div class="datumLabel">
+          ROOM
+        </div>
+
+        <div
+          class="datumValue"
+          id="roomReadout"
+        >
+          FRONT
+        </div>
+
+      </div>
+
+
+      <div class="datum">
+
+        <div class="datumLabel">
+          FIELD
+        </div>
+
+        <div
+          class="datumValue"
+          id="fieldState"
+        >
+          STABLE
+        </div>
+
+      </div>
+
+
+      <div class="datum">
+
+        <div class="datumLabel">
+          WENDY
+        </div>
+
+        <div
+          class="datumValue"
+          id="projectionState"
+        >
+          3D
+        </div>
+
+      </div>
+
+
+      <div class="datum">
+
+        <div class="datumLabel">
+          JACK
+        </div>
+
+        <div
+          class="datumValue"
+          id="jackStateReadout"
+        >
+          CLERK
+        </div>
+
+      </div>
+
+
+      <div class="datum">
+
+        <div class="datumLabel">
+          TEXTURES
+        </div>
+
+        <div
+          class="datumValue"
+          id="textureReadout"
+        >
+          PROC
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="jackStrip">
+
+      <div id="jackLamp"></div>
+
+      <div id="jackLine">
+        JACK / CLERK: room mounted.
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="claudbotHUD">
+
+    <canvas
+      id="claudCanvas"
+      width="32"
+      height="32"
+    ></canvas>
+
+    <div id="claudLabel">
+      CLAUDBOT / FERAL
+    </div>
+
+  </div>
+
+
+  <div id="crosshair"></div>
+
+
+  <div
+    id="notice"
+    aria-live="polite"
+  ></div>
+
+
+  <div id="debugPanel"></div>
+
+
+  <div
+    id="terminal"
+    aria-label="Jack terminal"
+  >
+
+    <div
+      id="terminalLog"
+      aria-live="polite"
+    ></div>
+
+
+    <div id="terminalInputRow">
+
+      <label
+        id="terminalInputLabel"
+        for="terminalInput"
+      >
+        TYPE TO JACK
+      </label>
+
+
+      <div id="terminalInputShell">
+
+        <span
+          id="terminalPrompt"
+          aria-hidden="true"
+        >
+          .;.
+        </span>
+
+
+        <input
+          id="terminalInput"
+
+          type="text"
+
+          inputmode="text"
+
+          enterkeyhint="send"
+
+          autocomplete="off"
+
+          autocapitalize="sentences"
+
+          spellcheck="true"
+
+          aria-label="Type a message to Jack"
+
+          aria-describedby="terminalInputHelp"
+
+          placeholder="Type to Jack…"
+        >
+
+
+        <button
+          id="sendBtn"
+
+          type="button"
+
+          aria-label="Send message to Jack"
+        >
+          SEND
+        </button>
+
+      </div>
+
+
+      <div id="terminalInputHelp">
+        Enter sends · Jack keeps the field while this terminal is open
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <input
+    id="textureInput"
+    type="file"
+    accept="image/*"
+    multiple
+  >
+
+
+  <div id="bottomHUD">
+
+    <div id="viewButtons">
+
+      <button data-view="front">
+        FRONT
+      </button>
+
+      <button data-view="left">
+        LEFT
+      </button>
+
+      <button data-view="back">
+        BACK
+      </button>
+
+      <button data-view="right">
+        RIGHT
+      </button>
+
+      <button data-view="up">
+        UP
+      </button>
+
+    </div>
+
+
+    <div id="actionButtons">
+
+      <button id="terminalBtn">
+        TYPE JACK
+      </button>
+
+      <button id="anamnesiaBtn">
+        ANAMNESIA
+      </button>
+
+      <button id="followBtn">
+        FOLLOW JACK
+      </button>
+
+      <button id="textureBtn">
+        TEXTURES
+      </button>
+
+      <button id="debugBtn">
+        DEBUG
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"
+  ></script>
+
+
+  <script>
+
+  (() => {
+
+    "use strict";
+
+
+    /* ============================================================
+       ERROR HANDLING
+       ============================================================ */
+
+
+    const errorEl =
+      document.getElementById(
+        "error"
+      );
+
+
+    function fail(
+      message
+    ) {
+
+      errorEl.style.display =
+        "block";
+
+      errorEl.textContent =
+        String(
+          message
+        );
+    }
+
+
+    window.addEventListener(
+      "error",
+      event => {
+
+        fail(
+          "JACK ROOM ERROR\n\n" +
+          (
+            event.error?.stack ||
+            event.message ||
+            event
+          )
+        );
+      }
+    );
+
+
+    window.addEventListener(
+      "unhandledrejection",
+      event => {
+
+        fail(
+          "PROMISE ERROR\n\n" +
+          (
+            event.reason?.stack ||
+            event.reason ||
+            event
+          )
+        );
+      }
+    );
+
+
+    try {
+
+
+      /* ============================================================
+         CONFIG
+         ============================================================ */
+
+
+      const CONFIG = {
+
+        roomSize: 12,
+
+        cameraFov: 68,
+
+        nodeSize: 1.65,
+
+        swipeX: 0.0042,
+
+        swipeY: 0.0037,
+
+        inertia: 0.918,
+
+        pinchDepth: 0.012,
+
+        cameraRadiusMax: 3.8,
+
+        projectionW: 3.4,
+
+        projectionV: 2.9,
+
+        jackSpeed: 2.25,
+
+        followDistance: 2.8,
+
+        punchCards: 48,
+
+        wallOpacity: 0.24
+      };
+
+
+      const HALF =
+        CONFIG.roomSize / 2;
+
+
+      /* ============================================================
+         ROOM DATA
+         ============================================================ */
+
+
+      const ROOM_DATA = [
+
+        {
+
+          id: "jack",
+
+          kind: "clerk",
+
+          title:
+            "JACK / CLERK",
+
+          subtitle:
+            "Punch-card intelligence",
+
+          text:
+            "Jacket on. Jacket o££. Nothing enters canon without a stamp.",
+
+          xyz:
+            [0,.4,-4.85],
+
+          w: .5,
+
+          v: .5,
+
+          glyph: "J",
+
+          colour:
+            0x83ff97,
+
+          links: [
+            "wendy",
+            "signals",
+            "screen"
+          ]
+        },
+
+
+        {
+
+          id: "wendy",
+
+          kind:
+            "projectionist",
+
+          title:
+            "WENDY WIGNOSIS III",
+
+          subtitle:
+            "The Projectionist",
+
+          text:
+            "Newport Millionaire. Guildsfolk. Knows Adam Dabb and Sam the Dragonlord.",
+
+          xyz:
+            [3.8,1.8,-4.75],
+
+          w: .67,
+
+          v: .72,
+
+          glyph: "W",
+
+          colour:
+            0xff7bdd,
+
+          links: [
+            "jack",
+            "oxford",
+            "signals",
+            "screen"
+          ]
+        },
+
+
+        {
+
+          id: "liveroom",
+
+          kind: "signal",
+
+          title:
+            "INIT.FFILM.ORG/LIVEROOM",
+
+          subtitle:
+            "Uh yeah, yeah, yeah, yeah, yeah.",
+
+          text:
+            "Live-room transmission.",
+
+          xyz:
+            [-4.25,2,-4.8],
+
+          w: .84,
+
+          v: .15,
+
+          glyph: "LIVE",
+
+          colour:
+            0x6ce8ff,
+
+          links: [
+            "signals",
+            "sophie",
+            "kelfin"
+          ]
+        },
+
+
+        {
+
+          id: "triskabiblios",
+
+          kind: "library",
+
+          title:
+            "TRISKABIBLIOS .GO.OGLE",
+
+          subtitle:
+            "Library fracture",
+
+          text:
+            "Triskabiblios .go.ogle",
+
+          xyz:
+            [-5.05,.9,-1.4],
+
+          w: .27,
+
+          v: .22,
+
+          glyph: "TB",
+
+          colour:
+            0xb39aff,
+
+          links: [
+            "oxford",
+            "nic"
+          ]
+        },
+
+
+        {
+
+          id: "nic",
+
+          kind: "file",
+
+          title:
+            "FFILM.ORG/NIC",
+
+          subtitle:
+            "File node",
+
+          text:
+            "Ffilm.org/nic",
+
+          xyz:
+            [-5.05,-1.75,1.4],
+
+          w: .38,
+
+          v: .27,
+
+          glyph: "NIC",
+
+          colour:
+            0xffffff,
+
+          links: [
+            "triskabiblios",
+            "screen"
+          ]
+        },
+
+
+        {
+
+          id: "oxford",
+
+          kind: "place",
+
+          title:
+            "OXFORD",
+
+          subtitle:
+            "Place node",
+
+          text:
+            "Oxford.",
+
+          xyz:
+            [5.05,1.75,-1.3],
+
+          w: .42,
+
+          v: .64,
+
+          glyph: "OX",
+
+          colour:
+            0xffd36f,
+
+          links: [
+            "wendy",
+            "sophie",
+            "kelfin"
+          ]
+        },
+
+
+        {
+
+          id: "sophie",
+
+          kind: "person",
+
+          title:
+            "SOPHIE(c)",
+
+          subtitle:
+            "Person node",
+
+          text:
+            "Sophie(c)",
+
+          xyz:
+            [5.05,-.3,1.0],
+
+          w: .59,
+
+          v: .79,
+
+          glyph: "S(c)",
+
+          colour:
+            0xffb8df,
+
+          links: [
+            "kelfin",
+            "oxford",
+            "liveroom"
+          ]
+        },
+
+
+        {
+
+          id: "kelfin",
+
+          kind: "person",
+
+          title:
+            "KELFIN",
+
+          subtitle:
+            "Person node",
+
+          text:
+            "Kelfin.",
+
+          xyz:
+            [5.05,-2.15,2.8],
+
+          w: .61,
+
+          v: .74,
+
+          glyph: "K",
+
+          colour:
+            0x8ae6ff,
+
+          links: [
+            "sophie",
+            "oxford",
+            "liveroom"
+          ]
+        },
+
+
+        {
+
+          id: "dream",
+
+          kind: "dream",
+
+          title:
+            "DREAM / UNCLASSIFIED",
+
+          subtitle:
+            "Memory residue",
+
+          text:
+            "I was Boris Johnson on bass for a week and ate the takeaway myself.",
+
+          xyz:
+            [-2.85,-3,5.0],
+
+          w: .91,
+
+          v: .05,
+
+          glyph: "ZZZ",
+
+          colour:
+            0xff976e,
+
+          links: [
+            "jack",
+            "signals"
+          ]
+        },
+
+
+        {
+
+          id: "screen",
+
+          kind: "screen",
+
+          title:
+            "TIMETRAVELLERSGUILD.COM/SCREEN",
+
+          subtitle:
+            "Guild screen",
+
+          text:
+            "TimeTravellersGuild.com/screen",
+
+          xyz:
+            [2.9,-3,5.0],
+
+          w: .72,
+
+          v: .87,
+
+          glyph: "TTG",
+
+          colour:
+            0x83ff97,
+
+          links: [
+            "wendy",
+            "jack",
+            "nic"
+          ]
+        },
+
+
+        {
+
+          id: "signals",
+
+          kind: "signal",
+
+          title:
+            "SIGNALS",
+
+          subtitle:
+            "Incoming field",
+
+          text:
+            "Incoming material remains unclassified until inspected.",
+
+          xyz:
+            [0,4.85,0],
+
+          w: .76,
+
+          v: .43,
+
+          glyph: "RSS",
+
+          colour:
+            0x6ce8ff,
+
+          links: [
+            "jack",
+            "wendy",
+            "liveroom",
+            "dream"
+          ]
+        }
+
+      ];
+
+
+      /* ============================================================
+         DOM
+         ============================================================ */
+
+
+      const roomReadout =
+        document.getElementById(
+          "roomReadout"
+        );
+
+
+      const fieldState =
+        document.getElementById(
+          "fieldState"
+        );
+
+
+      const projectionState =
+        document.getElementById(
+          "projectionState"
+        );
+
+
+      const jackStateReadout =
+        document.getElementById(
+          "jackStateReadout"
+        );
+
+
+      const textureReadout =
+        document.getElementById(
+          "textureReadout"
+        );
+
+
+      const jackLine =
+        document.getElementById(
+          "jackLine"
+        );
+
+
+      const notice =
+        document.getElementById(
+          "notice"
+        );
+
+
+      const terminal =
+        document.getElementById(
+          "terminal"
+        );
+
+
+      const terminalLog =
+        document.getElementById(
+          "terminalLog"
+        );
+
+
+      const terminalInput =
+        document.getElementById(
+          "terminalInput"
+        );
+
+
+      const terminalInputShell =
+        document.getElementById(
+          "terminalInputShell"
+        );
+
+
+      const textureInput =
+        document.getElementById(
+          "textureInput"
+        );
+
+
+      const debugPanel =
+        document.getElementById(
+          "debugPanel"
+        );
+
+
+      /* ============================================================
+         THREE SETUP
+         ============================================================ */
+
+
+      const scene =
+        new THREE.Scene();
+
+
+      scene.fog =
+        new THREE.FogExp2(
+          0x020302,
+          .026
+        );
+
+
+      const camera =
+        new THREE.PerspectiveCamera(
+
+          CONFIG.cameraFov,
+
+          innerWidth /
+          innerHeight,
+
+          .05,
+
+          100
+        );
+
+
+      const renderer =
+        new THREE.WebGLRenderer({
+
+          antialias: true,
+
+          alpha: false,
+
+          powerPreference:
+            "high-performance"
+        });
+
+
+      renderer.domElement.id =
+        "roomCanvas";
+
+
+      renderer.setPixelRatio(
+
+        Math.min(
+
+          devicePixelRatio ||
+          1,
+
+          2
+        )
+      );
+
+
+      renderer.setSize(
+
+        innerWidth,
+
+        innerHeight
+      );
+
+
+      renderer.setClearColor(
+
+        0x010201,
+
+        1
+      );
+
+
+      renderer.outputEncoding =
+        THREE.sRGBEncoding;
+
+
+      renderer.domElement.style.touchAction =
+        "none";
+
+
+      document.body.prepend(
+        renderer.domElement
+      );
+
+
+      /* ============================================================
+         LIGHTING
+         ============================================================ */
+
+
+      scene.add(
+
+        new THREE.HemisphereLight(
+
+          0xd6fff0,
+
+          0x101510,
+
+          .38
+        )
+      );
+
+
+      const ceilingLight =
+        new THREE.PointLight(
+
+          0xa8ffcf,
+
+          .72,
+
+          22,
+
+          2
+        );
+
+
+      ceilingLight.position.set(
+        0,
+        4.6,
+        0
+      );
+
+
+      scene.add(
+        ceilingLight
+      );
+
+
+      const jackLight =
+        new THREE.PointLight(
+
+          0x83ff97,
+
+          .5,
+
+          7,
+
+          2
+        );
+
+
+      scene.add(
+        jackLight
+      );
+
+
+      /* ============================================================
+         CANVAS HELPERS
+         ============================================================ */
+
+
+      function hex(
+        n
+      ) {
+
+        return (
+          "#" +
+          n
+            .toString(16)
+            .padStart(6,"0")
+        );
+      }
+
+
+      function wrapText(
+
+        ctx,
+
+        text,
+
+        x,
+
+        y,
+
+        maxWidth,
+
+        lineHeight,
+
+        maxLines = 99
+      ) {
+
+        const words =
+          String(text)
+            .split(/\s+/);
+
+
+        let line = "";
+
+        let row = 0;
+
+
+        for (
+          let i = 0;
+          i < words.length;
+          i++
+        ) {
+
+          const test =
+            line +
+            words[i] +
+            " ";
+
+
+          if (
+            ctx.measureText(test)
+              .width >
+              maxWidth
+            &&
+            line
+          ) {
+
+            ctx.fillText(
+              line.trim(),
+              x,
+              y +
+              row *
+              lineHeight
+            );
+
+
+            line =
+              words[i] +
+              " ";
+
+
+            row++;
+
+
+            if (
+              row >=
+              maxLines
+            ) {
+
+              return;
+            }
+
+          } else {
+
+            line = test;
+          }
+
+        }
+
+
+        if (
+          row <
+          maxLines
+        ) {
+
+          ctx.fillText(
+            line.trim(),
+            x,
+            y +
+            row *
+            lineHeight
+          );
+        }
+      }
+
+
+      function makeProceduralEvidence(
+
+        title,
+
+        text,
+
+        colour =
+          "#83ff97"
+      ) {
+
+        const canvas =
+          document.createElement(
+            "canvas"
+          );
+
+
+        canvas.width =
+          1024;
+
+        canvas.height =
+          640;
+
+
+        const ctx =
+          canvas.getContext(
+            "2d"
+          );
+
+
+        ctx.fillStyle =
+          "#080b09";
+
+
+        ctx.fillRect(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+
+        for (
+          let i = 0;
+          i < 2500;
+          i++
+        ) {
+
+          const a =
+            Math.random() *
+            .04;
+
+
+          ctx.fillStyle =
+            `rgba(255,255,255,${a})`;
+
+
+          ctx.fillRect(
+
+            Math.random() *
+            canvas.width,
+
+            Math.random() *
+            canvas.height,
+
+            1,
+
+            1
+          );
+        }
+
+
+        ctx.strokeStyle =
+          colour;
+
+
+        ctx.globalAlpha =
+          .72;
+
+
+        ctx.lineWidth =
+          4;
+
+
+        ctx.strokeRect(
+          28,
+          28,
+          968,
+          584
+        );
+
+
+        ctx.globalAlpha =
+          1;
+
+
+        ctx.fillStyle =
+          colour;
+
+
+        ctx.font =
+          "900 34px ui-monospace, monospace";
+
+
+        ctx.textAlign =
+          "left";
+
+
+        ctx.fillText(
+          title,
+          54,
+          82
+        );
+
+
+        ctx.fillStyle =
+          "rgba(255,255,255,.76)";
+
+
+        ctx.font =
+          "24px ui-monospace, monospace";
+
+
+        wrapText(
+
+          ctx,
+
+          text,
+
+          54,
+
+          145,
+
+          900,
+
+          38,
+
+          8
+        );
+
+
+        ctx.fillStyle =
+          "rgba(255,255,255,.2)";
+
+
+        ctx.font =
+          "16px ui-monospace, monospace";
+
+
+        ctx.fillText(
+          "ARCHIVE FRAGMENT / EVIDENCE",
+          54,
+          590
+        );
+
+
+        return canvas;
+      }
+
+
+      function canvasTexture(
+        canvas
+      ) {
+
+        const texture =
+          new THREE.CanvasTexture(
+            canvas
+          );
+
+
+        texture.encoding =
+          THREE.sRGBEncoding;
+
+
+        texture.anisotropy =
+          renderer.capabilities
+            .getMaxAnisotropy();
+
+
+        return texture;
+      }
+
+
+      /* ============================================================
+         SCREENSHOT MATERIAL SYSTEM
+         ============================================================ */
+
+
+      const evidenceImages =
+        [];
+
+
+      let screenshotCount =
+        0;
+
+
+      function makeCropCanvas(
+
+        image,
+
+        cropIndex,
+
+        outW = 512,
+
+        outH = 512
+      ) {
+
+        const canvas =
+          document.createElement(
+            "canvas"
+          );
+
+
+        canvas.width =
+          outW;
+
+
+        canvas.height =
+          outH;
+
+
+        const ctx =
+          canvas.getContext(
+            "2d"
+          );
+
+
+        const imageRatio =
+          image.width /
+          image.height;
+
+
+        const targetRatio =
+          outW /
+          outH;
+
+
+        let sw;
+        let sh;
+
+
+        if (
+          imageRatio >
+          targetRatio
+        ) {
+
+          sh =
+            image.height;
+
+
+          sw =
+            sh *
+            targetRatio;
+
+        } else {
+
+          sw =
+            image.width;
+
+
+          sh =
+            sw /
+            targetRatio;
+        }
+
+
+        const maxX =
+          Math.max(
+            0,
+            image.width -
+            sw
+          );
+
+
+        const maxY =
+          Math.max(
+            0,
+            image.height -
+            sh
+          );
+
+
+        const seed =
+          (
+            cropIndex *
+            .61803398875
+          ) %
+          1;
+
+
+        const seed2 =
+          (
+            cropIndex *
+            .38196601125
+          ) %
+          1;
+
+
+        const sx =
+          maxX *
+          seed;
+
+
+        const sy =
+          maxY *
+          seed2;
+
+
+        ctx.drawImage(
+
+          image,
+
+          sx,
+          sy,
+          sw,
+          sh,
+
+          0,
+          0,
+          outW,
+          outH
+        );
+
+
+        ctx.fillStyle =
+          "rgba(0,12,8,.16)";
+
+
+        ctx.fillRect(
+          0,
+          0,
+          outW,
+          outH
+        );
+
+
+        return canvas;
+      }
+
+
+      function readImageFile(
+        file
+      ) {
+
+        return new Promise(
+          (
+            resolve,
+            reject
+          ) => {
+
+            const reader =
+              new FileReader();
+
+
+            reader.onload =
+              () => {
+
+                const img =
+                  new Image();
+
+
+                img.onload =
+                  () => {
+
+                    resolve({
+                      image: img,
+                      name: file.name
+                    });
+                  };
+
+
+                img.onerror =
+                  reject;
+
+
+                img.src =
+                  reader.result;
+              };
+
+
+            reader.onerror =
+              reject;
+
+
+            reader.readAsDataURL(
+              file
+            );
+          }
+        );
+      }
+
+
+      async function loadScreenshotFiles(
+        fileList
+      ) {
+
+        const files =
+          Array.from(
+            fileList ||
+            []
+          )
+          .filter(
+            file =>
+              file.type
+                .startsWith(
+                  "image/"
+                )
+          );
+
+
+        if (
+          !files.length
+        ) {
+
+          return;
+        }
+
+
+        appendTerminal(
+
+          "SYSTEM",
+
+          `Loading ${files.length} screenshot(s) as archive matter.`,
+
+          "system"
+        );
+
+
+        const loaded =
+          await Promise.all(
+
+            files.map(
+              readImageFile
+            )
+          );
+
+
+        evidenceImages.splice(
+          0,
+          evidenceImages.length,
+          ...loaded
+        );
+
+
+        screenshotCount =
+          evidenceImages.length;
+
+
+        applyEvidenceTextures();
+
+
+        textureReadout.textContent =
+          screenshotCount +
+          " LIVE";
+
+
+        appendTerminal(
+
+          "WENDY",
+
+          "Archive images received. Projecting fragments onto room surfaces.",
+
+          "wendy"
+        );
+
+
+        showNotice(
+
+          "<strong>ARCHIVE MATERIALISED</strong><br><br>" +
+          screenshotCount +
+          " screenshot source(s)"
+        );
+      }
+
+
+      /* ============================================================
+         ROOM SHELL
+         ============================================================ */
+
+
+      const roomGroup =
+        new THREE.Group();
+
+
+      scene.add(
+        roomGroup
+      );
+
+
+      const wallMeshes =
+        [];
+
+
+      function createWall(
+
+        name,
+
+        position,
+
+        rotation,
+
+        width = CONFIG.roomSize,
+
+        height = CONFIG.roomSize
+      ) {
+
+        const canvas =
+          makeProceduralEvidence(
+
+            "/jack/room",
+
+            name +
+            " / awaiting screenshot evidence",
+
+            "#355f4f"
+          );
+
+
+        const texture =
+          canvasTexture(
+            canvas
+          );
+
+
+        const material =
+          new THREE.MeshBasicMaterial({
+
+            map: texture,
+
+            color:
+              0x596d63,
+
+            transparent:
+              true,
+
+            opacity:
+              CONFIG.wallOpacity,
+
+            side:
+              THREE.DoubleSide,
+
+            depthWrite:
+              false
+          });
+
+
+        const wall =
+          new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+              width,
+              height
+            ),
+
+            material
+          );
+
+
+        wall.position.fromArray(
+          position
+        );
+
+
+        wall.rotation.set(
+          rotation[0],
+          rotation[1],
+          rotation[2]
+        );
+
+
+        wall.userData.wallName =
+          name;
+
+
+        roomGroup.add(
+          wall
+        );
+
+
+        wallMeshes.push(
+          wall
+        );
+
+
+        return wall;
+      }
+
+
+      const e =
+        HALF -
+        .02;
+
+
+      createWall(
+        "FRONT",
+        [0,0,-e],
+        [0,0,0]
+      );
+
+
+      createWall(
+        "BACK",
+        [0,0,e],
+        [0,Math.PI,0]
+      );
+
+
+      createWall(
+        "LEFT",
+        [-e,0,0],
+        [0,Math.PI/2,0]
+      );
+
+
+      createWall(
+        "RIGHT",
+        [e,0,0],
+        [0,-Math.PI/2,0]
+      );
+
+
+      createWall(
+        "CEILING / MYTH / DEEP TIME",
+        [0,e,0],
+        [Math.PI/2,0,0]
+      );
+
+
+      createWall(
+        "FLOOR / ARCHIVE",
+        [0,-e,0],
+        [-Math.PI/2,0,0]
+      );
+
+
+      /* ============================================================
+         GRID OVER ROOM
+         ============================================================ */
+
+
+      const gridGroup =
+        new THREE.Group();
+
+
+      scene.add(
+        gridGroup
+      );
+
+
+      function makeGrid(
+
+        w,
+
+        h,
+
+        nx,
+
+        ny
+      ) {
+
+        const g =
+          new THREE.Group();
+
+
+        const mat =
+          new THREE.LineBasicMaterial({
+
+            color:
+              0x416452,
+
+            transparent:
+              true,
+
+            opacity:
+              .17
+          });
+
+
+        for (
+          let i = 0;
+          i <= nx;
+          i++
+        ) {
+
+          const x =
+            -w / 2 +
+            w *
+            i /
+            nx;
+
+
+          const geo =
+            new THREE.BufferGeometry()
+              .setFromPoints([
+                new THREE.Vector3(
+                  x,
+                  -h/2,
+                  0
+                ),
+                new THREE.Vector3(
+                  x,
+                  h/2,
+                  0
+                )
+              ]);
+
+
+          g.add(
+            new THREE.Line(
+              geo,
+              mat
+            )
+          );
+        }
+
+
+        for (
+          let i = 0;
+          i <= ny;
+          i++
+        ) {
+
+          const y =
+            -h / 2 +
+            h *
+            i /
+            ny;
+
+
+          const geo =
+            new THREE.BufferGeometry()
+              .setFromPoints([
+                new THREE.Vector3(
+                  -w/2,
+                  y,
+                  0
+                ),
+                new THREE.Vector3(
+                  w/2,
+                  y,
+                  0
+                )
+              ]);
+
+
+          g.add(
+            new THREE.Line(
+              geo,
+              mat
+            )
+          );
+        }
+
+
+        return g;
+      }
+
+
+      function addGrid(
+
+        pos,
+
+        rot
+      ) {
+
+        const g =
+          makeGrid(
+            12,
+            12,
+            12,
+            12
+          );
+
+
+        g.position.fromArray(
+          pos
+        );
+
+
+        g.rotation.set(
+          rot[0],
+          rot[1],
+          rot[2]
+        );
+
+
+        gridGroup.add(
+          g
+        );
+      }
+
+
+      addGrid(
+        [0,0,-e+.01],
+        [0,0,0]
+      );
+
+
+      addGrid(
+        [0,0,e-.01],
+        [0,Math.PI,0]
+      );
+
+
+      addGrid(
+        [-e+.01,0,0],
+        [0,Math.PI/2,0]
+      );
+
+
+      addGrid(
+        [e-.01,0,0],
+        [0,-Math.PI/2,0]
+      );
+
+
+      addGrid(
+        [0,e-.01,0],
+        [Math.PI/2,0,0]
+      );
+
+
+      addGrid(
+        [0,-e+.01,0],
+        [-Math.PI/2,0,0]
+      );
+
+
+      /* ============================================================
+         DATA OBJECTS
+         ============================================================ */
+
+
+      const nodeGroup =
+        new THREE.Group();
+
+
+      scene.add(
+        nodeGroup
+      );
+
+
+      const nodeObjects =
+        [];
+
+
+      const interactiveMeshes =
+        [];
+
+
+      function makeNodeCanvas(
+        node
+      ) {
+
+        const canvas =
+          document.createElement(
+            "canvas"
+          );
+
+
+        canvas.width =
+          512;
+
+
+        canvas.height =
+          512;
+
+
+        const ctx =
+          canvas.getContext(
+            "2d"
+          );
+
+
+        ctx.fillStyle =
+          "#070907";
+
+
+        ctx.fillRect(
+          0,
+          0,
+          512,
+          512
+        );
+
+
+        for (
+          let i = 0;
+          i < 800;
+          i++
+        ) {
+
+          ctx.fillStyle =
+            "rgba(255,255,255," +
+            (
+              Math.random() *
+              .04
+            ) +
+            ")";
+
+
+          ctx.fillRect(
+
+            Math.random() *
+            512,
+
+            Math.random() *
+            512,
+
+            1,
+
+            1
+          );
+        }
+
+
+        ctx.strokeStyle =
+          hex(
+            node.colour
+          );
+
+
+        ctx.lineWidth =
+          4;
+
+
+        ctx.globalAlpha =
+          .8;
+
+
+        ctx.strokeRect(
+          21,
+          21,
+          470,
+          470
+        );
+
+
+        ctx.globalAlpha =
+          1;
+
+
+        ctx.textAlign =
+          "center";
+
+
+        ctx.fillStyle =
+          hex(
+            node.colour
+          );
+
+
+        ctx.font =
+          "900 78px ui-monospace,monospace";
+
+
+        ctx.fillText(
+          node.glyph,
+          256,
+          205
+        );
+
+
+        ctx.fillStyle =
+          "#fff";
+
+
+        ctx.font =
+          "900 20px ui-monospace,monospace";
+
+
+        wrapText(
+
+          ctx,
+
+          node.title,
+
+          256,
+
+          330,
+
+          430,
+
+          27,
+
+          3
+        );
+
+
+        ctx.fillStyle =
+          "rgba(255,255,255,.55)";
+
+
+        ctx.font =
+          "15px ui-monospace,monospace";
+
+
+        wrapText(
+
+          ctx,
+
+          node.subtitle,
+
+          256,
+
+          418,
+
+          430,
+
+          22,
+
+          3
+        );
+
+
+        return canvas;
+      }
+
+
+      function orientTowardsCentre(
+        group
+      ) {
+
+        const p =
+          group.position.clone();
+
+
+        group.lookAt(
+          new THREE.Vector3(
+            0,
+            p.y *
+            .15,
+            0
+          )
+        );
+      }
+
+
+      function createNode(
+        node
+      ) {
+
+        const group =
+          new THREE.Group();
+
+
+        group.position.fromArray(
+          node.xyz
+        );
+
+
+        group.userData.node =
+          node;
+
+
+        group.userData.basePosition =
+          new THREE.Vector3()
+            .fromArray(
+              node.xyz
+            );
+
+
+        group.userData.targetPosition =
+          group
+            .userData
+            .basePosition
+            .clone();
+
+
+        const canvas =
+          makeNodeCanvas(
+            node
+          );
+
+
+        const texture =
+          canvasTexture(
+            canvas
+          );
+
+
+        texture.userData = {
+
+          source:
+            node.id,
+
+          kind:
+            "procedural-evidence",
+
+          evidence:
+            true
+        };
+
+
+        const mat =
+          new THREE.MeshStandardMaterial({
+
+            map:
+              texture,
+
+            emissive:
+              node.colour,
+
+            emissiveIntensity:
+              .045,
+
+            roughness:
+              .95,
+
+            side:
+              THREE.DoubleSide
+          });
+
+
+        const plane =
+          new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+              CONFIG.nodeSize,
+              CONFIG.nodeSize
+            ),
+
+            mat
+          );
+
+
+        plane.userData.parentNode =
+          group;
+
+
+        group.add(
+          plane
+        );
+
+
+        const edgeGeo =
+          new THREE.EdgesGeometry(
+
+            new THREE.BoxGeometry(
+              CONFIG.nodeSize +
+              .05,
+              CONFIG.nodeSize +
+              .05,
+              .07
+            )
+          );
+
+
+        const edgeMat =
+          new THREE.LineBasicMaterial({
+
+            color:
+              node.colour,
+
+            transparent:
+              true,
+
+            opacity:
+              .5
+          });
+
+
+        group.add(
+
+          new THREE.LineSegments(
+            edgeGeo,
+            edgeMat
+          )
+        );
+
+
+        const lamp =
+          new THREE.PointLight(
+
+            node.colour,
+
+            .12,
+
+            3.2
+          );
+
+
+        lamp.position.z =
+          .2;
+
+
+        group.add(
+          lamp
+        );
+
+
+        orientTowardsCentre(
+          group
+        );
+
+
+        nodeGroup.add(
+          group
+        );
+
+
+        nodeObjects.push(
+          group
+        );
+
+
+        interactiveMeshes.push(
+          plane
+        );
+
+
+        return group;
+      }
+
+
+      ROOM_DATA.forEach(
+        createNode
+      );
+
+
+      function nodeById(
+        id
+      ) {
+
+        return ROOM_DATA.find(
+          n =>
+            n.id === id
+        );
+      }
+
+
+      function objectById(
+        id
+      ) {
+
+        return nodeObjects.find(
+          o =>
+            o.userData.node.id ===
+            id
+        );
+      }
+
+
+      /* ============================================================
+         SCREENSHOT FRAGMENTS ON OBJECTS / WALLS
+         ============================================================ */
+
+
+      function applyEvidenceTextures() {
+
+        if (
+          !evidenceImages.length
+        ) {
+
+          return;
+        }
+
+
+        wallMeshes.forEach(
+          (
+            wall,
+            index
+          ) => {
+
+            const source =
+              evidenceImages[
+                index %
+                evidenceImages.length
+              ];
+
+
+            const canvas =
+              makeCropCanvas(
+
+                source.image,
+
+                index +
+                3,
+
+                1024,
+
+                1024
+              );
+
+
+            const texture =
+              canvasTexture(
+                canvas
+              );
+
+
+            texture.userData = {
+
+              source:
+                source.name,
+
+              kind:
+                "screenshot-fragment",
+
+              evidence:
+                true,
+
+              wall:
+                wall.userData
+                  .wallName
+            };
+
+
+            wall.material.map =
+              texture;
+
+
+            wall.material.opacity =
+              CONFIG.wallOpacity;
+
+
+            wall.material.needsUpdate =
+              true;
+          }
+        );
+
+
+        nodeObjects.forEach(
+          (
+            group,
+            index
+          ) => {
+
+            const source =
+              evidenceImages[
+                index %
+                evidenceImages.length
+              ];
+
+
+            const node =
+              group.userData.node;
+
+
+            const crop =
+              makeCropCanvas(
+
+                source.image,
+
+                index +
+                17,
+
+                512,
+
+                512
+              );
+
+
+            const ctx =
+              crop.getContext(
+                "2d"
+              );
+
+
+            ctx.fillStyle =
+              "rgba(0,0,0,.38)";
+
+
+            ctx.fillRect(
+              0,
+              350,
+              512,
+              162
+            );
+
+
+            ctx.strokeStyle =
+              hex(
+                node.colour
+              );
+
+
+            ctx.lineWidth =
+              4;
+
+
+            ctx.strokeRect(
+              15,
+              15,
+              482,
+              482
+            );
+
+
+            ctx.fillStyle =
+              "#fff";
+
+
+            ctx.font =
+              "900 20px ui-monospace,monospace";
+
+
+            ctx.textAlign =
+              "center";
+
+
+            ctx.fillText(
+              node.title,
+              256,
+              407
+            );
+
+
+            ctx.fillStyle =
+              "rgba(255,255,255,.65)";
+
+
+            ctx.font =
+              "14px ui-monospace,monospace";
+
+
+            ctx.fillText(
+              source.name,
+              256,
+              447
+            );
+
+
+            const texture =
+              canvasTexture(
+                crop
+              );
+
+
+            texture.userData = {
+
+              source:
+                source.name,
+
+              node:
+                node.id,
+
+              kind:
+                "screenshot-fragment",
+
+              evidence:
+                true
+            };
+
+
+            const plane =
+              group.children.find(
+                child =>
+                  child.isMesh &&
+                  child.geometry
+                    ?.type ===
+                    "PlaneGeometry"
+              );
+
+
+            if (
+              plane
+            ) {
+
+              plane.material.map =
+                texture;
+
+
+              plane.material.needsUpdate =
+                true;
+            }
+          }
+        );
+      }
+
+
+      /* ============================================================
+         RELATIONSHIP LINES
+         ============================================================ */
+
+
+      const relationGroup =
+        new THREE.Group();
+
+
+      scene.add(
+        relationGroup
+      );
+
+
+      const relationPairs =
+        [];
+
+
+      function buildRelations() {
+
+        relationGroup.clear();
+
+        relationPairs.length =
+          0;
+
+
+        const seen =
+          new Set();
+
+
+        ROOM_DATA.forEach(
+          node => {
+
+            (
+              node.links ||
+              []
+            )
+            .forEach(
+              targetId => {
+
+                const key =
+                  [
+                    node.id,
+                    targetId
+                  ]
+                  .sort()
+                  .join("|");
+
+
+                if (
+                  seen.has(
+                    key
+                  )
+                ) {
+
+                  return;
+                }
+
+
+                seen.add(
+                  key
+                );
+
+
+                const a =
+                  objectById(
+                    node.id
+                  );
+
+
+                const b =
+                  objectById(
+                    targetId
+                  );
+
+
+                if (
+                  !a ||
+                  !b
+                ) {
+
+                  return;
+                }
+
+
+                const geo =
+                  new THREE.BufferGeometry()
+                    .setFromPoints([
+                      a.position.clone(),
+                      b.position.clone()
+                    ]);
+
+
+                const mat =
+                  new THREE.LineBasicMaterial({
+
+                    color:
+                      0x83ff97,
+
+                    transparent:
+                      true,
+
+                    opacity:
+                      .14
+                  });
+
+
+                const line =
+                  new THREE.Line(
+                    geo,
+                    mat
+                  );
+
+
+                relationGroup.add(
+                  line
+                );
+
+
+                relationPairs.push({
+
+                  a,
+                  b,
+                  line
+                });
+              }
+            );
+          }
+        );
+      }
+
+
+      function updateRelations() {
+
+        relationPairs.forEach(
+          item => {
+
+            const attr =
+              item
+                .line
+                .geometry
+                .attributes
+                .position;
+
+
+            attr.setXYZ(
+
+              0,
+
+              item.a.position.x,
+
+              item.a.position.y,
+
+              item.a.position.z
+            );
+
+
+            attr.setXYZ(
+
+              1,
+
+              item.b.position.x,
+
+              item.b.position.y,
+
+              item.b.position.z
+            );
+
+
+            attr.needsUpdate =
+              true;
+          }
+        );
+      }
+
+
+      buildRelations();
+
+
+      /* ============================================================
+         WENDY / ANAMNESIA
+         ============================================================ */
+
+
+      let projectionEnabled =
+        false;
+
+
+      let wFocus =
+        .5;
+
+
+      let vFocus =
+        .5;
+
+
+      function projectedPosition(
+        node
+      ) {
+
+        const p =
+          new THREE.Vector3()
+            .fromArray(
+              node.xyz
+            );
+
+
+        if (
+          !projectionEnabled
+        ) {
+
+          return p;
+        }
+
+
+        const temporal =
+          (
+            node.w -
+            wFocus
+          )
+          *
+          CONFIG.projectionW;
+
+
+        const relational =
+          (
+            node.v -
+            vFocus
+          )
+          *
+          CONFIG.projectionV;
+
+
+        p.x +=
+          relational;
+
+
+        p.y +=
+          temporal;
+
+
+        p.z -=
+
+          Math.abs(
+            temporal
+          ) *
+          .62
+
+          +
+
+          Math.abs(
+            relational
+          ) *
+          .42;
+
+
+        const lim =
+          HALF -
+          1.15;
+
+
+        p.x =
+          THREE.MathUtils.clamp(
+            p.x,
+            -lim,
+            lim
+          );
+
+
+        p.y =
+          THREE.MathUtils.clamp(
+            p.y,
+            -lim,
+            lim
+          );
+
+
+        p.z =
+          THREE.MathUtils.clamp(
+            p.z,
+            -lim,
+            lim
+          );
+
+
+        return p;
+      }
+
+
+      function refreshProjection() {
+
+        nodeObjects.forEach(
+          group => {
+
+            group.userData.targetPosition =
+              projectedPosition(
+                group.userData.node
+              );
+          }
+        );
+
+
+        projectionState.textContent =
+          projectionEnabled
+            ?
+            "5D / WENDY"
+            :
+            "3D";
+
+
+        fieldState.textContent =
+          projectionEnabled
+            ?
+            "ANAMNESIA"
+            :
+            "STABLE";
+      }
+
+
+      function setAnamnesia(
+        enabled
+      ) {
+
+        projectionEnabled =
+          !!enabled;
+
+
+        refreshProjection();
+
+
+        document
+          .getElementById(
+            "anamnesiaBtn"
+          )
+          .classList
+          .toggle(
+            "on",
+            projectionEnabled
+          );
+
+
+        if (
+          projectionEnabled
+        ) {
+
+          appendTerminal(
+
+            "WENDY",
+
+            "Projectionist at her station.",
+
+            "wendy"
+          );
+
+
+          appendTerminal(
+
+            "JACK",
+
+            "ANAMNESIA PROGRAMMED. BY GEORGE. IT'S A GOODUN.",
+
+            "jack"
+          );
+
+
+          showNotice(
+
+            "<strong>.;.awakenGuild</strong><br><br>" +
+            "WENDY WIGNOSIS III<br>" +
+            "THE PROJECTIONIST"
+          );
+
+        } else {
+
+          appendTerminal(
+
+            "SYSTEM",
+
+            "Ordinary geometry restored.",
+
+            "system"
+          );
+        }
+      }
+
+
+      /* ============================================================
+         JACK'S BODY
+         ============================================================ */
+
+
+      const jackBody =
+        new THREE.Group();
+
+
+      scene.add(
+        jackBody
+      );
+
+
+      const jackCardCanvas =
+        makeProceduralEvidence(
+
+          "JACK",
+
+          "CLERK / INHABITANT",
+
+          "#83ff97"
+        );
+
+
+      const jackTexture =
+        canvasTexture(
+          jackCardCanvas
+        );
+
+
+      const jackBodyMesh =
+        new THREE.Mesh(
+
+          new THREE.PlaneGeometry(
+            .72,
+            .46
+          ),
+
+          new THREE.MeshBasicMaterial({
+
+            map:
+              jackTexture,
+
+            transparent:
+              true,
+
+            side:
+              THREE.DoubleSide
+          })
+        );
+
+
+      jackBody.add(
+        jackBodyMesh
+      );
+
+
+      const jackRing =
+        new THREE.Mesh(
+
+          new THREE.TorusGeometry(
+            .5,
+            .025,
+            8,
+            32
+          ),
+
+          new THREE.MeshBasicMaterial({
+
+            color:
+              0x83ff97,
+
+            transparent:
+              true,
+
+            opacity:
+              .48
+          })
+        );
+
+
+      jackRing.rotation.x =
+        Math.PI /
+        2;
+
+
+      jackBody.add(
+        jackRing
+      );
+
+
+      jackBody.position.set(
+        0,
+        .2,
+        -3.9
+      );
+
+
+      const jackState = {
+
+        mode:
+          "clerk",
+
+        position:
+          jackBody.position,
+
+        target:
+          jackBody.position
+            .clone(),
+
+        lookTarget:
+          new THREE.Vector3(
+            0,
+            0,
+            0
+          ),
+
+        selected:
+          null,
+
+        moving:
+          false,
+
+        follow:
+          false,
+
+        permission: {
+
+          move:
+            true,
+
+          inspect:
+            true,
+
+          focusProjection:
+            true,
+
+          rewriteRoomData:
+            false,
+
+          executeRemoteCode:
+            false
+        }
+      };
+
+
+      function resolveTarget(
+        target
+      ) {
+
+        if (
+          target instanceof
+          THREE.Vector3
+        ) {
+
+          return target.clone();
+        }
+
+
+        const object =
+          objectById(
+            target
+          );
+
+
+        if (
+          object
+        ) {
+
+          return object.position
+            .clone();
+        }
+
+
+        return null;
+      }
+
+
+      function jackMoveTo(
+        target
+      ) {
+
+        if (
+          !jackState
+            .permission
+            .move
+        ) {
+
+          return false;
+        }
+
+
+        const p =
+          resolveTarget(
+            target
+          );
+
+
+        if (
+          !p
+        ) {
+
+          appendTerminal(
+
+            "JACK",
+
+            "Target not found: " +
+            target,
+
+            "jack"
+          );
+
+
+          return false;
+        }
+
+
+        const direction =
+          p.clone()
+            .sub(
+              jackBody.position
+            );
+
+
+        if (
+          direction.length() >
+          1
+        ) {
+
+          direction
+            .normalize()
+            .multiplyScalar(
+              1
+            );
+
+
+          p.sub(
+            direction
+          );
+        }
+
+
+        jackState.target.copy(
+          p
+        );
+
+
+        jackState.mode =
+          "inhabit";
+
+
+        jackState.moving =
+          true;
+
+
+        jackStateReadout.textContent =
+          "MOVING";
+
+
+        appendTerminal(
+
+          "JACK",
+
+          "Moving to " +
+          target +
+          ".",
+
+          "jack"
+        );
+
+
+        return true;
+      }
+
+
+      function jackLookAt(
+        target
+      ) {
+
+        const p =
+          resolveTarget(
+            target
+          );
+
+
+        if (
+          !p
+        ) {
+
+          return false;
+        }
+
+
+        jackState.lookTarget.copy(
+          p
+        );
+
+
+        return true;
+      }
+
+
+      function jackInspect(
+        target
+      ) {
+
+        if (
+          !jackState
+            .permission
+            .inspect
+        ) {
+
+          return false;
+        }
+
+
+        const node =
+          nodeById(
+            target
+          );
+
+
+        if (
+          !node
+        ) {
+
+          return false;
+        }
+
+
+        jackState.selected =
+          node.id;
+
+
+        jackState.mode =
+          "inspect";
+
+
+        jackMoveTo(
+          node.id
+        );
+
+
+        appendTerminal(
+
+          "JACK",
+
+          "Inspecting " +
+          node.title +
+          ". " +
+          node.text,
+
+          "jack"
+        );
+
+
+        return node;
+      }
+
+
+      function jackProject(
+        target
+      ) {
+
+        if (
+          !jackState
+            .permission
+            .focusProjection
+        ) {
+
+          return false;
+        }
+
+
+        const node =
+          nodeById(
+            target
+          );
+
+
+        if (
+          !node
+        ) {
+
+          return false;
+        }
+
+
+        wFocus =
+          node.w;
+
+
+        vFocus =
+          node.v;
+
+
+        if (
+          !projectionEnabled
+        ) {
+
+          setAnamnesia(
+            true
+          );
+
+        } else {
+
+          refreshProjection();
+        }
+
+
+        jackState.mode =
+          "project";
+
+
+        jackState.selected =
+          node.id;
+
+
+        jackMoveTo(
+          "wendy"
+        );
+
+
+        appendTerminal(
+
+          "JACK",
+
+          "Wendy: project " +
+          node.title +
+          ".",
+
+          "jack"
+        );
+
+
+        appendTerminal(
+
+          "WENDY",
+
+          "Focus accepted. w=" +
+          node.w.toFixed(2) +
+          " v=" +
+          node.v.toFixed(2),
+
+          "wendy"
+        );
+
+
+        return node;
+      }
+
+
+      function jackFollow(
+        enabled = true
+      ) {
+
+        jackState.follow =
+          !!enabled;
+
+
+        document
+          .getElementById(
+            "followBtn"
+          )
+          .classList
+          .toggle(
+            "on",
+            jackState.follow
+          );
+
+
+        return jackState.follow;
+      }
+
+
+      function jackStop() {
+
+        jackState.target.copy(
+          jackBody.position
+        );
+
+
+        jackState.moving =
+          false;
+
+
+        jackState.mode =
+          "clerk";
+
+
+        jackStateReadout.textContent =
+          "CLERK";
+      }
+
+
+      /* ============================================================
+         CLAUDBOT
+         ============================================================ */
+
+
+      const claudCanvas =
+        document.getElementById(
+          "claudCanvas"
+        );
+
+
+      const cctx =
+        claudCanvas.getContext(
+          "2d"
+        );
+
+
+      cctx.imageSmoothingEnabled =
+        false;
+
+
+      function cpx(
+        x,
+        y,
+        w,
+        h,
+        colour
+      ) {
+
+        cctx.fillStyle =
+          colour;
+
+
+        cctx.fillRect(
+          x,
+          y,
+          w,
+          h
+        );
+      }
+
+
+      function drawClaudbot(
+        phase
+      ) {
+
+        cctx.clearRect(
+          0,
+          0,
+          32,
+          32
+        );
+
+
+        cpx(
+          0,
+          0,
+          32,
+          32,
+          "#07100e"
+        );
+
+
+        for (
+          let i = 0;
+          i < 9;
+          i++
+        ) {
+
+          cpx(
+
+            (
+              i * 7 +
+              phase
+            )
+            %
+            32,
+
+            (
+              i * 11 +
+              phase *
+              2
+            )
+            %
+            32,
+
+            1,
+            1,
+
+            "#426c61"
+          );
+        }
+
+
+        /* moon */
+
+        cpx(
+          22,
+          3,
+          7,
+          7,
+          "#dce8bf"
+        );
+
+
+        cpx(
+          25,
+          2,
+          6,
+          7,
+          "#07100e"
+        );
+
+
+        /* hair */
+
+        cpx(
+          9,
+          6,
+          14,
+          4,
+          "#dbe2dd"
+        );
+
+
+        cpx(
+          7,
+          9,
+          18,
+          8,
+          "#dbe2dd"
+        );
+
+
+        /* face */
+
+        cpx(
+          11,
+          10,
+          10,
+          8,
+          "#efd5b9"
+        );
+
+
+        /* eyes */
+
+        cpx(
+          12,
+          13,
+          2,
+          2,
+          "#080a09"
+        );
+
+
+        cpx(
+          18,
+          13,
+          2,
+          2,
+          "#080a09"
+        );
+
+
+        /* grin */
+
+        cpx(
+          14,
+          16,
+          4,
+          1,
+          "#662d32"
+        );
+
+
+        /* coat */
+
+        cpx(
+          10,
+          19,
+          12,
+          8,
+          "#456d60"
+        );
+
+
+        cpx(
+          8,
+          21,
+          4,
+          6,
+          "#456d60"
+        );
+
+
+        cpx(
+          20,
+          21,
+          4,
+          6,
+          "#456d60"
+        );
+
+
+        /* feet */
+
+        cpx(
+          9,
+          27,
+          5,
+          3,
+          "#151918"
+        );
+
+
+        cpx(
+          18,
+          27,
+          5,
+          3,
+          "#151918"
+        );
+
+
+        if (
+          projectionEnabled
+        ) {
+
+          cpx(
+            4,
+            5,
+            2,
+            2,
+            "#83ff97"
+          );
+
+
+          cpx(
+            27,
+            17,
+            2,
+            2,
+            "#ff7bdd"
+          );
+        }
+      }
+
+
+      /* ============================================================
+         PUNCH CARDS
+         ============================================================ */
+
+
+      const punchGroup =
+        new THREE.Group();
+
+
+      scene.add(
+        punchGroup
+      );
+
+
+      function punchTexture() {
+
+        const c =
+          document.createElement(
+            "canvas"
+          );
+
+
+        c.width =
+          256;
+
+
+        c.height =
+          112;
+
+
+        const ctx =
+          c.getContext(
+            "2d"
+          );
+
+
+        ctx.fillStyle =
+          "#d6c79a";
+
+
+        ctx.fillRect(
+          0,
+          0,
+          256,
+          112
+        );
+
+
+        ctx.strokeStyle =
+          "#625943";
+
+
+        ctx.strokeRect(
+          1,
+          1,
+          254,
+          110
+        );
+
+
+        ctx.fillStyle =
+          "#383328";
+
+
+        for (
+          let row = 0;
+          row < 5;
+          row++
+        ) {
+
+          for (
+            let col = 0;
+            col < 18;
+            col++
+          ) {
+
+            if (
+              Math.random() >
+              .63
+            ) {
+
+              ctx.fillRect(
+
+                12 +
+                col *
+                13,
+
+                10 +
+                row *
+                18,
+
+                6,
+
+                10
+              );
+            }
+          }
+        }
+
+
+        return canvasTexture(
+          c
+        );
+      }
+
+
+      for (
+        let i = 0;
+        i <
+        CONFIG.punchCards;
+        i++
+      ) {
+
+        const card =
+          new THREE.Mesh(
+
+            new THREE.PlaneGeometry(
+              .52,
+              .23
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+              map:
+                punchTexture(),
+
+              roughness:
+                .95,
+
+              side:
+                THREE.DoubleSide
+            })
+          );
+
+
+        const angle =
+          Math.random() *
+          Math.PI *
+          2;
+
+
+        const radius =
+          2 +
+          Math.random() *
+          3;
+
+
+        card.position.set(
+
+          Math.cos(angle) *
+          radius,
+
+          -3 +
+          Math.random() *
+          6,
+
+          Math.sin(angle) *
+          radius
+        );
+
+
+        card.rotation.set(
+
+          Math.random() *
+          Math.PI,
+
+          Math.random() *
+          Math.PI,
+
+          Math.random() *
+          Math.PI
+        );
+
+
+        card.userData.seed =
+          Math.random() *
+          100;
+
+
+        punchGroup.add(
+          card
+        );
+      }
+
+
+      /* ============================================================
+         HUMAN CAMERA
+         ============================================================ */
+
+
+      let yaw =
+        0;
+
+
+      let pitch =
+        0;
+
+
+      let targetYaw =
+        0;
+
+
+      let targetPitch =
+        0;
+
+
+      let yawVelocity =
+        0;
+
+
+      let pitchVelocity =
+        0;
+
+
+      let cameraRadius =
+        0;
+
+
+      let targetCameraRadius =
+        0;
+
+
+      const cameraEuler =
+        new THREE.Euler(
+          0,
+          0,
+          0,
+          "YXZ"
+        );
+
+
+      const humanAnchor =
+        new THREE.Vector3(
+          0,
+          .2,
+          0
+        );
+
+
+      function applyCamera() {
+
+        cameraEuler.set(
+          pitch,
+          yaw,
+          0
+        );
+
+
+        camera.quaternion
+          .setFromEuler(
+            cameraEuler
+          );
+
+
+        if (
+          jackState.follow
+        ) {
+
+          const offset =
+            new THREE.Vector3(
+              0,
+              .8,
+              CONFIG.followDistance
+            );
+
+
+          offset.applyQuaternion(
+            camera.quaternion
+          );
+
+
+          const desired =
+            jackBody.position
+              .clone()
+              .add(
+                offset
+              );
+
+
+          humanAnchor.lerp(
+            desired,
+            .05
+          );
+
+
+        } else {
+
+          humanAnchor.lerp(
+
+            new THREE.Vector3(
+              0,
+              .2,
+              0
+            ),
+
+            .03
+          );
+        }
+
+
+        const forward =
+          new THREE.Vector3(
+            0,
+            0,
+            1
+          )
+          .applyQuaternion(
+            camera.quaternion
+          );
+
+
+        camera.position.copy(
+          humanAnchor
+        );
+
+
+        camera.position.add(
+
+          forward.multiplyScalar(
+            -cameraRadius
+          )
+        );
+      }
+
+
+      /* ============================================================
+         POINTER / SWOOP
+         ============================================================ */
+
+
+      const pointers =
+        new Map();
+
+
+      let activePointer =
+        null;
+
+
+      let pointerX =
+        0;
+
+
+      let pointerY =
+        0;
+
+
+      let moved =
+        false;
+
+
+      let lastMove =
+        0;
+
+
+      let pinchDistanceStart =
+        null;
+
+
+      let pinchRadiusStart =
+        0;
+
+
+      let lastTap =
+        0;
+
+
+      function terminalOwnsInput() {
+
+        return (
+          terminal.classList
+            .contains(
+              "open"
+            )
+          &&
+          (
+            document.activeElement ===
+            terminalInput
+            ||
+            terminal.contains(
+              document.activeElement
+            )
+          )
+        );
+      }
+
+
+      function pointerDistance() {
+
+        const pts =
+          Array.from(
+            pointers.values()
+          );
+
+
+        if (
+          pts.length <
+          2
+        ) {
+
+          return null;
+        }
+
+
+        return Math.hypot(
+
+          pts[0].x -
+          pts[1].x,
+
+          pts[0].y -
+          pts[1].y
+        );
+      }
+
+
+      renderer.domElement
+        .addEventListener(
+          "pointerdown",
+          event => {
+
+            if (
+              terminalOwnsInput()
+            ) {
+
+              return;
+            }
+
+
+            pointers.set(
+
+              event.pointerId,
+
+              {
+                x:
+                  event.clientX,
+
+                y:
+                  event.clientY
+              }
+            );
+
+
+            if (
+              pointers.size ===
+              1
+            ) {
+
+              activePointer =
+                event.pointerId;
+
+
+              pointerX =
+                event.clientX;
+
+
+              pointerY =
+                event.clientY;
+
+
+              moved =
+                false;
+
+
+              lastMove =
+                performance.now();
+            }
+
+
+            if (
+              pointers.size ===
+              2
+            ) {
+
+              pinchDistanceStart =
+                pointerDistance();
+
+
+              pinchRadiusStart =
+                targetCameraRadius;
+            }
+          }
+        );
+
+
+      renderer.domElement
+        .addEventListener(
+          "pointermove",
+          event => {
+
+            if (
+              !pointers.has(
+                event.pointerId
+              )
+            ) {
+
+              return;
+            }
+
+
+            pointers.set(
+
+              event.pointerId,
+
+              {
+                x:
+                  event.clientX,
+
+                y:
+                  event.clientY
+              }
+            );
+
+
+            if (
+              pointers.size >=
+              2
+            ) {
+
+              const d =
+                pointerDistance();
+
+
+              if (
+                d !== null
+                &&
+                pinchDistanceStart !==
+                null
+              ) {
+
+                targetCameraRadius =
+                  THREE.MathUtils.clamp(
+
+                    pinchRadiusStart +
+
+                    (
+                      d -
+                      pinchDistanceStart
+                    )
+                    *
+                    CONFIG.pinchDepth,
+
+                    0,
+
+                    CONFIG.cameraRadiusMax
+                  );
+              }
+
+
+              return;
+            }
+
+
+            if (
+              event.pointerId !==
+              activePointer
+            ) {
+
+              return;
+            }
+
+
+            const now =
+              performance.now();
+
+
+            const dt =
+              Math.max(
+                1,
+                now -
+                lastMove
+              );
+
+
+            const dx =
+              event.clientX -
+              pointerX;
+
+
+            const dy =
+              event.clientY -
+              pointerY;
+
+
+            if (
+              Math.abs(dx) +
+              Math.abs(dy) >
+              2
+            ) {
+
+              moved =
+                true;
+            }
+
+
+            pointerX =
+              event.clientX;
+
+
+            pointerY =
+              event.clientY;
+
+
+            targetYaw -=
+              dx *
+              CONFIG.swipeX;
+
+
+            targetPitch =
+              THREE.MathUtils.clamp(
+
+                targetPitch -
+
+                dy *
+                CONFIG.swipeY,
+
+                -Math.PI *
+                .48,
+
+                Math.PI *
+                .48
+              );
+
+
+            yawVelocity =
+              (
+                -dx *
+                CONFIG.swipeX
+              )
+              /
+              dt
+              *
+              16;
+
+
+            pitchVelocity =
+              (
+                -dy *
+                CONFIG.swipeY
+              )
+              /
+              dt
+              *
+              16;
+
+
+            lastMove =
+              now;
+          }
+        );
+
+
+      function pointerDone(
+        event
+      ) {
+
+        const single =
+          pointers.size ===
+          1;
+
+
+        pointers.delete(
+          event.pointerId
+        );
+
+
+        if (
+          pointers.size <
+          2
+        ) {
+
+          pinchDistanceStart =
+            null;
+        }
+
+
+        if (
+          single &&
+          !moved
+        ) {
+
+          const now =
+            performance.now();
+
+
+          if (
+            now -
+            lastTap <
+            320
+          ) {
+
+            focusAt(
+
+              event.clientX,
+
+              event.clientY
+            );
+
+
+          } else {
+
+            inspectAt(
+
+              event.clientX,
+
+              event.clientY
+            );
+          }
+
+
+          lastTap =
+            now;
+        }
+
+
+        if (
+          event.pointerId ===
+          activePointer
+        ) {
+
+          activePointer =
+            null;
+        }
+      }
+
+
+      renderer.domElement
+        .addEventListener(
+          "pointerup",
+          pointerDone
+        );
+
+
+      renderer.domElement
+        .addEventListener(
+          "pointercancel",
+          pointerDone
+        );
+
+
+      /* ============================================================
+         RAYCAST
+         ============================================================ */
+
+
+      const raycaster =
+        new THREE.Raycaster();
+
+
+      const mouse =
+        new THREE.Vector2();
+
+
+      let selectedNode =
+        null;
+
+
+      let noticeTimer =
+        null;
+
+
+      function escapeHTML(
+        value
+      ) {
+
+        return String(value)
+          .replaceAll(
+            "&",
+            "&amp;"
+          )
+          .replaceAll(
+            "<",
+            "&lt;"
+          )
+          .replaceAll(
+            ">",
+            "&gt;"
+          );
+      }
+
+
+      function showNotice(
+        html,
+        time = 2600
+      ) {
+
+        clearTimeout(
+          noticeTimer
+        );
+
+
+        notice.innerHTML =
+          html;
+
+
+        notice.classList.add(
+          "show"
+        );
+
+
+        noticeTimer =
+          setTimeout(
+            () => {
+
+              notice.classList.remove(
+                "show"
+              );
+            },
+            time
+          );
+      }
+
+
+      function cast(
+        x,
+        y
+      ) {
+
+        mouse.x =
+          x /
+          innerWidth *
+          2 -
+          1;
+
+
+        mouse.y =
+          -(
+            y /
+            innerHeight
+          )
+          *
+          2 +
+          1;
+
+
+        raycaster.setFromCamera(
+          mouse,
+          camera
+        );
+
+
+        return raycaster
+          .intersectObjects(
+            interactiveMeshes,
+            false
+          );
+      }
+
+
+      function inspectAt(
+        x,
+        y
+      ) {
+
+        const hits =
+          cast(
+            x,
+            y
+          );
+
+
+        if (
+          !hits.length
+        ) {
+
+          return;
+        }
+
+
+        const group =
+          hits[0]
+            .object
+            .userData
+            .parentNode;
+
+
+        if (
+          !group
+        ) {
+
+          return;
+        }
+
+
+        const node =
+          group.userData.node;
+
+
+        selectedNode =
+          node;
+
+
+        showNotice(
+
+          "<strong>" +
+          escapeHTML(
+            node.title
+          ) +
+          "</strong><br><br>" +
+          escapeHTML(
+            node.text
+          )
+        );
+
+
+        appendTerminal(
+
+          "JACK",
+
+          "Inspection: " +
+          node.title +
+          ". " +
+          node.text,
+
+          "jack"
+        );
+
+
+        jackLine.textContent =
+          "JACK / CLERK: " +
+          node.title +
+          " selected.";
+      }
+
+
+      function focusAt(
+        x,
+        y
+      ) {
+
+        const hits =
+          cast(
+            x,
+            y
+          );
+
+
+        if (
+          !hits.length
+        ) {
+
+          return;
+        }
+
+
+        const node =
+          hits[0]
+            .object
+            .userData
+            .parentNode
+            .userData
+            .node;
+
+
+        selectedNode =
+          node;
+
+
+        jackProject(
+          node.id
+        );
+
+
+        showNotice(
+
+          "<strong>WENDY // FOCUS</strong><br><br>" +
+          escapeHTML(
+            node.title
+          )
+        );
+      }
+
+
+      /* ============================================================
+         TERMINAL
+         ============================================================ */
+
+
+      function appendTerminal(
+
+        who,
+
+        text,
+
+        kind
+      ) {
+
+        const line =
+          document.createElement(
+            "div"
+          );
+
+
+        line.className =
+          "termLine " +
+          (
+            kind === "jack"
+              ?
+              "termJack"
+            :
+            kind === "wendy"
+              ?
+              "termWendy"
+            :
+            kind === "claud"
+              ?
+              "termClaud"
+            :
+            kind === "human"
+              ?
+              "termHuman"
+            :
+              "termSystem"
+          );
+
+
+        line.textContent =
+          who +
+          " > " +
+          text;
+
+
+        terminalLog.appendChild(
+          line
+        );
+
+
+        terminalLog.scrollTop =
+          terminalLog.scrollHeight;
+      }
+
+
+      appendTerminal(
+
+        "SYSTEM",
+
+        "ROOM V2 mounted.",
+
+        "system"
+      );
+
+
+      appendTerminal(
+
+        "JACK",
+
+        "Morning. Jacket on.",
+
+        "jack"
+      );
+
+
+      appendTerminal(
+
+        "WENDY",
+
+        "Projectionist at her station.",
+
+        "wendy"
+      );
+
+
+      appendTerminal(
+
+        "CLAUDBOT",
+
+        "feral.",
+
+        "claud"
+      );
+
+
+      function focusJackInput() {
+
+        if (
+          !terminal.classList
+            .contains(
+              "open"
+            )
+        ) {
+
+          return;
+        }
+
+
+        if (
+          document.activeElement !==
+          terminalInput
+        ) {
+
+          try {
+
+            terminalInput.focus({
+
+              preventScroll:
+                true
+            });
+
+          } catch (
+            error
+          ) {
+
+            terminalInput.focus();
+          }
+        }
+      }
+
+
+      function toggleTerminal(
+        force
+      ) {
+
+        const open =
+          force !== undefined
+            ?
+            !!force
+            :
+            !terminal.classList
+              .contains(
+                "open"
+              );
+
+
+        terminal.classList.toggle(
+          "open",
+          open
+        );
+
+
+        document
+          .getElementById(
+            "terminalBtn"
+          )
+          .classList
+          .toggle(
+            "on",
+            open
+          );
+
+
+        if (
+          open
+        ) {
+
+          setTimeout(
+            focusJackInput,
+            60
+          );
+        }
+      }
+
+
+      function processCommand(
+        raw
+      ) {
+
+        const q =
+          raw
+            .trim()
+            .toLowerCase();
+
+
+        if (
+          !q
+        ) {
+
+          return "";
+        }
+
+
+        if (
+          q ===
+          ".;.awakenguild"
+          ||
+          q ===
+          "awakenguild"
+          ||
+          q ===
+          ".;.anamnesia"
+        ) {
+
+          setAnamnesia(
+            true
+          );
+
+
+          return (
+            "ANAMNESIA PROGRAMMED. Projectionist at her station."
+          );
+        }
+
+
+        if (
+          q ===
+          ".;.jack"
+          ||
+          q ===
+          "jack"
+        ) {
+
+          return (
+            "Jacket on. Jacket o££. I inhabit the room."
+          );
+        }
+
+
+        if (
+          q ===
+          ".;.wendy"
+          ||
+          q ===
+          "wendy"
+        ) {
+
+          return (
+            "Wendy Wignosis III. The Projectionist. Newport Millionaire. Guildsfolk."
+          );
+        }
+
+
+        if (
+          q ===
+          ".;.claudbot"
+          ||
+          q ===
+          "claudbot"
+        ) {
+
+          return (
+            "Feral moon child present."
+          );
+        }
+
+
+        if (
+          q ===
+          "/objects"
+        ) {
+
+          return ROOM_DATA
+            .map(
+              node =>
+                node.id
+            )
+            .join(
+              " · "
+            );
+        }
+
+
+        if (
+          q ===
+          "/selected"
+        ) {
+
+          return selectedNode
+            ?
+            selectedNode.title +
+            ": " +
+            selectedNode.text
+            :
+            "Nothing selected.";
+        }
+
+
+        if (
+          q ===
+          "/wake"
+        ) {
+
+          setAnamnesia(
+            false
+          );
+
+
+          return (
+            "Ordinary geometry restored."
+          );
+        }
+
+
+        if (
+          q ===
+          "/follow"
+        ) {
+
+          return (
+            "follow=" +
+            jackFollow(
+              !jackState.follow
+            )
+          );
+        }
+
+
+        if (
+          q ===
+          "/stop"
+        ) {
+
+          jackStop();
+
+
+          return (
+            "Stopped."
+          );
+        }
+
+
+        if (
+          q ===
+          "/textures"
+        ) {
+
+          textureInput.click();
+
+
+          return (
+            "Choose screenshots. Wendy will materialise fragments."
+          );
+        }
+
+
+        if (
+          q.startsWith(
+            "/move "
+          )
+        ) {
+
+          const target =
+            q
+              .slice(6)
+              .trim();
+
+
+          return jackMoveTo(
+            target
+          )
+            ?
+            "Moving."
+            :
+            "No such room node.";
+        }
+
+
+        if (
+          q.startsWith(
+            "/look "
+          )
+        ) {
+
+          const target =
+            q
+              .slice(6)
+              .trim();
+
+
+          return jackLookAt(
+            target
+          )
+            ?
+            "Looking."
+            :
+            "No such room node.";
+        }
+
+
+        if (
+          q.startsWith(
+            "/inspect "
+          )
+        ) {
+
+          const target =
+            q
+              .slice(9)
+              .trim();
+
+
+          return jackInspect(
+            target
+          )
+            ?
+            "Inspection begun."
+            :
+            "No such room node.";
+        }
+
+
+        if (
+          q.startsWith(
+            "/project "
+          )
+        ) {
+
+          const target =
+            q
+              .slice(9)
+              .trim();
+
+
+          return jackProject(
+            target
+          )
+            ?
+            "Projection requested."
+            :
+            "No such room node.";
+        }
+
+
+        if (
+          q.includes(
+            "oxford"
+          )
+        ) {
+
+          jackInspect(
+            "oxford"
+          );
+
+
+          return (
+            "Oxford. Moving to inspect."
+          );
+        }
+
+
+        if (
+          q.includes(
+            "sophie"
+          )
+        ) {
+
+          jackInspect(
+            "sophie"
+          );
+
+
+          return (
+            "Sophie(c). Person node selected."
+          );
+        }
+
+
+        if (
+          q.includes(
+            "kelfin"
+          )
+        ) {
+
+          jackInspect(
+            "kelfin"
+          );
+
+
+          return (
+            "Kelfin. Person node selected."
+          );
+        }
+
+
+        if (
+          q.includes(
+            "wendy"
+          )
+        ) {
+
+          jackMoveTo(
+            "wendy"
+          );
+
+
+          return (
+            "Going to see the Projectionist."
+          );
+        }
+
+
+        return (
+          "HELD AS PENDING. No remote language-model endpoint is connected in this one-page build."
+        );
+      }
+
+
+      function sendTerminal() {
+
+        const value =
+          terminalInput.value
+            .trim();
+
+
+        if (
+          !value
+        ) {
+
+          focusJackInput();
+
+          return;
+        }
+
+
+        appendTerminal(
+
+          "YOU",
+
+          value,
+
+          "human"
+        );
+
+
+        terminalInput.value =
+          "";
+
+
+        const answer =
+          processCommand(
+            value
+          );
+
+
+        setTimeout(
+          () => {
+
+            if (
+              answer
+            ) {
+
+              appendTerminal(
+
+                "JACK",
+
+                answer,
+
+                "jack"
+              );
+
+
+              jackLine.textContent =
+                "JACK / CLERK: " +
+                answer;
+            }
+
+
+            focusJackInput();
+
+          },
+          90
+        );
+
+
+        focusJackInput();
+      }
+
+
+      document
+        .getElementById(
+          "sendBtn"
+        )
+        .addEventListener(
+          "click",
+          sendTerminal
+        );
+
+
+      terminalInput
+        .addEventListener(
+          "keydown",
+          event => {
+
+            if (
+              event.key ===
+              "Enter"
+            ) {
+
+              event.preventDefault();
+
+              sendTerminal();
+            }
+          }
+        );
+
+
+      /*
+        Input focus guard.
+
+        While the terminal is OPEN,
+        Jack owns the text field.
+
+        The room does not repeatedly steal it.
+
+        Closing the terminal deliberately
+        returns touch control to the room.
+      */
+
+
+      terminalInput
+        .addEventListener(
+          "blur",
+          () => {
+
+            if (
+              terminal.classList
+                .contains(
+                  "open"
+                )
+            ) {
+
+              setTimeout(
+                focusJackInput,
+                0
+              );
+            }
+          }
+        );
+
+
+      [
+        "pointerdown",
+        "pointermove",
+        "pointerup"
+      ]
+      .forEach(
+        name => {
+
+          terminalInput
+            .addEventListener(
+              name,
+              event => {
+
+                event.stopPropagation();
+              }
+            );
+        }
+      );
+
+
+      terminalInputShell
+        .addEventListener(
+          "pointerdown",
+          event => {
+
+            event.stopPropagation();
+
+
+            if (
+              event.target !==
+              document.getElementById(
+                "sendBtn"
+              )
+            ) {
+
+              focusJackInput();
+            }
+          }
+        );
+
+
+      document
+        .getElementById(
+          "sendBtn"
+        )
+        .addEventListener(
+          "pointerdown",
+          event => {
+
+            event.stopPropagation();
+          }
+        );
+
+
+      document.addEventListener(
+        "visibilitychange",
+        () => {
+
+          if (
+            document.visibilityState ===
+            "visible"
+          ) {
+
+            setTimeout(
+              focusJackInput,
+              120
+            );
+          }
+        }
+      );
+
+
+      window.addEventListener(
+        "pageshow",
+        () => {
+
+          setTimeout(
+            focusJackInput,
+            120
+          );
+        }
+      );
+
+
+      /* ============================================================
+         VIEW BUTTONS
+         ============================================================ */
+
+
+      const VIEWS = {
+
+        front: {
+          yaw: 0,
+          pitch: 0
+        },
+
+        right: {
+          yaw: -Math.PI/2,
+          pitch: 0
+        },
+
+        back: {
+          yaw: Math.PI,
+          pitch: 0
+        },
+
+        left: {
+          yaw: Math.PI/2,
+          pitch: 0
+        },
+
+        up: {
+          yaw: 0,
+          pitch: -1.48
+        }
+      };
+
+
+      function setView(
+        name
+      ) {
+
+        const view =
+          VIEWS[name];
+
+
+        if (
+          !view
+        ) {
+
+          return;
+        }
+
+
+        targetYaw =
+          view.yaw;
+
+
+        targetPitch =
+          view.pitch;
+
+
+        yawVelocity =
+          0;
+
+
+        pitchVelocity =
+          0;
+
+
+        roomReadout.textContent =
+          name.toUpperCase();
+
+
+        document
+          .querySelectorAll(
+            "[data-view]"
+          )
+          .forEach(
+            button => {
+
+              button.classList.toggle(
+
+                "on",
+
+                button.dataset.view ===
+                name
+              );
+            }
+          );
+      }
+
+
+      document
+        .querySelectorAll(
+          "[data-view]"
+        )
+        .forEach(
+          button => {
+
+            button.addEventListener(
+              "click",
+              () => {
+
+                setView(
+                  button.dataset.view
+                );
+              }
+            );
+          }
+        );
+
+
+      setView(
+        "front"
+      );
+
+
+      /* ============================================================
+         BUTTONS
+         ============================================================ */
+
+
+      document
+        .getElementById(
+          "terminalBtn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            toggleTerminal();
+          }
+        );
+
+
+      document
+        .getElementById(
+          "anamnesiaBtn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            setAnamnesia(
+              !projectionEnabled
+            );
+          }
+        );
+
+
+      document
+        .getElementById(
+          "followBtn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            jackFollow(
+              !jackState.follow
+            );
+          }
+        );
+
+
+      document
+        .getElementById(
+          "textureBtn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            textureInput.click();
+          }
+        );
+
+
+      textureInput
+        .addEventListener(
+          "change",
+          async event => {
+
+            try {
+
+              await loadScreenshotFiles(
+                event.target.files
+              );
+
+            } catch (
+              error
+            ) {
+
+              fail(
+                error.stack ||
+                error
+              );
+            }
+          }
+        );
+
+
+      document
+        .getElementById(
+          "debugBtn"
+        )
+        .addEventListener(
+          "click",
+          () => {
+
+            debugPanel.classList.toggle(
+              "open"
+            );
+
+
+            document
+              .getElementById(
+                "debugBtn"
+              )
+              .classList.toggle(
+
+                "on",
+
+                debugPanel.classList
+                  .contains(
+                    "open"
+                  )
+              );
+          }
+        );
+
+
+      /* ============================================================
+         CLOCK
+         ============================================================ */
+
+
+      const clockTime =
+        document.getElementById(
+          "clockTime"
+        );
+
+
+      const clockDate =
+        document.getElementById(
+          "clockDate"
+        );
+
+
+      function updateClock() {
+
+        const now =
+          new Date();
+
+
+        clockTime.textContent =
+          now.toLocaleTimeString(
+            [],
+            {
+              hour:
+                "2-digit",
+
+              minute:
+                "2-digit",
+
+              second:
+                "2-digit"
+            }
+          );
+
+
+        clockDate.textContent =
+          now.toLocaleDateString(
+            [],
+            {
+              day:
+                "2-digit",
+
+              month:
+                "short",
+
+              year:
+                "numeric"
+            }
+          );
+      }
+
+
+      updateClock();
+
+
+      setInterval(
+        updateClock,
+        1000
+      );
+
+
+      /* ============================================================
+         DEBUG
+         ============================================================ */
+
+
+      function updateDebug() {
+
+        if (
+          !debugPanel
+            .classList
+            .contains(
+              "open"
+            )
+        ) {
+
+          return;
+        }
+
+
+        debugPanel.textContent =
+          [
+
+            "/jack/room V2 DEBUG",
+
+            "",
+
+            "THREE " +
+            THREE.REVISION,
+
+            "viewport " +
+            innerWidth +
+            " × " +
+            innerHeight,
+
+            "pixelRatio " +
+            renderer.getPixelRatio(),
+
+            "",
+
+            "projection " +
+            projectionEnabled,
+
+            "wFocus " +
+            wFocus.toFixed(3),
+
+            "vFocus " +
+            vFocus.toFixed(3),
+
+            "",
+
+            "human yaw " +
+            yaw.toFixed(3),
+
+            "human pitch " +
+            pitch.toFixed(3),
+
+            "cameraRadius " +
+            cameraRadius.toFixed(3),
+
+            "",
+
+            "jack.mode " +
+            jackState.mode,
+
+            "jack.follow " +
+            jackState.follow,
+
+            "jack.selected " +
+            (
+              jackState.selected ||
+              "none"
+            ),
+
+            "jack.position " +
+            jackBody.position
+              .toArray()
+              .map(
+                n =>
+                  n.toFixed(2)
+              )
+              .join(", "),
+
+            "",
+
+            "screenshots " +
+            screenshotCount,
+
+            "nodes " +
+            ROOM_DATA.length,
+
+            "relations " +
+            relationPairs.length,
+
+            "",
+
+            "COMMANDS",
+
+            ".;.awakenGuild",
+
+            ".;.Jack",
+
+            ".;.Wendy",
+
+            ".;.Claudbot",
+
+            "/move wendy",
+
+            "/look oxford",
+
+            "/inspect sophie",
+
+            "/project screen",
+
+            "/follow",
+
+            "/stop",
+
+            "/textures",
+
+            "/objects",
+
+            "/selected",
+
+            "/wake"
+
+          ].join(
+            "\n"
+          );
+      }
+
+
+      /* ============================================================
+         ANIMATION
+         ============================================================ */
+
+
+      const clock =
+        new THREE.Clock();
+
+
+      let claudPhase =
+        -1;
+
+
+      function animate() {
+
+        requestAnimationFrame(
+          animate
+        );
+
+
+        const dt =
+          Math.min(
+            clock.getDelta(),
+            .05
+          );
+
+
+        const t =
+          performance.now() *
+          .001;
+
+
+        /* ----------------------------------------------------------
+           Human inertial swoop
+           ---------------------------------------------------------- */
+
+
+        if (
+          pointers.size ===
+          0
+        ) {
+
+          targetYaw +=
+            yawVelocity;
+
+
+          targetPitch =
+            THREE.MathUtils.clamp(
+
+              targetPitch +
+              pitchVelocity,
+
+              -Math.PI *
+              .48,
+
+              Math.PI *
+              .48
+            );
+
+
+          yawVelocity *=
+            CONFIG.inertia;
+
+
+          pitchVelocity *=
+            CONFIG.inertia;
+
+
+          if (
+            Math.abs(
+              yawVelocity
+            ) <
+            .00002
+          ) {
+
+            yawVelocity =
+              0;
+          }
+
+
+          if (
+            Math.abs(
+              pitchVelocity
+            ) <
+            .00002
+          ) {
+
+            pitchVelocity =
+              0;
+          }
+        }
+
+
+        yaw +=
+          (
+            targetYaw -
+            yaw
+          )
+          *
+          Math.min(
+            1,
+            dt *
+            9
+          );
+
+
+        pitch +=
+          (
+            targetPitch -
+            pitch
+          )
+          *
+          Math.min(
+            1,
+            dt *
+            9
+          );
+
+
+        cameraRadius +=
+          (
+            targetCameraRadius -
+            cameraRadius
+          )
+          *
+          Math.min(
+            1,
+            dt *
+            8
+          );
+
+
+        applyCamera();
+
+
+        /* ----------------------------------------------------------
+           Wendy projects the archive
+           ---------------------------------------------------------- */
+
+
+        nodeObjects.forEach(
+          (
+            group,
+            index
+          ) => {
+
+            group.position.lerp(
+
+              group.userData
+                .targetPosition,
+
+              projectionEnabled
+                ?
+                .035
+                :
+                .05
+            );
+
+
+            if (
+              projectionEnabled
+            ) {
+
+              group.rotation.z =
+                Math.sin(
+                  t *
+                  .4 +
+                  index
+                )
+                *
+                .04;
+
+            } else {
+
+              orientTowardsCentre(
+                group
+              );
+            }
+          }
+        );
+
+
+        updateRelations();
+
+
+        /* ----------------------------------------------------------
+           Jack independently inhabits room
+           ---------------------------------------------------------- */
+
+
+        const toTarget =
+          jackState.target
+            .clone()
+            .sub(
+              jackBody.position
+            );
+
+
+        const distance =
+          toTarget.length();
+
+
+        if (
+          distance >
+          .025
+        ) {
+
+          jackState.moving =
+            true;
+
+
+          const step =
+            Math.min(
+
+              distance,
+
+              CONFIG.jackSpeed *
+              dt
+            );
+
+
+          jackBody.position.add(
+
+            toTarget
+              .normalize()
+              .multiplyScalar(
+                step
+              )
+          );
+
+
+          jackStateReadout.textContent =
+            "INHABIT";
+
+
+        } else if (
+          jackState.moving
+        ) {
+
+          jackState.moving =
+            false;
+
+
+          jackStateReadout.textContent =
+            jackState.mode
+              .toUpperCase();
+        }
+
+
+        jackBody.lookAt(
+          jackState.lookTarget
+        );
+
+
+        jackRing.rotation.z +=
+          dt *
+          .7;
+
+
+        jackBody.position.y +=
+          Math.sin(
+            t *
+            2.2
+          )
+          *
+          .0008;
+
+
+        jackLight.position.copy(
+          jackBody.position
+        );
+
+
+        /* ----------------------------------------------------------
+           Punch-card weather
+           ---------------------------------------------------------- */
+
+
+        punchGroup.children
+          .forEach(
+            (
+              card,
+              index
+            ) => {
+
+              card.rotation.y +=
+                dt *
+                .035;
+
+
+              card.rotation.z +=
+                dt *
+                .015;
+
+
+              card.position.y +=
+
+                Math.sin(
+
+                  t *
+                  .3 +
+
+                  card.userData
+                    .seed +
+
+                  index
+                )
+                *
+                dt
+                *
+                .025;
+            }
+          );
+
+
+        /* ----------------------------------------------------------
+           Claudbot
+           ---------------------------------------------------------- */
+
+
+        const newPhase =
+          Math.floor(
+            t *
+            3
+          );
+
+
+        if (
+          newPhase !==
+          claudPhase
+        ) {
+
+          claudPhase =
+            newPhase;
+
+
+          drawClaudbot(
+            claudPhase
+          );
+        }
+
+
+        updateDebug();
+
+
+        renderer.render(
+          scene,
+          camera
+        );
+      }
+
+
+      animate();
+
+
+      /* ============================================================
+         RESIZE / MOBILE KEYBOARD
+         ============================================================ */
+
+
+      function resize() {
+
+        const width =
+          window.visualViewport
+            ?.width ||
+          innerWidth;
+
+
+        const height =
+          window.visualViewport
+            ?.height ||
+          innerHeight;
+
+
+        camera.aspect =
+          width /
+          height;
+
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+          width,
+          height,
+          false
+        );
+      }
+
+
+      window.addEventListener(
+        "resize",
+        resize
+      );
+
+
+      if (
+        window.visualViewport
+      ) {
+
+        window.visualViewport
+          .addEventListener(
+            "resize",
+            resize
+          );
+      }
+
+
+      /* ============================================================
+         PUBLIC API
+         ============================================================ */
+
+
+      window.JACK = {
+
+        version:
+          "room-v2-anamnesia",
+
+
+        data:
+          ROOM_DATA,
+
+
+        permissions:
+          jackState.permission,
+
+
+        awakenGuild() {
+
+          setAnamnesia(
+            true
+          );
+
+
+          return {
+            jack:
+              "inhabiting",
+
+            wendy:
+              "projecting",
+
+            claudbot:
+              "feral"
+          };
+        },
+
+
+        moveTo(
+          target
+        ) {
+
+          return jackMoveTo(
+            target
+          );
+        },
+
+
+        lookAt(
+          target
+        ) {
+
+          return jackLookAt(
+            target
+          );
+        },
+
+
+        inspect(
+          target
+        ) {
+
+          return jackInspect(
+            target
+          );
+        },
+
+
+        project(
+          target
+        ) {
+
+          return jackProject(
+            target
+          );
+        },
+
+
+        follow(
+          enabled = true
+        ) {
+
+          return jackFollow(
+            enabled
+          );
+        },
+
+
+        stop() {
+
+          jackStop();
+
+
+          return true;
+        },
+
+
+        focus(
+          target
+        ) {
+
+          return jackProject(
+            target
+          );
+        },
+
+
+        wake() {
+
+          setAnamnesia(
+            false
+          );
+
+
+          return true;
+        },
+
+
+        say(
+          text
+        ) {
+
+          appendTerminal(
+
+            "JACK",
+
+            String(
+              text
+            ),
+
+            "jack"
+          );
+
+
+          jackLine.textContent =
+            "JACK / CLERK: " +
+            String(
+              text
+            );
+        },
+
+
+        wendy(
+          text
+        ) {
+
+          appendTerminal(
+
+            "WENDY",
+
+            String(
+              text
+            ),
+
+            "wendy"
+          );
+        },
+
+
+        terminal(
+          open = true
+        ) {
+
+          toggleTerminal(
+            open
+          );
+        },
+
+
+        textures() {
+
+          textureInput.click();
+        },
+
+
+        state() {
+
+          return {
+
+            projectionEnabled,
+
+            wFocus,
+
+            vFocus,
+
+            screenshots:
+              screenshotCount,
+
+            selected:
+              selectedNode
+                ?.id ||
+              null,
+
+            jack: {
+
+              mode:
+                jackState.mode,
+
+              selected:
+                jackState.selected,
+
+              follow:
+                jackState.follow,
+
+              moving:
+                jackState.moving,
+
+              position:
+                jackBody.position
+                  .toArray(),
+
+              permissions:
+                {
+                  ...jackState.permission
+                }
+            },
+
+            human: {
+
+              yaw,
+
+              pitch,
+
+              cameraRadius
+            }
+          };
+        }
+      };
+
+
+      /* ============================================================
+         BOOT
+         ============================================================ */
+
+
+      console.log(
+
+        "/jack/room V2 READY",
+
+        window.JACK
+      );
+
+
+      showNotice(
+
+        "<strong>/jack/room V2</strong><br><br>" +
+
+        "thumb drag = look · flick = swoop · pinch = depth<br>" +
+
+        "tap = inspect · double tap = Wendy focus<br><br>" +
+
+        "TEXTURES loads screenshots into the room",
+
+        4600
+      );
+
+
+      jackLine.textContent =
+        "JACK / CLERK: inhabiting room V2.";
+
+
+    } catch (
+      error
+    ) {
+
+      fail(
+
+        "ROOM INITIALISATION FAILED\n\n" +
+
+        (
+          error?.stack ||
+          error
+        )
+      );
+    }
+
+
+  })();
+
+  </script>
+
+<script src="/assets/ask-jack.js?v=1" defer></script>
+</body>
+</html>

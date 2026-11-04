@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "horology",
+    "title": "Horology and instrument making",
+    "code": "T-13",
+    "licence": "Class H or I",
+    "summary": "Clocks, chronometers, orreries and any instrument that measures relation rather than prediction."
+  },
+  {
+    "slug": "joinery",
+    "title": "Joinery and door making",
+    "code": "T-03",
+    "licence": "Class J",
+    "summary": "Doors, frames and thresholds. Includes work on doors that open for knowing."
+  },
+  {
+    "slug": "masonry",
+    "title": "Stonemasonry",
+    "code": "T-07",
+    "licence": "Class M",
+    "summary": "Stone that must already have been in place. Civic, station and always-has-been work."
+  },
+  {
+    "slug": "weaving",
+    "title": "Weaving (timeline)",
+    "code": "T-21",
+    "licence": "Class W, or A in the first year",
+    "summary": "Joining, dividing and repairing a thread of hours. Unsupervised century-holding is not in scope for apprentices."
+  },
+  {
+    "slug": "records",
+    "title": "Records, binding and clerical craft",
+    "code": "T-01",
+    "licence": "Any class",
+    "summary": "Minutes, catalogue marks, binding of contradictory papers, and the public register."
+  },
+  {
+    "slug": "oral-history",
+    "title": "Oral history",
+    "code": "T-18",
+    "licence": "Any class",
+    "summary": "Testimony taken in the present and deposited for a year that can receive it."
+  },
+  {
+    "slug": "film",
+    "title": "Film processing and projection",
+    "code": "T-14",
+    "licence": "Any class",
+    "summary": "Plates, cans, embargo years and the remembering of events that have not yet happened."
+  },
+  {
+    "slug": "cartography",
+    "title": "Cartography and unplaced hours",
+    "code": "T-88",
+    "licence": "Class C",
+    "summary": "Maps of lights that have an hour but no address. Surveying of unstable chronology."
+  },
+  {
+    "slug": "metalwork",
+    "title": "Metalwork and smithing",
+    "code": "T-09",
+    "licence": "Class I or M",
+    "summary": "Ironmongery for doors, instruments and station fittings. Includes work that must not turn for an unlicensed hand."
+  },
+  {
+    "slug": "allocations",
+    "title": "Allocations (civil service)",
+    "code": "CS-DET",
+    "licence": "Not required",
+    "summary": "Scheme administration. This is not a charged craft. It is the desk that licences the others."
+  }
+]

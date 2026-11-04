@@ -2,121 +2,102 @@
 declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/inc/graph.php';
+$officeAutoload = dirname(__DIR__) . '/app/JackOffice/autoload.php';
+if (is_file($officeAutoload)) require_once $officeAutoload;
 
-$payload = ttg_now_payload();
-$json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-if ($json === false) {
-    $json = '{"field":[],"edges":[],"you":{"known":false},"jack":{}}';
-}
-
-$local = new DateTimeImmutable('now');
-$clock = strtoupper($local->format('H:i:s · l d F Y'));
-$localPresent = $local->format('d.m.Y');
-$youHref = (string) ($payload['you']['href'] ?? '/people/auth/');
-$greeting = (string) ($payload['jack']['greeting'] ?? '');
-$csrf = (string) ($payload['csrf'] ?? '');
-$voice = !empty($payload['jack']['voice']);
-$batch = 'TTG-' . $local->format('ymd') . '-' . strtoupper(substr($csrf !== '' ? $csrf : 'desk', 0, 4));
-
-if ($greeting !== '') {
-    ttg_jack_queue_speech($greeting);
-}
-
+ttg_graph_boot_session();
+$csrf = ttg_graph_csrf();
+$keeper = class_exists('OfficeAuth') && OfficeAuth::mayUseOffice(ttg_graph_viewer());
 header('Content-Type: text/html; charset=utf-8');
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Pragma: no-cache');
-header('Expires: 0');
+header('Cache-Control: no-store');
 ?>
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>JACK — timetravellersguild.com</title>
-<meta name="description" content="Address the clerk. Punch-card desk, Festival of Britain, 1951.">
-<meta name="theme-color" content="#f1e4c4">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/now.css?v=1951j">
-<link rel="stylesheet" href="/assets/jack.css?v=1951j">
+<meta name="description" content="Jack lives inside a Rubik cube. Desk, tap, hopper, Jack. Click a station and he changes state.">
+<meta name="theme-color" content="#111214">
+<link rel="stylesheet" href="/jack/css/one.css?v=jack4">
 </head>
-<body class="jack-room">
-<a class="skip" href="#jackQ">Address the clerk</a>
-<div id="vignette"></div>
-<div id="grain"></div>
+<body data-stance="jack">
+<noscript>
+  <p>Jack lives in one room. It needs ordinary JavaScript.</p>
+  <p><a href="/now">NOW — the tree</a></p>
+</noscript>
 
-<header id="mast">
-  <div class="site">TIMETRAVELLERSGUILD.COM</div>
-  <div class="presents">
-    <span>LOCAL PRESENT: <time id="localPresent"><?= ttg_h($localPresent) ?></time></span>
-    <span>NETWORK PRESENT: 17.04.2033</span>
+<canvas id="stage" aria-label="Jack’s room"></canvas>
+<div id="grain" aria-hidden="true"></div>
+
+<?= ttg_html_site_mark('JACK') ?>
+<p id="hint">INSIDE THE CUBE · CLICK A STATION</p>
+
+<section id="console" aria-label="Jack">
+  <button type="button" id="btnCopyChat" aria-label="Copy chat" title="Copy chat">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="8" y="2.5" width="8" height="4" rx="0.6"/>
+      <path d="M9 4H7.2A2.2 2.2 0 0 0 5 6.2v12.6A2.2 2.2 0 0 0 7.2 21h9.6a2.2 2.2 0 0 0 2.2-2.2V6.2A2.2 2.2 0 0 0 16.8 4H15"/>
+      <path d="M9 11h6M9 15h4"/>
+    </svg>
+  </button>
+  <header>
+    <canvas id="jackPet" width="96" height="96" aria-label="Jack"></canvas>
+    <div class="who">
+      <p class="name">JACK</p>
+      <p id="jackForm">HE IS HERE</p>
+      <p id="stanceLine">WITH JACK</p>
+    </div>
+    <p id="stanceHint">He is not on duty. He is present.</p>
+  </header>
+  <p id="asked" hidden></p>
+  <div id="mods" hidden>
+    <div class="nine-stage">
+      <canvas id="nine" width="18" height="18" aria-label="9-bit clerk module"></canvas>
+      <p id="nineName">PUNCH COL</p>
+    </div>
+    <div id="tape" aria-hidden="true">
+      <div id="tapeTrack"></div>
+    </div>
   </div>
-</header>
-
-<section id="here">
-  <p id="clockLine"><?= ttg_h($clock) ?></p>
-  <p id="position">JACK / CLERK — HOLLERITH DESK · 1951</p>
+  <p id="said" aria-live="polite"></p>
+  <div id="talkLog" class="sr" role="log"></div>
+  <form id="askForm" class="ask">
+    <label class="sr" for="askQ">Speak to Jack</label>
+    <textarea id="askQ" rows="2" maxlength="2000" autocomplete="off" placeholder="Speak to Jack…"></textarea>
+    <button type="submit" id="btnAsk">ASK</button>
+  </form>
+  <nav class="doors" aria-label="Doors">
+    <a href="/">HOME</a>
+    <a href="/now">NOW</a>
+    <a href="/cube">CUBE</a>
+    <a href="/join/">JOIN</a>
+<?php if ($keeper): ?>
+    <a href="/jack/office">OFFICE</a>
+    <a href="/jack/ledger">LEDGER</a>
+<?php endif; ?>
+  </nav>
 </section>
 
-<main class="jack-machine" id="desk">
-  <div class="jack-hopper" aria-hidden="true">
-    <span class="feed-card"></span>
-    <span class="feed-card"></span>
-    <span class="feed-card"></span>
-  </div>
+<aside id="hopper" hidden>
+  <header>
+    <p>PUNCHCARD TAROT · THREE STATIONS · NOT CANON</p>
+    <button type="button" id="btnHopperClose">CLOSE</button>
+  </header>
+  <div id="hopperGrid"></div>
+  <p id="hopperLoad" hidden>PUNCHING SLIPS</p>
+  <button type="button" id="btnPunch">PUNCH THE HOPPER</button>
+</aside>
 
-  <article id="jack" class="ibm-card punch-sheet" aria-label="Clerk punch card">
-    <header class="ibm-band">
-      <span>IBM 5081 · GUILD ISSUE</span>
-      <span>BATCH <span id="jackBatch"><?= ttg_h($batch) ?></span></span>
-      <span>80 COL</span>
-    </header>
-    <div class="punch-face" aria-hidden="true">
-      <div class="punch-ruler" id="jackRuler"></div>
-      <div class="punch-belt" id="jackBelt"></div>
-    </div>
-    <p class="life-type">JACK / CLERK</p>
-    <p id="jackGreeting"><?= ttg_h($greeting) ?></p>
-    <div id="jackProcess" class="jack-process" hidden>
-      <div class="card-feed" aria-hidden="true">
-        <span class="feed-card"></span>
-        <span class="feed-card"></span>
-        <span class="feed-card"></span>
-      </div>
-      <p id="jackStage" class="punch-stage" aria-live="polite"></p>
-    </div>
-    <div id="jackLog"></div>
-    <div id="jackOps"></div>
+<audio id="jackAudio" hidden playsinline></audio>
+<?php readfile(__DIR__ . '/tarot/svg/deck.svg'); ?>
 
-    <form id="jackForm" action="/now/jack" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="csrf" value="<?= ttg_h($csrf) ?>">
-      <label class="sr" for="jackQ">Address the clerk</label>
-      <textarea id="jackQ" name="q" rows="3" maxlength="100000" autocomplete="off" placeholder="A question for the clerk…"></textarea>
-      <div class="jack-row">
-        <label class="file">Dossier file <input id="jackFile" name="dossier" type="file" accept=".txt,.md,.csv,text/plain"></label>
-        <div class="jack-actions">
-          <button type="button" id="jackTalk" data-idle="Speak">Speak</button>
-          <button type="button" id="jackHear" hidden>Hear him</button>
-          <button type="submit" name="intent" value="ask">Ask</button>
-          <button type="submit" name="intent" value="lodge">Lodge</button>
-        </div>
-      </div>
-      <p class="jack-hint">Enter asks. Shift+Enter is a new line. Lodge only when the tree should hold a dossier as pending leaves.<?= $voice ? ' He will read his reply.' : '' ?></p>
-    </form>
-    <audio id="jackAudio" hidden></audio>
-  </article>
-</main>
-
-<nav id="dock" aria-label="Jack">
-  <a href="/now">NOW</a>
-  <a href="/now#capture">+</a>
-  <a href="/jack" id="navJack" aria-current="page">JACK</a>
-  <a href="/signals/">SIGNALS</a>
-  <a href="<?= ttg_h($youHref) ?>" id="navYou">YOU</a>
-</nav>
-
-<script>window.TTG_GRAPH=<?= $json ?>;</script>
-<script src="/assets/jack-desk.js?v=1951j"></script>
-<script src="/assets/jack.js?v=1951j"></script>
+<script>window.TTG_JACK=<?= json_encode(['csrf' => $csrf, 'jack' => '/now/jack'], JSON_UNESCAPED_SLASHES) ?>;</script>
+<script src="/jack/body/js/sprite.js?v=18"></script>
+<script src="/jack/tarot/js/tarot.js?v=desk2"></script>
+<script src="/assets/jack-voice.js?v=2"></script>
+<script src="/jack/js/nine.js?v=1"></script>
+<script src="/jack/js/one.js?v=jack5"></script>
+<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+{
+ "staged": "2026-10-18",
+ "note": "Proposed canon edits. Nothing here is live. Each body_after is body_before plus the appended text. Merge by slug into nodes.json at apply time, since the app writes nodes.json live. After applying, rebuild Jack's RAG index.",
+ "nodes": [
+  {
+   "slug": "swansea-valley",
+   "body_before": "The valley that holds Cribarth, Abercrave, and more than one sealed container.",
+   "body_after": "The valley that holds Cribarth, Abercrave, and more than one sealed container. The archive lists one of the containers so far, Quantum Tin №013, found here on 12 August 2026. It also holds the Cribarth readings from March 2026. If you have been through this valley and something did not add up, lodge it."
+  },
+  {
+   "slug": "cribarth",
+   "body_before": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed.",
+   "body_after": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed. The run began on 21 March 2026 and the disagreement was logged on the third night, 23 March. The mission that sent people up is still open, and its completion rule is to leave the disagreement alone. A film fragment of that night is held."
+  },
+  {
+   "slug": "observation-tables-disagreed",
+   "body_before": "Third night. Cribarth. Two instruments, two readings, one hill.",
+   "body_after": "Third night. Cribarth. Two instruments, two readings, one hill. Logged 23 March 2026. Both readings are held as taken. Neither has been adjusted toward the other, and the film fragment of that night keeps the same rule."
+  },
+  {
+   "slug": "mission-valley-reading",
+   "body_before": "Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading.",
+   "body_after": "Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading. Anyone can lodge a reading for it, and a keeper decides whether it joins the record. A second instrument, a second watch or a dated note from the hill all qualify, as long as the reading goes in as taken."
+  },
+  {
+   "slug": "quantum-tin-013",
+   "body_before": "Sealed object. Contents relationship hidden. Existence is recorded; contents are not claimed.",
+   "body_after": "Sealed object. Contents relationship hidden. Existence is recorded; contents are not claimed. Found in the Swansea Valley at 16:40 on 12 August 2026 and recorded as sealed at 16:41. The record notes an opening condition. It has not been met."
+  },
+  {
+   "slug": "det-01",
+   "body_before": "Public notice. Classification of excess-time events. Issued by the Department. A summary, not the case file.",
+   "body_after": "Public notice. Classification of excess-time events. Issued by the Department. A summary, not the case file. The case file stays with the Department at Cathays Park. The Department's public page is the place to ask about it."
+  },
+  {
+   "slug": "mabel-notice-013",
+   "body_before": "Sealed containers, disagreed tables, and DET paper occupy the same neighbourhood. This is a pattern, not a cause.",
+   "body_after": "Sealed containers, disagreed tables, and DET paper occupy the same neighbourhood. This is a pattern, not a cause. It reads three records: the tin, the Cribarth observation and DET-01. Anyone who finds a fourth thing in the valley can lodge it, whether it supports the reading or not."
+  },
+  {
+   "slug": "abercrave",
+   "body_before": "Village at the head of the valley. Ordinary address. Unusual neighbourhood.",
+   "body_after": "Village at the head of the valley. Ordinary address. Unusual neighbourhood. The Guild's records of the valley start here on 21 March 2026, the day the Cribarth readings began."
+  }
+ ],
+ "edges_add": [
+  {
+   "public_id": "01TTGESTAGED000000000000001",
+   "source": "missions",
+   "relationship": "CONTAINS",
+   "target": "mission-valley-reading",
+   "confidence": 0.9
+  },
+  {
+   "public_id": "01TTGESTAGED000000000000002",
+   "source": "signals",
+   "relationship": "REFERENCES",
+   "target": "mabel-notice-013",
+   "confidence": 0.6
+  },
+  {
+   "public_id": "01TTGESTAGED000000000000003",
+   "source": "archive",
+   "relationship": "CONTAINS",
+   "target": "film-fragment-cribarth",
+   "confidence": 0.8
+  },
+  {
+   "public_id": "01TTGESTAGED000000000000004",
+   "source": "research",
+   "relationship": "REFERENCES",
+   "target": "observation-tables-disagreed",
+   "confidence": 0.7
+  }
+ ]
+}

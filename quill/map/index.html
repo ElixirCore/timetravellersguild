@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quill - what the code is doing</title>
+<style>
+:root{--bg:#14160f;--panel:#1d2018;--line:#454940;--txt:#d8dacd;--dim:#a3a89b;--model:#e0a458;--flat:#d96a5b;--ok:#8fb88a;--paper:#f7f1e4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:17px/1.55 Georgia,serif}
+main{max-width:1180px;margin:0 auto;padding:28px 18px 80px}
+a{color:var(--model)} h1{font-weight:600;font-size:2rem;margin:.3em 0 .1em} h2{font-weight:600;margin:2.2em 0 .4em}
+.dim{color:var(--dim)} .lede{max-width:62ch}
+code,.mono{font-family:ui-monospace,Menlo,monospace;font-size:.85em;color:var(--model)}
+.stage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:18px;margin-top:16px}
+@media(max-width:860px){.stage{grid-template-columns:1fr}}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px}
+svg{display:block;width:100%;height:auto}
+.node rect{fill:#14160f;stroke:var(--line);stroke-width:1.5;transition:all .25s}
+.node text{fill:var(--txt);font:600 14px Georgia,serif;pointer-events:none}
+.node .s{fill:var(--dim);font:12px Georgia,serif;font-weight:400}
+.node{cursor:pointer}
+.node:hover rect{stroke:var(--txt)}
+.node.model rect{stroke:var(--model)}
+.node.active rect{fill:#2a2d20;stroke:var(--paper);stroke-width:3}
+.node.done rect{fill:#1a1d15}
+.flatmode .node.hot rect{stroke:var(--flat);stroke-width:2.5}
+.badge{display:none}
+.flatmode .badge{display:block}
+.badge circle{fill:var(--flat)} .badge text{fill:#14160f;font:700 13px Georgia,serif;text-anchor:middle;dominant-baseline:central}
+.link{stroke:var(--line);stroke-width:2;fill:none}
+#dot{fill:var(--paper);filter:drop-shadow(0 0 6px var(--paper));transition:transform .7s cubic-bezier(.5,0,.2,1)}
+@media(prefers-reduced-motion:reduce){#dot,.node rect{transition:none}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;min-height:340px}
+.panel h3{margin:.1em 0 .3em;font-weight:600;font-size:1.25rem}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.tag{font:12px ui-monospace,monospace;border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:var(--dim)}
+.tag.m{border-color:var(--model);color:var(--model)} .tag.f{border-color:var(--flat);color:var(--flat)} .tag.k{border-color:var(--ok);color:var(--ok)}
+.ctrl{display:flex;gap:8px;align-items:center;margin:14px 0 0;flex-wrap:wrap}
+button{background:#262a1f;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font:inherit;font-size:.95rem;cursor:pointer}
+button:hover{border-color:var(--txt)} button.on{border-color:var(--flat);color:var(--flat)}
+.count{color:var(--dim);font-size:.9rem;margin-left:auto}
+.quote{border-left:3px solid var(--flat);padding:4px 12px;margin:10px 0;background:#1a1c14;font-style:italic;color:var(--txt)}
+.hot-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:12px}
+.hot{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;color:var(--txt);font:inherit}
+.hot b{display:block;margin-bottom:2px} .hot span{color:var(--dim);font-size:.9rem}
+.hot.sel{border-color:var(--flat)}
+.n{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--flat);color:#14160f;font:700 13px/22px Georgia;text-align:center;margin-right:8px}
+.bar{display:flex;height:46px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin:12px 0}
+.bar div{display:flex;align-items:center;justify-content:center;font:12px ui-monospace,monospace;color:#14160f;min-width:3px;cursor:default}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;color:var(--dim)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.cav{border-left:3px solid var(--flat);padding:.1em 1em;background:var(--panel);max-width:75ch}
+ol li,ul li{max-width:70ch;margin:.3em 0}
+</style></head><body><main>
+<p class="dim"><a href="../">&larr; Quill</a></p>
+<h1>Quill: what the code is doing</h1>
+<p class="lede dim">Read from the source package <code>quill-share-20261010-111634.zip</code> (10 Oct 2026, after the step 1 and 2 refactor). Press play, or click any box. Switch on the flatness view to see where replies get squashed.</p>
+
+<h2>One turn, step by step</h2>
+<div class="stage">
+  <div class="board" id="board">
+    <svg id="map" viewBox="0 0 760 450" role="img" aria-label="One turn through Quill"></svg>
+  </div>
+  <div class="panel" id="panel" aria-live="polite"></div>
+</div>
+<div class="ctrl">
+  <button id="prev">&larr; Back</button><button id="play">Play</button><button id="next">Next &rarr;</button>
+  <button id="flat">Show flatness spots</button><button id="reset">Restart</button>
+  <span class="count" id="count"></span>
+</div>
+<p class="dim" style="font-size:.9rem">Keys: left/right arrows to step, space to play, F for the flatness view. Amber boxes are calls to the language model. Red badges are the seven flatness spots below.</p>
+
+<h2>The seven flatness spots</h2>
+<p class="lede">Click one: the map jumps to where it happens and shows the actual words the code uses. Ranked by how often I expect each to bite in ordinary chat.</p>
+<div class="hot-list" id="hots"></div>
+<div class="panel" id="hotpanel" style="margin-top:12px;min-height:0"></div>
+
+<h2>How much of the prompt is voice?</h2>
+<p class="lede">Every turn the model is handed <code>identity.txt</code> first (9,310 characters). Hover a slice.</p>
+<div class="bar" id="bar"></div><div class="legend" id="legend"></div>
+<p class="lede" style="margin-top:14px">The voice instruction is one sentence: <i>"Be warm, curious, candid and conversational. You do not need to sound like a customer-service assistant."</i> That is 104 of 9,310 characters, about 1%. The honesty rule that follows it is longer and stricter, and the rest is room, coding lab and Arnold manuals. Also: <i>"Respond to simple conversation simply."</i> A second file, <code>identity-v2.txt</code> (939 characters, voice and honesty only), sits beside it; the code reads only <code>identity.txt</code>.</p>
+
+<h2>Levers, if the aim is a more interesting Quill</h2>
+<ol>
+<li>Give the voice more room in <code>identity.txt</code>: what a good reply looks like, permission to have opinions, ask back, follow a tangent. Positive instructions, not only constraints.</li>
+<li>Let the truth gate judge claims about the world, not every assertive sentence in plain chat.</li>
+<li>Turn the stock refusals into an instruction to the model, so a refusal is still a sentence Quill would say.</li>
+<li>Drop "Be concise" from the receipt rewrite on conversational turns.</li>
+<li>Put a budget on the prompt so the voice is not buried by a long history.</li>
+</ol>
+<p class="dim">Directions only. Nothing in the code has been touched.</p>
+
+<h2>Caveats</h2>
+<div class="cav"><p>This is read from code, not from a traced conversation. Which spot fires on a given dull reply stays a hypothesis until one such turn is followed through the logs.</p>
+<p>Line numbers are from the 10 Oct package. The 12-stage pipeline, the Groq call and the truth gate are all still present after the refactor; the new part is a per-turn record (<code>turn_context.py</code>) holding provenance, permitted tools, receipts and one retry allowance per stage.</p></div>
+</main>
+<script>
+const STEPS=[
+{id:"in",t:"A message arrives",s:"room_server.py",x:30,y:30,
+ d:"The room page posts to <code>/api/chat</code>. The server tags who is speaking (Toby, a visitor, Arnold, or a system trigger) and takes a lock so only one turn runs at a time.",f:"room_server.py ~1770",tags:[["k","no model"]]},
+{id:"hist",t:"History is loaded",s:"conversation log",x:290,y:30,
+ d:"The whole conversation since the last boundary marker is read from disk, every turn, with no limit. A long chat means a long prompt.",f:"conversation.py load_history(limit=None)",tags:[["k","no model"],["f","hotspot 6"]],hot:[6]},
+{id:"short",t:"Shortcut check",s:"canned routes",x:550,y:30,
+ d:"Some questions never reach the model: definitions of epistemic words, 'what do you know' inventories, tool lists, chronology overviews. They get a fixed rendering.",f:"brain.py _quill_public_direct_route_v715, truth early route",tags:[["k","no model"],["f","hotspot 7"]],hot:[7]},
+{id:"ctx",t:"A turn record opens",s:"turn_context.py",x:550,y:140,
+ d:"New since the refactor: one record per turn holding who spoke, which tools are allowed, receipts, and a retry allowance for each stage. Stages read and write this instead of passing state around.",f:"turn_context.py, brain.py ~3962",tags:[["k","no model"]]},
+{id:"wrap",t:"Twelve wrapper layers, going in",s:"memory guard ... chronology",x:290,y:140,
+ d:"Each layer wraps the next like an onion: memory guard, perspective, natural expression, conscience, semantic contract, source responsibility, continuity, intentional context, wants, valuation, output sanity, chronology. Going in, most just add a note to the prompt.",f:"brain.py _REPLY_PIPELINE_STAGES",tags:[["k","12 stages"],["f","hotspot 4"]],hot:[4]},
+{id:"prompt",t:"The prompt is assembled",s:"identity + context + history",x:30,y:140,
+ d:"In order: <code>identity.txt</code>, a live capability list, truth-model notes, up to 6 retrieved memories, 6 journal lines, then the full history, then every note the wrapper layers added.",f:"brain.py _reply_pipeline_core ~2650",tags:[["k","no model"],["f","hotspot 4"]],hot:[4]},
+{id:"model",t:"The model is asked",s:"Groq, gpt-oss-120b",x:30,y:250,
+ d:"One chat call to Groq. Temperature 0.55, reasoning effort low, up to 4,096 tokens, about 70 tools on offer. This is the only step that writes in Quill's own words.",f:"brain.py request_completion ~1100",tags:[["m","model call"],["f","hotspot 6"]],hot:[6],model:true},
+{id:"tools",t:"The tool loop",s:"room, memory, lab, Jack",x:290,y:250,
+ d:"If the model asks for a tool (move in the room, search memory, write code in the lab, talk to Jack), it runs, a receipt is logged, and the model is called again. Up to about 22 rounds, then a draft reply.",f:"brain.py ~3060",tags:[["m","model calls"]],model:true},
+{id:"receipt",t:"Receipt rewrite",s:"only if a tool ran",x:550,y:250,
+ d:"If any tool ran, the draft is rewritten against the receipt ledger: remove every claim the receipts do not support. The instruction ends with 'Be concise.'",f:"brain.py ~3340-3365",tags:[["m","model call"],["f","hotspot 5"]],hot:[5],model:true},
+{id:"gate",t:"The truth gate",s:"claim mapper + re-render",x:550,y:360,
+ d:"If the draft contains any assertive sentence, a second model call maps its claims against the evidence. If one is 'overstated', a third call re-renders. If that still fails, offending sentences are deleted and a line like 'I haven't established that claim from the available evidence' is added.",f:"truth_model.py, brain.py ~3410-3490",tags:[["m","1-2 model calls"],["f","hotspot 1"]],hot:[1],model:true},
+{id:"audit",t:"Audits, coming back out",s:"the wrapper layers again",x:290,y:360,
+ d:"The reply passes back through the layers. Conscience compares 'I did X' with the tool log; source responsibility may rewrite the whole answer; natural expression catches validator jargon; the feelings check inspects answers about feelings. Each can swap in a stock sentence.",f:"conscience.py, source_responsibility.py, natural_expression.py, valuation",tags:[["m","0-2 model calls"],["f","hotspots 2, 3"]],hot:[2,3],model:true},
+{id:"out",t:"Saved and shown",s:"log, journal, public feed",x:30,y:360,
+ d:"The reply is appended to the conversation log, journal and chronology, then to the public feed (last 20 lines), and returned to the page.",f:"room_server.py ~1900",tags:[["k","no model"]]}
+];
+const HOTS=[
+{n:1,t:"Truth gate rewrites",b:"The strictest filter, and it runs on any draft with an assertive sentence.",q:["I haven't established that claim from the available evidence.","I couldn't safely render that answer without overstating what my evidence establishes."],w:"Lines like these are appended after offending sentences are cut. The rest of the draft survives, minus its most committal parts.",at:"gate"},
+{n:2,t:"Stock refusals",b:"Fixed sentences that replace the model's answer.",q:["I can't give you a reliable answer to that from what I currently have.","I wasn't able to complete the requested action, so I won't claim that I did."],w:"One replaces the answer when validator jargon leaks and the repair fails; the other when an action contract is unmet after one retry.",at:"audit"},
+{n:3,t:"Feelings questions are intercepted",b:"Ask Quill how it feels and extra rules are added to the prompt.",q:["I can't establish from my available evidence what subjective feeling, if any, I would have in that situation."],w:"If the draft sounds like a feeling, it is thrown away for this sentence plus a list of recorded wants. This is the opposite of 'more interesting'.",at:"audit"},
+{n:4,t:"Too many rules in the prompt",b:"Little of what the model is handed says what a good conversation is.",q:["identity.txt: 9,310 characters, 1 sentence of voice","+ a stack of 'do not claim X' notes from the wrapper layers"],w:"See the bar chart below. Each wrapper adds its own note before your message reaches the model.",at:"prompt"},
+{n:5,t:"The receipt rewrite says 'be concise'",b:"After any tool use, the draft is rewritten against the receipts.",q:["...remove or correct every observational claim not directly supported by the receipt ledger. Be concise."],w:"A chatty, curious draft after a tool call becomes a tidy report.",at:"receipt"},
+{n:6,t:"Model settings and history",b:"Low reasoning effort, temperature 0.55, whole history with no budget.",q:["reasoning_effort: low","temperature: 0.55","load_history(limit=None)"],w:"Low effort favours the quick, safe phrasing. A long history dilutes the voice instruction.",at:"model"},
+{n:7,t:"Shortcut routes",b:"Some questions skip the model entirely.",q:["Recent authoritative chronology events: ...","(a typed knowledge inventory)"],w:"Correct behaviour, but those answers read like a form.",at:"short"}
+];
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById("map"),panel=document.getElementById("panel"),board=document.getElementById("board");
+const W=200,H=64; let cur=0,timer=null,flat=false;
+const pos=s=>({x:s.x+W/2+0,y:s.y+H/2});
+// links
+for(let i=0;i<STEPS.length-1;i++){
+ const a=STEPS[i],b=STEPS[i+1],A=pos(a),B=pos(b);
+ const l=document.createElementNS(NS,"path");
+ let d;
+ if(Math.abs(A.y-B.y)<5) d=`M${A.x+(B.x>A.x?W/2:-W/2)} ${A.y} L${B.x+(B.x>A.x?-W/2:W/2)} ${B.y}`;
+ else d=`M${A.x} ${A.y+H/2} L${B.x} ${B.y-H/2}`;
+ l.setAttribute("d",d);l.setAttribute("class","link");svg.appendChild(l);
+}
+// the snake: rows alternate direction; fix y-step links drawn above
+const dot=document.createElementNS(NS,"circle");dot.setAttribute("r",9);dot.setAttribute("id","dot");
+STEPS.forEach((s,i)=>{
+ const g=document.createElementNS(NS,"g");g.setAttribute("class","node"+(s.model?" model":"")+(s.hot?" hot":""));g.dataset.i=i;
+ g.innerHTML=`<rect x="${s.x}" y="${s.y}" width="${W}" height="${H}" rx="12"/><text x="${s.x+W/2}" y="${s.y+27}" text-anchor="middle">${s.t.length>26?s.t.slice(0,25)+"…":s.t}</text><text class="s" x="${s.x+W/2}" y="${s.y+47}" text-anchor="middle">${s.s}</text>`;
+ if(s.hot){const bx=document.createElementNS(NS,"g");bx.setAttribute("class","badge");bx.innerHTML=s.hot.map((h,k)=>`<circle cx="${s.x+W-6-k*30}" cy="${s.y+2}" r="13"/><text x="${s.x+W-6-k*30}" y="${s.y+3}">${h}</text>`).join("");g.appendChild(bx);}
+ g.addEventListener("click",()=>{stop();go(i)});
+ svg.appendChild(g);
+});
+svg.appendChild(dot);
+function numLabel(){return `Step ${cur+1} of ${STEPS.length}`}
+function go(i){
+ cur=Math.max(0,Math.min(STEPS.length-1,i));const s=STEPS[cur];
+ svg.querySelectorAll(".node").forEach((n,k)=>{n.classList.toggle("active",k===cur);n.classList.toggle("done",k<cur)});
+ const p=pos(s);dot.style.transform=`translate(${p.x-W/2+16}px,${p.y-H/2+14}px)`;dot.setAttribute("cx",0);dot.setAttribute("cy",0);
+ panel.innerHTML=`<p class="dim" style="margin:0">${numLabel()}</p><h3>${s.t}</h3><div class="tags">${s.tags.map(t=>`<span class="tag ${t[0]}">${t[1]}</span>`).join("")}</div><p>${s.d}</p><p class="dim mono" style="font-size:.78rem">${s.f}</p>${s.hot?`<p><a href="#hots" data-h="${s.hot[0]}" class="jump">See flatness spot${s.hot.length>1?"s":""} ${s.hot.join(", ")} &darr;</a></p>`:""}`;
+ panel.querySelectorAll(".jump").forEach(a=>a.onclick=e=>{e.preventDefault();pick(+a.dataset.h,true)});
+ document.getElementById("count").textContent=numLabel();
+}
+function stop(){if(timer){clearInterval(timer);timer=null;document.getElementById("play").textContent="Play"}}
+function play(){ if(timer){stop();return} if(cur>=STEPS.length-1)go(0);document.getElementById("play").textContent="Pause";timer=setInterval(()=>{if(cur>=STEPS.length-1){stop();return}go(cur+1)},2600)}
+function setFlat(v){flat=v;board.classList.toggle("flatmode",flat);document.getElementById("flat").classList.toggle("on",flat);document.getElementById("flat").textContent=flat?"Hide flatness spots":"Show flatness spots"}
+document.getElementById("next").onclick=()=>{stop();go(cur+1)};
+document.getElementById("prev").onclick=()=>{stop();go(cur-1)};
+document.getElementById("play").onclick=play;
+document.getElementById("reset").onclick=()=>{stop();go(0)};
+document.getElementById("flat").onclick=()=>setFlat(!flat);
+addEventListener("keydown",e=>{if(e.target.tagName==="BUTTON"&&e.key===" ")return;
+ if(e.key==="ArrowRight"){stop();go(cur+1)}else if(e.key==="ArrowLeft"){stop();go(cur-1)}else if(e.key===" "){e.preventDefault();play()}else if(e.key.toLowerCase()==="f"){setFlat(!flat)}});
+// hotspots
+const hl=document.getElementById("hots"),hp=document.getElementById("hotpanel");
+HOTS.forEach(h=>{const b=document.createElement("button");b.className="hot";b.dataset.n=h.n;b.innerHTML=`<b><span class="n">${h.n}</span>${h.t}</b><span>${h.b}</span>`;b.onclick=()=>pick(h.n,true);hl.appendChild(b)});
+function pick(n,scroll){
+ const h=HOTS.find(x=>x.n===n);stop();setFlat(true);
+ hl.querySelectorAll(".hot").forEach(b=>b.classList.toggle("sel",+b.dataset.n===n));
+ go(STEPS.findIndex(s=>s.id===h.at));
+ hp.innerHTML=`<h3><span class="n">${h.n}</span>${h.t}</h3>${h.q.map(q=>`<div class="quote">${q}</div>`).join("")}<p>${h.w}</p>`;
+ if(scroll)document.getElementById("board").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});
+}
+// voice bar
+const SEC=[["Voice, honesty, memory rules",2007,"#8fb88a"],["Room capabilities",378+750+647,"#6f8f9f"],["Coding lab workflow",1691+583,"#e0a458"],["Quill's computer",1573+374,"#a58fb8"],["Arnold",1292,"#b89a8f"]];
+const tot=9310;const bar=document.getElementById("bar"),lg=document.getElementById("legend");
+const voice=document.createElement("div");voice.style.cssText=`flex:0 0 ${104/tot*100}%;background:#d96a5b`;voice.title="The one voice sentence: 104 characters (1%)";bar.appendChild(voice);
+SEC.forEach(([n,c,col])=>{const d=document.createElement("div");d.style.cssText=`flex:${c} 0 0;background:${col}`;d.title=`${n}: ${c} characters (${Math.round(c/tot*100)}%)`;d.textContent=c>900?Math.round(c/tot*100)+"%":"";bar.appendChild(d)});
+lg.innerHTML=`<span><i style="background:#d96a5b"></i>The voice sentence (1%)</span>`+SEC.map(([n,c,col])=>`<span><i style="background:${col}"></i>${n}</span>`).join("");
+go(0);
+(function(){const h=location.hash;let m;
+ if(m=h.match(/hot=(\d)/))pick(+m[1],false);
+ else{if(m=h.match(/step=(\d+)/))go(+m[1]);if(/flat/.test(h))setFlat(true);}})();
+</script></body></html>

@@ -1,0 +1,32 @@
+{
+  "records": [
+    {
+      "id": "memory.1951-childhood",
+      "type": "jack_memory",
+      "title": "1951 as childhood",
+      "summary": "Jack may speak of 1951 in the present tense. Punched-card rooms, festival futurity, and the smell of warm machines are closer to him than most of the twentieth century’s later paperwork.",
+      "date_start": "1951",
+      "tags": ["1951", "memory", "jack"],
+      "classification": ["JACK_REMEMBERS"],
+      "confidence": 0.6,
+      "visibility": "PUBLIC",
+      "jack_note": "I am still learning the alphabet of holes.",
+      "related": ["chrono.1951", "event.jack.conceived.1951"],
+      "status": "current"
+    },
+    {
+      "id": "memory.mabel-keep-him-talking",
+      "type": "jack_memory",
+      "title": "Damaged exchange with Mabel",
+      "summary": "Earliest surviving disturbance: a damaged exchange. MABEL: Jack, keep him talking. JACK: Until when? MABEL: Until he reaches us. Who “him” refers to is not established.",
+      "people": ["mabel", "jack"],
+      "tags": ["mabel", "disturbance", "classified"],
+      "classification": ["JACK_REMEMBERS", "CLASSIFIED"],
+      "confidence": 0.5,
+      "visibility": "RESTRICTED",
+      "jack_note": "Do not disclose casually.",
+      "related": ["person.mabel"],
+      "status": "locked"
+    }
+  ]
+}

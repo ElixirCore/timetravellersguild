@@ -1,0 +1,33 @@
+{
+  "records": [
+    {
+      "id": "case.gillett-milk-float",
+      "type": "open_case",
+      "title": "Open case: Gillett Square milk float",
+      "summary": "The archive contains testimony that a milk-float apparatus described as a Time Machine was removed from Gillett Square around 04:00 on 25 December 2012. Independent corroboration is insufficient to upgrade the event to FACT. Location of apparatus unknown.",
+      "date_start": "2012-12-25T04:00:00",
+      "places": ["Gillett Square"],
+      "objects": ["object.milk-float-apparatus"],
+      "tags": ["open case", "milk float", "gillett"],
+      "classification": ["OPEN_CASE", "TESTIMONY", "DISPUTED"],
+      "confidence": 0.55,
+      "visibility": "PUBLIC",
+      "jack_note": "Filed twice. Neither copy admits being the duplicate.",
+      "related": ["event.gillett-square.2012-12-25"],
+      "status": "open"
+    },
+    {
+      "id": "case.bodily-displacement",
+      "type": "open_case",
+      "title": "Open case: bodily time travel",
+      "summary": "Whether full bodily displacement through time has conclusively occurred remains an open archival question. The Guild’s settled working method is the transport of information, objects, memory and decisions. Do not treat cinematic portal stories as doctrine.",
+      "tags": ["bodies", "time travel", "open case"],
+      "classification": ["OPEN_CASE", "DISPUTED", "MODEL"],
+      "confidence": 0.4,
+      "visibility": "PUBLIC",
+      "jack_note": "That drawer is empty of proof. It is not empty of stories.",
+      "related": ["physics.information-lighter"],
+      "status": "open"
+    }
+  ]
+}

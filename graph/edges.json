@@ -1,0 +1,706 @@
+[
+    {
+        "public_id": "01TTGE00000000000000000001",
+        "source": "guild",
+        "relationship": "HOSTED",
+        "target": "station-xiii",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000002",
+        "source": "department",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "guild",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000003",
+        "source": "department",
+        "relationship": "HOSTED",
+        "target": "cardiff",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000004",
+        "source": "tobywhy",
+        "relationship": "VISITED",
+        "target": "cardiff",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000005",
+        "source": "tobywhy",
+        "relationship": "VISITED",
+        "target": "station-xiii",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000006",
+        "source": "tobywhy",
+        "relationship": "REMEMBERS",
+        "target": "mythology-2008",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000007",
+        "source": "chronometer",
+        "relationship": "APPEARED_IN",
+        "target": "station-xiii",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000008",
+        "source": "watch",
+        "relationship": "APPEARED_IN",
+        "target": "archive",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000009",
+        "source": "cardiff",
+        "relationship": "HOSTED",
+        "target": "mythology-2008",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000010",
+        "source": "cribarth",
+        "relationship": "HOSTED",
+        "target": "stations",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000011",
+        "source": "join",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "people",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000012",
+        "source": "join",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "commons",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000013",
+        "source": "join",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "missions",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000014",
+        "source": "people",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "commons",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000015",
+        "source": "film",
+        "relationship": "USES",
+        "target": "watch",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000016",
+        "source": "film",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "signals",
+        "confidence": 0.6
+    },
+    {
+        "public_id": "01TTGE00000000000000000017",
+        "source": "film",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "people",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000018",
+        "source": "archive",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "cardiff",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000019",
+        "source": "archive",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "research",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000020",
+        "source": "research",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "chronometer",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000021",
+        "source": "research",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "triangla",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000022",
+        "source": "missions",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "calendar",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000023",
+        "source": "signals",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "the-transmission",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000024",
+        "source": "signals",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "elsewhen",
+        "confidence": 0.6
+    },
+    {
+        "public_id": "01TTGE00000000000000000025",
+        "source": "unplaced-2014",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "elsewhen",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000026",
+        "source": "unplaced-2019",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "elsewhen",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000027",
+        "source": "unplaced-2031",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "elsewhen",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000028",
+        "source": "unplaced-2033",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "elsewhen",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000029",
+        "source": "stations",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "station-xiii",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000030",
+        "source": "door",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "join",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000031",
+        "source": "door",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "station-xiii",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000032",
+        "source": "welsh-government-mug",
+        "relationship": "APPEARED_IN",
+        "target": "cardiff",
+        "confidence": 0.4
+    },
+    {
+        "public_id": "01TTGE00000000000000000033",
+        "source": "guild",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "department",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000034",
+        "source": "calendar",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "chronometer",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000035",
+        "source": "people",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "tobywhy",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000036",
+        "source": "quantum-tin-013",
+        "relationship": "OBSERVED_AT",
+        "target": "swansea-valley",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000037",
+        "source": "quantum-tin-013",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "det-01",
+        "confidence": 0.45
+    },
+    {
+        "public_id": "01TTGE00000000000000000038",
+        "source": "department",
+        "relationship": "CLASSIFIED",
+        "target": "det-01",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000039",
+        "source": "det-01",
+        "relationship": "REFERENCES",
+        "target": "department",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000040",
+        "source": "abercrave",
+        "relationship": "LOCATED_AT",
+        "target": "swansea-valley",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000041",
+        "source": "cribarth",
+        "relationship": "LOCATED_AT",
+        "target": "swansea-valley",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000042",
+        "source": "mabel-notice-013",
+        "relationship": "SUGGESTS",
+        "target": "quantum-tin-013",
+        "confidence": 0.6
+    },
+    {
+        "public_id": "01TTGE00000000000000000043",
+        "source": "mabel-notice-013",
+        "relationship": "REFERENCES",
+        "target": "observation-tables-disagreed",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000044",
+        "source": "mabel-notice-013",
+        "relationship": "REFERENCES",
+        "target": "det-01",
+        "confidence": 0.55
+    },
+    {
+        "public_id": "01TTGE00000000000000000045",
+        "source": "mabel-notice-013",
+        "relationship": "REFERENCES",
+        "target": "cribarth",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000046",
+        "source": "mabel",
+        "relationship": "SUGGESTS",
+        "target": "mabel-notice-013",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000047",
+        "source": "film-fragment-cribarth",
+        "relationship": "USES",
+        "target": "observation-tables-disagreed",
+        "confidence": 0.85
+    },
+    {
+        "public_id": "01TTGE00000000000000000048",
+        "source": "film-fragment-cribarth",
+        "relationship": "APPEARED_IN",
+        "target": "cribarth",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000049",
+        "source": "film",
+        "relationship": "CONTAINS",
+        "target": "film-fragment-cribarth",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000050",
+        "source": "chronometer",
+        "relationship": "STAMPED",
+        "target": "moment-2026-09-03",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000051",
+        "source": "moment-2026-09-03",
+        "relationship": "OBSERVED_AT",
+        "target": "cardiff",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000052",
+        "source": "welsh-government-mug",
+        "relationship": "OBSERVED_AT",
+        "target": "moment-2026-09-03",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000053",
+        "source": "mission-valley-reading",
+        "relationship": "LOCATED_AT",
+        "target": "cribarth",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000054",
+        "source": "mission-valley-reading",
+        "relationship": "REFERENCES",
+        "target": "observation-tables-disagreed",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000055",
+        "source": "tobywhy",
+        "relationship": "VISITED",
+        "target": "abercrave",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000056",
+        "source": "tobywhy",
+        "relationship": "VISITED",
+        "target": "swansea-valley",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000057",
+        "source": "tobywhy",
+        "relationship": "REMEMBERS",
+        "target": "observation-tables-disagreed",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000058",
+        "source": "mission-founding-record",
+        "relationship": "LOCATED_AT",
+        "target": "cardiff",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000059",
+        "source": "mission-founding-record",
+        "relationship": "REFERENCES",
+        "target": "mythology-2008",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000060",
+        "source": "scheduled-transmission",
+        "relationship": "FOLLOWS",
+        "target": "the-transmission",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000061",
+        "source": "scheduled-transmission",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "signals",
+        "confidence": 0.85
+    },
+    {
+        "public_id": "01TTGE00000000000000000062",
+        "source": "det-response",
+        "relationship": "REFERENCES",
+        "target": "department",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000063",
+        "source": "det-response",
+        "relationship": "REFERENCES",
+        "target": "det-01",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000064",
+        "source": "field-issue-13",
+        "relationship": "REFERENCES",
+        "target": "quantum-tin-013",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000065",
+        "source": "field-issue-13",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "film",
+        "confidence": 0.4
+    },
+    {
+        "public_id": "01TTGE00000000000000000066",
+        "source": "instrument-13",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "chronometer",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000067",
+        "source": "instrument-13",
+        "relationship": "STAMPED",
+        "target": "moment-2026-09-03",
+        "confidence": 0.9
+    },
+    {
+        "public_id": "01TTGE00000000000000000068",
+        "source": "observation-tables-disagreed",
+        "relationship": "OBSERVED_AT",
+        "target": "cribarth",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000069",
+        "source": "jack",
+        "relationship": "REFERENCES",
+        "target": "guild",
+        "confidence": 0.6
+    },
+    {
+        "public_id": "01TTGE00000000000000000070",
+        "source": "quantum-tin-013",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "abercrave",
+        "confidence": 0.35
+    },
+    {
+        "public_id": "01TTGE00000000000000000071",
+        "source": "station-xiii",
+        "relationship": "LOCATED_AT",
+        "target": "cardiff",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000072",
+        "source": "department",
+        "relationship": "LOCATED_AT",
+        "target": "cardiff",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE00000000000000000073",
+        "source": "mabel",
+        "relationship": "REFERENCES",
+        "target": "chronometer",
+        "confidence": 0.5
+    },
+    {
+        "public_id": "01TTGE00000000000000000074",
+        "source": "mission-valley-reading",
+        "relationship": "PARTICIPATED_IN",
+        "target": "stations",
+        "confidence": 0.6
+    },
+    {
+        "public_id": "01TTGE00000000000000000075",
+        "source": "film-fragment-cribarth",
+        "relationship": "DERIVED_FROM",
+        "target": "cribarth",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE00000000000000000076",
+        "source": "feed",
+        "relationship": "APPEARED_IN",
+        "target": "archive",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE00000000000000000077",
+        "source": "watch",
+        "relationship": "POSSIBLY_RELATED_TO",
+        "target": "feed",
+        "confidence": 0.7
+    },
+    {
+        "public_id": "01TTGE9AA76C6E5A65764A092FBE",
+        "source": "jack",
+        "target": "pending-remember-this-meeting-in-the-cube-acc961",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE49E24F895C52E1BC32253E",
+        "source": "tobywhy",
+        "target": "pending-remember-this-meeting-in-the-cube-acc961",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGED31998825134E2AAB6257B",
+        "source": "film",
+        "target": "pending-remember-this-meeting-in-the-cube-acc961",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEBA8BF287C0DE7FB975B9D3",
+        "source": "pending-time-travelling-house-edeb99",
+        "target": "abercrave",
+        "relationship": "OBSERVED_AT",
+        "confidence": 0.35,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE0B8BAB648CEA907B130FFD",
+        "source": "welsh-government-mug",
+        "target": "pending-bute-street-0cd6df",
+        "relationship": "OBSERVED_AT",
+        "confidence": 0.35,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE5784B2DCBB9B804F3F5E2D",
+        "source": "pending-bute-street-0cd6df",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEDED5235D508E3F29ECB2EF",
+        "source": "cardiff",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE0B66399D35B9C0D9F3A845",
+        "source": "cribarth",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE8C46609A5016DB6DE8D709",
+        "source": "department",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEC537AB9EECF84F2F3EB945",
+        "source": "welsh-government-mug",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE1B798552A1FFCD7C8DA190",
+        "source": "quantum-tin-013",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE3CDBE543A8405CBF900ECD",
+        "source": "observation-tables-disagreed",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE3FFBAF175EA798A81DE524",
+        "source": "mission-valley-reading",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGE89D8790F4B1168D91B627C",
+        "source": "station-xiii",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEC2D11798172166442C73DD",
+        "source": "pending-department-notice-in-the-field-d63cb3",
+        "target": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEC5E5B032891AAEB22E62E3",
+        "source": "pending-got-lost-f40e8b",
+        "target": "pending-i-got-lost-83624f",
+        "relationship": "EXTRACTED_FROM",
+        "confidence": 0.4,
+        "pending": false,
+        "visibility": "PUBLIC"
+    },
+    {
+        "public_id": "01TTGEA7E30C12BDE05947FB0636",
+        "source": "tipi-valley-2033-1981-276",
+        "relationship": "OBSERVED_AT",
+        "target": "tipi-valley",
+        "confidence": 1
+    },
+    {
+        "public_id": "01TTGE8CF3C8B359288DD72EF83F",
+        "source": "tobywhy",
+        "relationship": "VISITED",
+        "target": "tipi-valley",
+        "confidence": 0.8
+    },
+    {
+        "public_id": "01TTGE0573081867B485FD68A87B",
+        "source": "tipi-valley-2033-1981-276",
+        "relationship": "REFERENCES",
+        "target": "unplaced-2033",
+        "confidence": 0.5
+    }
+]
