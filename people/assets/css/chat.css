@@ -88,3 +88,13 @@ a.msg-who:hover{text-decoration:underline}
 }
 .chat-pref{display:flex;gap:8px;align-items:flex-start;padding:8px 12px 12px;font-size:11px;line-height:1.35;color:var(--dim);cursor:pointer}
 .chat-pref input{width:auto;margin:1px 0 0;appearance:auto}
+/* link previews */
+.pv{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 2px}
+.pv img,.pv video,.pv iframe{display:block;max-width:100%;border:1.5px solid var(--navy);background:var(--well)}
+.pv-img img{max-height:18rem;width:auto;height:auto;min-width:4rem;min-height:4rem;object-fit:contain}
+.pv-video{max-height:20rem;width:min(100%,32rem)}
+.pv iframe,.pv-play.pv-wide{width:min(100%,32rem);aspect-ratio:16/9;height:auto}
+.pv-play{position:relative;display:block;padding:0;border:0;background:var(--ink);cursor:pointer}
+.pv-play img{width:100%;height:100%;object-fit:cover;border:1.5px solid var(--navy)}
+.pv-tri{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;color:var(--paper);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.pv-play:hover .pv-tri,.pv-play:focus-visible .pv-tri{color:var(--scarlet)}

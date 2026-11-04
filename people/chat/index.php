@@ -74,6 +74,6 @@ require dirname(__DIR__) . '/inc/header.php';
     </section>
   </div>
 </main>
-<script src="/people/assets/js/chat.js?v=5" defer></script>
+<script src="/people/assets/js/chat.js?v=8" defer></script>
 <?php endif; ?>
 <?php require dirname(__DIR__) . '/inc/footer.php'; ?>

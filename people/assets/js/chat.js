@@ -240,24 +240,112 @@
     return new Date(ts * 1000).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
   }
 
-  var URL_RE = /\bhttps?:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]]/g;
+  // Links: full http(s) URLs, www., and bare domains with a path or a common TLD (timetravellersguild.com/people).
+  var URL_RE = /(?:https?:\/\/|www\.)[^\s<>"']+|\b(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:com|org|net|io|co|uk|space|online|dev|app|me|info|xyz|art|tv|eu|ie|de|fr|wales|cymru|ly|gg|fm)\b(?:\/[^\s<>"']*)?/gi;
+  function cleanUrl(raw) {
+    var u = raw.replace(/[.,;:!?'"]+$/, '');
+    // drop a closing bracket that belongs to the sentence, not the link
+    while (/[)\]]$/.test(u) && (u.split('(').length < u.split(')').length || u.split('[').length < u.split(']').length)) u = u.slice(0, -1);
+    return u;
+  }
   function richText(node, text) {
-    var last = 0, m;
+    var last = 0, m, found = [];
     URL_RE.lastIndex = 0;
     while ((m = URL_RE.exec(text))) {
+      var prevChar = m.index > 0 ? text.charAt(m.index - 1) : '';
+      if (prevChar === '@' || /[\w.\/-]/.test(prevChar)) continue; // part of an email or a longer word
+      var shown = cleanUrl(m[0]);
+      var href = /^https?:\/\//i.test(shown) ? shown : 'https://' + shown;
+      var url;
+      try { url = new URL(href); } catch (e) { continue; }
+      if (url.protocol !== 'https:' && url.protocol !== 'http:') continue;
       mentions(node, text.slice(last, m.index));
       var a = document.createElement('a');
-      a.href = m[0]; a.textContent = m[0]; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow ugc';
+      a.href = url.href; a.textContent = shown; a.target = '_blank'; a.rel = 'noopener noreferrer nofollow ugc';
       node.appendChild(a);
-      last = m.index + m[0].length;
+      found.push(url);
+      last = m.index + shown.length;
+      URL_RE.lastIndex = last;
     }
     mentions(node, text.slice(last));
+    return found;
   }
+
+  /* ── previews: images, video files, YouTube, Vimeo ── */
+  var IMG_RE = /\.(?:jpe?g|png|gif|webp|avif)$/i;
+  var VID_RE = /\.(?:mp4|webm|m4v|mov|ogv)$/i;
+  function youTubeId(u) {
+    var h = u.hostname.replace(/^(www\.|m\.)/, '');
+    if (h === 'youtu.be') return u.pathname.slice(1).split('/')[0];
+    if (h === 'youtube.com' || h === 'youtube-nocookie.com') {
+      if (u.pathname === '/watch') return u.searchParams.get('v') || '';
+      var m = u.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]{6,})/);
+      return m ? m[1] : '';
+    }
+    return '';
+  }
+  function vimeoId(u) {
+    var h = u.hostname.replace(/^www\./, '');
+    var m = (h === 'vimeo.com' || h === 'player.vimeo.com') && u.pathname.match(/\/(?:video\/)?(\d{5,})/);
+    return m ? m[1] : '';
+  }
+  function keepBottom(media) {
+    var stick = nearBottom();
+    media.addEventListener(media.tagName === 'VIDEO' ? 'loadedmetadata' : 'load', function () { if (stick) toBottom(); }, { once: true });
+  }
+  function playerButton(label, thumb, onPlay) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'pv-play'; b.setAttribute('aria-label', label);
+    if (thumb) { var i = document.createElement('img'); i.src = thumb; i.alt = ''; i.loading = 'lazy'; i.referrerPolicy = 'no-referrer'; keepBottom(i); b.appendChild(i); }
+    var t = document.createElement('span'); t.className = 'pv-tri'; t.textContent = '▶'; b.appendChild(t);
+    b.addEventListener('click', function () { b.replaceWith(onPlay()); }, { once: true });
+    return b;
+  }
+  function frame(src, title) {
+    var f = document.createElement('iframe');
+    f.src = src; f.title = title; f.loading = 'lazy'; f.referrerPolicy = 'strict-origin-when-cross-origin';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+    f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-popups');
+    return f;
+  }
+  function previews(urls) {
+    var box = document.createElement('div'); box.className = 'pv';
+    var seen = {}, shown = 0;
+    urls.forEach(function (u) {
+      if (u.protocol !== 'https:' || shown >= 3) return; // no mixed content; at most 3 previews
+      var path = u.pathname, yt = youTubeId(u), vm = vimeoId(u), el;
+      var key = yt ? 'yt:' + yt : vm ? 'vm:' + vm : u.href;
+      if (seen[key]) return;
+      seen[key] = true;
+      if (yt && /^[\w-]{6,20}$/.test(yt)) {
+        el = playerButton('Play YouTube video', 'https://i.ytimg.com/vi/' + yt + '/hqdefault.jpg', function () {
+          return frame('https://www.youtube-nocookie.com/embed/' + yt + '?autoplay=1&rel=0', 'YouTube video');
+        });
+        el.classList.add('pv-wide');
+      } else if (vm) {
+        el = playerButton('Play Vimeo video', '', function () { return frame('https://player.vimeo.com/video/' + vm + '?autoplay=1&dnt=1', 'Vimeo video'); });
+        el.classList.add('pv-wide');
+      } else if (IMG_RE.test(path)) {
+        el = document.createElement('a'); el.href = u.href; el.target = '_blank'; el.rel = 'noopener noreferrer nofollow ugc'; el.className = 'pv-img';
+        var img = document.createElement('img'); img.src = u.href; img.alt = 'Image from ' + u.hostname; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer'; img.decoding = 'async';
+        img.addEventListener('error', function () { el.remove(); });
+        keepBottom(img); el.appendChild(img);
+      } else if (VID_RE.test(path)) {
+        el = document.createElement('video'); el.src = u.href; el.controls = true; el.preload = 'metadata'; el.playsInline = true; el.className = 'pv-video';
+        el.addEventListener('error', function () { el.remove(); });
+        keepBottom(el);
+      }
+      if (el) { box.appendChild(el); shown++; }
+    });
+    return box.children.length ? box : null;
+  }
+
   function mentions(node, text) {
     var parts = text.split(/(@[A-Za-z][\w-]{1,30})/);
     parts.forEach(function (p, i) {
       if (!p) return;
-      if (i % 2) { var s = document.createElement('span'); s.className = 'at'; s.textContent = p; node.appendChild(s); }
+      var before = i > 0 ? parts[i - 1] : '';
+      if (i % 2 && !/[\w.]$/.test(before)) { var s = document.createElement('span'); s.className = 'at'; s.textContent = p; node.appendChild(s); }
       else node.appendChild(document.createTextNode(p));
     });
   }
@@ -281,8 +369,11 @@
     head.appendChild(who); head.appendChild(at);
     col.appendChild(head);
     var body = document.createElement('p'); body.className = 'msg-body';
-    if (m.deleted) body.textContent = '— withdrawn —'; else richText(body, m.body);
+    var links = [];
+    if (m.deleted) body.textContent = '— withdrawn —'; else links = richText(body, m.body);
     col.appendChild(body);
+    var pv = links.length ? previews(links) : null;
+    if (pv) col.appendChild(pv);
     if (m.user_id === ME && !m.deleted && m.id > 0) {
       var tools = document.createElement('div'); tools.className = 'msg-tools';
       var del = document.createElement('button'); del.type = 'button'; del.textContent = 'WITHDRAW'; del.dataset.del = m.id;
@@ -357,6 +448,7 @@
     if (!li || li.classList.contains('deleted')) return;
     li.classList.add('deleted');
     var b = li.querySelector('.msg-body'); b.textContent = '— withdrawn —';
+    var pv = li.querySelector('.pv'); if (pv) pv.remove();
     var t = li.querySelector('.msg-tools'); if (t) t.remove();
   }
 

@@ -22,7 +22,7 @@ $chatUnread = $user ? ttg_chat_unread_total((int) $user['id']) : 0;
 <link rel="stylesheet" href="<?= ttg_h(ttg_base('assets/css/people.css')) ?>?v=punch3">
 <link rel="stylesheet" href="/assets/avatar.css?v=1">
 <link rel="stylesheet" href="/assets/network.css">
-<link rel="stylesheet" href="/people/assets/css/chat.css?v=5">
+<link rel="stylesheet" href="/people/assets/css/chat.css?v=8">
 </head>
 <body>
 <?= ttg_network_bar('paper') ?>
