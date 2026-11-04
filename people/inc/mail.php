@@ -44,7 +44,10 @@ function ttg_send_mail(string $to, string $subject, string $body, array $opts = 
 
     $messageId = sprintf('<%s@%s>', bin2hex(random_bytes(16)), $domain);
     $date = gmdate('D, d M Y H:i:s O');
-    $unsubscribe = '<' . $fromAddr . '>, <https://timetravellersguild.com/>';
+    $unsubUrl = trim((string) ($opts['unsubscribe_url'] ?? ''));
+    $unsubscribe = $unsubUrl !== '' && preg_match('#^https://#', $unsubUrl)
+        ? '<' . str_replace(["\r", "\n", '<', '>', ' '], '', $unsubUrl) . '>, <mailto:' . $fromAddr . '>'
+        : '<mailto:' . $fromAddr . '>, <https://timetravellersguild.com/>';
 
     $headers = [
         'From: ' . $encodeHeader($fromName) . ' <' . $fromAddr . '>',

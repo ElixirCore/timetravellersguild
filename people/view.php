@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/inc/db.php';
+$user = ttg_current_user();
 
 $slug = preg_replace('/[^a-z0-9-]/', '', strtolower((string)($_GET['slug'] ?? '')));
 $person = $slug !== '' ? ttg_user_by_slug($slug) : null;
@@ -38,6 +39,7 @@ $cells = ttg_pixel_parse((string)($person['avatar_pixels'] ?? ''));
     <?php if ($isSelf): ?>
       <p class="handoff-row"><a class="door" href="/people/profile/"><b>DOOR</b> EDIT YOUR SLIP</a></p>
     <?php elseif ($user): ?>
+      <p class="handoff-row"><a class="door primary" href="/people/chat/?with=<?= ttg_h($slug) ?>"><b>DOOR</b> SEND A MESSAGE</a></p>
       <?php if ($knocked): ?>
         <p class="status">Knocked. They'll see it on their slip.</p>
       <?php elseif ($blocked): ?>
