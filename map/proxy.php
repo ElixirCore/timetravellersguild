@@ -353,16 +353,19 @@ if ($src === 'wdevents') {
 
 if ($src === 'wdpeople') {
   [$lat, $lng] = $point();
-  out(cached($CACHE, 'wdpeople:v1:' . $lat . ',' . $lng, 30 * 86400, function () use ($lat, $lng, $sparql, $qid, $yearOf) {
-    // Only real settlements count as birthplaces; regions like "South Wales" would pull in half a country.
+  // Optional year: only people born by then, asked of Wikidata directly (a big city has thousands of births, so filtering a sample afterwards finds nobody).
+  $to = isset($_GET['to']) ? max(-3000, min(2100, (int) $_GET['to'])) : 2100;
+  out(cached($CACHE, 'wdpeople:v3:' . $lat . ',' . $lng . ':' . $to, 30 * 86400, function () use ($lat, $lng, $to, $sparql, $qid, $yearOf) {
+    // Birthplaces must be settlements, municipalities or cities (any subclass: French communes are municipalities);
+    // regions like "South Wales" would pull in half a country.
     $q = 'SELECT ?p ?pLabel ?pDescription ?birth ?death ?placeLabel ?article WHERE {
       SERVICE wikibase:around { ?place wdt:P625 ?c. bd:serviceParam wikibase:center "Point(' . $lng . ' ' . $lat . ')"^^geo:wktLiteral. bd:serviceParam wikibase:radius "6". }
-      VALUES ?ptype { wd:Q486972 wd:Q3957 wd:Q532 wd:Q515 wd:Q5084 wd:Q188509 wd:Q123705 wd:Q1637706 wd:Q2630741 wd:Q15078955 wd:Q1549591 wd:Q7930989 }
-      ?place wdt:P31 ?ptype. ?p wdt:P19 ?place; wdt:P31 wd:Q5.
-      OPTIONAL { ?p wdt:P569 ?birth } OPTIONAL { ?p wdt:P570 ?death }
+      VALUES ?cls { wd:Q486972 wd:Q15284 wd:Q515 }
+      ?place wdt:P31/wdt:P279* ?cls. ?p wdt:P19 ?place; wdt:P31 wd:Q5.
+      ' . ($to < 2100 ? '?p wdt:P569 ?birth. FILTER(YEAR(?birth) <= ' . $to . ')' : 'OPTIONAL { ?p wdt:P569 ?birth }') . ' OPTIONAL { ?p wdt:P570 ?death }
       OPTIONAL { ?article schema:about ?p; schema:isPartOf <https://en.wikipedia.org/> }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en,cy,fr,de,es,it". }
-    } LIMIT 120';
+    } ORDER BY ?birth LIMIT 150';
     $rows = $sparql($q);
     if ($rows === null) return ['', 503, ''];
     $by = [];
