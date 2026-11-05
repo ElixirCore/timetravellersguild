@@ -86,7 +86,7 @@ if (isset($in['question'])) {
   if (isset($in['image']) && is_array($in['image'])) {
     $img = (string) ($in['image']['url'] ?? '');
     $host = strtolower((string) parse_url($img, PHP_URL_HOST));
-    if (strlen($img) > 1000 || !str_starts_with($img, 'https://') || !in_array($host, ['thumb.wikimedia.org', 'upload.wikimedia.org', 'api.europeana.eu'], true)) {
+    if (strlen($img) > 1000 || !str_starts_with($img, 'https://') || !in_array($host, ['thumb.wikimedia.org', 'upload.wikimedia.org', 'api.europeana.eu', 'live.staticflickr.com'], true)) {
       fail(400, 'That photo cannot be shown to the guide.');
     }
     $about = mb_substr(trim((string) ($in['image']['about'] ?? '')), 0, 400);

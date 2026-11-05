@@ -24,10 +24,17 @@ if (is_file($secretFile)) {
     if (is_array($secrets) && is_string($secrets['EUROPEANA_KEY'] ?? null) && $secrets['EUROPEANA_KEY'] !== '') $europeana = true;
 }
 if (!$europeana && (string) (getenv('EUROPEANA_KEY') ?: '') !== '') $europeana = true;
+// Flickr photos: only whether a key exists (proxy.php holds the key itself).
+$flickr = is_array($secrets ?? null) && preg_match('/^[0-9a-f]{32}$/i', (string) ($secrets['FLICKR_KEY'] ?? '')) === 1;
+if (!$flickr && preg_match('/^[0-9a-f]{32}$/i', (string) (getenv('FLICKR_KEY') ?: '')) === 1) $flickr = true;
+// Mapillary street-level photos: a client token (MLY|app id|hash), made for use in the browser like the MapTiler key.
+$mapillary = is_array($secrets ?? null) ? (string) ($secrets['MAPILLARY_TOKEN'] ?? '') : '';
+if ($mapillary === '') $mapillary = (string) (getenv('MAPILLARY_TOKEN') ?: '');
+if (!preg_match('/^MLY\|\d{5,25}\|[0-9a-f]{20,64}$/i', $mapillary)) $mapillary = '';
 if ($maptiler === '') $maptiler = (string) (getenv('MAPTILER_KEY') ?: '');
 if (!preg_match('/^[A-Za-z0-9_-]{8,80}$/', $maptiler)) $maptiler = '';
 
-$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler, 'europeana' => $europeana,
+$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler, 'europeana' => $europeana, 'flickr' => $flickr, 'mapillary' => $mapillary,
     'agent' => '/map/agent.php', 'proxy' => '/map/proxy.php'];
 if ($interface) {
     $cfg['interface'] = true;

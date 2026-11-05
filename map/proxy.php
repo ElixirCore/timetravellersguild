@@ -17,6 +17,8 @@
  *   src=he       England: Historic England layers in a cell (listed buildings, scheduled monuments, parks and gardens,
  *                battlefields, World Heritage Sites, conservation areas, Heritage at Risk 2026, Greater London
  *                Archaeological Priority Areas), from Historic England's open ArcGIS services, GeoJSON
+ *   src=flickr   geotagged Flickr photos in a cell, openly licensed only (Creative Commons, no known copyright, public domain);
+ *                needs FLICKR_KEY in secret_agent.php. Images stay on Flickr's servers; only the search is cached, for a day.
  *   src=plaques  commemorative plaques in a cell (Open Plaques), worldwide but richest in London
  *   src=oldmaps  georeferenced old maps covering a point: Allmaps (David Rumsey, Library of Congress, Internet Archive…)
  *                and mapwarper.net, local maps first; each with its own tile URL for an overlay
@@ -441,6 +443,50 @@ if ($src === 'he') {
     }
     return [json_encode(['type' => 'FeatureCollection', 'features' => $out], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
   }), 86400);
+}
+
+if ($src === 'flickr') {
+  $secret = __DIR__ . '/secret_agent.php';
+  $sec = is_file($secret) ? (static fn(string $f) => require $f)($secret) : [];
+  $key = is_array($sec) ? (string) ($sec['FLICKR_KEY'] ?? '') : '';
+  if ($key === '') $key = (string) (getenv('FLICKR_KEY') ?: '');
+  if (!preg_match('/^[0-9a-f]{32}$/i', $key)) fail(503, 'Flickr photos need a Flickr API key (FLICKR_KEY in map/secret_agent.php).');
+  $bbox = $_GET['bbox'] ?? '';
+  if (!preg_match('/^-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2},-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2}$/', $bbox)) fail(400, 'Bad bbox');
+  $b = array_map('floatval', explode(',', $bbox));
+  if ($b[2] - $b[0] > 0.11 || $b[3] - $b[1] > 0.11) fail(400, 'Area too large');
+  $commons = ($_GET['commons'] ?? '') === '1';
+  // Licence ids that allow reuse with credit: every Creative Commons licence (2.0 and 4.0), no known copyright restrictions,
+  // US Government work, CC0 and the Public Domain Mark. 0 (all rights reserved) is never requested.
+  $LIC = [1 => 'CC BY-NC-SA 2.0', 2 => 'CC BY-NC 2.0', 3 => 'CC BY-NC-ND 2.0', 4 => 'CC BY 2.0', 5 => 'CC BY-SA 2.0', 6 => 'CC BY-ND 2.0',
+          7 => 'No known copyright restrictions', 8 => 'United States Government Work', 9 => 'CC0 1.0', 10 => 'Public Domain Mark 1.0',
+          11 => 'CC BY 4.0', 12 => 'CC BY-SA 4.0', 13 => 'CC BY-ND 4.0', 14 => 'CC BY-NC 4.0', 15 => 'CC BY-NC-SA 4.0', 16 => 'CC BY-NC-ND 4.0'];
+  $q = ['method' => 'flickr.photos.search', 'api_key' => $key, 'bbox' => $bbox, 'has_geo' => 1, 'license' => implode(',', array_keys($LIC)),
+        'content_types' => 0, 'media' => 'photos', 'safe_search' => 1, 'sort' => 'interestingness-desc', 'per_page' => 250,
+        'extras' => 'geo,date_taken,owner_name,license,url_s,url_m', 'format' => 'json', 'nojsoncallback' => 1];
+  if ($commons) $q['is_commons'] = 'true';
+  $url = 'https://api.flickr.com/services/rest/?' . http_build_query($q);
+  set_time_limit(60);
+  // The cache key leaves the API key out, so a new key does not empty the cache.
+  out(cached($CACHE, 'fl1:' . $bbox . ':' . ($commons ? 'c' : 'a'), 86400, function () use ($url, $LIC) {
+    [$body, $code, $type] = fetch_url($url, 40);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j) || ($j['stat'] ?? '') !== 'ok') return [$body, $code === 200 ? 502 : $code, $type];   // Flickr errors come back as 200
+    $out = [];
+    foreach ($j['photos']['photo'] ?? [] as $ph) {
+      $lic = (int) ($ph['license'] ?? 0);
+      if (!isset($LIC[$lic]) || empty($ph['url_s']) || !is_numeric($ph['latitude'] ?? null) || (float) $ph['latitude'] == 0.0) continue;
+      $taken = (string) ($ph['datetaken'] ?? '');
+      $year = preg_match('/^(\d{4})/', $taken, $m) ? (int) $m[1] : null;
+      // Flickr fills an unknown date with the upload date; "unknown" dates are flagged by datetakenunknown.
+      if (!empty($ph['datetakenunknown'])) $year = null;
+      $out[] = ['type' => 'Feature', 'id' => (string) $ph['id'], 'geometry' => ['type' => 'Point', 'coordinates' => [round((float) $ph['longitude'], 5), round((float) $ph['latitude'], 5)]],
+        'properties' => ['id' => (string) $ph['id'], 'owner' => (string) ($ph['owner'] ?? ''), 'by' => mb_substr((string) ($ph['ownername'] ?? ''), 0, 80),
+          'title' => mb_substr((string) ($ph['title'] ?? ''), 0, 160), 'taken' => $year ? substr($taken, 0, 10) : '', 'from' => $year ?? 2100,
+          'licence' => $LIC[$lic], 'lid' => $lic, 'thumb' => (string) $ph['url_s'], 'img' => (string) ($ph['url_m'] ?? $ph['url_s'])]];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $out], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 3600);
 }
 
 if ($src === 'plaques') {

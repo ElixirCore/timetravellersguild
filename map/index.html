@@ -220,6 +220,11 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
     <select id="wiki-lang" aria-label="Wikipedia language"><option value="en">English</option><option value="cy">Cymraeg</option></select></div>
   <div class="st" id="st-wiki"></div>
   <div class="row"><label><input type="checkbox" id="l-photos" checked> Photos <span class="key">(Wikimedia Commons)</span></label></div>
+  <div class="row"><label><input type="checkbox" id="l-flickr" checked> Photos <span class="key">(Flickr, openly licensed)</span></label></div>
+  <div class="row" style="margin-left:23px"><label><input type="checkbox" id="l-flickr-commons"> Only The Commons <span class="key">(museums and archives)</span></label></div>
+  <div class="st" id="st-flickr"></div>
+  <div class="row"><label><input type="checkbox" id="l-mly" checked> Street-level photos <span class="key">(Mapillary · mostly 2014 on)</span></label></div>
+  <div class="st" id="st-mly"></div>
   <div class="st" id="st-photos"></div>
   <div class="row"><label><input type="checkbox" id="l-osmh" checked> Historic places <span class="key">(OpenStreetMap)</span></label></div>
   <div class="st" id="st-osmh"></div>
@@ -567,8 +572,9 @@ function setYear(y) {
   $('yr-v').textContent = fmtYear(YEAR);
   $('yr-note').textContent = YEAR >= 2100 ? 'Everything on record, any date.' : 'Showing only what existed or was named by ' + fmtYear(YEAR) + (STOPS[i][0] === YEAR && STOPS[i][1] ? ' · ' + STOPS[i][1] : '') + '.';
   const f = ['<=', ['get', 'from'], YEAR];
-  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit', 'he-plq', 'he-plq-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
+  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit', 'he-plq', 'he-plq-hit', 'flickr', 'flickr-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
   hideTip();
+  if (typeof mlyYear === 'function') mlyYear();
   if ($('oldmap').value === 'match') applyOldMap();
   else if (map.getSource('ohm')) OHM_LAYERS.forEach((l) => map.getLayer(l.id) && map.setFilter(l.id, ohmFilter()));
   return { year: YEAR, label: fmtYear(YEAR) };
@@ -863,7 +869,7 @@ map.on('load', () => { mapReady = true; });
 function heritage() {
   if (!mapReady) return; // the 'load' handler calls heritage() once sources exist
   const z = map.getZoom(), bb = map.getBounds();
-  wikiLoad(); photoLoad(); OSMH.load(); EVENTS.load(); heLoad();
+  wikiLoad(); photoLoad(); OSMH.load(); EVENTS.load(); heLoad(); flickrLoad(); mlyInit();
   for (const kind of ['sam', 'lb', 'nmrw', 'names']) {
     if (!$('l-' + kind).checked) continue;
     if (z < MINZ[kind]) { status('st-' + kind, 'Zoom in to see these (zoom ' + MINZ[kind] + '+).'); continue; }
@@ -897,7 +903,7 @@ map.on('click', async (e) => {
   const now = Date.now(), near = lastClick && now - lastClick.t < 350 && Math.hypot(e.point.x - lastClick.x, e.point.y - lastClick.y) < 24;
   lastClick = near ? null : { t: now, x: e.point.x, y: e.point.y };
   if (near) return tapPoint(e);
-  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'mly-hit', 'flickr-hit', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
   if (hit) {
     const p = hit.properties || {};
     if (hit.layer.id === 'graph-places') {
@@ -933,6 +939,7 @@ map.on('click', async (e) => {
       tipCurrent = { kind, p, ll: c }; hideTip();
       if (kind === 'lb-hit') map.setFilter('lb-hover', ['==', ['get', 'RecordNumber'], Number(p.RecordNumber)]);
       if (kind === 'photos-hit') selectPhoto(p, c);
+      if (kind === 'flickr-hit') selectPhoto({ flickr: true, img: p.img, title: p.title, date: p.taken, author: p.by + ' on Flickr' }, c);
       card(TIPS[kind].html(p));
       if (TIPS[kind].after) TIPS[kind].after(p, $('card-b'));
       return;
@@ -1063,7 +1070,7 @@ function photoHtml(p) {
 }
 let selectedPhoto = null;
 function selectPhoto(p, ll) {
-  const url = httpsOnly(p && p.thumb, /^(upload|thumb)\.wikimedia\.org$/);
+  const url = httpsOnly(p && p.thumb, /^(upload|thumb)\.wikimedia\.org$/) || httpsOnly(p && p.flickr && p.img, /^live\.staticflickr\.com$/);
   if (!url) return;
   selectedPhoto = { url, ll: ll || null, about: [p.title, p.dated ? 'taken ' + p.dated + ' (file date ' + (p.date || '?') + ', probably the scan)' : p.date ? 'taken ' + p.date : '', p.author ? 'by ' + p.author : '', 'Wikimedia Commons'].filter(Boolean).join(', ') };
   const w = $('see-what'); if (!w) return;
@@ -1272,6 +1279,105 @@ TIPS['he-plq-hit'] = { key: (p) => 'plq:' + p.id, html: plqHtml,
   ask: (p) => 'This plaque reads: "' + String(p.inscription || '').slice(0, 300) + '". Who was this, what did they do here, and what was this street like in their time? With sources.',
   name: (p) => String(p.inscription || 'Plaque').split(/[,.]/)[0].slice(0, 80), place: (p) => String(p.inscription || '').split(/[,.]/)[0].slice(0, 80) };
 
+/* ---------- Flickr: geotagged photos under open licences (proxy.php src=flickr, needs FLICKR_KEY) ----------
+   Images load straight from Flickr; each card credits the photographer, names the licence and links to the photo page. */
+const FLICKR = { cell: 0.05, minz: 13, cells: new Map(), data: new Map() };
+function flickrInit() {
+  if (map.getSource('flickr')) return;
+  map.addSource('flickr', { type: 'geojson', data: { type: 'FeatureCollection', features: [] },
+    attribution: 'Photos: <a href="https://www.flickr.com/" target="_blank" rel="noopener">Flickr</a> photographers (licence on each photo)' });
+  const vis = $('l-flickr').checked ? 'visible' : 'none', f = ['<=', ['get', 'from'], YEAR];
+  map.addLayer({ id: 'flickr', type: 'circle', source: 'flickr', minzoom: FLICKR.minz, filter: f, layout: { visibility: vis },
+    paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 3, 17, 6], 'circle-color': '#ff0084', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 1, 'circle-opacity': 0.85 } });
+  map.addLayer({ id: 'flickr-hit', type: 'circle', source: 'flickr', minzoom: FLICKR.minz, filter: f, layout: { visibility: vis },
+    paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 8, 17, 12], 'circle-color': '#000', 'circle-opacity': 0 } });
+}
+function flickrLoad() {
+  if (!mapReady || !$('l-flickr').checked) return;
+  if (!CFG.flickr) { status('st-flickr', 'Needs a Flickr API key (FLICKR_KEY in map/secret_agent.php).'); return; }
+  flickrInit();
+  if (map.getZoom() < FLICKR.minz) { status('st-flickr', 'Zoom in to see these (zoom ' + FLICKR.minz + '+).'); return; }
+  const c = map.getCenter(), cx = Math.floor(c.lng / FLICKR.cell), cy = Math.floor(c.lat / FLICKR.cell);
+  for (let x = cx - 1; x <= cx + 1; x++) for (let y = cy - 1; y <= cy + 1; y++) flickrCell(x, y);
+}
+async function flickrCell(cx, cy) {
+  const commons = $('l-flickr-commons').checked ? '1' : '0', key = commons + ':' + cx + ':' + cy;
+  if (FLICKR.cells.has(key)) return;
+  FLICKR.cells.set(key, 'pending');
+  const b = [cx * FLICKR.cell, cy * FLICKR.cell, (cx + 1) * FLICKR.cell, (cy + 1) * FLICKR.cell].map((n) => n.toFixed(2)).join(',');
+  try {
+    const r = await slowFetch(P({ src: 'flickr', bbox: b, commons }));
+    if (!r.ok) throw new Error(r.status === 503 ? 'no Flickr key on the server' : 'HTTP ' + r.status);
+    const fc = await r.json();
+    (fc.features || []).forEach((f) => { f.properties.set = commons; FLICKR.data.set(commons + ':' + f.id, f); });
+    flickrShow();
+  } catch (e) { FLICKR.cells.delete(key); status('st-flickr', 'Could not load (' + e.message + ').', true); }
+}
+function flickrShow() {
+  const commons = $('l-flickr-commons').checked ? '1' : '0', feats = [...FLICKR.data.values()].filter((f) => f.properties.set === commons);
+  if (map.getSource('flickr')) map.getSource('flickr').setData({ type: 'FeatureCollection', features: feats });
+  status('st-flickr', feats.length ? feats.length + ' in view so far' : 'None here yet.');
+}
+$('l-flickr').addEventListener('change', (e) => { if (!mapReady) return; if (CFG.flickr) flickrInit(); ['flickr', 'flickr-hit'].forEach((l) => map.getLayer(l) && map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none')); if (e.target.checked) flickrLoad(); });
+$('l-flickr-commons').addEventListener('change', () => { flickrShow(); flickrLoad(); });
+function flickrHtml(p) {
+  const img = httpsOnly(p.img || p.thumb, /^live\.staticflickr\.com$/);
+  const owner = /^[\w@-]{3,40}$/.test(String(p.owner || '')) ? String(p.owner) : '', id = /^\d{1,20}$/.test(String(p.id || '')) ? String(p.id) : '';
+  const page = owner && id ? 'https://www.flickr.com/photos/' + encodeURIComponent(owner) + '/' + id : '';
+  return '<div class="lbx"><p class="lbx-kind">PHOTO · FLICKR' + (p.taken ? ' · ' + esc(p.taken.slice(0, 4)) : '') + '</p>'
+    + (img ? '<a class="lbx-photo" href="' + esc(page || img) + '" target="_blank" rel="noopener noreferrer"><img alt="' + esc(p.title || 'Photo') + '" referrerpolicy="no-referrer" src="' + esc(img) + '"></a>' : '')
+    + '<h3>' + esc(p.title || 'Untitled') + '</h3>'
+    + '<dl>' + tipRow('Taken', p.taken || 'date not recorded') + tipRow('By', p.by) + tipRow('Licence', p.licence) + '</dl>' + tipActs(page, 'Flickr') + '</div>';
+}
+TIPS['flickr-hit'] = { key: (p) => 'fl:' + p.id, html: flickrHtml,
+  ask: (p) => 'This Flickr photo is "' + (p.title || '') + '"' + (p.taken ? ', taken ' + p.taken : '') + '. What is it, and how has this place changed over time? With sources.',
+  name: (p) => p.title, place: (p) => p.title };
+
+/* ---------- Mapillary: street-level photos worldwide (CC BY-SA 4.0), from Mapillary's own vector tiles ----------
+   Green lines show where someone drove or walked with a camera; from zoom 16 each photo is a dot. A click fetches that photo.
+   Needs a Mapillary client token (MAPILLARY_TOKEN in map/secret_agent.php), which is made to be used in the browser. */
+const MLY_TILES = 'https://tiles.mapillary.com/maps/vtp/mly1_public/2/{z}/{x}/{y}?access_token=';
+// Only photos taken by the end of the slider's year (Mapillary keeps capture time in milliseconds).
+const mlyFilter = () => ['<=', ['get', 'captured_at'], YEAR >= 2100 ? 9e15 : Date.UTC(YEAR + 1, 0, 1)];
+function mlyYear() { ['mly-seq', 'mly-img', 'mly-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, mlyFilter())); }
+function mlyInit() {
+  if (!mapReady || !$('l-mly').checked) return;
+  if (!CFG.mapillary) { status('st-mly', 'Needs a Mapillary token (MAPILLARY_TOKEN in map/secret_agent.php).'); return; }
+  if (map.getSource('mly')) return;
+  map.addSource('mly', { type: 'vector', tiles: [MLY_TILES + encodeURIComponent(CFG.mapillary)], minzoom: 6, maxzoom: 14,
+    attribution: 'Street-level photos: <a href="https://www.mapillary.com/" target="_blank" rel="noopener">Mapillary</a> contributors, CC BY-SA 4.0' });
+  map.addLayer({ id: 'mly-seq', type: 'line', source: 'mly', 'source-layer': 'sequence', minzoom: 12, filter: mlyFilter(),
+    paint: { 'line-color': '#05cb63', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 17, 3], 'line-opacity': 0.55 } });
+  map.addLayer({ id: 'mly-img', type: 'circle', source: 'mly', 'source-layer': 'image', minzoom: 16, filter: mlyFilter(),
+    paint: { 'circle-radius': 4, 'circle-color': '#05cb63', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 1 } });
+  map.addLayer({ id: 'mly-hit', type: 'circle', source: 'mly', 'source-layer': 'image', minzoom: 16, filter: mlyFilter(),
+    paint: { 'circle-radius': 10, 'circle-color': '#000', 'circle-opacity': 0 } });
+  status('st-mly', 'Green lines from zoom 12; zoom in to 16 to pick a photo.');
+}
+$('l-mly').addEventListener('change', (e) => {
+  if (e.target.checked) mlyInit();
+  ['mly-seq', 'mly-img', 'mly-hit'].forEach((l) => map.getLayer(l) && map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none'));
+});
+// The tile only carries the photo's id: fetch its picture and details when it is opened.
+async function mlyFill(p, root) {
+  const el = root && root.querySelector('[data-mly]'); if (!el || !/^\d{1,25}$/.test(String(p.id))) return;
+  try {
+    const r = await fetch('https://graph.mapillary.com/' + p.id + '?fields=thumb_1024_url,captured_at,creator,compass_angle&access_token=' + encodeURIComponent(CFG.mapillary));
+    const j = await r.json(); if (!r.ok || !j.thumb_1024_url) throw new Error((j.error && j.error.message) || 'HTTP ' + r.status);
+    const img = httpsOnly(j.thumb_1024_url, /(^|\.)(fbcdn\.net|mapillary\.com)$/), page = 'https://www.mapillary.com/app/?pKey=' + p.id + '&focus=photo';
+    const by = j.creator && j.creator.username ? String(j.creator.username) : '';
+    el.innerHTML = (img ? '<a class="lbx-photo" href="' + esc(page) + '" target="_blank" rel="noopener noreferrer"><img alt="Street-level photo" referrerpolicy="no-referrer" src="' + esc(img) + '"></a>' : '')
+      + '<dl>' + tipRow('Taken', j.captured_at ? new Date(j.captured_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '')
+      + tipRow('By', by ? by + ' on Mapillary' : '') + tipRow('Facing', Number.isFinite(j.compass_angle) ? ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'][Math.round(((j.compass_angle % 360) + 360) % 360 / 45) % 8] : '')
+      + tipRow('Licence', 'CC BY-SA 4.0') + '</dl>';
+  } catch (e) { el.innerHTML = '<p class="lbx-ex">Could not fetch this photo (' + esc(e.message) + ').</p>'; }
+}
+TIPS['mly-hit'] = { key: (p) => 'mly:' + p.id, after: mlyFill,
+  html: (p) => '<div class="lbx"><p class="lbx-kind">STREET-LEVEL PHOTO · MAPILLARY' + (p.captured_at ? ' · ' + new Date(p.captured_at).getFullYear() : '') + '</p>'
+    + '<div data-mly><p class="lbx-ex">Fetching the photo…</p></div>' + tipActs('https://www.mapillary.com/app/?pKey=' + encodeURIComponent(p.id) + '&focus=photo', 'Mapillary') + '</div>',
+  ask: () => 'I am looking at a recent street-level photo here. How has this street changed over the last two hundred years? With sources.',
+  name: () => 'Street-level photo', place: () => '' };
+
 const lbTip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, closeOnMove: false, focusAfterOpen: false, maxWidth: '300px', offset: 12, className: 'lb-tip' });
 let tipCurrent = null, tipKey = '', tipShowT = 0, tipHideT = 0;
 function hideTip() {
@@ -1304,7 +1410,7 @@ document.addEventListener('click', (e) => {
   else if (b.dataset.lb === 'stamp') addToPassport(b, String(t.name(p) || 'Place'), ll[0] != null ? +ll[0].toFixed(5) : null, ll[1] != null ? +ll[1].toFixed(5) : null);
 });
 
-['graph-places', 'stamps', 'pods', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
+['graph-places', 'stamps', 'pods', 'mly-hit', 'flickr-hit', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
   map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
 });
