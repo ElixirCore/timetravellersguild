@@ -1,45 +1,54 @@
 <?php
 /*
- * Guild game: state and rules for authored episodes on the Passport Map.
- * Storage: people/data/game.sqlite (its own file; never touches arg.sqlite, the trails or the passport register).
- * No model calls. Plot, rules and Jack's lines come from episode.php; state transitions are enforced here.
+ * The Desk: what travellers bring to the Passport Map, and what other travellers do with it.
+ *
+ *   A traveller LODGES something real at a place: a recollection, an object, a photograph or document, a name, a question.
+ *   They say how they know it, and who may see it.
+ *   Other travellers add HANDS to it: witness it, remember it differently, correct it with a source, or carry it to another
+ *   place where it connects. Every hand is kept. Contradiction is kept, not resolved.
+ *   Only the Keeper can accept an item to the Guild record (canon requires accountable human acceptance).
+ *
+ * Jack clerks, he does not author: the classification comes from what the traveller says about how they know,
+ * the standing comes from the hands, and his lines are fixed filing slips. No model calls. No Common Room posts.
+ *
+ * Storage: people/data/game.sqlite. The earlier episode tables (game_runs, game_stubs, game_custody) are left as they are.
  */
 declare(strict_types=1);
 
 require_once dirname(__DIR__, 2) . '/people/inc/db.php';
 
+const GAME_KEEPERS = [1];   // user ids who may accept items to the record (1 = Toby Godden, Keeper of Recollection)
+
+const GAME_KINDS = ['recollection' => 'Recollection', 'object' => 'Object', 'document' => 'Photograph or document', 'name' => 'Name', 'question' => 'Question'];
+// How the traveller knows it decides the class. Jack does not upgrade it.
+const GAME_HOW = [
+    'there' => ['label' => 'I was there', 'class' => 'OBSERVATION'],
+    'told' => ['label' => 'I was told', 'class' => 'TESTIMONY'],
+    'family' => ['label' => 'It is kept in my family', 'class' => 'RECOLLECTION'],
+    'documented' => ['label' => 'It is documented (give the source)', 'class' => 'RECORD'],
+    'asking' => ['label' => "I don't know: I'm asking", 'class' => 'OPEN QUESTION'],
+];
+const GAME_ACTS = ['witness' => 'witnessed it', 'differ' => 'remembers it differently', 'correct' => 'corrected it with a source', 'carry' => 'carried it'];
+
 function game_db(): PDO {
     static $pdo;
     if ($pdo instanceof PDO) return $pdo;
-    $path = dirname(__DIR__, 2) . '/people/data/game.sqlite';
-    $pdo = new PDO('sqlite:' . $path, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_TIMEOUT => 5]);
+    $pdo = new PDO('sqlite:' . dirname(__DIR__, 2) . '/people/data/game.sqlite', null, null,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_TIMEOUT => 5]);
     $pdo->exec('PRAGMA journal_mode = WAL'); $pdo->exec('PRAGMA busy_timeout = 5000');
     $pdo->exec("
-      CREATE TABLE IF NOT EXISTS game_runs (
-        user_id INTEGER NOT NULL, ep TEXT NOT NULL, started_at INTEGER NOT NULL, finished_at INTEGER,
-        PRIMARY KEY (user_id, ep));
-      -- One row per traveller per stub: their own carbon copy of the receipt.
-      CREATE TABLE IF NOT EXISTS game_stubs (
-        user_id INTEGER NOT NULL, ep TEXT NOT NULL, stub TEXT NOT NULL,
-        state TEXT NOT NULL DEFAULT 'found',        -- found | returned | kept
-        ret_year INTEGER, lng REAL, lat REAL,
-        receipt TEXT NOT NULL DEFAULT '', audience TEXT NOT NULL DEFAULT 'me',   -- me | guild
-        found_at INTEGER NOT NULL, decided_at INTEGER,
-        PRIMARY KEY (user_id, ep, stub));
-      -- Receipt 0001 is one shared object. Each traveller who reaches it may move it once; the chain is kept.
-      CREATE TABLE IF NOT EXISTS game_custody (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, ep TEXT NOT NULL, stub TEXT NOT NULL, user_id INTEGER NOT NULL,
-        action TEXT NOT NULL,                        -- returned | signed | unsigned
-        note TEXT NOT NULL DEFAULT '', audience TEXT NOT NULL DEFAULT 'me', lng REAL, lat REAL, created_at INTEGER NOT NULL,
-        UNIQUE (ep, stub, user_id));
-      CREATE INDEX IF NOT EXISTS idx_game_stubs_ep ON game_stubs(ep, stub, state);
+      CREATE TABLE IF NOT EXISTS desk_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, kind TEXT NOT NULL, how TEXT NOT NULL, body TEXT NOT NULL,
+        source_url TEXT NOT NULL DEFAULT '', near_title TEXT NOT NULL DEFAULT '', near_url TEXT NOT NULL DEFAULT '',
+        lng REAL NOT NULL, lat REAL NOT NULL, year INTEGER, audience TEXT NOT NULL DEFAULT 'me',
+        accepted_by INTEGER, accepted_at INTEGER, created_at INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS desk_hands (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, item_id INTEGER NOT NULL, user_id INTEGER NOT NULL, act TEXT NOT NULL, body TEXT NOT NULL DEFAULT '',
+        source_url TEXT NOT NULL DEFAULT '', lng REAL, lat REAL, place TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL);
+      CREATE INDEX IF NOT EXISTS idx_desk_items_pos ON desk_items(lat, lng);
+      CREATE INDEX IF NOT EXISTS idx_desk_hands_item ON desk_hands(item_id, id);
     ");
     return $pdo;
-}
-
-function game_episode(): array {
-    static $ep;
-    return $ep ??= require __DIR__ . '/episode.php';
 }
 
 function game_json(array $data, int $code = 200): never {
@@ -57,101 +66,78 @@ function game_clean(string $s, int $max): string {
     return mb_substr($s, 0, $max);
 }
 
+/** An http(s) link or ''. */
+function game_url($u): string {
+    $u = trim((string) $u);
+    if ($u === '' || mb_strlen($u) > 500 || !preg_match('#^https?://[^\s<>"]+$#i', $u)) return '';
+    return $u;
+}
+
 function game_name(int $uid): string {
     $u = ttg_user_by_id($uid);
     return $u ? (string) $u['display_name'] : 'A traveller';
 }
 
-/** Metres between two points. */
-function game_dist(float $lat1, float $lng1, float $lat2, float $lng2): float {
-    $t = M_PI / 180; $dLat = ($lat2 - $lat1) * $t; $dLng = ($lng2 - $lng1) * $t;
-    $a = sin($dLat / 2) ** 2 + cos($lat1 * $t) * cos($lat2 * $t) * sin($dLng / 2) ** 2;
-    return 2 * 6371000 * asin(min(1, sqrt($a)));
-}
+function game_is_keeper(int $uid): bool { return in_array($uid, GAME_KEEPERS, true); }
 
-/** A traveller's own stubs, keyed A..D. */
-function game_my_stubs(int $uid, string $ep): array {
-    $st = game_db()->prepare('SELECT * FROM game_stubs WHERE user_id = ? AND ep = ?');
-    $st->execute([$uid, $ep]);
-    $out = [];
-    foreach ($st->fetchAll() as $r) $out[$r['stub']] = $r;
-    return $out;
-}
-
-/** Which stub the traveller should look for next, or null. A, B, C in order; D once A to C are decided. */
-function game_next_stub(array $mine): ?string {
-    foreach (['A', 'B', 'C'] as $k) if (!isset($mine[$k])) return $k;
-    foreach (['A', 'B', 'C'] as $k) if ($mine[$k]['state'] === 'found') return null; // decide what you hold first
-    return isset($mine['D']) ? null : 'D';
-}
-
-function game_decided_count(array $mine): int {
-    $n = 0;
-    foreach (['A', 'B', 'C'] as $k) if (isset($mine[$k]) && $mine[$k]['state'] !== 'found') $n++;
-    return $n;
-}
+/** May this traveller see this item? Their own, or anything shared with travellers. */
+function game_visible(array $it, int $uid): bool { return $it['audience'] === 'travellers' || (int) $it['user_id'] === $uid; }
 
 /**
- * The shared Jack: what he still remembers, given every traveller's decisions.
- * A stub's memory is HELD while nobody has returned it, FRAYING while keeps at least match returns, GONE once returns outnumber keeps.
- * Receipt 0001 follows the head of its custody chain.
+ * Standing, from the hands, never from Jack's opinion.
+ * ACCEPTED (Keeper) > DISPUTED (any differ or correct) > WITNESSED (another traveller witnessed it) > LODGED.
  */
-function game_memory(string $ep, int $uid): array {
-    $db = game_db(); $E = game_episode(); $out = [];
-    foreach (['A', 'B', 'C'] as $k) {
-        $st = $db->prepare("SELECT SUM(state = 'returned') r, SUM(state = 'kept') k, COUNT(*) n FROM game_stubs WHERE ep = ? AND stub = ? AND state != 'found'");
-        $st->execute([$ep, $k]); $c = $st->fetch();
-        $r = (int) ($c['r'] ?? 0); $kp = (int) ($c['k'] ?? 0);
-        $state = $r === 0 ? 'held' : ($kp >= $r ? 'fraying' : 'gone');
-        $rc = $db->prepare("SELECT user_id, receipt, ret_year, decided_at FROM game_stubs WHERE ep = ? AND stub = ? AND state = 'returned' AND audience = 'guild' AND receipt != '' ORDER BY decided_at DESC LIMIT 6");
-        $rc->execute([$ep, $k]);
-        $out[$k] = ['stub' => $k, 'no' => $E['stubs'][$k]['no'], 'name' => $E['stubs'][$k]['name'], 'state' => $state, 'returned' => $r, 'kept' => $kp,
-            'memory' => $state === 'gone' ? null : $E['stubs'][$k]['memory'],
-            'receipts' => array_map(fn($x) => ['who' => game_name((int) $x['user_id']), 'mine' => (int) $x['user_id'] === $uid, 'text' => $x['receipt'], 'year' => $x['ret_year'] !== null ? (int) $x['ret_year'] : null], $rc->fetchAll())];
+function game_standing(array $it, array $hands): string {
+    if ($it['accepted_at']) return 'ACCEPTED';
+    $owner = (int) $it['user_id']; $disputed = false; $witnessed = false;
+    foreach ($hands as $h) {
+        if (in_array($h['act'], ['differ', 'correct'], true)) $disputed = true;
+        if ($h['act'] === 'witness' && (int) $h['user_id'] !== $owner) $witnessed = true;
     }
-    $chain = game_chain($ep, $uid);
-    $head = $chain ? end($chain)['action'] : null;
-    $out['D'] = ['stub' => 'D', 'no' => '0001', 'name' => $E['stubs']['D']['name'], 'state' => $head === 'returned' ? 'gone' : ($head === 'unsigned' ? 'open' : 'held'),
-        'head' => $head, 'memory' => $head === 'returned' ? null : $E['stubs']['D']['memory'], 'receipts' => []];
-    return $out;
+    return $disputed ? 'DISPUTED' : ($witnessed ? 'WITNESSED' : 'LODGED');
 }
 
-/** Receipt 0001's custody chain, oldest first. Private entries show the action but not the name or note. */
-function game_chain(string $ep, int $uid): array {
-    $st = game_db()->prepare("SELECT * FROM game_custody WHERE ep = ? AND stub = 'D' ORDER BY id ASC");
-    $st->execute([$ep]);
-    return array_map(function ($r) use ($uid) {
-        $public = $r['audience'] === 'guild'; $mine = (int) $r['user_id'] === $uid;
-        return ['action' => $r['action'], 'who' => ($public || $mine) ? game_name((int) $r['user_id']) : 'A traveller', 'mine' => $mine,
-            'note' => ($public || $mine) ? $r['note'] : '', 'private' => !$public, 'at' => (int) $r['created_at']];
-    }, $st->fetchAll());
+/** Jack's filing note: fixed lines chosen by state. The quoted sentences are Guild record (Trailhead Register 13, card 04). */
+function game_slip(array $it, array $hands, string $standing): string {
+    $class = GAME_HOW[$it['how']]['class'] ?? 'TESTIMONY';
+    $others = array_unique(array_map(fn($h) => (int) $h['user_id'], array_filter($hands, fn($h) => (int) $h['user_id'] !== (int) $it['user_id'])));
+    $n = 1 + count($others);
+    $hand = $n === 1 ? 'One hand.' : $n . ' hands.';
+    return match ($standing) {
+        'ACCEPTED' => "Accepted to the record by the Keeper. Filed as $class. $hand",
+        'DISPUTED' => "Filed as $class. $hand The accounts disagree. \"Contradiction is not corruption while both sources remain intact.\" Both are kept.",
+        'WITNESSED' => "Filed as $class. $hand Witnessed. Not yet accepted to the record.",
+        default => $it['how'] === 'asking'
+            ? "Filed as an open question. $hand Nobody has answered it yet."
+            : "Filed as $class. $hand \"Leave it open until another witness can alter its standing.\"",
+    };
 }
 
-/** (unused in the simplified loop) Guild-visible set-down points from other travellers, for the map. Never live locations: only where someone chose to leave a stub, inside its ring. */
-function game_marks(string $ep, int $uid): array {
-    $st = game_db()->prepare("SELECT user_id, stub, ret_year, lng, lat, receipt, audience FROM game_stubs WHERE ep = ? AND state = 'returned' AND lng IS NOT NULL AND (audience = 'guild' OR user_id = ?)");
-    $st->execute([$ep, $uid]);
-    $marks = array_map(fn($r) => ['stub' => $r['stub'], 'year' => $r['ret_year'] !== null ? (int) $r['ret_year'] : null, 'lng' => (float) $r['lng'], 'lat' => (float) $r['lat'],
-        'who' => game_name((int) $r['user_id']), 'mine' => (int) $r['user_id'] === $uid, 'receipt' => $r['receipt'], 'private' => $r['audience'] !== 'guild'], $st->fetchAll());
-    $cs = game_db()->prepare("SELECT user_id, action, note, audience, lng, lat FROM game_custody WHERE ep = ? AND lng IS NOT NULL AND (audience = 'guild' OR user_id = ?) ORDER BY id");
-    $cs->execute([$ep, $uid]);
-    foreach ($cs->fetchAll() as $r) $marks[] = ['stub' => 'D', 'action' => $r['action'], 'lng' => (float) $r['lng'], 'lat' => (float) $r['lat'], 'who' => game_name((int) $r['user_id']),
-        'mine' => (int) $r['user_id'] === $uid, 'receipt' => $r['note'], 'private' => $r['audience'] !== 'guild'];
-    return $marks;
+function game_hand_view(array $h, int $uid): array {
+    return ['id' => (int) $h['id'], 'act' => $h['act'], 'did' => GAME_ACTS[$h['act']] ?? $h['act'], 'who' => game_name((int) $h['user_id']), 'mine' => (int) $h['user_id'] === $uid,
+        'body' => $h['body'], 'source_url' => $h['source_url'], 'place' => $h['place'],
+        'lng' => $h['lng'] !== null ? (float) $h['lng'] : null, 'lat' => $h['lat'] !== null ? (float) $h['lat'] : null, 'at' => (int) $h['created_at']];
 }
 
-/** The client view of a stub. Text is only sent once the traveller has found it, so the plot is not in the page source ahead of play. */
-function game_stub_view(string $k, ?array $row, bool $active): array {
-    $s = game_episode()['stubs'][$k];
-    $v = ['stub' => $k, 'no' => $s['no'], 'name' => $s['name'], 'place' => $s['place'], 'state' => $row['state'] ?? ($active ? 'seeking' : 'unseen')];
-    if ($active || $row) $v += ['at' => ['lat' => $s['ring']['lat'], 'lng' => $s['ring']['lng']], 'year' => $s['year']];
-    if ($row) {
-        $v += ['front' => $s['front'], 'back' => $s['back'], 'real' => $s['real'], 'ask' => $s['ask'], 'canon' => $s['canon'] ?? null,
-            'memory' => $s['memory'], 'lost' => $s['lost'] ?? null, 'choices' => $s['choices'] ?? null,
-            'ret_year' => $row['ret_year'] !== null ? (int) $row['ret_year'] : null, 'receipt' => $row['receipt'], 'audience' => $row['audience'],
-            'lng' => $row['lng'] !== null ? (float) $row['lng'] : null, 'lat' => $row['lat'] !== null ? (float) $row['lat'] : null];
-        if ($row['state'] === 'returned' && $row['ret_year'] !== null) $v['said'] = ($s['returned'][(int) $row['ret_year']] ?? '') . ' ' . ($s['after_return'] ?? '');
-        if ($row['state'] === 'kept') $v['said'] = $s['kept'] ?? '';
+function game_hands(int $itemId): array {
+    $st = game_db()->prepare('SELECT * FROM desk_hands WHERE item_id = ? ORDER BY id'); $st->execute([$itemId]);
+    return $st->fetchAll();
+}
+
+function game_item_view(array $it, int $uid, bool $full): array {
+    $hands = game_hands((int) $it['id']);
+    $standing = game_standing($it, $hands);
+    $v = ['id' => (int) $it['id'], 'kind' => $it['kind'], 'kind_label' => GAME_KINDS[$it['kind']] ?? $it['kind'], 'how' => $it['how'],
+        'class' => GAME_HOW[$it['how']]['class'] ?? 'TESTIMONY', 'how_label' => GAME_HOW[$it['how']]['label'] ?? '',
+        'body' => $it['body'], 'who' => game_name((int) $it['user_id']), 'mine' => (int) $it['user_id'] === $uid,
+        'lng' => (float) $it['lng'], 'lat' => (float) $it['lat'], 'year' => $it['year'] !== null ? (int) $it['year'] : null,
+        'audience' => $it['audience'], 'standing' => $standing, 'hands' => count($hands), 'at' => (int) $it['created_at']];
+    // Where it has been carried, for the line on the map.
+    $v['route'] = array_values(array_map(fn($h) => [(float) $h['lng'], (float) $h['lat']], array_filter($hands, fn($h) => $h['act'] === 'carry' && $h['lng'] !== null)));
+    if ($full) {
+        $v += ['source_url' => $it['source_url'], 'near_title' => $it['near_title'], 'near_url' => $it['near_url'],
+            'slip' => game_slip($it, $hands, $standing), 'hand_list' => array_map(fn($h) => game_hand_view($h, $uid), $hands),
+            'accepted_by' => $it['accepted_by'] ? game_name((int) $it['accepted_by']) : null];
     }
     return $v;
 }

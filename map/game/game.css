@@ -6,50 +6,47 @@
 #desk-fold{font-size:10px;padding:2px 6px}
 #desk.folded #desk-b{display:none}
 #desk-b{overflow:auto;padding:10px 12px;min-height:0}
-#desk .k{margin:0 0 6px;font-size:10px;letter-spacing:.12em;color:var(--ink-2)}
+#desk .k{margin:10px 0 6px;font-size:10px;letter-spacing:.12em;color:var(--ink-2)}
 #desk .jk{margin:0 0 8px;padding-left:10px;border-left:2px solid var(--red);font-size:12.5px;line-height:1.5}
-#desk .small{font-size:10.5px;color:var(--ink-2);margin:6px 0}
+#desk .small{font-size:11px;color:var(--ink-2);margin:6px 0}
+#desk .err{color:var(--red);font-size:11.5px;margin:0 0 8px}
 #desk .acts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}
-#desk .acts button{padding:7px 12px;font-weight:600;letter-spacing:.06em}
+#desk .acts button{padding:6px 11px;font-weight:600}
 #desk .acts button.go{background:var(--red);color:var(--paper-2);border-color:var(--ink)}
-#desk button.link{border:0;background:none;color:var(--red);padding:0;text-decoration:underline}
-#desk .tg{display:inline-block;font-size:9px;letter-spacing:.12em;padding:0 4px;border:1px solid currentColor;margin-right:4px;vertical-align:1px}
-#desk .tg-fiction{color:#7a4a00}
-#desk .tg-real{color:#1e5a8c}
-#desk .tg-canon{color:var(--red)}
-#desk .stub{margin:0 0 8px}
-#desk .front{margin:0 0 6px;padding:8px 10px;background:#f6efd8;border:1px solid var(--rule);font-size:12.5px;
-  background-image:radial-gradient(circle at 8px 50%,var(--paper-2) 2.5px,transparent 3px);background-size:100% 14px;padding-left:18px}
-#desk .back{margin:0 0 8px;font-style:italic}
-#desk .back span{font-style:normal;color:var(--ink-2);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
-#desk .real{border-top:1px dashed var(--rule);padding:6px 0;font-size:11.5px}
-#desk .real p{margin:4px 0}
-#desk .real a{color:var(--red);font-size:11px}
-#desk .mem-now{margin:0 0 6px;font-style:italic}
-#desk .mem-gone{margin:0 0 6px;color:var(--ink-2)}
-#desk .nt{display:block;font-size:10.5px;color:var(--ink-2);margin-top:8px}
-#desk textarea{display:block;width:100%;margin-top:3px;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:5px;resize:vertical}
-#desk .aud{display:flex;gap:6px;align-items:center;font-size:10.5px;margin-top:5px;cursor:pointer}
-#desk .aud input{accent-color:var(--red);margin:0}
-#desk .says{margin:6px 0;padding-left:16px;font-size:11px}
-#desk .chain{margin:0 0 8px;padding-left:18px;font-size:11.5px}
-#desk .reg{margin:0 0 8px;padding-left:16px}
-#desk .rev{margin:8px 0;padding:8px;background:rgba(179,38,30,.06);border:1px dashed var(--red)}
-#desk .rev summary{cursor:pointer;font-size:11px}
-#desk .file{border-top:1px dashed var(--rule);margin-top:10px;padding-top:6px}
-#desk .file summary{cursor:pointer;font-size:11px;letter-spacing:.06em}
-#desk .file summary small{color:var(--ink-2)}
-#desk .file ul{list-style:none;margin:6px 0 0;padding:0}
-#desk .mem{padding:5px 0;border-bottom:1px dotted var(--rule);font-size:11.5px}
-#desk .mem p{margin:3px 0}
-#desk .mem small{color:var(--ink-2);font-size:9.5px;letter-spacing:.08em}
-#desk .mem-gone b,#desk .mem-gone>p:first-of-type{color:var(--ink-2)}
-#desk .mem-fraying p{color:var(--ink-2)}
-#desk .mem-left{font-size:10px;color:var(--ink-2)}
-#desk .rc{margin:0;padding-left:14px;font-size:11px}
-#desk .err{color:var(--red);font-size:11.5px}
+#desk .small-acts button{font-size:11px;padding:4px 8px;font-weight:400}
+#desk button.link{border:0;background:none;color:var(--red);padding:0;text-decoration:underline;font-size:11px}
+#desk a{color:var(--red)}
+#desk .items{list-style:none;margin:0;padding:0}
+#desk .row-b{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px dotted var(--rule);padding:6px 2px}
+#desk .row-b:hover{background:rgba(179,38,30,.07)}
+#desk .row-b .ln{display:block;margin:2px 0}
+#desk .row-b small{color:var(--ink-2);font-size:10px}
+#desk .st{font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:0 4px;border:1px solid var(--rule);margin-left:4px}
+#desk .st-witnessed{color:var(--red);border-color:var(--red)}
+#desk .st-disputed{color:#8a5a00;border-color:#e0a03e}
+#desk .st-accepted{background:var(--ink);color:var(--paper-2)}
+#desk .body{white-space:pre-wrap;margin:0 0 8px;font-size:12.5px;line-height:1.5}
+#desk dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:0 0 10px;font-size:11px}
+#desk dt{color:var(--ink-2)} #desk dd{margin:0;word-break:break-word}
+#desk .hands{margin:0 0 8px;padding-left:18px;font-size:11.5px}
+#desk .hands li{margin-bottom:6px}
+#desk .hands small{color:var(--ink-2)}
+#desk form label{display:block;font-size:10.5px;color:var(--ink-2);margin:7px 0 0}
+#desk form label.chk{display:flex;gap:6px;align-items:flex-start;color:var(--ink);font-size:11px}
+#desk form label.chk input{accent-color:var(--red);margin:2px 0 0}
+#desk fieldset{border:0;padding:0;margin:8px 0 0}
+#desk legend{font-size:10.5px;color:var(--ink-2);padding:0}
+#desk textarea,#desk input[type=url],#desk input[name=place],#desk select{display:block;width:100%;margin-top:3px;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:5px}
+#desk textarea{resize:vertical}
+#desk .hand-f{border-top:1px dashed var(--rule);margin-top:6px}
+/* the cross marking the place being lodged or carried to: the map's centre, inside the clear area */
+#desk-cross{display:none;position:fixed;z-index:3;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;pointer-events:none;
+  background:linear-gradient(var(--red),var(--red)) center/2px 100% no-repeat,linear-gradient(var(--red),var(--red)) center/100% 2px no-repeat;
+  border:2px solid var(--red);border-radius:50%;box-shadow:0 0 0 2px var(--paper-2)}
+body.desk-placing #desk-cross{display:block}
 .side.asking #desk{max-height:34%}
 @media (max-width:640px){
-  #desk{max-height:44dvh}
-  .side:not(.asking) #desk ~ .card{max-height:24dvh}
+  #desk{max-height:46dvh}
+  /* on a phone the Desk sits on top: put the cross in the map that is left below it */
+  #desk-cross{top:74%}
 }

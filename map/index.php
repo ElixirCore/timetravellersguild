@@ -48,8 +48,8 @@ if ($interface) {
     $html = str_replace('</body>', '<script src="/map/arg/interface.js?v=1" defer></script></body>', $html);
 }
 if ($play) {
-    $inject .= '<link rel="stylesheet" href="/map/game/game.css?v=1">';
+    $inject .= '<link rel="stylesheet" href="/map/game/game.css?v=2">';
     $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>The Desk — Time Travellers Guild</title>', $html);
-    $html = str_replace('</body>', '<script src="/map/game/game.js?v=1" defer></script></body>', $html);
+    $html = str_replace('</body>', '<script src="/map/game/game.js?v=2" defer></script></body>', $html);
 }
 echo str_replace('</head>', $inject . '</head>', $html);
