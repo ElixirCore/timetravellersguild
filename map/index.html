@@ -555,6 +555,7 @@ function setYear(y) {
   return { year: YEAR, label: fmtYear(YEAR) };
 }
 $('yr').oninput = (e) => setYear(STOPS[+e.target.value][0]);
+window.ttgSetYear = setYear; // used by the game on /map/play/
 
 /* ---------- slow sources (Overpass, Wikidata, Commons, Wikipedia) share one lane: at most 2 at a time ----------
    On shared hosting each slow request holds a PHP process for up to ~40 s; firing many at once starved quick

@@ -89,7 +89,7 @@ function ttg_csrf_token(): string {
  * `next` value can never become an open redirect. Returns '' if not allowed.
  */
 function ttg_auth_next(string $next): string {
-    return preg_match('#^/(?:join/\?welcome=1|map/(?:interface/)?|passport/|people/chat/(?:\?c=\d{1,10})?)$#', $next) === 1 ? $next : '';
+    return preg_match('#^/(?:join/\?welcome=1|map/(?:interface/|play/)?|passport/|people/chat/(?:\?c=\d{1,10})?)$#', $next) === 1 ? $next : '';
 }
 
 function ttg_cookie_secure(): bool

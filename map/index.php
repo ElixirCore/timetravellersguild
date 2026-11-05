@@ -4,9 +4,11 @@ require_once __DIR__ . '/../people/inc/db.php';
 
 // /map/interface/ includes this file with $TTG_INTERFACE = true: the same map, in the Guild's cyberpunk ARG skin.
 $interface = !empty($TTG_INTERFACE);
+// /map/play/ includes this file with $TTG_PLAY = true: the same parchment map, with the Guild game docked beside it.
+$play = !empty($TTG_PLAY);
 $user = ttg_current_user();
 if (!$user) {
-    header('Location: ' . ttg_base('auth/?next=' . urlencode($interface ? '/map/interface/' : '/map/')));
+    header('Location: ' . ttg_base('auth/?next=' . urlencode($interface ? '/map/interface/' : ($play ? '/map/play/' : '/map/'))));
     exit;
 }
 
@@ -33,6 +35,10 @@ if ($interface) {
     $cfg['csrf'] = ttg_csrf_token();
     $cfg['me'] = (string) $user['display_name'];
 }
+if ($play) {
+    $cfg['game'] = '/map/game/api.php';
+    $cfg['csrf'] = ttg_csrf_token();
+}
 $html = file_get_contents(__DIR__ . '/index.html');
 // Inject endpoint overrides (and the optional MapTiler key) before </head>
 $inject = '<script>window.TTG_MAP=' . json_encode($cfg, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';
@@ -40,5 +46,10 @@ if ($interface) {
     $inject .= '<link rel="stylesheet" href="/map/arg/interface.css?v=1">';
     $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>GUILD://INTERFACE — Time Travellers Guild</title>', $html);
     $html = str_replace('</body>', '<script src="/map/arg/interface.js?v=1" defer></script></body>', $html);
+}
+if ($play) {
+    $inject .= '<link rel="stylesheet" href="/map/game/game.css?v=1">';
+    $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>The Desk — Time Travellers Guild</title>', $html);
+    $html = str_replace('</body>', '<script src="/map/game/game.js?v=1" defer></script></body>', $html);
 }
 echo str_replace('</head>', $inject . '</head>', $html);

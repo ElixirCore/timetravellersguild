@@ -1,0 +1,4 @@
+# Only the API and the client files are served; the episode script and library are included by the API.
+<FilesMatch "^(lib|episode)\.php$">
+  Require all denied
+</FilesMatch>
