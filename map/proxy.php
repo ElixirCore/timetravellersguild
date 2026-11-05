@@ -189,7 +189,7 @@ if ($src === 'commons') {
   $lat = (float) ($_GET['lat'] ?? 0); $lng = (float) ($_GET['lng'] ?? 0);
   if ($lat < -85 || $lat > 85 || $lng < -180 || $lng > 180) fail(400, 'Bad point');
   $lat = round($lat, 2); $lng = round($lng, 2);
-  $key = 'commons:v3:' . $lat . ',' . $lng;
+  $key = 'commons:v4:' . $lat . ',' . $lng;
   out(cached($CACHE, $key, 7 * 86400, function () use ($lat, $lng, $plain) {
     $api = 'https://commons.wikimedia.org/w/api.php?';
     // MediaWiki reports errors (e.g. "search is too busy") with HTTP 200: treat them as failures so they are never cached.
@@ -211,7 +211,7 @@ if ($src === 'commons') {
     foreach (array_chunk(array_keys($coords), 50) as $chunk) {
       $j2 = $call($api . http_build_query(['action' => 'query', 'format' => 'json', 'formatversion' => 2, 'titles' => implode('|', $chunk),
         'prop' => 'imageinfo', 'iiprop' => 'url|mime|extmetadata', 'iiurlwidth' => 480,
-        'iiextmetadatafilter' => 'DateTimeOriginal|LicenseShortName|Artist|ImageDescription|ObjectName']));
+        'iiextmetadatafilter' => 'DateTimeOriginal|LicenseShortName|Artist|ImageDescription|ObjectName|Categories']));
       if ($j2 === null) return ['', 503, '']; // partial results are not cached either
       foreach (($j2['query']['pages'] ?? []) as $pg) {
         $ii = $pg['imageinfo'][0] ?? null; $t = (string) ($pg['title'] ?? '');
@@ -219,11 +219,23 @@ if ($src === 'commons') {
         $m = $ii['extmetadata'] ?? [];
         $date = $plain($m['DateTimeOriginal']['value'] ?? '');
         $year = preg_match('/\b(1[5-9]\d\d|20\d\d)\b/', $date, $ym) ? (int) $ym[1] : null;
+        // Archive photos often carry the scan or upload date (e.g. a Lawrence Collection negative of 1888 "dated" 2007).
+        // When Commons files the photo under an earlier year or decade ("Ireland in the 1880s", "1888 in Wales",
+        // "Photographs taken on 1888-07-30"), believe the categories.
+        $dated = '';
+        $catYear = null;
+        foreach (explode('|', (string) ($m['Categories']['value'] ?? '')) as $cat) {
+          if (preg_match('/(?:^|\s)in the (1[5-9]\d0|20[0-2]0)s\b/i', $cat, $cm) || preg_match('/^(1[5-9]\d0|20[0-2]0)s (?:in|photographs)\b/i', $cat, $cm)) { $y = (int) $cm[1]; $label = $cm[1] . 's'; }
+          elseif (preg_match('/^(1[5-9]\d\d|20[0-2]\d) (?:in|photographs)\b/i', $cat, $cm) || preg_match('/^Photographs taken on (1[5-9]\d\d|20[0-2]\d)/i', $cat, $cm)) { $y = (int) $cm[1]; $label = $cm[1]; }
+          else continue;
+          if ($catYear === null || $y < $catYear) { $catYear = $y; $dated = 'the ' . $label; if (strlen($label) === 4) $dated = $label; }
+        }
+        if ($catYear !== null && ($year === null || $catYear < $year - 10)) { $year = $catYear; } else { $dated = ''; }
         $fs[] = ['type' => 'Feature', 'id' => (int) ($pg['pageid'] ?? 0), 'geometry' => ['type' => 'Point', 'coordinates' => $coords[$t]],
           'properties' => array_filter([
             'title' => mb_substr(preg_replace('/\s*-\s*geograph\.org\.uk\s*-\s*\d+\s*$/i', '', $plain($m['ObjectName']['value'] ?? '') ?: preg_replace('/^File:|\.[a-z0-9]{3,4}$/i', '', $t)) ?? '', 0, 140),
             'thumb' => (string) $ii['thumburl'], 'page' => (string) ($ii['descriptionurl'] ?? ''),
-            'date' => mb_substr($date, 0, 40), 'year' => $year,
+            'date' => mb_substr($date, 0, 40), 'year' => $year, 'dated' => $dated,
             'author' => mb_substr($plain($m['Artist']['value'] ?? ''), 0, 80), 'licence' => mb_substr($plain($m['LicenseShortName']['value'] ?? ''), 0, 40),
             'desc' => mb_substr($plain($m['ImageDescription']['value'] ?? ''), 0, 240)], fn($v) => $v !== '' && $v !== null)];
       }

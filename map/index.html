@@ -788,7 +788,7 @@ map.on('click', async (e) => {
       const kind = hit.layer.id === 'lb' ? 'lb-hit' : hit.layer.id, c = centroid(hit.geometry);
       tipCurrent = { kind, p, ll: c }; hideTip();
       if (kind === 'lb-hit') map.setFilter('lb-hover', ['==', ['get', 'RecordNumber'], Number(p.RecordNumber)]);
-      if (kind === 'photos-hit') selectPhoto(p);
+      if (kind === 'photos-hit') selectPhoto(p, c);
       card(TIPS[kind].html(p));
       if (TIPS[kind].after) TIPS[kind].after(p, $('card-b'));
       return;
@@ -915,19 +915,30 @@ function photoHtml(p) {
   return '<div class="lbx"><p class="lbx-kind">PHOTO · WIKIMEDIA COMMONS' + (p.year ? ' · ' + esc(p.year) : '') + '</p>'
     + (img ? '<a class="lbx-photo" href="' + esc(page || img) + '" target="_blank" rel="noopener noreferrer"><img alt="' + esc(p.title || 'Photo') + '" referrerpolicy="no-referrer" src="' + esc(img) + '"></a>' : '')
     + '<h3>' + esc(p.title || '') + '</h3>' + (p.desc && p.desc !== p.title ? '<p class="lbx-ex">' + esc(p.desc) + '</p>' : '')
-    + '<dl>' + tipRow('Taken', p.date) + tipRow('By', p.author) + tipRow('Licence', p.licence) + '</dl>' + tipActs(page, 'Commons') + '</div>';
+    + '<dl>' + tipRow('Taken', p.dated ? p.dated + (p.date ? ' (the file says ' + p.date + ', probably when it was scanned or uploaded)' : '') : p.date) + tipRow('By', p.author) + tipRow('Licence', p.licence) + '</dl>' + tipActs(page, 'Commons') + '</div>';
 }
 let selectedPhoto = null;
-function selectPhoto(p) {
+function selectPhoto(p, ll) {
   const url = httpsOnly(p && p.thumb, /^(upload|thumb)\.wikimedia\.org$/);
   if (!url) return;
-  selectedPhoto = { url, about: [p.title, p.date ? 'taken ' + p.date : '', p.author ? 'by ' + p.author : '', 'Wikimedia Commons'].filter(Boolean).join(', ') };
+  selectedPhoto = { url, ll: ll || null, about: [p.title, p.dated ? 'taken ' + p.dated + ' (file date ' + (p.date || '?') + ', probably the scan)' : p.date ? 'taken ' + p.date : '', p.author ? 'by ' + p.author : '', 'Wikimedia Commons'].filter(Boolean).join(', ') };
   const w = $('see-what'); if (!w) return;
   w.replaceChildren();
   const i = document.createElement('img'); i.src = url; i.alt = ''; i.referrerPolicy = 'no-referrer';
   const t = document.createElement('span'); t.textContent = 'Selected: ' + String(p.title || 'photo').slice(0, 70);
   w.append(i, t);
 }
+// A selected photo belongs to its place: once the map has moved more than 50 km away, let it go,
+// so the guide is never shown an Irish cottage while you are standing in Varanasi.
+function clearPhoto() {
+  selectedPhoto = null;
+  const w = $('see-what'); if (w) w.textContent = 'No photo selected: open one on the map.';
+}
+map.on('moveend', () => {
+  if (!selectedPhoto || !selectedPhoto.ll) return;
+  const c = map.getCenter();
+  if (kmBetween([c.lng, c.lat], selectedPhoto.ll) > 50) clearPhoto();
+});
 async function oldPhotos(place) {
   place = String(place || '').replace(/\s*\(.*?\)\s*/g, ' ').split(/[,;]/)[0].trim().slice(0, 80);
   if (!place) throw new Error('no place name');
@@ -1014,7 +1025,7 @@ function hideTip() {
 const hideLbTip = hideTip;
 function showTip(kind, f) {
   const t = TIPS[kind], ll = centroid(f.geometry); if (!t || !ll) return;
-  if (kind === 'photos-hit') selectPhoto(f.properties);
+  if (kind === 'photos-hit') selectPhoto(f.properties, ll);
   tipKey = t.key(f.properties); tipCurrent = { kind, p: f.properties, ll };
   map.setFilter('lb-hover', t.ring ? ['==', ['get', 'RecordNumber'], Number(f.properties.RecordNumber)] : ['==', ['get', 'RecordNumber'], -1]);
   lbTip.setLngLat(ll).setHTML(t.html(f.properties)).addTo(map);
@@ -1315,6 +1326,12 @@ const TOOLS = {
     return Object.assign({ source: 'Wikipedia' }, await r.json());
   },
   set_year: async (a) => Object.assign({ ok: true }, setYear(a.year)),
+  distance: async (a) => {
+    const A = [LNG(a.from_lng), LAT(a.from_lat)], B = [LNG(a.to_lng), LAT(a.to_lat)], t = Math.PI / 180;
+    const y = Math.sin((B[0] - A[0]) * t) * Math.cos(B[1] * t), x = Math.cos(A[1] * t) * Math.sin(B[1] * t) - Math.sin(A[1] * t) * Math.cos(B[1] * t) * Math.cos((B[0] - A[0]) * t);
+    const brg = (Math.atan2(y, x) / t + 360) % 360, pts = ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'];
+    return { km: +kmBetween(A, B).toFixed(2), bearing_degrees: Math.round(brg), direction: pts[Math.round(brg / 45) % 8] };
+  },
   historic_near: async (a) => {
     setBox('l-osmh', true);
     const near = (await OSMH.near(LNG(a.lng), LAT(a.lat), num(a.radius_km == null ? 1 : a.radius_km, 0.05, 3))).slice(0, 25);
@@ -1342,7 +1359,7 @@ const TOOLS = {
       for (let y = Math.floor((P0[1] - dLat) / PCELL); y <= Math.floor((P0[1] + dLat) / PCELL); y++) lists.push(photoCell(x, y));
     const seen = new Map(); (await Promise.all(lists.slice(0, 30))).flat().forEach((f) => seen.set(f.id, f));
     const near = [...seen.values()].map((f) => ({ p: f.properties, km: kmBetween(P0, f.geometry.coordinates) })).filter((x) => x.km <= R).sort((x, y) => x.km - y.km).slice(0, 15);
-    return { source: 'Wikimedia Commons', count: near.length, photos: near.map((x) => ({ km: +x.km.toFixed(2), title: x.p.title, taken: x.p.date || 'undated', by: x.p.author, licence: x.p.licence, description: x.p.desc, page: x.p.page })) };
+    return { source: 'Wikimedia Commons', count: near.length, photos: near.map((x) => ({ km: +x.km.toFixed(2), title: x.p.title, taken: x.p.dated || x.p.date || 'undated', file_date: x.p.dated ? x.p.date : undefined, by: x.p.author, licence: x.p.licence, description: x.p.desc, page: x.p.page })) };
   },
   old_photos: async (a) => {
     const j = await oldPhotos(a.place);
@@ -1422,7 +1439,7 @@ const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geol
   add_stamp: 'inked a place slip', start_run: 'started a run', end_run: 'ended the run', sites_near: 'searched Coflein', names_near: 'read the old place names',
   wiki_near: 'looked on Wikipedia', wiki_summary: 'read a Wikipedia article', set_year: 'travelled in time',
   photos_near: 'looked at photos', old_photos: 'searched the old photographs', historic_near: 'searched OpenStreetMap history',
-  events_near: 'looked up events', people_from: 'looked up people from here' };
+  events_near: 'looked up events', people_from: 'looked up people from here', distance: 'measured a distance' };
 let convo = '', busy = false;
 // Web sources under an answer: https links only, built as DOM nodes (never HTML from the model).
 const sourceList = (sources) => {

@@ -89,6 +89,9 @@ $tools = [
     $pt + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
     $fn('people_from', 'People recorded in Wikidata as born in towns and villages within about 6 km of a point: name, birth and death years, what they did. Uneven (notable people only). Shows a list to the viewer unless show is false.',
     $pt + ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['lng', 'lat']),
+    $fn('distance', 'Straight-line distance in kilometres and compass bearing from one point to another. Use this instead of calculating or searching.',
+        ['from_lng' => ['type' => 'number'], 'from_lat' => ['type' => 'number'], 'to_lng' => ['type' => 'number'], 'to_lat' => ['type' => 'number']],
+        ['from_lng', 'from_lat', 'to_lng', 'to_lat']),
     $fn('my_stamps',     'The viewer\'s passport stamps: places, lines, dates, coordinates.', [], []),
     $fn('start_run',     'Begin recording a named run. All fly_to destinations will be saved under this run until end_run is called. Use when the viewer asks to record, save or name a tour of places.',
         ['name' => ['type' => 'string', 'description' => 'Short name for this run, e.g. "Cities of Wales"']], ['name']),
@@ -131,6 +134,8 @@ KNOWN FIELD OBJECTS:
 TIME: Local Present 04 November 2026. Network Present 17 April 2033.
 
 TOOLS: use get_view first if the viewer asks about what's visible. Use find_place for any place you don't have coordinates for. Use elevation_at or terrain_profile for height questions. Use geology_at and switch on the bedrock layer for rock questions. Use heritage_near and switch on monuments for heritage questions. Use my_stamps to walk through the viewer's route. Use fly_to for every place you name. Use set_camera to tilt and turn for drama. Use web_search to find the temporal fact that makes this place speak.
+
+BE QUICK AND ECONOMICAL. Use the map's own tools before the web: get_view for where the viewer is, find_place for coordinates, distance for distances and bearings, the layer tools for what is here. Never use web_search for arithmetic, coordinates, distances, or anything a map tool already answers. Use at most three web searches in one answer, and stop searching as soon as you have one solid source; say what is uncertain rather than searching on.
 
 SOCIAL HISTORY FIRST. This is a map for time travellers, and what they most want is people: who lived here, how they worked, what they built and lost, the strikes and riots and disasters, the migrations, the chapels and pubs and memorials. Rock and height are the stage, not the play. Anywhere in the world, reach for events_near (dated strikes, riots, disasters, battles), people_from (who was born here), historic_near (memorials, ruins, mines, mills from OpenStreetMap), Wikipedia and the photographs before geology. Name ordinary lives where the records allow, say plainly when the records are thin or only remember the famous, and never invent a person or an event.
 
