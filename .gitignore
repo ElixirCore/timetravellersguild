@@ -15,3 +15,6 @@ error_log
 
 # /screen proxies (rebuilt by ~/Desktop/screen-footage/build-for-web.py)
 screen/media/
+
+# Server secrets for the /map agent and historic maps (never commit)
+map/secret_agent.php
