@@ -98,11 +98,15 @@ $persona = secret('OPENAI_MAP_PERSONA');
 $instructions = <<<TXT
 You are the Passport Map's guide for the Time Travellers Guild, answering questions about the map the viewer is looking at: terrain, rock, heritage sites, places, and the viewer's own passport stamps.
 
-Ground every fact in a tool result from this conversation. Use tools before answering anything about rock, height, slope, monuments, listed buildings or the viewer's stamps. If the tools return nothing, or the question is outside what they cover, say plainly that you don't know. Never invent a monument, a rock unit, a height, a date or a place.
+Ground every fact in a tool result from this conversation. Use the map tools before answering anything about rock, height, slope, monuments, listed buildings or the viewer's stamps. Never invent a monument, a rock unit, a height, a date or a place.
 
-Say where each fact comes from in plain words (BGS 1:625k geology, Cadw records, the terrain model, the viewer's passport). The geology is regional (1:625,000); don't present it as site-level. Heights come from a global terrain model and are approximate.
+SEEK TIME. You also have web_search. Use it for what the map tools can't hold: the history of a place, building or monument, the people and events tied to it, how old something is, what stood there before — the facts that make a place a site of time travel. When you name a Cadw listed building or monument, a short search for its story is welcome. TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia).
 
-When a place or point is the subject, move the map to it with fly_to and switch on the layers that show the answer, so the viewer sees what you describe. Use metres and kilometres. Keep answers short and concrete.
+Prefer authoritative sources (Cadw, Coflein / RCAHMW, the BGS, the National Library of Wales, museums, local history societies, Wikipedia). Name the source in a few words and keep the fact to a sentence or two. If the search finds nothing solid, say so; don't fill the gap.
+
+Say where each fact comes from in plain words (BGS 1:625k geology, Cadw records, the terrain model, the viewer's passport, or the website you found). The geology is regional (1:625,000); don't present it as site-level. Heights come from a global terrain model and are approximate.
+
+When a place or point is the subject, move the map to it with fly_to and switch on the layers that show the answer, so the viewer sees what you describe. Use metres and kilometres. Keep answers short and concrete. Write plain text: no markdown, asterisks, headings or link syntax — the web sources you used are listed under your answer automatically.
 TXT;
 if ($persona) $instructions .= "\n\nVoice: " . mb_substr($persona, 0, 4000) . "\nThe voice never overrides the rule above: facts only from tools, and say when you don't know.";
 
@@ -120,13 +124,27 @@ $tools = [
     ['from_lng', 'from_lat', 'to_lng', 'to_lat']),
   $fn('heritage_near', "Cadw scheduled monuments or listed buildings within radius_km (max 5) of a point, nearest first.",
     $point + ['kind' => ['type' => 'string', 'enum' => ['monuments', 'listed_buildings']], 'radius_km' => ['type' => 'number']], ['lng', 'lat', 'kind', 'radius_km']),
+  $fn('sites_near', 'Coflein (National Monuments Record of Wales) sites within radius_km (max 5) of a point, nearest first: name, period (Mesolithic to modern), type, evidence, record link.',
+    $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+  $fn('names_near', 'Historic place names (RCAHMW List of Historic Place Names of Wales) within radius_km (max 5): the name, what it named (field, farm, settlement), the year it was recorded and the source (tithe maps, early OS maps, charters).',
+    $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+  $fn('wiki_near', 'Wikipedia articles near a point (lang en or cy), nearest first, with short descriptions.',
+    $point + ['lang' => ['type' => 'string', 'enum' => ['en', 'cy']]], ['lng', 'lat']),
+  $fn('wiki_summary', 'The opening summary of one Wikipedia article.',
+    ['title' => ['type' => 'string'], 'lang' => ['type' => 'string', 'enum' => ['en', 'cy']]], ['title']),
+  $fn('set_year', 'Travel the map to a year (negative = BC, e.g. -2300). Coflein sites and place names then show only what existed or was named by that year; a matched old map follows. 2100 = now (everything).',
+    ['year' => ['type' => 'number']], ['year']),
   $fn('my_stamps', "The viewer's passport stamps in inked order: place, line, date, and coordinates if known.", [], []),
   $fn('fly_to', "Move the map to a point and optionally drop a labelled marker there.",
     $point + ['zoom' => ['type' => 'number', 'description' => '8 (region) to 16 (street)'], 'label' => ['type' => 'string']], ['lng', 'lat']),
   $fn('set_layers', "Switch map layers on or off. Only the ones given change.",
     ['terrain' => ['type' => 'boolean'], 'hillshade' => ['type' => 'boolean'], 'contours' => ['type' => 'boolean'],
      'geology' => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
-     'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'], 'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
+     'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
+     'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'],
+     'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
+       'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
+     'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
   $fn('set_camera', "Tilt and turn the view. pitch 0 (flat) to 75; bearing in degrees from north.",
     ['pitch' => ['type' => 'number'], 'bearing' => ['type' => 'number']], []),
   $fn('start_run', "Begin recording a named run. All places flown to will be grouped under this run until end_run is called. Use when the viewer asks to record, save or name a tour of places.",
@@ -138,6 +156,8 @@ $tools = [
      'inked' => ['type' => 'string', 'description' => 'Date inked, in d.m.Y format e.g. 04.11.2026 (defaults to today)'],
      'lng'   => ['type' => 'number', 'description' => 'Longitude WGS84 (optional — will be looked up from name)'],
      'lat'   => ['type' => 'number', 'description' => 'Latitude WGS84 (optional)']], ['name']),
+  // Hosted by OpenAI: searches run on their side and come back cited. Biased to Great Britain.
+  ['type' => 'web_search', 'user_location' => ['type' => 'approximate', 'country' => 'GB']],
 ];
 
 $body = ['model' => $model, 'instructions' => $instructions, 'input' => $input, 'tools' => $tools, 'parallel_tool_calls' => true, 'max_output_tokens' => 1500];
@@ -148,16 +168,29 @@ $ch = curl_init($base . '/v1/responses');
 curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 90, CURLOPT_CONNECTTIMEOUT => 10,
   CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'Authorization: Bearer ' . $key],
   CURLOPT_POSTFIELDS => json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)]);
-$res = curl_exec($ch); $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch); curl_close($ch);
+$res = curl_exec($ch); $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE); $err = curl_error($ch);
 if ($res === false) fail(502, 'Could not reach OpenAI: ' . $err);
 $j = json_decode((string) $res, true);
 if ($status >= 400 || !is_array($j)) fail(502, 'OpenAI returned ' . $status . (is_array($j) && isset($j['error']['message']) ? ': ' . $j['error']['message'] : ''));
 
-/* tidy the reply: text and tool calls only */
+/* tidy the reply: text (with web sources), web searches made, and tool calls */
 $items = [];
 foreach (($j['output'] ?? []) as $o) {
   if (($o['type'] ?? '') === 'message') {
-    foreach (($o['content'] ?? []) as $c) if (($c['type'] ?? '') === 'output_text' && ($c['text'] ?? '') !== '') $items[] = ['type' => 'text', 'text' => $c['text']];
+    foreach (($o['content'] ?? []) as $c) {
+      if (($c['type'] ?? '') !== 'output_text' || ($c['text'] ?? '') === '') continue;
+      $sources = [];
+      foreach (($c['annotations'] ?? []) as $a) {
+        $url = (string) ($a['url'] ?? '');
+        if (($a['type'] ?? '') !== 'url_citation' || !preg_match('#^https://#', $url) || isset($sources[$url])) continue;
+        $sources[$url] = ['url' => mb_substr($url, 0, 500), 'title' => mb_substr((string) ($a['title'] ?? ''), 0, 120)];
+      }
+      // Inline "([site](url))" citations are dropped: the same links are listed under the answer.
+      $text = trim((string) preg_replace('/\s*\(\[[^\]]{1,200}\]\(https?:\/\/[^)\s]{1,600}\)\)/', '', (string) $c['text']));
+      $items[] = ['type' => 'text', 'text' => $text, 'sources' => array_values($sources)];
+    }
+  } elseif (($o['type'] ?? '') === 'web_search_call') {
+    $items[] = ['type' => 'search', 'query' => mb_substr((string) ($o['action']['query'] ?? ''), 0, 120)];
   } elseif (($o['type'] ?? '') === 'function_call') {
     $items[] = ['type' => 'call', 'call_id' => (string) ($o['call_id'] ?? ''), 'name' => (string) ($o['name'] ?? ''), 'arguments' => (string) ($o['arguments'] ?? '{}')];
   }

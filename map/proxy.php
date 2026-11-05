@@ -6,6 +6,9 @@
  *   src=bgs    BGS 1:625k geology WMS (GetMap tiles, GetFeatureInfo)
  *   src=cadw   Cadw scheduled monuments / listed buildings (DataMapWales WFS, GeoJSON)
  *   src=place  place-name lookup (OpenStreetMap Nominatim), cached for good
+ *   src=cadw   layer=nmrw   Coflein / National Monuments Record of Wales sites (RCAHMW, DataMapWales WFS)
+ *   src=cadw   layer=names  List of Historic Place Names of Wales (RCAHMW, DataMapWales WFS)
+ *   src=wiki   Wikipedia articles near a point (en / cy), and src=wikisum for one article's summary
  *
  * It is not an open proxy: the host is fixed per source and only named parameters pass through.
  * No keys are needed, so secrets.php is not used.
@@ -26,7 +29,6 @@ function fetch_url(string $url, int $timeout = 20): array {
   $body = curl_exec($ch);
   $code = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
   $type = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-  curl_close($ch);
   return [$body === false ? '' : $body, $code, $type];
 }
 function cached(string $dir, string $key, int $ttl, callable $get): array {
@@ -53,6 +55,14 @@ function out(array $r, int $maxAge): void {
   header('Content-Type: ' . ($type ?: 'application/octet-stream'));
   header('Cache-Control: public, max-age=' . $maxAge);
   header('X-Relay-Cache: ' . $hit);
+  header('Vary: Accept-Encoding');
+  // The host does not compress these; JSON cells shrink about tenfold.
+  if (str_contains((string) $type, 'json') && strlen($body) > 2048 && function_exists('gzencode')
+      && str_contains((string) ($_SERVER['HTTP_ACCEPT_ENCODING'] ?? ''), 'gzip') && !headers_sent()) {
+    $z = gzencode($body, 6);
+    if ($z !== false) { header('Content-Encoding: gzip'); $body = $z; }
+  }
+  header('Content-Length: ' . strlen($body));
   echo $body; exit;
 }
 
@@ -70,7 +80,11 @@ if ($src === 'bgs') {
 }
 
 if ($src === 'cadw') {
-  $types = ['sam' => 'inspire-wg:Cadw_SAM', 'lb' => 'inspire-wg:Cadw_ListedBuildings'];
+  $types = ['sam' => 'inspire-wg:Cadw_SAM', 'lb' => 'inspire-wg:Cadw_ListedBuildings',
+            'nmrw' => 'geonode:rcahmw_nmrw_terrestrialsites_rcahmw_bng', 'names' => 'geonode:rcahmw_historicplacenames_wales_recordednames'];
+  // RCAHMW layers carry dozens of fields (and mis-encoded Welsh duplicates): keep only what the map shows.
+  $keep = ['nmrw' => ['nprn', 'name', 'site_type', 'period', 'evidence', 'community', 'unitary_au', 'old_county', 'url'],
+           'names' => ['enw_name', 'place_type', 'discy_pdes', 'blwgyn_eye', 'parish', 'county', 'prim_srce', 'url_en']];
   $layer = $_GET['layer'] ?? '';
   $bbox = $_GET['bbox'] ?? '';
   if (!isset($types[$layer])) fail(400, 'Bad layer');
@@ -81,7 +95,67 @@ if ($src === 'cadw') {
     'service' => 'WFS', 'version' => '1.0.0', 'request' => 'GetFeature', 'typename' => $types[$layer],
     'outputFormat' => 'application/json', 'srsName' => 'EPSG:4326', 'maxFeatures' => 3000,
     'bbox' => $bbox . ',EPSG:4326']);
-  out(cached($CACHE, $url, 7 * 86400, fn() => fetch_url($url, 40)), 86400);
+  if (!isset($keep[$layer])) out(cached($CACHE, $url, 7 * 86400, fn() => fetch_url($url, 40)), 86400);
+  $fields = $keep[$layer];
+  out(cached($CACHE, 'slim:' . $url, 7 * 86400, function () use ($url, $fields) {
+    [$body, $code, $type] = fetch_url($url, 40);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j) || !isset($j['features'])) return [$body, $code === 200 ? 502 : $code, $type];
+    $out = [];
+    foreach ($j['features'] as $f) {
+      if (!isset($f['geometry']['coordinates'])) continue;
+      $p = [];
+      foreach ($fields as $k) {
+        $v = $f['properties'][$k] ?? null;
+        if (is_string($v)) $v = trim(mb_convert_encoding($v, 'UTF-8', 'UTF-8'));
+        if ($v !== null && $v !== '' && $v !== 'None') $p[$k] = $v;
+      }
+      $g = $f['geometry'];
+      if (($g['type'] ?? '') === 'Point') $g['coordinates'] = [round((float) $g['coordinates'][0], 5), round((float) $g['coordinates'][1], 5)];
+      if (isset($p['url_en'])) $p['url_en'] = str_replace('https://historicplacenames.rcahmw.gov.uk/placenames/recordedname/', '', (string) $p['url_en']);
+      $out[] = ['type' => 'Feature', 'id' => $f['id'] ?? null, 'geometry' => $g, 'properties' => $p];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $out], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'wiki' || $src === 'wikisum') {
+  $lang = ($_GET['lang'] ?? 'en') === 'cy' ? 'cy' : 'en';
+  $host = 'https://' . $lang . '.wikipedia.org';
+  if ($src === 'wiki') {
+    $lat = (float) ($_GET['lat'] ?? 0); $lng = (float) ($_GET['lng'] ?? 0);
+    if ($lat < 49 || $lat > 61.5 || $lng < -11 || $lng > 3) fail(400, 'Bad point');
+    // Rounded to the client's 0.1° cell centres, so the cache is shared.
+    $lat = round($lat, 2); $lng = round($lng, 2);
+    $url = $host . '/w/api.php?' . http_build_query(['action' => 'query', 'format' => 'json', 'formatversion' => 2,
+      'generator' => 'geosearch', 'ggscoord' => $lat . '|' . $lng, 'ggsradius' => 10000, 'ggslimit' => 60,
+      'prop' => 'coordinates|description|pageimages', 'piprop' => 'thumbnail', 'pithumbsize' => 320, 'pilimit' => 60]);
+    out(cached($CACHE, $url, 7 * 86400, function () use ($url, $lang) {
+      [$body, $code] = fetch_url($url);
+      $j = $code === 200 ? json_decode($body, true) : null;
+      if (!is_array($j)) return ['', $code === 200 ? 502 : $code, ''];
+      $fs = [];
+      foreach (($j['query']['pages'] ?? []) as $pg) {
+        $c = $pg['coordinates'][0] ?? null; if (!$c) continue;
+        $fs[] = ['type' => 'Feature', 'id' => $lang . ':' . (int) ($pg['pageid'] ?? 0),
+          'geometry' => ['type' => 'Point', 'coordinates' => [(float) $c['lon'], (float) $c['lat']]],
+          'properties' => array_filter(['title' => (string) ($pg['title'] ?? ''), 'lang' => $lang, 'description' => (string) ($pg['description'] ?? ''),
+            'thumb' => (string) ($pg['thumbnail']['source'] ?? '')], fn($v) => $v !== '')];
+      }
+      return [json_encode(['type' => 'FeatureCollection', 'features' => $fs], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+    }), 86400);
+  }
+  $title = trim((string) ($_GET['title'] ?? ''));
+  if ($title === '' || mb_strlen($title) > 200) fail(400, 'Bad title');
+  $url = $host . '/api/rest_v1/page/summary/' . rawurlencode(str_replace(' ', '_', $title));
+  out(cached($CACHE, $url, 7 * 86400, function () use ($url) {
+    [$body, $code] = fetch_url($url);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j)) return ['', $code === 200 ? 502 : $code, ''];
+    return [json_encode(['title' => (string) ($j['title'] ?? ''), 'extract' => mb_substr((string) ($j['extract'] ?? ''), 0, 1200),
+      'url' => (string) ($j['content_urls']['desktop']['page'] ?? ''), 'thumb' => (string) ($j['thumbnail']['source'] ?? '')],
+      JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
 }
 
 if ($src === 'place') {
