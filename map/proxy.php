@@ -14,6 +14,10 @@
  *   src=osmhist  OpenStreetMap historic places (memorials, battlefields, ruins, mines…) in a 0.05° cell, worldwide (Overpass)
  *   src=wdevents dated events near a point (Wikidata: strikes, riots, disasters, battles…), worldwide
  *   src=wdpeople people born in settlements near a point (Wikidata), worldwide
+ *   src=he       England: Historic England layers in a cell (listed buildings, scheduled monuments, parks and gardens,
+ *                battlefields, World Heritage Sites, conservation areas, Heritage at Risk 2026, Greater London
+ *                Archaeological Priority Areas), from Historic England's open ArcGIS services, GeoJSON
+ *   src=plaques  commemorative plaques in a cell (Open Plaques), worldwide but richest in London
  *   src=oldmaps  georeferenced old maps covering a point: Allmaps (David Rumsey, Library of Congress, Internet Archive…)
  *                and mapwarper.net, local maps first; each with its own tile URL for an overlay
  *
@@ -393,6 +397,74 @@ if ($src === 'wdpeople') {
     $people = array_values($by);
     usort($people, fn($a, $b) => ($a['born'] ?? 9999) <=> ($b['born'] ?? 9999));
     return [json_encode(['people' => $people], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'he') {
+  // Historic England open data (OGL v3). Fixed service, layer and fields per kind; only the bbox passes through.
+  $base = 'https://services-eu1.arcgis.com/ZOdPfBS3aqqDYPUQ/arcgis/rest/services/';
+  $nhle = 'National_Heritage_List_for_England_NHLE_v02_VIEW';
+  $HE = [
+    'helb'  => [$nhle, 0, 'ListEntry,Name,Grade,ListDate,hyperlink', false],
+    'hesm'  => [$nhle, 6, 'ListEntry,Name,SchedDate,hyperlink', true],
+    'hepg'  => [$nhle, 7, 'ListEntry,Name,Grade,RegDate,hyperlink', true],
+    'hebf'  => [$nhle, 8, 'ListEntry,Name,RegDate,hyperlink', true],
+    'hewh'  => [$nhle, 10, 'ListEntry,Name,InscrDate,hyperlink', true],
+    'heca'  => ['Conservation_Areas', 0, 'NAME,DATE_OF_DE,LPA', true],
+    'heapa' => ['Greater_London_Archaeological_Priority_Areas__APAs_', 1, 'primary_re,descriptio,designatio,area_type', true],
+    'hear'  => ['Historic England Heritage at Risk Register 2026 points', 0, 'List_Entry,HeritageCa,Risk_Metho,EntryName,URL', false],
+  ];
+  $layer = $_GET['layer'] ?? ''; $bbox = $_GET['bbox'] ?? '';
+  if (!isset($HE[$layer])) fail(400, 'Bad layer');
+  if (!preg_match('/^-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2},-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2}$/', $bbox)) fail(400, 'Bad bbox');
+  $b = array_map('floatval', explode(',', $bbox));
+  if ($b[2] - $b[0] > 0.11 || $b[3] - $b[1] > 0.11) fail(400, 'Area too large');
+  if ($b[2] < -6.5 || $b[0] > 2.0 || $b[3] < 49.8 || $b[1] > 55.9) out([json_encode(['type' => 'FeatureCollection', 'features' => []]), 200, 'application/json', 'SKIP'], 86400);
+  [$svc, $lid, $fields, $poly] = $HE[$layer];
+  $q = ['where' => '1=1', 'geometry' => $bbox, 'geometryType' => 'esriGeometryEnvelope', 'inSR' => 4326, 'spatialRel' => 'esriSpatialRelIntersects',
+        'outFields' => $fields, 'outSR' => 4326, 'f' => 'geojson', 'resultRecordCount' => 2000, 'geometryPrecision' => 6];
+  if ($poly) $q['maxAllowableOffset'] = 0.00002;
+  $url = $base . rawurlencode($svc) . '/FeatureServer/' . $lid . '/query?' . http_build_query($q);
+  set_time_limit(60);
+  out(cached($CACHE, 'he2:' . $url, 14 * 86400, function () use ($url, $layer) {
+    [$body, $code, $type] = fetch_url($url, 40);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j) || !isset($j['features'])) return [$body, $code === 200 ? 502 : $code, $type];  // ArcGIS errors come back as 200
+    $out = [];
+    foreach ($j['features'] as $f) {
+      if (empty($f['geometry'])) continue;
+      $p = $f['properties'] ?? [];
+      // Archaeological Priority Area descriptions arrive as HTML: keep plain text.
+      if (isset($p['descriptio'])) $p['descriptio'] = mb_substr(trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string) $p['descriptio']), ENT_QUOTES | ENT_HTML5, 'UTF-8'))), 0, 1200);
+      foreach ($p as $k => $v) if ($v === null || $v === '' || $v === ' ') unset($p[$k]);
+      $out[] = ['type' => 'Feature', 'id' => $f['id'] ?? null, 'geometry' => $f['geometry'], 'properties' => $p + ['kind' => $layer]];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $out], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'plaques') {
+  // Open Plaques (openplaques.org): plaque inscriptions with positions. Photos there are mostly all-rights-reserved, so none are relayed.
+  $bbox = $_GET['bbox'] ?? '';
+  if (!preg_match('/^-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2},-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2}$/', $bbox)) fail(400, 'Bad bbox');
+  $b = array_map('floatval', explode(',', $bbox));
+  if ($b[2] - $b[0] > 0.11 || $b[3] - $b[1] > 0.11) fail(400, 'Area too large');
+  $url = 'https://openplaques.org/plaques.json?box=' . rawurlencode('[' . $b[3] . ',' . $b[0] . '],[' . $b[1] . ',' . $b[2] . ']');
+  set_time_limit(60);
+  out(cached($CACHE, 'op1:' . $url, 7 * 86400, function () use ($url) {
+    [$body, $code, $type] = fetch_url($url, 40);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j)) return [$body, $code === 200 ? 502 : $code, $type];
+    $out = [];
+    foreach ($j as $r) {
+      if (!isset($r['latitude'], $r['longitude'], $r['id'])) continue;
+      $ins = trim(preg_replace('/\s+/', ' ', (string) ($r['inscription'] ?? '')));
+      // "from": the earliest year the inscription names, so the plaque appears once its subject's time has begun.
+      $from = preg_match_all('/\b(1[0-9]{3}|20[0-2][0-9])\b/', $ins, $m) ? min(array_map('intval', $m[1])) : 2100;
+      $out[] = ['type' => 'Feature', 'id' => (int) $r['id'], 'geometry' => ['type' => 'Point', 'coordinates' => [round((float) $r['longitude'], 5), round((float) $r['latitude'], 5)]],
+        'properties' => ['id' => (int) $r['id'], 'inscription' => mb_substr($ins, 0, 600), 'from' => $from]];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $out], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
   }), 86400);
 }
 

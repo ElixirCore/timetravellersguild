@@ -238,6 +238,7 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
       <option value="uk-osgb1919">c. 1919</option>
       <option value="uk-osgb25k1937">1937–61 · 1:25,000</option>
       <option value="uk-osgb63k1955">1955–61 · one-inch, 7th series</option>
+      <option value="uk-oslondon1k1893">London 1893–96 · five-foot town plan</option>
       </optgroup>
     </select></div>
   <div class="row"><span>Ink</span><input type="range" id="oldmap-op" min="0.2" max="1" step="0.05" value="0.85"><span class="v" id="oldmap-op-v">85%</span></div>
@@ -249,6 +250,24 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="st" id="st-sam"></div>
   <div class="row"><label><input type="checkbox" id="l-lb" checked> Listed buildings</label></div>
   <div class="st" id="st-lb"></div>
+
+  <h2>England &amp; London <span style="text-transform:none;letter-spacing:0">(Historic England)</span></h2>
+  <div class="row"><label><input type="checkbox" id="l-plq" checked> Plaques <span class="key">(Open Plaques · who lived and worked here)</span></label></div>
+  <div class="st" id="st-plq"></div>
+  <div class="row"><label><input type="checkbox" id="l-helb" checked> Listed buildings <span class="key">(England)</span></label></div>
+  <div class="st" id="st-helb"></div>
+  <div class="row"><label><input type="checkbox" id="l-hesm" checked> Scheduled monuments</label></div>
+  <div class="st" id="st-hesm"></div>
+  <div class="row"><label><input type="checkbox" id="l-heapa" checked> Archaeological priority areas <span class="key">(Greater London)</span></label></div>
+  <div class="st" id="st-heapa"></div>
+  <div class="row"><label><input type="checkbox" id="l-hear" checked> Heritage at Risk 2026</label></div>
+  <div class="st" id="st-hear"></div>
+  <div class="row"><label><input type="checkbox" id="l-hepg" checked> Parks and gardens</label></div>
+  <div class="st" id="st-hepg"></div>
+  <div class="row"><label><input type="checkbox" id="l-hewh" checked> World Heritage Sites &amp; battlefields</label></div>
+  <div class="st" id="st-hewh"></div>
+  <div class="row"><label><input type="checkbox" id="l-heca"> Conservation areas</label></div>
+  <div class="st" id="st-heca"></div>
 
   <h2>Guild</h2>
   <div class="row"><label><input type="checkbox" id="l-route" checked> Time-lines between stamps</label></div>
@@ -548,7 +567,7 @@ function setYear(y) {
   $('yr-v').textContent = fmtYear(YEAR);
   $('yr-note').textContent = YEAR >= 2100 ? 'Everything on record, any date.' : 'Showing only what existed or was named by ' + fmtYear(YEAR) + (STOPS[i][0] === YEAR && STOPS[i][1] ? ' · ' + STOPS[i][1] : '') + '.';
   const f = ['<=', ['get', 'from'], YEAR];
-  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
+  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit', 'he-plq', 'he-plq-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
   hideTip();
   if ($('oldmap').value === 'match') applyOldMap();
   else if (map.getSource('ohm')) OHM_LAYERS.forEach((l) => map.getLayer(l.id) && map.setFilter(l.id, ohmFilter()));
@@ -629,6 +648,8 @@ function applyOldMap() {
   if (!key) { status('st-oldmap', 'Historic maps need a MapTiler key (free for non-commercial use). Add MAPTILER_KEY to map/secret_agent.php.', true); return { ok: false, error: 'no MapTiler key configured' }; }
   let id = sel;
   if (sel === 'match') { id = OLDMAP_ERAS[OLDMAP_ERAS.length - 1][1]; for (const [upTo, t] of OLDMAP_ERAS) if (YEAR <= upTo) { id = t; break; } }
+  // Inside the County of London around the 1890s, the OS five-foot town plan is far more detailed than the national series.
+  if (sel === 'match' && YEAR >= 1880 && YEAR <= 1913) { const c = map.getCenter(); if (c.lng > -0.37 && c.lng < 0.1 && c.lat > 51.35 && c.lat < 51.61) id = 'uk-oslondon1k1893'; }
   map.addSource('oldmap', { type: 'raster', url: 'https://api.maptiler.com/tiles/' + id + '/tiles.json?key=' + encodeURIComponent(key), tileSize: 256,
     attribution: '<a href="https://maps.nls.uk/" target="_blank" rel="noopener">Historic maps: National Library of Scotland</a> · <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">© MapTiler</a>' });
   map.addLayer({ id: 'oldmap', type: 'raster', source: 'oldmap', paint: { 'raster-opacity': +$('oldmap-op').value } }, map.getLayer('geo') ? 'geo' : undefined);
@@ -842,7 +863,7 @@ map.on('load', () => { mapReady = true; });
 function heritage() {
   if (!mapReady) return; // the 'load' handler calls heritage() once sources exist
   const z = map.getZoom(), bb = map.getBounds();
-  wikiLoad(); photoLoad(); OSMH.load(); EVENTS.load();
+  wikiLoad(); photoLoad(); OSMH.load(); EVENTS.load(); heLoad();
   for (const kind of ['sam', 'lb', 'nmrw', 'names']) {
     if (!$('l-' + kind).checked) continue;
     if (z < MINZ[kind]) { status('st-' + kind, 'Zoom in to see these (zoom ' + MINZ[kind] + '+).'); continue; }
@@ -876,7 +897,7 @@ map.on('click', async (e) => {
   const now = Date.now(), near = lastClick && now - lastClick.t < 350 && Math.hypot(e.point.x - lastClick.x, e.point.y - lastClick.y) < 24;
   lastClick = near ? null : { t: now, x: e.point.x, y: e.point.y };
   if (near) return tapPoint(e);
-  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
   if (hit) {
     const p = hit.properties || {};
     if (hit.layer.id === 'graph-places') {
@@ -1139,6 +1160,118 @@ const TIPS = {
     // "Footpath in Abercraf" → Abercraf; "Cottages at Craig-y-nos" → Craig-y-nos; otherwise the title before any " / "
     name: (p) => p.title, place: (p) => { const t = String(p.title || '').split(' / ')[0], m = t.match(/\b(?:in|at|near|above|below|of|yn|ger)\s+([A-Z][\w'’-]+(?:[ -][A-Z][\w'’-]+)*)/); return m ? m[1] : t; } },
 };
+/* ---------- England & London: Historic England designations and Open Plaques ----------
+   Loaded in cells through proxy.php (src=he, src=plaques), only for checked boxes and above each kind's zoom.
+   Designations are not filtered by year (as with Cadw); plaques appear from the earliest year their inscription names. */
+const HE = {
+  plq:   { box: 'l-plq',   cell: 0.02, minz: 14, src: 'plaques', point: true },
+  helb:  { box: 'l-helb',  cell: 0.02, minz: 14, point: true },
+  hear:  { box: 'l-hear',  cell: 0.1,  minz: 11, point: true },
+  hesm:  { box: 'l-hesm',  cell: 0.1,  minz: 12 },
+  heapa: { box: 'l-heapa', cell: 0.1,  minz: 11 },
+  hepg:  { box: 'l-hepg',  cell: 0.1,  minz: 11 },
+  hewh:  { box: 'l-hewh',  cell: 0.1,  minz: 9 },
+  hebf:  { box: 'l-hewh',  cell: 0.1,  minz: 9 },
+  heca:  { box: 'l-heca',  cell: 0.05, minz: 12 },
+};
+const HE_POLY = {   // fill, outline, fill opacity, dashed
+  hesm: ['#b3261e', '#7a1712', 0.28, false], heapa: ['#5b3a8c', '#5b3a8c', 0.10, true], hepg: ['#2f6b3a', '#24502c', 0.18, false],
+  hewh: ['#c8902a', '#8a5a00', 0.06, false], hebf: ['#4a4436', '#1b1a17', 0.10, true], heca: ['#1e5a8c', '#1e5a8c', 0.05, true],
+};
+const heCells = new Map(), heData = {};
+function heInit() {
+  if (map.getSource('he-plq')) return;
+  const before = map.getLayer('lb') ? 'lb' : undefined;
+  for (const k of Object.keys(HE)) { heData[k] = new Map(); map.addSource('he-' + k, { type: 'geojson', data: { type: 'FeatureCollection', features: [] },
+    attribution: k === 'plq' ? 'Plaques: <a href="https://openplaques.org/" target="_blank" rel="noopener">Open Plaques</a>' : 'England: Historic England, OGL v3' }); }
+  // Areas under everything else, widest first.
+  ['heca', 'heapa', 'hewh', 'hebf', 'hepg', 'hesm'].forEach((k) => {
+    const [fill, line, op, dash] = HE_POLY[k], vis = $(HE[k].box).checked ? 'visible' : 'none';
+    map.addLayer({ id: 'he-' + k + '-fill', type: 'fill', source: 'he-' + k, minzoom: HE[k].minz, layout: { visibility: vis }, paint: { 'fill-color': fill, 'fill-opacity': op } }, before);
+    map.addLayer({ id: 'he-' + k + '-line', type: 'line', source: 'he-' + k, minzoom: HE[k].minz, layout: { visibility: vis },
+      paint: Object.assign({ 'line-color': line, 'line-width': k === 'hewh' ? 2.5 : 1.2, 'line-opacity': 0.8 }, dash ? { 'line-dasharray': [3, 2] } : {}) }, before);
+  });
+  const pt = (k, paint, filter) => {
+    const vis = $(HE[k].box).checked ? 'visible' : 'none', f = filter ? { filter } : {};
+    map.addLayer(Object.assign({ id: 'he-' + k, type: 'circle', source: 'he-' + k, minzoom: HE[k].minz, layout: { visibility: vis }, paint }, f));
+    map.addLayer(Object.assign({ id: 'he-' + k + '-hit', type: 'circle', source: 'he-' + k, minzoom: HE[k].minz, layout: { visibility: vis },
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 8, 17, 14], 'circle-color': '#000', 'circle-opacity': 0 } }, f));
+  };
+  pt('helb', { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 2.5, 17, 6], 'circle-color': '#1b1a17', 'circle-stroke-color': '#e8dcb6', 'circle-stroke-width': 1 });
+  pt('hear', { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 4, 16, 8], 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#e0483e', 'circle-stroke-width': 2.5 });
+  // Plaques: the blue disc of a London blue plaque, with a paper rim.
+  pt('plq', { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 4, 17, 8], 'circle-color': '#1f4e9c', 'circle-stroke-color': '#f4ecd2', 'circle-stroke-width': 1.5 },
+    ['<=', ['get', 'from'], YEAR]);
+}
+function heLoad() {
+  if (!mapReady) return;
+  heInit();
+  const z = map.getZoom(), c = map.getCenter();
+  for (const [k, d] of Object.entries(HE)) {
+    if (!$(d.box).checked) continue;
+    const st = 'st-' + (k === 'hebf' ? 'hewh' : k);
+    if (z < d.minz) { status(st, 'Zoom in to see these (zoom ' + d.minz + '+).'); continue; }
+    const cx = Math.floor(c.lng / d.cell), cy = Math.floor(c.lat / d.cell), R = d.cell < 0.05 ? 1 : 0;
+    for (let x = cx - R; x <= cx + R; x++) for (let y = cy - R; y <= cy + R; y++) heCell(k, x, y, st);
+  }
+}
+async function heCell(k, cx, cy, st) {
+  const d = HE[k], key = k + ':' + cx + ':' + cy;
+  if (heCells.has(key)) return;
+  const b = [cx * d.cell, cy * d.cell, (cx + 1) * d.cell, (cy + 1) * d.cell].map((n) => n.toFixed(2)).join(',');
+  heCells.set(key, 'pending');
+  try {
+    const r = await fetch(P(d.src === 'plaques' ? { src: 'plaques', bbox: b } : { src: 'he', layer: k, bbox: b }));
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const fc = await r.json();
+    (fc.features || []).forEach((f) => heData[k].set(String(f.id != null ? f.id : JSON.stringify(f.properties)), f));
+    heCells.set(key, 'done');
+    map.getSource('he-' + k).setData({ type: 'FeatureCollection', features: [...heData[k].values()] });
+    const n = k === 'hewh' || k === 'hebf' ? heData.hewh.size + heData.hebf.size : heData[k].size;
+    status(st, n ? n + ' in view so far' : 'None here.');
+  } catch (e) { heCells.delete(key); status(st, 'Could not load (' + e.message + ').', true); }
+}
+Object.entries({ 'l-plq': ['plq'], 'l-helb': ['helb'], 'l-hear': ['hear'], 'l-hesm': ['hesm'], 'l-heapa': ['heapa'], 'l-hepg': ['hepg'], 'l-hewh': ['hewh', 'hebf'], 'l-heca': ['heca'] })
+  .forEach(([box, kinds]) => { $(box).addEventListener('change', (e) => {
+    if (!mapReady) return; heInit();
+    kinds.forEach((k) => ['he-' + k, 'he-' + k + '-hit', 'he-' + k + '-fill', 'he-' + k + '-line'].forEach((l) => map.getLayer(l) && map.setLayoutProperty(l, 'visibility', e.target.checked ? 'visible' : 'none')));
+    if (e.target.checked) heLoad();
+  }); });
+
+const heWhen = (ms) => { const d = ms ? new Date(Number(ms)) : null; return d && !isNaN(d) ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''; };
+// The List keeps many names in capitals: "BASILDON HOUSE" reads better as "Basildon House".
+const heName = (n) => { const t = String(n || ''); return t && t === t.toUpperCase() ? t.toLowerCase().replace(/(^|[\s(\-'’])([a-z])/g, (m, a, b) => a + b.toUpperCase()) : t; };
+function heHtml(p) {
+  const k = p.kind, link = httpsOnly(p.hyperlink || p.URL, /^historicengland\.org\.uk$/);
+  const g = String(p.Grade || '').trim(), grade = g ? ' · <span class="grade ' + (g === 'I' ? 'g1' : g === 'II*' ? 'g2s' : 'g2') + '">GRADE ' + esc(g) + '</span>' : '';
+  const head = (kind, title) => '<div class="lbx"><p class="lbx-kind">' + kind + '</p><h3>' + esc(title) + '</h3>';
+  if (k === 'heapa') return head('ARCHAEOLOGICAL PRIORITY AREA · GREATER LONDON', 'Archaeological Priority Area' + (p.area_type && p.area_type.trim() ? ' · ' + p.area_type : ''))
+    + (p.descriptio ? '<p class="lbx-ex">' + esc(p.descriptio.length > 700 ? p.descriptio.slice(0, 700).replace(/\s+\S*$/, '') + '…' : p.descriptio) + '</p>' : '')
+    + '<dl>' + tipRow('Record', p.primary_re ? 'Greater London HER ' + p.primary_re : '') + '</dl>'
+    + tipActs('https://historicengland.org.uk/services-skills/our-planning-services/greater-london-archaeology-advisory-service/greater-london-archaeological-priority-areas/', 'About these areas') + '</div>';
+  if (k === 'heca') return head('CONSERVATION AREA', p.NAME || 'Conservation area') + '<dl>' + tipRow('Designated', p.DATE_OF_DE) + tipRow('Authority', p.LPA) + '</dl>' + tipActs('', '') + '</div>';
+  if (k === 'hear') return head('HERITAGE AT RISK · 2026 REGISTER', p.EntryName || 'Heritage at risk')
+    + '<dl>' + tipRow('Asset', p.HeritageCa) + tipRow('Assessed as', p.Risk_Metho) + tipRow('List entry', p.List_Entry) + '</dl>' + tipActs(link, 'Risk register entry') + '</div>';
+  const label = { helb: 'LISTED BUILDING · HISTORIC ENGLAND' + grade, hesm: 'SCHEDULED MONUMENT · HISTORIC ENGLAND', hepg: 'REGISTERED PARK AND GARDEN' + grade,
+    hebf: 'REGISTERED BATTLEFIELD', hewh: 'WORLD HERITAGE SITE' }[k] || 'HISTORIC ENGLAND';
+  const date = p.ListDate || p.SchedDate || p.RegDate || p.InscrDate, verb = k === 'helb' ? 'Listed' : k === 'hesm' ? 'Scheduled' : k === 'hewh' ? 'Inscribed' : 'Registered';
+  return head(label, heName(p.Name) || 'Designated place') + '<dl>' + tipRow(verb, heWhen(date)) + tipRow('List entry', p.ListEntry) + '</dl>' + tipActs(link, 'The List entry') + '</div>';
+}
+function plqHtml(p) {
+  const id = /^\d+$/.test(String(p.id)) ? String(p.id) : '';
+  return '<div class="lbx"><p class="lbx-kind">PLAQUE · OPEN PLAQUES</p><p class="lbx-ex" style="font-size:13px">“' + esc(p.inscription || '') + '”</p>'
+    + tipActs(id ? 'https://openplaques.org/plaques/' + id : '', 'Open Plaques') + '</div>';
+}
+const heAsk = (p) => p.kind === 'heapa'
+  ? 'What has been found, or is expected, in this Greater London Archaeological Priority Area? ' + String(p.descriptio || '').slice(0, 300) + ' What would a time traveller have seen here? With sources.'
+  : 'Tell me the human story of ' + (heName(p.Name) || p.EntryName || p.NAME || 'this place') + ' (Historic England' + (p.ListEntry ? ' list entry ' + p.ListEntry : '') + '): who built it, who lived, worked or died here, and what happened. With sources.';
+const heTip = { key: (p) => 'he:' + p.kind + ':' + (p.ListEntry || p.List_Entry || p.NAME || p.primary_re), html: heHtml, ask: heAsk,
+  name: (p) => heName(p.Name) || p.EntryName || p.NAME || 'Archaeological Priority Area', place: (p) => heName(p.Name) || p.EntryName || p.NAME || '' };
+['he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill'].forEach((l) => { TIPS[l] = heTip; });
+TIPS['he-plq-hit'] = { key: (p) => 'plq:' + p.id, html: plqHtml,
+  ask: (p) => 'This plaque reads: "' + String(p.inscription || '').slice(0, 300) + '". Who was this, what did they do here, and what was this street like in their time? With sources.',
+  name: (p) => String(p.inscription || 'Plaque').split(/[,.]/)[0].slice(0, 80), place: (p) => String(p.inscription || '').split(/[,.]/)[0].slice(0, 80) };
+
 const lbTip = new maplibregl.Popup({ closeButton: false, closeOnClick: false, closeOnMove: false, focusAfterOpen: false, maxWidth: '300px', offset: 12, className: 'lb-tip' });
 let tipCurrent = null, tipKey = '', tipShowT = 0, tipHideT = 0;
 function hideTip() {
@@ -1171,7 +1304,7 @@ document.addEventListener('click', (e) => {
   else if (b.dataset.lb === 'stamp') addToPassport(b, String(t.name(p) || 'Place'), ll[0] != null ? +ll[0].toFixed(5) : null, ll[1] != null ? +ll[1].toFixed(5) : null);
 });
 
-['graph-places', 'stamps', 'pods', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
+['graph-places', 'stamps', 'pods', 'he-plq-hit', 'he-helb-hit', 'he-hear-hit', 'he-hesm-fill', 'he-hewh-fill', 'he-hebf-fill', 'he-hepg-fill', 'he-heapa-fill', 'he-heca-fill', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
   map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
 });
