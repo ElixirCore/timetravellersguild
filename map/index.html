@@ -151,11 +151,12 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   .askbtn{top:12px;right:56px}
   .guidebtn{top:48px;right:56px}
   .side{top:88px;left:8px;right:8px;width:auto;bottom:auto;max-height:calc(100dvh - 96px)}
-  .side.asking .ask{height:50dvh;flex:0 0 auto}
+  .side.asking .ask{height:38dvh;flex:0 0 auto}
+  .side.asking .card{max-height:22dvh}
   .panel{top:auto;bottom:0;left:0;width:100%;max-height:55dvh;box-shadow:0 -3px 0 var(--ink);border-width:1px 0 0}
   .panel.closed>*:not(.toggle){display:none}
   .toggle{display:block;width:100%;margin-bottom:8px}
-  .side:not(.asking) .card{max-height:45dvh}
+  .side:not(.asking) .card{max-height:34dvh}
   .guide{bottom:auto;top:8px;left:8px;right:8px;transform:none;width:auto;max-height:50dvh}
 }
 </style>
@@ -646,7 +647,9 @@ function heritage() {
 map.on('moveend', heritage);
 
 /* ---------- info card ---------- */
-const card = (html) => { $('card-b').innerHTML = html; $('card').style.display = 'block'; };
+const NARROW = matchMedia('(max-width:640px)');
+const foldLayers = () => { if (NARROW.matches && !$('panel').classList.contains('closed')) $('toggle').click(); };
+const card = (html) => { $('card-b').innerHTML = html; $('card').style.display = 'block'; foldLayers(); };
 $('card-x').onclick = () => { $('card').style.display = 'none'; map.getLayer('lb-hover') && map.setFilter('lb-hover', ['==', ['get', 'RecordNumber'], -1]); [...$('stamps').children].forEach((li) => li.style.background = ''); };
 const SKIP = /^(geom|the_geom|shape|objectid|fid|easting|northing|.*_cy)$/i;
 const dl = (props, prefer) => {
@@ -1329,7 +1332,7 @@ async function ask(q) {
     log('ai err', 'The map agent could not answer: ' + e.message);
   } finally { wait.remove(); busy = false; $('ask-go').disabled = false; }
 }
-const openAsk = (on) => { $('ask').classList.toggle('open', on); $('side').classList.toggle('asking', on); $('askbtn').style.display = on ? 'none' : ''; $('askbtn').setAttribute('aria-expanded', String(on)); if (on) $('ask-q').focus(); };
+const openAsk = (on) => { $('ask').classList.toggle('open', on); $('side').classList.toggle('asking', on); if (on) foldLayers(); $('askbtn').style.display = on ? 'none' : ''; $('askbtn').setAttribute('aria-expanded', String(on)); if (on) $('ask-q').focus(); };
 $('askbtn').onclick = () => openAsk(true);
 $('ask-x').onclick = () => openAsk(false);
 $('ask-f').onsubmit = (e) => { e.preventDefault(); const q = $('ask-q').value; $('ask-q').value = ''; ask(q); };
