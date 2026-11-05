@@ -11,6 +11,9 @@
  *   src=wiki   Wikipedia articles near a point (en / cy), and src=wikisum for one article's summary
  *   src=commons  geotagged Wikimedia Commons photos near a point (thumbnail, date taken, author, licence)
  *   src=europeana  old photographs by place name (Europeana; needs EUROPEANA_KEY in secret_agent.php)
+ *   src=osmhist  OpenStreetMap historic places (memorials, battlefields, ruins, mines…) in a 0.05° cell, worldwide (Overpass)
+ *   src=wdevents dated events near a point (Wikidata: strikes, riots, disasters, battles…), worldwide
+ *   src=wdpeople people born in settlements near a point (Wikidata), worldwide
  *
  * It is not an open proxy: the host is fixed per source and only named parameters pass through.
  * No keys are needed, so secrets.php is not used.
@@ -126,7 +129,7 @@ if ($src === 'wiki' || $src === 'wikisum') {
   $host = 'https://' . $lang . '.wikipedia.org';
   if ($src === 'wiki') {
     $lat = (float) ($_GET['lat'] ?? 0); $lng = (float) ($_GET['lng'] ?? 0);
-    if ($lat < 49 || $lat > 61.5 || $lng < -11 || $lng > 3) fail(400, 'Bad point');
+    if ($lat < -85 || $lat > 85 || $lng < -180 || $lng > 180) fail(400, 'Bad point');
     // Rounded to the client's 0.1° cell centres, so the cache is shared.
     $lat = round($lat, 2); $lng = round($lng, 2);
     $url = $host . '/w/api.php?' . http_build_query(['action' => 'query', 'format' => 'json', 'formatversion' => 2,
@@ -163,13 +166,13 @@ if ($src === 'wiki' || $src === 'wikisum') {
 if ($src === 'place') {
   $name = trim((string) ($_GET['q'] ?? ''));
   if ($name === '' || mb_strlen($name) > 80) fail(400, 'Bad place');
-  $key = 'place:' . mb_strtolower($name);
+  $key = 'place:world:' . mb_strtolower($name);
   $r = cached($CACHE, $key, 0, function () use ($name, $CACHE) {
     // Nominatim asks for no more than one request a second: serialise and space them out.
     $lock = fopen($CACHE . '/.nominatim.lock', 'c'); flock($lock, LOCK_EX);
     $last = (float) @file_get_contents($CACHE . '/.nominatim.last');
     $wait = 1.1 - (microtime(true) - $last); if ($wait > 0) usleep((int) ($wait * 1e6));
-    $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query(['q' => $name, 'format' => 'jsonv2', 'limit' => 1, 'countrycodes' => 'gb']);
+    $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query(['q' => $name, 'format' => 'jsonv2', 'limit' => 1]);
     [$body, $code] = fetch_url($url);
     file_put_contents($CACHE . '/.nominatim.last', (string) microtime(true)); flock($lock, LOCK_UN); fclose($lock);
     if ($code !== 200) return ['', $code, ''];
@@ -184,7 +187,7 @@ $plain = static fn($v): string => trim(preg_replace('/\s+/u', ' ', html_entity_d
 
 if ($src === 'commons') {
   $lat = (float) ($_GET['lat'] ?? 0); $lng = (float) ($_GET['lng'] ?? 0);
-  if ($lat < 49 || $lat > 61.5 || $lng < -11 || $lng > 3) fail(400, 'Bad point');
+  if ($lat < -85 || $lat > 85 || $lng < -180 || $lng > 180) fail(400, 'Bad point');
   $lat = round($lat, 2); $lng = round($lng, 2);
   $key = 'commons:v3:' . $lat . ',' . $lng;
   out(cached($CACHE, $key, 7 * 86400, function () use ($lat, $lng, $plain) {
@@ -256,6 +259,123 @@ if ($src === 'europeana') {
     }
     usort($items, fn($a, $b) => ((int) ($a['year'] ?? 9999)) <=> ((int) ($b['year'] ?? 9999)));
     return [json_encode(['total' => (int) ($j['totalResults'] ?? 0), 'items' => $items], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+/* Overpass and Wikidata can be slow: give these sources more than the default 30 s (where the host allows it). */
+if (in_array($src, ['osmhist', 'wdevents', 'wdpeople'], true)) @set_time_limit(100);
+
+/* Wikidata query service: busy answers are retried once (only if the first failed quickly) and never cached. */
+$sparql = static function (string $q): ?array {
+  $url = 'https://query.wikidata.org/sparql?' . http_build_query(['query' => $q, 'format' => 'json']);
+  $t0 = microtime(true);
+  for ($try = 0; $try < 2; $try++) {
+    [$b, $c] = fetch_url($url, 40);
+    $j = $c === 200 ? json_decode($b, true) : null;
+    if (is_array($j) && isset($j['results']['bindings'])) return $j['results']['bindings'];
+    if (microtime(true) - $t0 > 20) break;
+    usleep(1500000);
+  }
+  return null;
+};
+$point = static function (): array {
+  $lat = round((float) ($_GET['lat'] ?? 0), 2); $lng = round((float) ($_GET['lng'] ?? 0), 2);
+  if ($lat < -85 || $lat > 85 || $lng < -180 || $lng > 180 || ($lat == 0.0 && $lng == 0.0)) fail(400, 'Bad point');
+  return [$lat, $lng];
+};
+$qid = static fn(string $uri): string => preg_match('#/(Q\d+)$#', $uri, $m) ? $m[1] : '';
+$yearOf = static function (string $iso): ?int {
+  // Wikidata dates look like "1966-10-21T00:00:00Z" or "-0055-01-01T00:00:00Z"
+  return preg_match('/^(-?)(\d{1,6})-/', $iso, $m) ? (int) (($m[1] === '-' ? -1 : 1) * (int) $m[2]) : null;
+};
+
+if ($src === 'osmhist') {
+  $bbox = (string) ($_GET['bbox'] ?? '');
+  if (!preg_match('/^-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2},-?\d{1,3}\.\d{1,2},-?\d{1,2}\.\d{1,2}$/', $bbox)) fail(400, 'Bad bbox');
+  $b = array_map('floatval', explode(',', $bbox));
+  if ($b[2] - $b[0] > 0.051 || $b[3] - $b[1] > 0.051) fail(400, 'Area too large');
+  $q = '[out:json][timeout:45];nwr["historic"]["name"](' . $b[1] . ',' . $b[0] . ',' . $b[3] . ',' . $b[2] . ');out center tags 800;';
+  out(cached($CACHE, 'osmhist:v1:' . $bbox, 30 * 86400, function () use ($q) {
+    // The main public server first; if it fails quickly (busy, rate-limited), one public mirror.
+    $j = null; $t0 = microtime(true);
+    foreach (['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'] as $ep) {
+      [$body, $code] = fetch_url($ep . '?' . http_build_query(['data' => $q]), 50);
+      $j = $code === 200 ? json_decode($body, true) : null;
+      // Overpass reports timeouts and overload as a "remark" with HTTP 200: never cache those.
+      if (!is_array($j) || !isset($j['elements']) || preg_match('/runtime error|timed out|too many/i', (string) ($j['remark'] ?? ''))) $j = null;
+      if ($j !== null || microtime(true) - $t0 > 40) break;
+    }
+    if ($j === null) return ['', 503, ''];
+    $fs = [];
+    foreach ($j['elements'] as $e) {
+      $lon = $e['lon'] ?? ($e['center']['lon'] ?? null); $lat = $e['lat'] ?? ($e['center']['lat'] ?? null);
+      if ($lon === null || $lat === null) continue;
+      $t = $e['tags'] ?? [];
+      $p = [];
+      foreach (['name', 'name:en', 'historic', 'memorial', 'start_date', 'end_date', 'wikidata', 'wikipedia', 'inscription', 'description', 'heritage', 'site_type', 'castle_type', 'ruins'] as $k) {
+        if (isset($t[$k]) && is_string($t[$k]) && trim($t[$k]) !== '') $p[str_replace(':', '_', $k)] = mb_substr(trim($t[$k]), 0, $k === 'inscription' || $k === 'description' ? 300 : 120);
+      }
+      $p['osm'] = $e['type'] . '/' . $e['id'];
+      $fs[] = ['type' => 'Feature', 'id' => crc32($p['osm']), 'geometry' => ['type' => 'Point', 'coordinates' => [round((float) $lon, 5), round((float) $lat, 5)]], 'properties' => $p];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $fs], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'wdevents') {
+  [$lat, $lng] = $point();
+  out(cached($CACHE, 'wdevents:v1:' . $lat . ',' . $lng, 14 * 86400, function () use ($lat, $lng, $sparql, $qid, $yearOf) {
+    $q = 'SELECT ?item ?itemLabel ?itemDescription ?date ?end ?typeLabel ?coord ?article WHERE {
+      SERVICE wikibase:around { ?item wdt:P625 ?coord. bd:serviceParam wikibase:center "Point(' . $lng . ' ' . $lat . ')"^^geo:wktLiteral. bd:serviceParam wikibase:radius "10". }
+      ?item wdt:P31 ?type. FILTER(?type NOT IN (wd:Q5))
+      OPTIONAL { ?item wdt:P585 ?d1 } OPTIONAL { ?item wdt:P580 ?d2 } OPTIONAL { ?item wdt:P582 ?end }
+      BIND(COALESCE(?d1, ?d2) AS ?date) FILTER(BOUND(?date))
+      OPTIONAL { ?article schema:about ?item; schema:isPartOf <https://en.wikipedia.org/> }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en,cy,fr,de,es,it". }
+    } LIMIT 300';
+    $rows = $sparql($q);
+    if ($rows === null) return ['', 503, ''];
+    $by = [];
+    foreach ($rows as $x) {
+      $id = $qid((string) ($x['item']['value'] ?? '')); if ($id === '') continue;
+      if (!preg_match('/Point\(([-\d.eE]+) ([-\d.eE]+)\)/', (string) ($x['coord']['value'] ?? ''), $m)) continue;
+      $label = (string) ($x['itemLabel']['value'] ?? '');
+      if ($label === '' || preg_match('/^Q\d+$/', $label)) $label = (string) ($x['typeLabel']['value'] ?? 'Event');
+      if (!isset($by[$id])) $by[$id] = ['type' => 'Feature', 'id' => (int) substr($id, 1), 'geometry' => ['type' => 'Point', 'coordinates' => [round((float) $m[1], 5), round((float) $m[2], 5)]],
+        'properties' => array_filter(['label' => mb_substr($label, 0, 140), 'qid' => $id, 'year' => $yearOf((string) ($x['date']['value'] ?? '')),
+          'date' => substr((string) ($x['date']['value'] ?? ''), 0, 10), 'end' => substr((string) ($x['end']['value'] ?? ''), 0, 10),
+          'kind' => mb_substr((string) ($x['typeLabel']['value'] ?? ''), 0, 60), 'desc' => mb_substr((string) ($x['itemDescription']['value'] ?? ''), 0, 200),
+          'wiki' => (string) ($x['article']['value'] ?? '')], fn($v) => $v !== '' && $v !== null)];
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => array_values($by)], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'wdpeople') {
+  [$lat, $lng] = $point();
+  out(cached($CACHE, 'wdpeople:v1:' . $lat . ',' . $lng, 30 * 86400, function () use ($lat, $lng, $sparql, $qid, $yearOf) {
+    // Only real settlements count as birthplaces; regions like "South Wales" would pull in half a country.
+    $q = 'SELECT ?p ?pLabel ?pDescription ?birth ?death ?placeLabel ?article WHERE {
+      SERVICE wikibase:around { ?place wdt:P625 ?c. bd:serviceParam wikibase:center "Point(' . $lng . ' ' . $lat . ')"^^geo:wktLiteral. bd:serviceParam wikibase:radius "6". }
+      VALUES ?ptype { wd:Q486972 wd:Q3957 wd:Q532 wd:Q515 wd:Q5084 wd:Q188509 wd:Q123705 wd:Q1637706 wd:Q2630741 wd:Q15078955 wd:Q1549591 wd:Q7930989 }
+      ?place wdt:P31 ?ptype. ?p wdt:P19 ?place; wdt:P31 wd:Q5.
+      OPTIONAL { ?p wdt:P569 ?birth } OPTIONAL { ?p wdt:P570 ?death }
+      OPTIONAL { ?article schema:about ?p; schema:isPartOf <https://en.wikipedia.org/> }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en,cy,fr,de,es,it". }
+    } LIMIT 120';
+    $rows = $sparql($q);
+    if ($rows === null) return ['', 503, ''];
+    $by = [];
+    foreach ($rows as $x) {
+      $id = $qid((string) ($x['p']['value'] ?? '')); if ($id === '' || isset($by[$id])) continue;
+      $name = (string) ($x['pLabel']['value'] ?? ''); if ($name === '' || preg_match('/^Q\d+$/', $name)) continue;
+      $by[$id] = array_filter(['name' => mb_substr($name, 0, 120), 'qid' => $id, 'born' => $yearOf((string) ($x['birth']['value'] ?? '')), 'died' => $yearOf((string) ($x['death']['value'] ?? '')),
+        'place' => mb_substr((string) ($x['placeLabel']['value'] ?? ''), 0, 80), 'desc' => mb_substr((string) ($x['pDescription']['value'] ?? ''), 0, 160),
+        'wiki' => (string) ($x['article']['value'] ?? '')], fn($v) => $v !== '' && $v !== null);
+    }
+    $people = array_values($by);
+    usort($people, fn($a, $b) => ($a['born'] ?? 9999) <=> ($b['born'] ?? 9999));
+    return [json_encode(['people' => $people], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
   }), 86400);
 }
 

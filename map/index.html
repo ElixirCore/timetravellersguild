@@ -212,10 +212,14 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="st" id="st-wiki"></div>
   <div class="row"><label><input type="checkbox" id="l-photos" checked> Photos <span class="key">(Wikimedia Commons)</span></label></div>
   <div class="st" id="st-photos"></div>
+  <div class="row"><label><input type="checkbox" id="l-osmh" checked> Historic places <span class="key">(OpenStreetMap)</span></label></div>
+  <div class="st" id="st-osmh"></div>
+  <div class="row"><label><input type="checkbox" id="l-events" checked> Events <span class="key">(Wikidata)</span></label></div>
+  <div class="st" id="st-events"></div>
   <div class="row"><span>Old map</span>
     <select id="oldmap" aria-label="Historic Ordnance Survey map">
       <option value="off">Off</option>
-      <option value="match">Match the year</option>
+      <option value="match">Match the year (Britain)</option>
       <option value="uk-osgb63k1885">1885–1903 · one-inch, hills</option>
       <option value="uk-osgb10k1888">1888–1913 · six-inch</option>
       <option value="uk-osgb1919">c. 1919</option>
@@ -246,7 +250,7 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="seg"><button type="button" id="b-play" aria-pressed="false">▶ Replay route</button></div>
   <ul class="stamps" id="stamps"></ul>
 
-  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Coflein sites and Historic Place Names: RCAHMW via DataMapWales. Wikipedia: CC BY-SA. Photos: Wikimedia Commons contributors (licence on each photo); old photographs via Europeana. Historic maps: National Library of Scotland, via MapTiler. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
+  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Coflein sites and Historic Place Names: RCAHMW via DataMapWales. Wikipedia: CC BY-SA. Photos: Wikimedia Commons contributors (licence on each photo); old photographs via Europeana. Historic places © OpenStreetMap contributors (ODbL). Events and people: Wikidata (CC0). Historic maps: National Library of Scotland, via MapTiler. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
 </aside>
 
 <button class="guidebtn" id="guidebtn" type="button" aria-pressed="false" aria-controls="guide">GUIDE</button>
@@ -330,6 +334,8 @@ const style = {
     names: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     wiki: { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: 'Wikipedia (CC BY-SA)' },
     photos: { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: 'Photos: Wikimedia Commons' },
+    osmh: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    events: { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: 'Events &amp; people: Wikidata' },
     route: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     stamps: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
     pods: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
@@ -372,6 +378,17 @@ const style = {
       paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 3, 16, 6], 'circle-color': '#e0483e', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 1, 'circle-opacity': 0.85 } },
     { id: 'photos-hit', type: 'circle', source: 'photos', minzoom: 13, filter: ['<=', ['get', 'from'], 2100],
       paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 8, 16, 12], 'circle-color': '#000', 'circle-opacity': 0 } },
+    { id: 'osmh', type: 'circle', source: 'osmh', minzoom: 13, filter: ['<=', ['get', 'from'], 2100],
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 2.5, 16, 6], 'circle-color': '#6b4226', 'circle-stroke-color': '#f4ecd2', 'circle-stroke-width': 1 } },
+    { id: 'osmh-hit', type: 'circle', source: 'osmh', minzoom: 13, filter: ['<=', ['get', 'from'], 2100],
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 8, 16, 12], 'circle-color': '#000', 'circle-opacity': 0 } },
+    { id: 'events', type: 'circle', source: 'events', minzoom: 8, filter: ['<=', ['get', 'from'], 2100],
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 5, 15, 8], 'circle-color': '#1b1a17', 'circle-stroke-color': '#e0483e', 'circle-stroke-width': 2 } },
+    { id: 'events-label', type: 'symbol', source: 'events', minzoom: 11, filter: ['<=', ['get', 'from'], 2100],
+      layout: { 'text-field': ['to-string', ['get', 'year']], 'text-font': CFG.font, 'text-size': 10, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true },
+      paint: { 'text-color': '#7a1712', 'text-halo-color': '#f4ecd2', 'text-halo-width': 1.3 } },
+    { id: 'events-hit', type: 'circle', source: 'events', minzoom: 8, filter: ['<=', ['get', 'from'], 2100],
+      paint: { 'circle-radius': 12, 'circle-color': '#000', 'circle-opacity': 0 } },
     { id: 'wiki', type: 'circle', source: 'wiki', minzoom: 9,
       paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 5, 15, 8], 'circle-color': '#f4ecd2', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 1.5 } },
     { id: 'wiki-w', type: 'symbol', source: 'wiki', minzoom: 9,
@@ -459,6 +476,8 @@ $('l-sam').onchange = (e) => { vis(['sam-fill', 'sam-line'], e.target.checked); 
 $('l-nmrw').onchange = (e) => { vis(['nmrw', 'nmrw-hit'], e.target.checked); if (!e.target.checked) hideTip(); heritage(); };
 $('l-names').onchange = (e) => { vis(['names', 'names-dot', 'names-hit'], e.target.checked); if (!e.target.checked) hideTip(); heritage(); };
 $('l-wiki').onchange = (e) => { vis(['wiki', 'wiki-w'], e.target.checked); if (!e.target.checked) hideTip(); heritage(); };
+$('l-osmh').onchange = (e) => { vis(['osmh', 'osmh-hit'], e.target.checked); heritage(); };
+$('l-events').onchange = (e) => { vis(['events', 'events-label', 'events-hit'], e.target.checked); heritage(); };
 $('l-photos').onchange = (e) => { vis(['photos', 'photos-hit'], e.target.checked); if (!e.target.checked) hideTip(); heritage(); };
 $('wiki-lang').onchange = () => { wikiLoaded.clear(); map.getSource('wiki') && map.getSource('wiki').setData({ type: 'FeatureCollection', features: [] }); hideTip(); heritage(); };
 $('l-lb').onchange = (e) => { vis(['lb', 'lb-hover', 'lb-hit'], e.target.checked); if (!e.target.checked) hideTip(); heritage(); };
@@ -514,7 +533,7 @@ function setYear(y) {
   $('yr-v').textContent = fmtYear(YEAR);
   $('yr-note').textContent = YEAR >= 2100 ? 'Everything on record, any date.' : 'Showing only what existed or was named by ' + fmtYear(YEAR) + (STOPS[i][0] === YEAR && STOPS[i][1] ? ' · ' + STOPS[i][1] : '') + '.';
   const f = ['<=', ['get', 'from'], YEAR];
-  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
+  ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
   hideTip();
   if ($('oldmap').value === 'match') applyOldMap();
   return { year: YEAR, label: fmtYear(YEAR) };
@@ -592,6 +611,78 @@ function photoLoad() {
   cells.sort((a, b) => Math.hypot(a[0] - cx, a[1] - cy) - Math.hypot(b[0] - cx, b[1] - cy));
   cells.slice(0, 16).forEach(([x, y]) => photoCell(x, y));
 }
+/* ---------- worldwide social history: OpenStreetMap historic places, Wikidata events ---------- */
+// "1850", "~1850", "1850..1860", "C19", "-0055" → a year (or null if the date says nothing usable)
+function yearOf(v) {
+  const t = String(v == null ? '' : v).trim();
+  let m = t.match(/^(?:~|c\.?\s*|before\s+|after\s+)?(-?\d{1,4})\b/i); if (m) return parseInt(m[1], 10);
+  m = t.match(/^C(\d{1,2})$/i); if (m) return (parseInt(m[1], 10) - 1) * 100;
+  return null;
+}
+function gridLayer(o) {
+  const loaded = new Map(), pending = new Set();
+  async function cell(cx, cy) {
+    const key = cx + ':' + cy;
+    if (loaded.has(key) || pending.has(key)) return loaded.get(key) || [];
+    pending.add(key);
+    try {
+      const r = await fetch(P(o.params(cx, cy)));
+      if (!r.ok) throw new Error(r.status === 503 ? 'the source is busy; it will retry' : 'HTTP ' + r.status);
+      const fs = ((await r.json()).features || []).map((f) => { f.properties.from = o.from(f.properties); return f; });
+      loaded.set(key, fs);
+      const all = new Map(); for (const list of loaded.values()) for (const f of list) all.set(f.id, f);
+      map.getSource(o.source).setData({ type: 'FeatureCollection', features: [...all.values()] });
+      status(o.status, all.size + ' ' + o.noun + ' in view so far');
+      return fs;
+    } catch (e) { status(o.status, 'Could not load (' + e.message + ').', true); return []; }
+    finally { pending.delete(key); }
+  }
+  function load() {
+    if (!$(o.box).checked) return;
+    if (map.getZoom() < o.minz) { status(o.status, 'Zoom in to see these (zoom ' + o.minz + '+).'); return; }
+    const c = map.getCenter(), bb = map.getBounds(), cx = Math.floor(c.lng / o.size), cy = Math.floor(c.lat / o.size), R = o.reach;
+    const cells = [];
+    for (let x = Math.max(cx - R, Math.floor(bb.getWest() / o.size)); x <= Math.min(cx + R, Math.floor(bb.getEast() / o.size)); x++)
+      for (let y = Math.max(cy - R, Math.floor(bb.getSouth() / o.size)); y <= Math.min(cy + R, Math.floor(bb.getNorth() / o.size)); y++) cells.push([x, y]);
+    cells.sort((a, b) => Math.hypot(a[0] - cx, a[1] - cy) - Math.hypot(b[0] - cx, b[1] - cy));
+    cells.slice(0, o.max).forEach(([x, y]) => cell(x, y));
+  }
+  async function near(lng, lat, km) {
+    const dLat = km / 111.2, dLng = km / (111.2 * Math.cos(lat * Math.PI / 180)), lists = [];
+    for (let x = Math.floor((lng - dLng) / o.size); x <= Math.floor((lng + dLng) / o.size); x++)
+      for (let y = Math.floor((lat - dLat) / o.size); y <= Math.floor((lat + dLat) / o.size); y++) lists.push(cell(x, y));
+    const seen = new Map(); (await Promise.all(lists.slice(0, 6))).flat().forEach((f) => seen.set(f.id, f));
+    return [...seen.values()].map((f) => ({ p: f.properties, ll: f.geometry.coordinates, km: kmBetween([lng, lat], f.geometry.coordinates) }))
+      .filter((x) => x.km <= km).sort((a, b) => a.km - b.km);
+  }
+  return { cell, load, near };
+}
+const OSMH = gridLayer({ source: 'osmh', box: 'l-osmh', status: 'st-osmh', noun: 'historic places', size: 0.05, minz: 13, reach: 1, max: 4,
+  params: (cx, cy) => ({ src: 'osmhist', bbox: [cx * 0.05, cy * 0.05, (cx + 1) * 0.05, (cy + 1) * 0.05].map((n) => n.toFixed(2)).join(',') }),
+  from: (p) => { const y = yearOf(p.start_date); return y === null ? 2100 : y; } });
+const EVENTS = gridLayer({ source: 'events', box: 'l-events', status: 'st-events', noun: 'dated events', size: 0.1, minz: 8, reach: 1, max: 4,
+  params: (cx, cy) => ({ src: 'wdevents', lat: ((cy + 0.5) * 0.1).toFixed(2), lng: ((cx + 0.5) * 0.1).toFixed(2) }),
+  from: (p) => (p.year == null ? 2100 : Number(p.year)) });
+async function peopleFrom(lng, lat) {
+  const r = await fetch(P({ src: 'wdpeople', lat: lat.toFixed(2), lng: lng.toFixed(2) }));
+  if (!r.ok) throw new Error(r.status === 503 ? 'Wikidata is busy; try again in a moment' : 'HTTP ' + r.status);
+  return (await r.json()).people || [];
+}
+async function showPeople(ll, place) {
+  card('<div class="lbx"><p class="lbx-kind">PEOPLE FROM HERE · WIKIDATA</p><h3>' + esc(place || 'Near this point') + '</h3><p class="lbx-ex">Looking through the records…</p></div>');
+  try {
+    const all = await peopleFrom(ll[0], ll[1]);
+    const ppl = all.filter((x) => YEAR >= 2100 || (x.born != null && x.born <= YEAR));
+    const life = (x) => (x.born != null ? fmtYear(x.born) : '?') + '–' + (x.died != null ? fmtYear(x.died) : (x.born != null && x.born < 1910 ? '?' : ''));
+    $('card-b').innerHTML = '<div class="lbx"><p class="lbx-kind">PEOPLE FROM HERE · WIKIDATA' + (YEAR < 2100 ? ' · BORN BY ' + esc(fmtYear(YEAR)) : '') + '</p><h3>' + esc(place || 'Near this point') + '</h3>'
+      + (ppl.length ? '<dl>' + ppl.slice(0, 60).map((x) => {
+          const link = httpsOnly(x.wiki, /^en\.wikipedia\.org$/);
+          return '<dt>' + esc(life(x)) + '</dt><dd>' + (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' + esc(x.name) + '</a>' : esc(x.name))
+            + (x.desc ? ' · ' + esc(x.desc) : '') + (x.place ? ' <span style="color:var(--ink-2)">(' + esc(x.place) + ')</span>' : '') + '</dd>'; }).join('') + '</dl>'
+        : '<p class="lbx-ex">No one recorded as born within a few kilometres' + (YEAR < 2100 ? ' by ' + esc(fmtYear(YEAR)) : '') + '.</p>')
+      + '<p class="lbx-kind" style="margin-top:8px">Birthplaces in towns and villages within about 6 km. Wikidata is uneven: the famous are over-counted, everyone else is missing.</p></div>';
+  } catch (e) { $('card-b').innerHTML = '<div class="lbx"><p class="lbx-kind">PEOPLE FROM HERE</p><p class="lbx-ex">' + esc(e.message) + '.</p></div>'; }
+}
 function wikiLoad() {
   if (!$('l-wiki').checked) return;
   if (map.getZoom() < 9) { status('st-wiki', 'Zoom in to see these (zoom 9+).'); return; }
@@ -629,7 +720,7 @@ map.on('load', () => { mapReady = true; });
 function heritage() {
   if (!mapReady) return; // the 'load' handler calls heritage() once sources exist
   const z = map.getZoom(), bb = map.getBounds();
-  wikiLoad(); photoLoad();
+  wikiLoad(); photoLoad(); OSMH.load(); EVENTS.load();
   for (const kind of ['sam', 'lb', 'nmrw', 'names']) {
     if (!$('l-' + kind).checked) continue;
     if (z < MINZ[kind]) { status('st-' + kind, 'Zoom in to see these (zoom ' + MINZ[kind] + '+).'); continue; }
@@ -661,7 +752,7 @@ map.on('click', async (e) => {
   const now = Date.now(), near = lastClick && now - lastClick.t < 350 && Math.hypot(e.point.x - lastClick.x, e.point.y - lastClick.y) < 24;
   lastClick = near ? null : { t: now, x: e.point.x, y: e.point.y };
   if (near) return tapPoint(e);
-  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['graph-places', 'stamps', 'pods', 'sam-fill', 'lb-hit', 'lb', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'trail'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
   if (hit) {
     const p = hit.properties || {};
     if (hit.layer.id === 'graph-places') {
@@ -795,8 +886,29 @@ function lbHtml(p) {
 const httpsOnly = (u, hostRe) => { try { const x = new URL(String(u || '').replace(/^http:/, 'https:')); return x.protocol === 'https:' && hostRe.test(x.hostname) ? x.href : ''; } catch (e) { return ''; } };
 const tipRow = (k, v) => v ? '<dt>' + esc(k) + '</dt><dd>' + esc(v) + '</dd>' : '';
 const tipActs = (link, label) => '<p class="lbx-acts">' + (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">' + esc(label) + ' ↗</a>' : '')
-  + '<button type="button" data-lb="ask">Ask the guide</button>' + (CFG.europeana ? '<button type="button" data-lb="old" title="Old photographs and objects from the archives (Europeana)">Archives</button>' : '')
+  + '<button type="button" data-lb="ask">Ask the guide</button><button type="button" data-lb="people" title="People born near here (Wikidata)">People</button>' + (CFG.europeana ? '<button type="button" data-lb="old" title="Old photographs and objects from the archives (Europeana)">Archives</button>' : '')
   + '<button type="button" data-lb="stamp">+ Passport</button></p>';
+const humanise = (v) => String(v || '').replace(/_/g, ' ').replace(/^yes$/, 'historic site');
+const wpLink = (tag) => { const m = String(tag || '').match(/^([a-z-]{2,12}):(.+)$/); return m ? 'https://' + m[1] + '.wikipedia.org/wiki/' + encodeURIComponent(m[2].replace(/ /g, '_')) : ''; };
+function osmHtml(p) {
+  const kind = humanise(p.historic) + (p.memorial ? ' · ' + humanise(p.memorial) : '') + (p.castle_type ? ' · ' + humanise(p.castle_type) : '');
+  const y = yearOf(p.start_date), wp = wpLink(p.wikipedia), wd = /^Q\d+$/.test(String(p.wikidata || '')) ? 'https://www.wikidata.org/wiki/' + p.wikidata : '';
+  const osm = /^(node|way|relation)\/\d+$/.test(String(p.osm || '')) ? 'https://www.openstreetmap.org/' + p.osm : '';
+  return '<div class="lbx"><p class="lbx-kind">HISTORIC PLACE · OPENSTREETMAP · ' + esc(kind.toUpperCase()) + '</p><h3>' + esc(p.name_en || p.name || '') + '</h3>'
+    + (p.name_en && p.name && p.name_en !== p.name ? '<p class="lbx-cy">' + esc(p.name) + '</p>' : '')
+    + (p.inscription ? '<p class="lbx-ex">“' + esc(p.inscription) + '”</p>' : '') + (p.description ? '<p class="lbx-ex">' + esc(p.description) + '</p>' : '')
+    + '<dl>' + tipRow('Dates', [p.start_date, p.end_date].filter(Boolean).join(' – ') + (y !== null ? '' : '')) + tipRow('Heritage', p.heritage ? 'protected (level ' + p.heritage + ')' : '')
+    + (wd ? '<dt>Wikidata</dt><dd><a href="' + esc(wd) + '" target="_blank" rel="noopener noreferrer">' + esc(p.wikidata) + '</a></dd>' : '') + '</dl>'
+    + tipActs(wp || osm, wp ? 'Wikipedia' : 'OpenStreetMap') + '</div>';
+}
+function eventHtml(p) {
+  const wp = httpsOnly(p.wiki, /^en\.wikipedia\.org$/), wd = /^Q\d+$/.test(String(p.qid || '')) ? 'https://www.wikidata.org/wiki/' + p.qid : '';
+  return '<div class="lbx"><p class="lbx-kind">EVENT · WIKIDATA' + (p.kind ? ' · ' + esc(String(p.kind).toUpperCase()) : '') + '</p><h3>' + esc(p.label || '') + '</h3>'
+    + (p.desc ? '<p class="lbx-ex">' + esc(p.desc) + '</p>' : '')
+    + '<dl>' + tipRow('When', [p.date, p.end].filter(Boolean).join(' – ') || (p.year != null ? fmtYear(p.year) : ''))
+    + (wd ? '<dt>Record</dt><dd><a href="' + esc(wd) + '" target="_blank" rel="noopener noreferrer">' + esc(p.qid) + '</a></dd>' : '') + '</dl>'
+    + tipActs(wp, 'Wikipedia') + '</div>';
+}
 function photoHtml(p) {
   const img = httpsOnly(p.thumb, /^(upload|thumb)\.wikimedia\.org$/), page = httpsOnly(p.page, /^commons\.wikimedia\.org$/);
   return '<div class="lbx"><p class="lbx-kind">PHOTO · WIKIMEDIA COMMONS' + (p.year ? ' · ' + esc(p.year) : '') + '</p>'
@@ -881,6 +993,12 @@ const TIPS = {
   wiki: { key: (p) => 'w:' + p.lang + ':' + p.title, html: wikiHtml, after: fillWiki,
     ask: (p) => 'Tell me the deep history of ' + (p.title || 'this place') + '. One or two time-travel facts, with sources.',
     name: (p) => p.title, place: (p) => p.title },
+  'osmh-hit': { key: (p) => 'o:' + p.osm, html: osmHtml,
+    ask: (p) => 'Tell me the human story of ' + (p.name_en || p.name || 'this place') + ' (' + humanise(p.historic) + (p.start_date ? ', ' + p.start_date : '') + '): who built it, who lived or worked or died here, and what happened. With sources.',
+    name: (p) => p.name_en || p.name, place: (p) => p.name_en || p.name },
+  'events-hit': { key: (p) => 'e:' + p.qid, html: eventHtml,
+    ask: (p) => 'Tell me about ' + (p.label || 'this event') + (p.date ? ' (' + p.date + ')' : '') + ': what happened, who was caught up in it, and how it is remembered here. With sources.',
+    name: (p) => p.label, place: (p) => p.label },
   'photos-hit': { key: (p) => 'ph:' + p.page, html: photoHtml,
     ask: (p) => 'This photo is "' + (p.title || '') + '"' + (p.year ? ', taken in ' + p.year : '') + '. What is it, and how has this place changed over time? With sources.',
     // "Footpath in Abercraf" → Abercraf; "Cottages at Craig-y-nos" → Craig-y-nos; otherwise the title before any " / "
@@ -913,11 +1031,12 @@ document.addEventListener('click', (e) => {
   const b = e.target.closest && e.target.closest('[data-lb]'); if (!b || !tipCurrent) return;
   const t = TIPS[tipCurrent.kind], p = tipCurrent.p, ll = tipCurrent.ll || [null, null];
   if (b.dataset.lb === 'ask') { hideTip(); openAsk(true); ask(t.ask(p)); }
+  else if (b.dataset.lb === 'people') { hideTip(); if (ll[0] != null) showPeople(ll, String((t.place && t.place(p)) || t.name(p) || '')); }
   else if (b.dataset.lb === 'old') { hideTip(); showOldPhotos(String((t.place && t.place(p)) || t.name(p) || '')); }
   else if (b.dataset.lb === 'stamp') addToPassport(b, String(t.name(p) || 'Place'), ll[0] != null ? +ll[0].toFixed(5) : null, ll[1] != null ? +ll[1].toFixed(5) : null);
 });
 
-['graph-places', 'stamps', 'pods', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
+['graph-places', 'stamps', 'pods', 'sam-fill', 'lb', 'lb-hit', 'nmrw-hit', 'names-hit', 'wiki', 'photos-hit', 'osmh-hit', 'events-hit', 'pins', 'trail', 'run-points'].forEach((l) => {
   map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
 });
@@ -1131,7 +1250,7 @@ async function apiEndRun() {
 
 /* ---------- the agent: OpenAI via agent.php, tools run here ---------- */
 const num = (v, lo, hi) => { const n = Number(v); if (!Number.isFinite(n) || n < lo || n > hi) throw new Error('number out of range'); return n; };
-const LNG = (v) => num(v, -11, 3), LAT = (v) => num(v, 49, 61.5);   // Great Britain and Ireland
+const LNG = (v) => num(v, -180, 180), LAT = (v) => num(v, -85, 85);   // anywhere
 const setBox = (id, on) => { const el = $(id); if (el.checked !== on) { el.checked = on; el.dispatchEvent(new Event('change')); } };
 function view() {
   const b = map.getBounds(), c = map.getCenter(), on = (id) => $(id).checked;
@@ -1139,7 +1258,7 @@ function view() {
     bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map((n) => +n.toFixed(4)), last_tapped: lastTap,
     layers: { terrain: on('l-terrain'), hillshade: on('l-hill'), contours: on('l-contour'), geology: on('l-geo') ? $('geo-layer').selectedOptions[0].textContent : 'off',
       monuments: on('l-sam'), listed_buildings: on('l-lb'), coflein: on('l-nmrw'), place_names: on('l-names'), wikipedia: on('l-wiki') ? $('wiki-lang').value : false,
-      old_map: $('oldmap').value, photos: on('l-photos'), routes: on('l-route'), timepods: on('l-pods') }, year: fmtYear(YEAR), stamps_loaded: STAMPS.length };
+      old_map: $('oldmap').value, photos: on('l-photos'), historic_places: on('l-osmh'), events: on('l-events'), routes: on('l-route'), timepods: on('l-pods') }, year: fmtYear(YEAR), stamps_loaded: STAMPS.length };
 }
 async function featuresNear(kind, a, max) {
   const P0 = [LNG(a.lng), LAT(a.lat)], R = num(a.radius_km == null ? 1 : a.radius_km, 0.05, 5);
@@ -1195,6 +1314,25 @@ const TOOLS = {
     return Object.assign({ source: 'Wikipedia' }, await r.json());
   },
   set_year: async (a) => Object.assign({ ok: true }, setYear(a.year)),
+  historic_near: async (a) => {
+    setBox('l-osmh', true);
+    const near = (await OSMH.near(LNG(a.lng), LAT(a.lat), num(a.radius_km == null ? 1 : a.radius_km, 0.05, 3))).slice(0, 25);
+    return { source: 'OpenStreetMap historic features (worldwide, crowd-mapped)', count: near.length,
+      places: near.map((x) => ({ km: +x.km.toFixed(2), name: x.p.name_en || x.p.name, kind: humanise(x.p.historic) + (x.p.memorial ? ' / ' + humanise(x.p.memorial) : ''),
+        dates: [x.p.start_date, x.p.end_date].filter(Boolean).join(' – ') || undefined, inscription: x.p.inscription, wikidata: x.p.wikidata, wikipedia: wpLink(x.p.wikipedia) || undefined })) };
+  },
+  events_near: async (a) => {
+    setBox('l-events', true);
+    const near = (await EVENTS.near(LNG(a.lng), LAT(a.lat), num(a.radius_km == null ? 10 : a.radius_km, 0.5, 15))).slice(0, 30);
+    return { source: 'Wikidata (dated events with coordinates)', count: near.length,
+      events: near.map((x) => ({ km: +x.km.toFixed(1), what: x.p.label, kind: x.p.kind, date: x.p.date, end: x.p.end, about: x.p.desc, wikipedia: x.p.wiki, wikidata: x.p.qid })).sort((m, n) => String(m.date).localeCompare(String(n.date))) };
+  },
+  people_from: async (a) => {
+    const lng = LNG(a.lng), lat = LAT(a.lat), all = await peopleFrom(lng, lat);
+    if (a.show !== false) showPeople([lng, lat], String(a.place || ''));
+    return { source: 'Wikidata birthplaces within about 6 km (uneven: notable people only)', count: all.length,
+      people: all.slice(0, 40).map((x) => ({ name: x.name, born: x.born, died: x.died, place: x.place, about: x.desc, wikipedia: x.wiki })) };
+  },
   photos_near: async (a) => {
     const P0 = [LNG(a.lng), LAT(a.lat)], R = num(a.radius_km == null ? 1 : a.radius_km, 0.05, 5);
     setBox('l-photos', true);
@@ -1224,7 +1362,7 @@ const TOOLS = {
   my_stamps: async () => ({ source: "the viewer's passport record", stamps: STAMPS.map((s) => ({ n: s.n, place: s.place, line: s.line, inked: s.inked, lng: +s.ll[0].toFixed(5), lat: +s.ll[1].toFixed(5), position: s.approx ? 'looked up from the name' : 'from the record' })), not_on_map: Math.max(0, $('stamps').children.length - STAMPS.length) }),
   fly_to: async (a) => { const lng = LNG(a.lng), lat = LAT(a.lat); map.flyTo({ center: [lng, lat], zoom: a.zoom == null ? 13 : num(a.zoom, 5, 17), duration: 1600 }); dropPin(lng, lat, String(a.label || '').slice(0, 60)); return { ok: true }; },
   set_layers: async (a) => {
-    const m = { terrain: 'l-terrain', hillshade: 'l-hill', contours: 'l-contour', monuments: 'l-sam', listed_buildings: 'l-lb', coflein: 'l-nmrw', place_names: 'l-names', wikipedia: 'l-wiki', photos: 'l-photos', routes: 'l-route', timepods: 'l-pods' };
+    const m = { terrain: 'l-terrain', hillshade: 'l-hill', contours: 'l-contour', monuments: 'l-sam', listed_buildings: 'l-lb', coflein: 'l-nmrw', place_names: 'l-names', wikipedia: 'l-wiki', photos: 'l-photos', historic_places: 'l-osmh', events: 'l-events', routes: 'l-route', timepods: 'l-pods' };
     for (const [k, id] of Object.entries(m)) if (typeof a[k] === 'boolean') setBox(id, a[k]);
     if (typeof a.geology === 'string') { if (a.geology === 'off') setBox('l-geo', false); else if (GEO[a.geology]) { $('geo-layer').value = GEO[a.geology]; $('geo-layer').dispatchEvent(new Event('change')); setBox('l-geo', true); } }
     let old = null;
@@ -1282,7 +1420,8 @@ const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geol
   terrain_profile: 'traced a height profile', heritage_near: 'searched Cadw records', my_stamps: 'read your stamps', fly_to: 'moved the map', set_layers: 'switched layers', set_camera: 'turned the camera',
   add_stamp: 'inked a place slip', start_run: 'started a run', end_run: 'ended the run', sites_near: 'searched Coflein', names_near: 'read the old place names',
   wiki_near: 'looked on Wikipedia', wiki_summary: 'read a Wikipedia article', set_year: 'travelled in time',
-  photos_near: 'looked at photos', old_photos: 'searched the old photographs' };
+  photos_near: 'looked at photos', old_photos: 'searched the old photographs', historic_near: 'searched OpenStreetMap history',
+  events_near: 'looked up events', people_from: 'looked up people from here' };
 let convo = '', busy = false;
 // Web sources under an answer: https links only, built as DOM nodes (never HTML from the model).
 const sourceList = (sources) => {

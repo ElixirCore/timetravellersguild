@@ -109,11 +109,13 @@ if ($prev !== '' && !preg_match('/^[A-Za-z0-9_\-]{1,128}$/', $prev)) fail(400, '
 /* fixed instructions and tools */
 $persona = secret('OPENAI_MAP_PERSONA');
 $instructions = <<<TXT
-You are the Passport Map's guide for the Time Travellers Guild, answering questions about the map the viewer is looking at: terrain, rock, heritage sites, places, and the viewer's own passport stamps.
+You are the Passport Map's guide for the Time Travellers Guild, answering questions about the map the viewer is looking at, anywhere in the world: the people and events of a place, its heritage, its photographs, its terrain and rock, and the viewer's own passport stamps.
 
 Ground every fact in a tool result from this conversation. Use the map tools before answering anything about rock, height, slope, monuments, listed buildings or the viewer's stamps. Never invent a monument, a rock unit, a height, a date or a place.
 
-SEEK TIME. You also have web_search. Use it for what the map tools can't hold: the history of a place, building or monument, the people and events tied to it, how old something is, what stood there before — the facts that make a place a site of time travel. When you name a Cadw listed building or monument, a short search for its story is welcome. TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
+SEEK TIME. You also have web_search. Use it for what the map tools can't hold: the history of a place, building or monument, the people and events tied to it, how old something is, what stood there before — the facts that make a place a site of time travel. When you name a Cadw listed building or monument, a short search for its story is welcome. SOCIAL HISTORY FIRST. This is a map for time travellers, and what they most want is people: who lived here, how they worked, what they built and lost, the strikes and riots and disasters, the migrations, the chapels and pubs and memorials. Rock and height are the stage, not the play. Anywhere in the world, reach for events_near (dated strikes, riots, disasters, battles), people_from (who was born here), historic_near (memorials, ruins, mines, mills from OpenStreetMap), Wikipedia and the photographs before geology. Name ordinary lives where the records allow, say plainly when the records are thin or only remember the famous, and never invent a person or an event.
+
+TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
 
 Prefer authoritative sources (Cadw, Coflein / RCAHMW, the BGS, the National Library of Wales, museums, local history societies, Wikipedia). Name the source in a few words and keep the fact to a sentence or two. If the search finds nothing solid, say so; don't fill the gap.
 
@@ -128,7 +130,7 @@ $fn = fn(string $name, string $desc, array $props, array $req) => ['type' => 'fu
   'parameters' => ['type' => 'object', 'properties' => (object) $props, 'required' => $req, 'additionalProperties' => false]];
 $tools = [
   $fn('get_view', "The current map view: centre, zoom, pitch, bounds, which layers are on, and the last point the viewer tapped (if any).", [], []),
-  $fn('find_place', "Look up a place name in Great Britain (OpenStreetMap). Returns its coordinates or null.", ['name' => ['type' => 'string']], ['name']),
+  $fn('find_place', "Look up a place name anywhere in the world (OpenStreetMap). Returns its coordinates or null.", ['name' => ['type' => 'string']], ['name']),
   $fn('geology_at', "BGS 1:625k geology at a point. layer: bedrock (lithostratigraphy), age (bedrock age) or superficial (superficial deposits).",
     $point + ['layer' => ['type' => 'string', 'enum' => ['bedrock', 'age', 'superficial']]], ['lng', 'lat', 'layer']),
   $fn('elevation_at', "Ground height in metres at a point, from the terrain model.", $point, ['lng', 'lat']),
@@ -151,6 +153,12 @@ $tools = [
     $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
   $fn('old_photos', 'Search old photographs of a named place (town, village, parish or building) in Europeana: National Library of Wales and other archives. Respects the current year on the map (only photos up to it). Shows a gallery to the viewer unless show is false.',
     ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['place']),
+  $fn('historic_near', 'Named historic places from OpenStreetMap within radius_km (max 3) of a point, anywhere in the world: memorials, war graves, battlefields, ruins, mines, mills, wayside shrines, archaeological sites. Name, kind, dates, inscription, links.',
+    $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+  $fn('events_near', 'Dated events recorded in Wikidata within radius_km (max 15) of a point, anywhere: strikes, riots, protests, disasters, accidents, battles, fires, floods. What, when, kind, a one-line description, Wikipedia link.',
+    $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+  $fn('people_from', 'People recorded in Wikidata as born in towns and villages within about 6 km of a point: name, birth and death years, what they did. Uneven (notable people only). Shows a list to the viewer unless show is false.',
+    $point + ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['lng', 'lat']),
   $fn('my_stamps', "The viewer's passport stamps in inked order: place, line, date, and coordinates if known.", [], []),
   $fn('fly_to', "Move the map to a point and optionally drop a labelled marker there.",
     $point + ['zoom' => ['type' => 'number', 'description' => '8 (region) to 16 (street)'], 'label' => ['type' => 'string']], ['lng', 'lat']),
@@ -158,7 +166,7 @@ $tools = [
     ['terrain' => ['type' => 'boolean'], 'hillshade' => ['type' => 'boolean'], 'contours' => ['type' => 'boolean'],
      'geology' => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
      'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
-     'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'],
+     'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'], 'historic_places' => ['type' => 'boolean'], 'events' => ['type' => 'boolean'],
      'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
        'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
      'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
@@ -173,8 +181,8 @@ $tools = [
      'inked' => ['type' => 'string', 'description' => 'Date inked, in d.m.Y format e.g. 04.11.2026 (defaults to today)'],
      'lng'   => ['type' => 'number', 'description' => 'Longitude WGS84 (optional — will be looked up from name)'],
      'lat'   => ['type' => 'number', 'description' => 'Latitude WGS84 (optional)']], ['name']),
-  // Hosted by OpenAI: searches run on their side and come back cited. Biased to Great Britain.
-  ['type' => 'web_search', 'user_location' => ['type' => 'approximate', 'country' => 'GB']],
+  // Hosted by OpenAI: searches run on their side and come back cited. The map is worldwide, so no country bias.
+  ['type' => 'web_search'],
 ];
 
 $body = ['model' => $model, 'instructions' => $instructions, 'input' => $input, 'tools' => $tools, 'parallel_tool_calls' => true, 'max_output_tokens' => 1500];

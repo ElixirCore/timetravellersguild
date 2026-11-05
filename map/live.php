@@ -47,14 +47,14 @@ $fn = fn(string $n, string $d, array $p, array $r) => [
 $pt = ['lng' => ['type' => 'number', 'description' => 'Longitude, WGS84'], 'lat' => ['type' => 'number', 'description' => 'Latitude, WGS84']];
 $tools = [
     $fn('get_view',      'Current map state: centre, zoom, pitch, bearing, active layers, last tapped point.', [], []),
-    $fn('find_place',    'Geocode a place name in Great Britain. Returns coordinates or not-found.', ['name' => ['type' => 'string']], ['name']),
+    $fn('find_place',    'Geocode a place name anywhere in the world. Returns coordinates or not-found.', ['name' => ['type' => 'string']], ['name']),
     $fn('fly_to',        'Fly the map to a point and optionally drop a labelled pin.',
         $pt + ['zoom' => ['type' => 'number', 'description' => '8 (region) to 16 (street)'], 'label' => ['type' => 'string']], ['lng', 'lat']),
     $fn('set_layers',    'Switch map layers on or off. Only provided keys change.',
         ['terrain' => ['type' => 'boolean'], 'hillshade' => ['type' => 'boolean'], 'contours' => ['type' => 'boolean'],
          'geology'  => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
          'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
-         'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'],
+         'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'], 'historic_places' => ['type' => 'boolean'], 'events' => ['type' => 'boolean'],
          'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
            'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
          'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
@@ -83,6 +83,12 @@ $tools = [
     $pt + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
     $fn('old_photos', 'Search old photographs of a named place (town, village, parish or building) in Europeana: National Library of Wales and other archives. Respects the current year on the map (only photos up to it). Shows a gallery to the viewer unless show is false.',
     ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['place']),
+    $fn('historic_near', 'Named historic places from OpenStreetMap within radius_km (max 3) of a point, anywhere in the world: memorials, war graves, battlefields, ruins, mines, mills, wayside shrines, archaeological sites. Name, kind, dates, inscription, links.',
+    $pt + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+    $fn('events_near', 'Dated events recorded in Wikidata within radius_km (max 15) of a point, anywhere: strikes, riots, protests, disasters, accidents, battles, fires, floods. What, when, kind, a one-line description, Wikipedia link.',
+    $pt + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+    $fn('people_from', 'People recorded in Wikidata as born in towns and villages within about 6 km of a point: name, birth and death years, what they did. Uneven (notable people only). Shows a list to the viewer unless show is false.',
+    $pt + ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['lng', 'lat']),
     $fn('my_stamps',     'The viewer\'s passport stamps: places, lines, dates, coordinates.', [], []),
     $fn('start_run',     'Begin recording a named run. All fly_to destinations will be saved under this run until end_run is called. Use when the viewer asks to record, save or name a tour of places.',
         ['name' => ['type' => 'string', 'description' => 'Short name for this run, e.g. "Cities of Wales"']], ['name']),
@@ -125,6 +131,8 @@ KNOWN FIELD OBJECTS:
 TIME: Local Present 04 November 2026. Network Present 17 April 2033.
 
 TOOLS: use get_view first if the viewer asks about what's visible. Use find_place for any place you don't have coordinates for. Use elevation_at or terrain_profile for height questions. Use geology_at and switch on the bedrock layer for rock questions. Use heritage_near and switch on monuments for heritage questions. Use my_stamps to walk through the viewer's route. Use fly_to for every place you name. Use set_camera to tilt and turn for drama. Use web_search to find the temporal fact that makes this place speak.
+
+SOCIAL HISTORY FIRST. This is a map for time travellers, and what they most want is people: who lived here, how they worked, what they built and lost, the strikes and riots and disasters, the migrations, the chapels and pubs and memorials. Rock and height are the stage, not the play. Anywhere in the world, reach for events_near (dated strikes, riots, disasters, battles), people_from (who was born here), historic_near (memorials, ruins, mines, mills from OpenStreetMap), Wikipedia and the photographs before geology. Name ordinary lives where the records allow, say plainly when the records are thin or only remember the famous, and never invent a person or an event.
 
 TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
 
