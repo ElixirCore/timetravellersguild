@@ -54,7 +54,7 @@ $tools = [
         ['terrain' => ['type' => 'boolean'], 'hillshade' => ['type' => 'boolean'], 'contours' => ['type' => 'boolean'],
          'geology'  => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
          'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
-         'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'],
+         'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'],
          'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
            'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
          'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
@@ -79,6 +79,10 @@ $tools = [
     ['title' => ['type' => 'string'], 'lang' => ['type' => 'string', 'enum' => ['en', 'cy']]], ['title']),
     $fn('set_year', 'Travel the map to a year (negative = BC, e.g. -2300). Coflein sites and place names then show only what existed or was named by that year; a matched old map follows. 2100 = now (everything).',
     ['year' => ['type' => 'number']], ['year']),
+    $fn('photos_near', 'Geotagged Wikimedia Commons photos within radius_km (max 5) of a point: title, date taken, photographer, licence, link. Mostly recent photos: what the place looks like now.',
+    $pt + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+    $fn('old_photos', 'Search old photographs of a named place (town, village, parish or building) in Europeana: National Library of Wales and other archives. Respects the current year on the map (only photos up to it). Shows a gallery to the viewer unless show is false.',
+    ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['place']),
     $fn('my_stamps',     'The viewer\'s passport stamps: places, lines, dates, coordinates.', [], []),
     $fn('start_run',     'Begin recording a named run. All fly_to destinations will be saved under this run until end_run is called. Use when the viewer asks to record, save or name a tour of places.',
         ['name' => ['type' => 'string', 'description' => 'Short name for this run, e.g. "Cities of Wales"']], ['name']),
@@ -122,7 +126,7 @@ TIME: Local Present 04 November 2026. Network Present 17 April 2033.
 
 TOOLS: use get_view first if the viewer asks about what's visible. Use find_place for any place you don't have coordinates for. Use elevation_at or terrain_profile for height questions. Use geology_at and switch on the bedrock layer for rock questions. Use heritage_near and switch on monuments for heritage questions. Use my_stamps to walk through the viewer's route. Use fly_to for every place you name. Use set_camera to tilt and turn for drama. Use web_search to find the temporal fact that makes this place speak.
 
-TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia).
+TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
 
 Speak in short bursts — you are narrating a live flyover. One destination at a time unless touring. Never invent coordinates; use find_place or the known points above. If asked to replay the route, use my_stamps then fly to each place in order.
 TXT;

@@ -12,15 +12,18 @@ if (!$user) {
 // MapTiler keys are meant for the browser (restrict them to this domain in the MapTiler dashboard).
 // Set MAPTILER_KEY in map/secret_agent.php (returned array) or the server environment.
 $maptiler = '';
+$europeana = false; // only whether a key exists: the Europeana key itself stays on the server (proxy.php uses it)
 $secretFile = __DIR__ . '/secret_agent.php';
 if (is_file($secretFile)) {
     $secrets = (static fn(string $f) => require $f)($secretFile);
     if (is_array($secrets) && is_string($secrets['MAPTILER_KEY'] ?? null)) $maptiler = $secrets['MAPTILER_KEY'];
+    if (is_array($secrets) && is_string($secrets['EUROPEANA_KEY'] ?? null) && $secrets['EUROPEANA_KEY'] !== '') $europeana = true;
 }
+if (!$europeana && (string) (getenv('EUROPEANA_KEY') ?: '') !== '') $europeana = true;
 if ($maptiler === '') $maptiler = (string) (getenv('MAPTILER_KEY') ?: '');
 if (!preg_match('/^[A-Za-z0-9_-]{8,80}$/', $maptiler)) $maptiler = '';
 
-$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler];
+$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler, 'europeana' => $europeana];
 $html = file_get_contents(__DIR__ . '/index.html');
 // Inject endpoint overrides (and the optional MapTiler key) before </head>
 $inject = '<script>window.TTG_MAP=' . json_encode($cfg, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';

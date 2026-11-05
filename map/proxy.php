@@ -9,6 +9,8 @@
  *   src=cadw   layer=nmrw   Coflein / National Monuments Record of Wales sites (RCAHMW, DataMapWales WFS)
  *   src=cadw   layer=names  List of Historic Place Names of Wales (RCAHMW, DataMapWales WFS)
  *   src=wiki   Wikipedia articles near a point (en / cy), and src=wikisum for one article's summary
+ *   src=commons  geotagged Wikimedia Commons photos near a point (thumbnail, date taken, author, licence)
+ *   src=europeana  old photographs by place name (Europeana; needs EUROPEANA_KEY in secret_agent.php)
  *
  * It is not an open proxy: the host is fixed per source and only named parameters pass through.
  * No keys are needed, so secrets.php is not used.
@@ -133,7 +135,7 @@ if ($src === 'wiki' || $src === 'wikisum') {
     out(cached($CACHE, $url, 7 * 86400, function () use ($url, $lang) {
       [$body, $code] = fetch_url($url);
       $j = $code === 200 ? json_decode($body, true) : null;
-      if (!is_array($j)) return ['', $code === 200 ? 502 : $code, ''];
+      if (!is_array($j) || isset($j['error'])) return ['', is_array($j) ? 503 : ($code === 200 ? 502 : $code), ''];
       $fs = [];
       foreach (($j['query']['pages'] ?? []) as $pg) {
         $c = $pg['coordinates'][0] ?? null; if (!$c) continue;
@@ -176,6 +178,85 @@ if ($src === 'place') {
     return [json_encode($hit), 200, 'application/json'];
   });
   out($r, 86400);
+}
+
+$plain = static fn($v): string => trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $v), ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? '');
+
+if ($src === 'commons') {
+  $lat = (float) ($_GET['lat'] ?? 0); $lng = (float) ($_GET['lng'] ?? 0);
+  if ($lat < 49 || $lat > 61.5 || $lng < -11 || $lng > 3) fail(400, 'Bad point');
+  $lat = round($lat, 2); $lng = round($lng, 2);
+  $key = 'commons:v3:' . $lat . ',' . $lng;
+  out(cached($CACHE, $key, 7 * 86400, function () use ($lat, $lng, $plain) {
+    $api = 'https://commons.wikimedia.org/w/api.php?';
+    // MediaWiki reports errors (e.g. "search is too busy") with HTTP 200: treat them as failures so they are never cached.
+    $call = static function (string $url): ?array {
+      for ($try = 0; $try < 2; $try++) {
+        [$b, $c] = fetch_url($url);
+        $j = $c === 200 ? json_decode($b, true) : null;
+        if (is_array($j) && !isset($j['error'])) return $j;
+        usleep(700000);
+      }
+      return null;
+    };
+    $j = $call($api . http_build_query(['action' => 'query', 'format' => 'json', 'formatversion' => 2, 'list' => 'geosearch',
+      'gscoord' => $lat . '|' . $lng, 'gsradius' => 1600, 'gslimit' => 100, 'gsnamespace' => 6]));
+    if ($j === null) return ['', 503, ''];
+    $coords = [];
+    foreach (($j['query']['geosearch'] ?? []) as $g) $coords[(string) $g['title']] = [(float) $g['lon'], (float) $g['lat']];
+    $fs = [];
+    foreach (array_chunk(array_keys($coords), 50) as $chunk) {
+      $j2 = $call($api . http_build_query(['action' => 'query', 'format' => 'json', 'formatversion' => 2, 'titles' => implode('|', $chunk),
+        'prop' => 'imageinfo', 'iiprop' => 'url|mime|extmetadata', 'iiurlwidth' => 480,
+        'iiextmetadatafilter' => 'DateTimeOriginal|LicenseShortName|Artist|ImageDescription|ObjectName']));
+      if ($j2 === null) return ['', 503, '']; // partial results are not cached either
+      foreach (($j2['query']['pages'] ?? []) as $pg) {
+        $ii = $pg['imageinfo'][0] ?? null; $t = (string) ($pg['title'] ?? '');
+        if (!$ii || !isset($coords[$t]) || !str_starts_with((string) ($ii['mime'] ?? ''), 'image/') || empty($ii['thumburl'])) continue;
+        $m = $ii['extmetadata'] ?? [];
+        $date = $plain($m['DateTimeOriginal']['value'] ?? '');
+        $year = preg_match('/\b(1[5-9]\d\d|20\d\d)\b/', $date, $ym) ? (int) $ym[1] : null;
+        $fs[] = ['type' => 'Feature', 'id' => (int) ($pg['pageid'] ?? 0), 'geometry' => ['type' => 'Point', 'coordinates' => $coords[$t]],
+          'properties' => array_filter([
+            'title' => mb_substr(preg_replace('/\s*-\s*geograph\.org\.uk\s*-\s*\d+\s*$/i', '', $plain($m['ObjectName']['value'] ?? '') ?: preg_replace('/^File:|\.[a-z0-9]{3,4}$/i', '', $t)) ?? '', 0, 140),
+            'thumb' => (string) $ii['thumburl'], 'page' => (string) ($ii['descriptionurl'] ?? ''),
+            'date' => mb_substr($date, 0, 40), 'year' => $year,
+            'author' => mb_substr($plain($m['Artist']['value'] ?? ''), 0, 80), 'licence' => mb_substr($plain($m['LicenseShortName']['value'] ?? ''), 0, 40),
+            'desc' => mb_substr($plain($m['ImageDescription']['value'] ?? ''), 0, 240)], fn($v) => $v !== '' && $v !== null)];
+      }
+    }
+    return [json_encode(['type' => 'FeatureCollection', 'features' => $fs], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'europeana') {
+  $secret = __DIR__ . '/secret_agent.php';
+  $s = is_file($secret) ? (static fn(string $f) => require $f)($secret) : [];
+  $key = is_array($s) ? (string) ($s['EUROPEANA_KEY'] ?? '') : '';
+  if ($key === '') $key = (string) (getenv('EUROPEANA_KEY') ?: '');
+  if ($key === '') fail(503, 'Old photographs need a Europeana key (EUROPEANA_KEY in map/secret_agent.php).');
+  $place = trim((string) ($_GET['place'] ?? ''));
+  if ($place === '' || mb_strlen($place) > 80 || !preg_match('/^[\p{L}\p{N} \'’.,()&-]+$/u', $place)) fail(400, 'Bad place');
+  $to = (int) ($_GET['to'] ?? 0);
+  $q = '"' . str_replace('"', '', $place) . '"' . ($to >= 1800 && $to <= 2100 ? ' AND YEAR:[1500 TO ' . $to . ']' : '');
+  $url = 'https://api.europeana.eu/record/v2/search.json?' . http_build_query(['wskey' => $key, 'query' => $q, 'qf' => 'TYPE:IMAGE', 'rows' => 30, 'profile' => 'standard']);
+  out(cached($CACHE, $url, 7 * 86400, function () use ($url, $plain) {
+    [$body, $code] = fetch_url($url, 25);
+    $j = $code === 200 ? json_decode($body, true) : null;
+    if (!is_array($j) || empty($j['success'])) return ['', $code === 200 ? 502 : $code, ''];
+    $items = [];
+    foreach (($j['items'] ?? []) as $it) {
+      $thumb = (string) ($it['edmPreview'][0] ?? '');
+      $link = (string) ($it['guid'] ?? '');
+      if (!preg_match('#^https://api\.europeana\.eu/#', $thumb)) $thumb = '';
+      if (!preg_match('#^https://www\.europeana\.eu/#', $link)) $link = '';
+      $items[] = array_filter(['title' => mb_substr($plain($it['title'][0] ?? ''), 0, 160), 'year' => (string) ($it['year'][0] ?? ''),
+        'provider' => mb_substr($plain($it['dataProvider'][0] ?? ''), 0, 80), 'creator' => mb_substr($plain($it['dcCreator'][0] ?? ''), 0, 80),
+        'thumb' => $thumb, 'link' => $link, 'rights' => (string) ($it['rights'][0] ?? '')], fn($v) => $v !== '');
+    }
+    usort($items, fn($a, $b) => ((int) ($a['year'] ?? 9999)) <=> ((int) ($b['year'] ?? 9999)));
+    return [json_encode(['total' => (int) ($j['totalResults'] ?? 0), 'items' => $items], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
 }
 
 fail(400, 'Unknown source');

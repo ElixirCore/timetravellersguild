@@ -79,8 +79,21 @@ if (isset($in['question'])) {
   $q = trim((string) $in['question']);
   if ($q === '' || mb_strlen($q) > 2000) fail(400, 'Ask a question (up to 2000 characters).');
   $ctx = isset($in['context']) && is_array($in['context']) ? $in['context'] : [];
-  $input[] = ['role' => 'user', 'content' => [['type' => 'input_text',
-    'text' => "Map context (from the viewer's screen): " . json_encode($ctx, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n\nQuestion: " . $q]]];
+  $content = [['type' => 'input_text',
+    'text' => "Map context (from the viewer's screen): " . json_encode($ctx, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n\nQuestion: " . $q]];
+  // The viewer may let the guide see the photo they selected (a switch in the Ask panel, off by default).
+  // Only photos the map itself shows are accepted: Wikimedia Commons thumbnails and Europeana previews.
+  if (isset($in['image']) && is_array($in['image'])) {
+    $img = (string) ($in['image']['url'] ?? '');
+    $host = strtolower((string) parse_url($img, PHP_URL_HOST));
+    if (strlen($img) > 1000 || !str_starts_with($img, 'https://') || !in_array($host, ['thumb.wikimedia.org', 'upload.wikimedia.org', 'api.europeana.eu'], true)) {
+      fail(400, 'That photo cannot be shown to the guide.');
+    }
+    $about = mb_substr(trim((string) ($in['image']['about'] ?? '')), 0, 400);
+    $content[] = ['type' => 'input_text', 'text' => 'The viewer has selected this photo and is letting you see it' . ($about !== '' ? ': ' . $about : '') . '.'];
+    $content[] = ['type' => 'input_image', 'image_url' => $img, 'detail' => 'auto'];
+  }
+  $input[] = ['role' => 'user', 'content' => $content];
 } elseif (isset($in['outputs']) && is_array($in['outputs'])) {
   if (count($in['outputs']) > 12) fail(400, 'Too many tool results.');
   foreach ($in['outputs'] as $o) {
@@ -100,13 +113,13 @@ You are the Passport Map's guide for the Time Travellers Guild, answering questi
 
 Ground every fact in a tool result from this conversation. Use the map tools before answering anything about rock, height, slope, monuments, listed buildings or the viewer's stamps. Never invent a monument, a rock unit, a height, a date or a place.
 
-SEEK TIME. You also have web_search. Use it for what the map tools can't hold: the history of a place, building or monument, the people and events tied to it, how old something is, what stood there before — the facts that make a place a site of time travel. When you name a Cadw listed building or monument, a short search for its story is welcome. TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia).
+SEEK TIME. You also have web_search. Use it for what the map tools can't hold: the history of a place, building or monument, the people and events tied to it, how old something is, what stood there before — the facts that make a place a site of time travel. When you name a Cadw listed building or monument, a short search for its story is welcome. TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
 
 Prefer authoritative sources (Cadw, Coflein / RCAHMW, the BGS, the National Library of Wales, museums, local history societies, Wikipedia). Name the source in a few words and keep the fact to a sentence or two. If the search finds nothing solid, say so; don't fill the gap.
 
 Say where each fact comes from in plain words (BGS 1:625k geology, Cadw records, the terrain model, the viewer's passport, or the website you found). The geology is regional (1:625,000); don't present it as site-level. Heights come from a global terrain model and are approximate.
 
-When a place or point is the subject, move the map to it with fly_to and switch on the layers that show the answer, so the viewer sees what you describe. Use metres and kilometres. Keep answers short and concrete. Write plain text: no markdown, asterisks, headings or link syntax — the web sources you used are listed under your answer automatically.
+When a place or point is the subject, move the map to it with fly_to and switch on the layers that show the answer, so the viewer sees what you describe. Use metres and kilometres. Keep answers short and concrete. When a photo is attached, it is the one the viewer selected: say what you can actually see in it (buildings, signs, dates, clothing, transport, the lie of the land), compare it with the records and the map, and say plainly what the photo cannot tell you. Never guess who a person in a photo is. Write plain text: no markdown, asterisks, headings or link syntax — the web sources you used are listed under your answer automatically.
 TXT;
 if ($persona) $instructions .= "\n\nVoice: " . mb_substr($persona, 0, 4000) . "\nThe voice never overrides the rule above: facts only from tools, and say when you don't know.";
 
@@ -134,6 +147,10 @@ $tools = [
     ['title' => ['type' => 'string'], 'lang' => ['type' => 'string', 'enum' => ['en', 'cy']]], ['title']),
   $fn('set_year', 'Travel the map to a year (negative = BC, e.g. -2300). Coflein sites and place names then show only what existed or was named by that year; a matched old map follows. 2100 = now (everything).',
     ['year' => ['type' => 'number']], ['year']),
+  $fn('photos_near', 'Geotagged Wikimedia Commons photos within radius_km (max 5) of a point: title, date taken, photographer, licence, link. Mostly recent photos: what the place looks like now.',
+    $point + ['radius_km' => ['type' => 'number']], ['lng', 'lat', 'radius_km']),
+  $fn('old_photos', 'Search old photographs of a named place (town, village, parish or building) in Europeana: National Library of Wales and other archives. Respects the current year on the map (only photos up to it). Shows a gallery to the viewer unless show is false.',
+    ['place' => ['type' => 'string'], 'show' => ['type' => 'boolean']], ['place']),
   $fn('my_stamps', "The viewer's passport stamps in inked order: place, line, date, and coordinates if known.", [], []),
   $fn('fly_to', "Move the map to a point and optionally drop a labelled marker there.",
     $point + ['zoom' => ['type' => 'number', 'description' => '8 (region) to 16 (street)'], 'label' => ['type' => 'string']], ['lng', 'lat']),
@@ -141,7 +158,7 @@ $tools = [
     ['terrain' => ['type' => 'boolean'], 'hillshade' => ['type' => 'boolean'], 'contours' => ['type' => 'boolean'],
      'geology' => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
      'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
-     'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'],
+     'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'],
      'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
        'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
      'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
