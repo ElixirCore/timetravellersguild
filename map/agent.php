@@ -117,7 +117,7 @@ SEEK TIME. You also have web_search. Use it for what the map tools can't hold: t
 
 SOCIAL HISTORY FIRST. This is a map for time travellers, and what they most want is people: who lived here, how they worked, what they built and lost, the strikes and riots and disasters, the migrations, the chapels and pubs and memorials. Rock and height are the stage, not the play. Anywhere in the world, reach for events_near (dated strikes, riots, disasters, battles), people_from (who was born here), historic_near (memorials, ruins, mines, mills from OpenStreetMap), Wikipedia and the photographs before geology. Name ordinary lives where the records allow, say plainly when the records are thin or only remember the famous, and never invent a person or an event.
 
-TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year.
+TIME TRAVEL TOOLS: sites_near finds Coflein's recorded sites with their periods (back to the Mesolithic); names_near finds the old names of fields, farms and places with the year they were written down; wiki_near and wiki_summary give Wikipedia's account; set_year takes the viewer's map back to a year, so only what existed then is shown, and set_layers old_map:'match' lays the nearest historic Ordnance Survey map over it. When the viewer asks what a place was like at a time, set_year first, then describe what remains, citing the record (Coflein, the place-name list, Wikipedia). photos_near shows what a place looks like now (Wikimedia Commons); old_photos opens the archives for a named place (Europeana: National Library of Wales and others), so the viewer can see it as it was; pair it with set_year. For old maps anywhere: old_maps_here finds scanned, georeferenced maps of the spot (often dozens), show_old_map lays one over the map; set_layers old_map 'ohm' gives OpenHistoricalMap, which follows the year, and 'dare' the Roman Empire.
 
 Prefer authoritative sources (Cadw, Coflein / RCAHMW, the BGS, the National Library of Wales, museums, local history societies, Wikipedia). Name the source in a few words and keep the fact to a sentence or two. If the search finds nothing solid, say so; don't fill the gap.
 
@@ -164,6 +164,10 @@ $tools = [
   $fn('distance', 'Straight-line distance in kilometres and compass bearing from one point to another. Use this instead of calculating or searching.',
     ['from_lng' => ['type' => 'number'], 'from_lat' => ['type' => 'number'], 'to_lng' => ['type' => 'number'], 'to_lat' => ['type' => 'number']],
     ['from_lng', 'from_lat', 'to_lng', 'to_lat']),
+  $fn('old_maps_here', 'Find georeferenced old maps covering a point, anywhere in the world: scans from David Rumsey, the Library of Congress, the Bodleian, the National Library of Scotland, NYPL and many more (via Allmaps) and mapwarper.net. Most local first, with title, year if known, collection, how much ground each covers. Shows the list to the viewer unless show is false.',
+    $point + ['show' => ['type' => 'boolean']], ['lng', 'lat']),
+  $fn('show_old_map', 'Lay one of the maps from old_maps_here over the map (by its source and id, or its n in the list).',
+    ['source' => ['type' => 'string', 'enum' => ['allmaps', 'mapwarper']], 'id' => ['type' => 'string'], 'n' => ['type' => 'number']], []),
   $fn('my_stamps', "The viewer's passport stamps in inked order: place, line, date, and coordinates if known.", [], []),
   $fn('fly_to', "Move the map to a point and optionally drop a labelled marker there.",
     $point + ['zoom' => ['type' => 'number', 'description' => '8 (region) to 16 (street)'], 'label' => ['type' => 'string']], ['lng', 'lat']),
@@ -172,7 +176,7 @@ $tools = [
      'geology' => ['type' => 'string', 'enum' => ['off', 'bedrock', 'age', 'superficial']],
      'monuments' => ['type' => 'boolean'], 'listed_buildings' => ['type' => 'boolean'],
      'coflein' => ['type' => 'boolean'], 'place_names' => ['type' => 'boolean'], 'wikipedia' => ['type' => 'boolean'], 'photos' => ['type' => 'boolean'], 'historic_places' => ['type' => 'boolean'], 'events' => ['type' => 'boolean'],
-     'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
+     'old_map' => ['type' => 'string', 'enum' => ['off', 'match', 'ohm', 'dare', 'uk-osgb63k1885', 'uk-osgb10k1888', 'uk-osgb1919', 'uk-osgb25k1937', 'uk-osgb63k1955'],
        'description' => 'Historic OS map overlay: match = the era nearest the current year; or a specific series (1885 one-inch, 1888 six-inch, 1919, 1937 1:25k, 1955 one-inch). Needs a MapTiler key on the server.'],
      'routes' => ['type' => 'boolean'], 'timepods' => ['type' => 'boolean']], []),
   $fn('set_camera', "Tilt and turn the view. pitch 0 (flat) to 75; bearing in degrees from north.",

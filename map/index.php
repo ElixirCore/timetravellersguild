@@ -2,9 +2,11 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../people/inc/db.php';
 
+// /map/interface/ includes this file with $TTG_INTERFACE = true: the same map, in the Guild's cyberpunk ARG skin.
+$interface = !empty($TTG_INTERFACE);
 $user = ttg_current_user();
 if (!$user) {
-    header('Location: ' . ttg_base('auth/?next=' . urlencode('/map/')));
+    header('Location: ' . ttg_base('auth/?next=' . urlencode($interface ? '/map/interface/' : '/map/')));
     exit;
 }
 
@@ -23,8 +25,20 @@ if (!$europeana && (string) (getenv('EUROPEANA_KEY') ?: '') !== '') $europeana =
 if ($maptiler === '') $maptiler = (string) (getenv('MAPTILER_KEY') ?: '');
 if (!preg_match('/^[A-Za-z0-9_-]{8,80}$/', $maptiler)) $maptiler = '';
 
-$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler, 'europeana' => $europeana];
+$cfg = ['record' => '/map/record.php', 'live' => '/map/live.php', 'trail' => '/map/trail.php', 'maptiler' => $maptiler, 'europeana' => $europeana,
+    'agent' => '/map/agent.php', 'proxy' => '/map/proxy.php'];
+if ($interface) {
+    $cfg['interface'] = true;
+    $cfg['arg'] = '/map/arg/api.php';
+    $cfg['csrf'] = ttg_csrf_token();
+    $cfg['me'] = (string) $user['display_name'];
+}
 $html = file_get_contents(__DIR__ . '/index.html');
 // Inject endpoint overrides (and the optional MapTiler key) before </head>
 $inject = '<script>window.TTG_MAP=' . json_encode($cfg, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';
+if ($interface) {
+    $inject .= '<link rel="stylesheet" href="/map/arg/interface.css?v=1">';
+    $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>GUILD://INTERFACE — Time Travellers Guild</title>', $html);
+    $html = str_replace('</body>', '<script src="/map/arg/interface.js?v=1" defer></script></body>', $html);
+}
 echo str_replace('</head>', $inject . '</head>', $html);

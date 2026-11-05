@@ -65,6 +65,15 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 .gal a{display:block;color:var(--ink);text-decoration:none;font-size:10.5px;line-height:1.3}
 .gal img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--ink);background:var(--paper);margin-bottom:3px}
 .gal b{color:var(--red)}
+.oml{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.oml li{display:grid;grid-template-columns:44px 1fr;gap:4px 8px;align-items:start;padding:6px 0;border-top:1px dashed var(--rule)}
+.oml .th{width:44px;height:44px;object-fit:cover;border:1px solid var(--ink);background:var(--paper)}
+.oml .ph{width:44px;height:44px;border:1px solid var(--rule);display:grid;place-items:center;font-size:18px;color:var(--ink-2)}
+.oml b{display:block;font-size:12px}
+.oml small{color:var(--ink-2);font-size:10.5px}
+.oml .acts{grid-column:2;display:flex;gap:6px;align-items:center}
+.oml .acts a{font-size:11px;color:var(--red)}
+.oml li.on b{color:var(--red)}
 .lbx-img{float:right;width:84px;height:84px;object-fit:cover;margin:0 0 6px 8px;border:1px solid var(--ink)}
 .lbx .era{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .lb-tip .maplibregl-popup-content{background:var(--paper-2);color:var(--ink);border:1px solid var(--ink);border-radius:0;box-shadow:4px 4px 0 var(--red);padding:10px 12px 9px;font:12px/1.45 var(--f)}
@@ -219,14 +228,20 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="row"><span>Old map</span>
     <select id="oldmap" aria-label="Historic Ordnance Survey map">
       <option value="off">Off</option>
-      <option value="match">Match the year (Britain)</option>
+      <option value="match">Match the year (best available here)</option>
+      <option value="ohm">OpenHistoricalMap · follows the year (worldwide)</option>
+      <option value="dare">Roman Empire c. AD 200 (Digital Atlas of the Roman Empire)</option>
+      <optgroup label="Found here" id="oldmap-found"></optgroup>
+      <optgroup label="Ordnance Survey (Britain only)">
       <option value="uk-osgb63k1885">1885–1903 · one-inch, hills</option>
       <option value="uk-osgb10k1888">1888–1913 · six-inch</option>
       <option value="uk-osgb1919">c. 1919</option>
       <option value="uk-osgb25k1937">1937–61 · 1:25,000</option>
       <option value="uk-osgb63k1955">1955–61 · one-inch, 7th series</option>
+      </optgroup>
     </select></div>
   <div class="row"><span>Ink</span><input type="range" id="oldmap-op" min="0.2" max="1" step="0.05" value="0.85"><span class="v" id="oldmap-op-v">85%</span></div>
+  <div class="seg" style="margin:4px 0 0"><button type="button" id="oldmap-find">Find old maps here</button></div>
   <div class="st" id="st-oldmap"></div>
 
   <h2>Heritage <span style="text-transform:none;letter-spacing:0">(Cadw)</span></h2>
@@ -250,7 +265,7 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
   <div class="seg"><button type="button" id="b-play" aria-pressed="false">▶ Replay route</button></div>
   <ul class="stamps" id="stamps"></ul>
 
-  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Coflein sites and Historic Place Names: RCAHMW via DataMapWales. Wikipedia: CC BY-SA. Photos: Wikimedia Commons contributors (licence on each photo); old photographs via Europeana. Historic places © OpenStreetMap contributors (ODbL). Events and people: Wikidata (CC0). Historic maps: National Library of Scotland, via MapTiler. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
+  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Coflein sites and Historic Place Names: RCAHMW via DataMapWales. Wikipedia: CC BY-SA. Photos: Wikimedia Commons contributors (licence on each photo); old photographs via Europeana. Historic places © OpenStreetMap contributors (ODbL). Events and people: Wikidata (CC0). Historic maps: National Library of Scotland, via MapTiler; OpenHistoricalMap contributors (CC0); Digital Atlas of the Roman Empire (CC BY 4.0, Johan Åhlfeldt); scans via Allmaps and mapwarper.net from their holding libraries (rights vary by map). Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
 </aside>
 
 <button class="guidebtn" id="guidebtn" type="button" aria-pressed="false" aria-controls="guide">GUIDE</button>
@@ -292,7 +307,7 @@ button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
 /* ---------- config (override any of these before this script) ---------- */
 const CFG = Object.assign({
   record: '/passport/record.json',   // the passport book's record file
-  pods: 'timepods.json',             // [{name, lng, lat, note}]
+  pods: '/map/timepods.json',             // [{name, lng, lat, note}]
   proxy: 'proxy.php',                // same-origin relay for BGS, Cadw and place lookups
   agent: 'agent.php',                // same-origin relay to OpenAI (holds the key)
   trail: '/map/trail.php',           // guide trail: saved fly_to destinations
@@ -536,17 +551,80 @@ function setYear(y) {
   ['nmrw', 'nmrw-hit', 'names', 'names-dot', 'names-hit', 'photos', 'photos-hit', 'osmh', 'osmh-hit', 'events', 'events-label', 'events-hit'].forEach((l) => map.getLayer(l) && map.setFilter(l, f));
   hideTip();
   if ($('oldmap').value === 'match') applyOldMap();
+  else if (map.getSource('ohm')) OHM_LAYERS.forEach((l) => map.getLayer(l.id) && map.setFilter(l.id, ohmFilter()));
   return { year: YEAR, label: fmtYear(YEAR) };
 }
 $('yr').oninput = (e) => setYear(STOPS[+e.target.value][0]);
 
+/* ---------- slow sources (Overpass, Wikidata, Commons, Wikipedia) share one lane: at most 2 at a time ----------
+   On shared hosting each slow request holds a PHP process for up to ~40 s; firing many at once starved quick
+   requests such as place search. Queued requests start in order as slots free up. */
+const SLOW_MAX = 2; let slowBusy = 0; const slowQueue = [];
+function slowFetch(url) {
+  return new Promise((resolve, reject) => {
+    const run = () => { slowBusy++; fetch(url).then(resolve, reject).finally(() => { slowBusy--; const next = slowQueue.shift(); if (next) next(); }); };
+    if (slowBusy < SLOW_MAX) run(); else slowQueue.push(run);
+  });
+}
+
 /* ---------- historic Ordnance Survey maps (National Library of Scotland via MapTiler; needs a key) ---------- */
 const OLDMAP_ERAS = [[1903, 'uk-osgb63k1885'], [1913, 'uk-osgb10k1888'], [1930, 'uk-osgb1919'], [1954, 'uk-osgb25k1937'], [2100, 'uk-osgb63k1955']];
-function applyOldMap() {
-  const sel = $('oldmap').value, key = CFG.maptiler || '';
+// OpenHistoricalMap: a worldwide historical map; every feature has start/end dates (decimal years), so the
+// overlay shows only what existed in the slider's year. Volunteer-mapped: rich in places, thin in others.
+const OHM_LAYERS = [
+  { id: 'ohm-landuse', type: 'fill', 'source-layer': 'landuse_areas', paint: { 'fill-color': '#b9a77a', 'fill-opacity': 0.35 } },
+  { id: 'ohm-water', type: 'fill', 'source-layer': 'water_areas', paint: { 'fill-color': '#8fa8b4', 'fill-opacity': 0.6 } },
+  { id: 'ohm-waterways', type: 'line', 'source-layer': 'water_lines', paint: { 'line-color': '#6f8c99', 'line-width': 1.2 } },
+  { id: 'ohm-buildings', type: 'fill', 'source-layer': 'buildings', minzoom: 13, paint: { 'fill-color': '#7a5a3a', 'fill-opacity': 0.55 } },
+  { id: 'ohm-roads', type: 'line', 'source-layer': 'transport_lines', paint: { 'line-color': '#4a3a2a', 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 0.4, 16, 2.4] } },
+  { id: 'ohm-borders', type: 'line', 'source-layer': 'land_ohm_lines', paint: { 'line-color': '#b3261e', 'line-width': 1.4, 'line-dasharray': [3, 2] } },
+  { id: 'ohm-places', type: 'symbol', 'source-layer': 'place_points_centroids',
+    layout: { 'text-field': ['coalesce', ['get', 'name_en'], ['get', 'name']], 'text-font': CFG.font, 'text-size': 12, 'text-optional': true },
+    paint: { 'text-color': '#3a2a1a', 'text-halo-color': '#f4ecd2', 'text-halo-width': 1.4 } },
+];
+const ohmYear = () => (YEAR >= 2100 ? new Date().getFullYear() + 0.9 : YEAR + 0.5);
+const ohmFilter = () => ['all', ['<=', ['coalesce', ['get', 'start_decdate'], -100000], ohmYear()], ['>', ['coalesce', ['get', 'end_decdate'], 100000], ohmYear()]];
+function removeOldMaps() {
+  OHM_LAYERS.forEach((l) => map.getLayer(l.id) && map.removeLayer(l.id));
+  if (map.getSource('ohm')) map.removeSource('ohm');
   if (map.getLayer('oldmap')) map.removeLayer('oldmap');
   if (map.getSource('oldmap')) map.removeSource('oldmap');
+}
+function addOhm() {
+  map.addSource('ohm', { type: 'vector', tiles: ['https://vtiles.openhistoricalmap.org/maps/ohm/{z}/{x}/{y}.pbf'], maxzoom: 14,
+    attribution: '<a href="https://www.openhistoricalmap.org/" target="_blank" rel="noopener">© OpenHistoricalMap contributors</a>' });
+  const op = +$('oldmap-op').value, before = map.getLayer('geo') ? 'geo' : undefined;
+  OHM_LAYERS.forEach((l) => {
+    const paint = Object.assign({}, l.paint);
+    if (l.type === 'fill') paint['fill-opacity'] = paint['fill-opacity'] * op;
+    if (l.type === 'line') paint['line-opacity'] = op;
+    if (l.type === 'symbol') paint['text-opacity'] = Math.min(1, op + 0.2);
+    map.addLayer(Object.assign({ source: 'ohm', filter: ohmFilter() }, l, { paint }), before);
+  });
+}
+const inBritain = () => { const c = map.getCenter(); return c.lng > -8.7 && c.lng < 1.9 && c.lat > 49.8 && c.lat < 60.9; };
+const FOUND = new Map(); // option value → found map (from "Find old maps here")
+function applyOldMap() {
+  const sel = $('oldmap').value, key = CFG.maptiler || '';
+  removeOldMaps();
   if (sel === 'off') { status('st-oldmap', ''); return { ok: true, old_map: 'off' }; }
+  if (sel === 'dare' || FOUND.has(sel)) {
+    const m = sel === 'dare' ? { tiles: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', maxzoom: 11, title: 'Roman Empire c. AD 200',
+      attribution: '<a href="https://imperium.ahlfeldt.se/" target="_blank" rel="noopener">Digital Atlas of the Roman Empire</a> (CC BY 4.0)' } : FOUND.get(sel);
+    const src = { type: 'raster', tiles: [m.tiles], tileSize: 256, maxzoom: m.maxzoom || 20,
+      attribution: m.attribution || ('Old map: <a href="' + esc(m.link || '#') + '" target="_blank" rel="noopener">' + esc(m.provider || 'source') + '</a>') };
+    if (m.bbox) src.bounds = m.bbox;
+    map.addSource('oldmap', src);
+    map.addLayer({ id: 'oldmap', type: 'raster', source: 'oldmap', paint: { 'raster-opacity': +$('oldmap-op').value } }, map.getLayer('geo') ? 'geo' : undefined);
+    status('st-oldmap', (m.title || 'Old map') + (m.year ? ' (' + m.year + ')' : '') + (m.provider ? ' · ' + m.provider : '') + '. Use Ink to blend it.');
+    return { ok: true, old_map: m.title, year: m.year || null, source: m.provider || 'DARE' };
+  }
+  // Worldwide: OpenHistoricalMap, chosen directly, or by "match" outside Britain (or when there is no MapTiler key).
+  if (sel === 'ohm' || (sel === 'match' && (!inBritain() || !key))) {
+    addOhm();
+    status('st-oldmap', 'OpenHistoricalMap as it was in ' + fmtYear(Math.min(YEAR, new Date().getFullYear())) + '. Volunteer-mapped: detailed in some places, thin in others.');
+    return { ok: true, old_map: 'openhistoricalmap', year: fmtYear(YEAR) };
+  }
   if (!key) { status('st-oldmap', 'Historic maps need a MapTiler key (free for non-commercial use). Add MAPTILER_KEY to map/secret_agent.php.', true); return { ok: false, error: 'no MapTiler key configured' }; }
   let id = sel;
   if (sel === 'match') { id = OLDMAP_ERAS[OLDMAP_ERAS.length - 1][1]; for (const [upTo, t] of OLDMAP_ERAS) if (YEAR <= upTo) { id = t; break; } }
@@ -558,8 +636,50 @@ function applyOldMap() {
   return { ok: true, old_map: id };
 }
 $('oldmap').onchange = () => applyOldMap();
-$('oldmap-op').oninput = (e) => { $('oldmap-op-v').textContent = Math.round(e.target.value * 100) + '%'; if (map.getLayer('oldmap')) map.setPaintProperty('oldmap', 'raster-opacity', +e.target.value); };
-if (!CFG.maptiler) status('st-oldmap', 'Historic maps switch on when a MapTiler key is set.');
+async function oldMapsHere(lng, lat) {
+  // Asked for by the viewer: skip the background lane so it never waits behind layer loading.
+  const r = await fetch(P({ src: 'oldmaps', lat: lat.toFixed(2), lng: lng.toFixed(2) }));
+  if (!r.ok) throw new Error(r.status === 503 ? 'the map archives are busy; try again shortly' : 'HTTP ' + r.status);
+  return (await r.json()).maps || [];
+}
+function foundValue(m) { return 'scan:' + m.source + ':' + m.id; }
+function useFoundMap(m) {
+  const v = foundValue(m);
+  if (!FOUND.has(v)) {
+    FOUND.set(v, m);
+    const o = document.createElement('option'); o.value = v; o.textContent = (m.year ? m.year + ' · ' : '') + String(m.title).slice(0, 60);
+    $('oldmap-found').appendChild(o);
+  }
+  $('oldmap').value = v;
+  return applyOldMap();
+}
+const across = (km2) => { const k = Math.sqrt(Math.max(0, km2)); return k < 1 ? 'under 1 km across' : k < 20 ? Math.round(k) + ' km across' : k < 1000 ? Math.round(k / 10) * 10 + ' km across' : 'a continent or more'; };
+async function showOldMapsHere() {
+  const c = map.getCenter();
+  card('<div class="lbx"><p class="lbx-kind">OLD MAPS OF THIS PLACE</p><h3>Searching the map archives…</h3><p class="lbx-ex">David Rumsey, the Library of Congress, the Bodleian, the NLS, NYPL and dozens more, via Allmaps and mapwarper.net.</p></div>');
+  try {
+    const maps = await oldMapsHere(c.lng, c.lat);
+    window.__oldmaps = maps;
+    const list = maps.map((m, i) => {
+      const th = httpsOnly(m.thumb, /^mapwarper\.net$/), link = httpsOnly(m.link, /^(viewer\.allmaps\.org|mapwarper\.net)$/);
+      return '<li data-i="' + i + '" class="' + ($('oldmap').value === foundValue(m) ? 'on' : '') + '">' + (th ? '<img class="th" alt="" loading="lazy" referrerpolicy="no-referrer" src="' + esc(th) + '">' : '<span class="ph">⌖</span>')
+        + '<div><b>' + (m.year ? esc(m.year) + ' · ' : '') + esc(m.title) + '</b><small>' + esc(m.provider || '') + ' · ' + esc(across(m.km2)) + '</small></div>'
+        + '<div class="acts"><button type="button" data-om="' + i + '">Show</button>' + (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Original ↗</a>' : '') + '</div></li>';
+    }).join('');
+    $('card-b').innerHTML = '<div class="lbx"><p class="lbx-kind">OLD MAPS OF THIS PLACE · ' + maps.length + ' FOUND</p><h3>Most local first</h3>'
+      + (maps.length ? '<ul class="oml">' + list + '</ul>' : '<p class="lbx-ex">No georeferenced old maps cover this spot yet. Try OpenHistoricalMap in the Old map menu.</p>')
+      + '<p class="lbx-kind" style="margin-top:8px">Georeferenced by volunteers and libraries; rights vary, open the original for each map’s terms.</p></div>';
+  } catch (e) { $('card-b').innerHTML = '<div class="lbx"><p class="lbx-kind">OLD MAPS</p><p class="lbx-ex">Could not search: ' + esc(e.message) + '.</p></div>'; }
+}
+$('oldmap-find').onclick = () => showOldMapsHere();
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('[data-om]'); if (!b || !window.__oldmaps) return;
+  const m = window.__oldmaps[+b.dataset.om]; if (!m) return;
+  useFoundMap(m);
+  [...document.querySelectorAll('.oml li')].forEach((li) => li.classList.toggle('on', li.dataset.i === b.dataset.om));
+});
+$('oldmap-op').oninput = (e) => { $('oldmap-op-v').textContent = Math.round(e.target.value * 100) + '%'; if (map.getLayer('oldmap')) map.setPaintProperty('oldmap', 'raster-opacity', +e.target.value); if (map.getSource('ohm')) applyOldMap(); };
+
 
 /* ---------- Wikipedia near the view ---------- */
 const wikiLoaded = new Map(), wikiPending = new Set();
@@ -568,7 +688,7 @@ async function wikiCell(cx, cy) {
   if (wikiLoaded.has(key) || wikiPending.has(key)) return wikiLoaded.get(key) || [];
   wikiPending.add(key);
   try {
-    const r = await fetch(P({ src: 'wiki', lang, lat: ((cy + 0.5) * CELL).toFixed(2), lng: ((cx + 0.5) * CELL).toFixed(2) }));
+    const r = await slowFetch(P({ src: 'wiki', lang, lat: ((cy + 0.5) * CELL).toFixed(2), lng: ((cx + 0.5) * CELL).toFixed(2) }));
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const fc = await r.json();
     wikiLoaded.set(key, fc.features || []);
@@ -588,7 +708,7 @@ async function photoCell(cx, cy) {
   if (photoLoaded.has(key) || photoPending.has(key)) return photoLoaded.get(key) || [];
   photoPending.add(key);
   try {
-    const r = await fetch(P({ src: 'commons', lat: ((cy + 0.5) * PCELL).toFixed(2), lng: ((cx + 0.5) * PCELL).toFixed(2) }));
+    const r = await slowFetch(P({ src: 'commons', lat: ((cy + 0.5) * PCELL).toFixed(2), lng: ((cx + 0.5) * PCELL).toFixed(2) }));
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const fs = ((await r.json()).features || []).map((f) => { f.properties.from = Number(f.properties.year) || 2100; return f; });
     photoLoaded.set(key, fs);
@@ -626,7 +746,7 @@ function gridLayer(o) {
     if (loaded.has(key) || pending.has(key)) return loaded.get(key) || [];
     pending.add(key);
     try {
-      const r = await fetch(P(o.params(cx, cy)));
+      const r = await slowFetch(P(o.params(cx, cy)));
       if (!r.ok) throw new Error(r.status === 503 ? 'the source is busy; it will retry' : 'HTTP ' + r.status);
       const fs = ((await r.json()).features || []).map((f) => { f.properties.from = o.from(f.properties); return f; });
       loaded.set(key, fs);
@@ -736,7 +856,9 @@ function heritage() {
     cells.forEach(([x, y]) => loadCell(kind, x, y));
   }
 }
-map.on('moveend', heritage);
+let heritageT = 0, wasBritain = null;
+map.on('moveend', () => { const b = inBritain(); if (wasBritain !== null && b !== wasBritain && $('oldmap').value === 'match') applyOldMap(); wasBritain = b; });
+map.on('moveend', () => { clearTimeout(heritageT); heritageT = setTimeout(heritage, 600); });
 
 /* ---------- info card ---------- */
 const NARROW = matchMedia('(max-width:640px)');
@@ -1285,7 +1407,7 @@ async function featuresNear(kind, a, max) {
 }
 const TOOLS = {
   get_view: async () => view(),
-  find_place: async (a) => { const r = await fetch(P({ src: 'place', q: String(a.name || '').slice(0, 80) })); if (!r.ok) throw new Error('HTTP ' + r.status); const j = await r.json(); return j.lng == null ? { found: false } : { found: true, lng: j.lng, lat: j.lat, label: j.label || '' }; },
+  find_place: async (a) => { const j = await findPlace(a.name); return j.lng == null ? { found: false } : { found: true, lng: j.lng, lat: j.lat, label: j.label || '' }; },
   geology_at: async (a) => { const g = await geologyAt(LNG(a.lng), LAT(a.lat), GEO[a.layer] || GEO.bedrock); return g ? { source: 'BGS 1:625k ' + (a.layer || 'bedrock'), fields: g } : { source: 'BGS 1:625k', fields: null, note: 'Nothing recorded at this point.' }; },
   elevation_at: async (a) => ({ metres: await elevationAt(LNG(a.lng), LAT(a.lat)), source: 'AWS/Mapzen terrain tiles, zoom 12 (about 30 m cells)' }),
   terrain_profile: async (a) => {
@@ -1326,6 +1448,19 @@ const TOOLS = {
     return Object.assign({ source: 'Wikipedia' }, await r.json());
   },
   set_year: async (a) => Object.assign({ ok: true }, setYear(a.year)),
+  old_maps_here: async (a) => {
+    const lng = LNG(a.lng), lat = LAT(a.lat), maps = await oldMapsHere(lng, lat);
+    window.__oldmaps = maps;
+    if (a.show !== false) showOldMapsHere();
+    return { source: 'Allmaps (David Rumsey, Library of Congress, Bodleian, NLS, NYPL and others) and mapwarper.net', count: maps.length,
+      maps: maps.slice(0, 30).map((m, i) => ({ n: i, title: m.title, year: m.year, collection: m.provider, covers: across(m.km2), source: m.source, id: m.id })) };
+  },
+  show_old_map: async (a) => {
+    const list = window.__oldmaps || [];
+    const m = list.find((x) => String(x.id) === String(a.id) && (!a.source || x.source === a.source)) || (a.n != null ? list[+a.n] : null);
+    if (!m) throw new Error('not in the last list: call old_maps_here first');
+    return useFoundMap(m);
+  },
   distance: async (a) => {
     const A = [LNG(a.from_lng), LAT(a.from_lat)], B = [LNG(a.to_lng), LAT(a.to_lat)], t = Math.PI / 180;
     const y = Math.sin((B[0] - A[0]) * t) * Math.cos(B[1] * t), x = Math.cos(A[1] * t) * Math.sin(B[1] * t) - Math.sin(A[1] * t) * Math.cos(B[1] * t) * Math.cos((B[0] - A[0]) * t);
@@ -1439,7 +1574,8 @@ const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geol
   add_stamp: 'inked a place slip', start_run: 'started a run', end_run: 'ended the run', sites_near: 'searched Coflein', names_near: 'read the old place names',
   wiki_near: 'looked on Wikipedia', wiki_summary: 'read a Wikipedia article', set_year: 'travelled in time',
   photos_near: 'looked at photos', old_photos: 'searched the old photographs', historic_near: 'searched OpenStreetMap history',
-  events_near: 'looked up events', people_from: 'looked up people from here', distance: 'measured a distance' };
+  events_near: 'looked up events', people_from: 'looked up people from here', distance: 'measured a distance',
+  old_maps_here: 'searched the map archives', show_old_map: 'laid an old map over this one' };
 let convo = '', busy = false;
 // Web sources under an answer: https links only, built as DOM nodes (never HTML from the model).
 const sourceList = (sources) => {
@@ -1498,14 +1634,27 @@ document.querySelectorAll('.ask .sugg button').forEach((b) => { b.onclick = () =
 window.ttgAsk = ask;
 
 /* ---------- place search ---------- */
+// Place lookup goes straight from the browser to OpenStreetMap's Nominatim (light use is allowed; it never queues
+// behind the slow sources on our server); if that fails, our cached relay answers instead.
+async function findPlace(q) {
+  q = String(q || '').trim().slice(0, 80);
+  if (!q) return { lng: null, lat: null };
+  try {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
+    const r = await fetch('https://nominatim.openstreetmap.org/search?' + new URLSearchParams({ q, format: 'jsonv2', limit: '1', 'accept-language': 'en' }), { signal: ctl.signal });
+    clearTimeout(t);
+    if (r.ok) { const a = await r.json(); return a[0] ? { lng: +a[0].lon, lat: +a[0].lat, label: a[0].display_name || '' } : { lng: null, lat: null }; }
+  } catch (e) { /* fall through to the relay */ }
+  const r2 = await fetch(P({ src: 'place', q }));
+  if (!r2.ok) throw new Error('the place search is busy (HTTP ' + r2.status + '); try again');
+  return r2.json();
+}
 async function searchFly(q) {
   q = q.trim().slice(0, 80);
   if (!q) return;
-  status('search-st', '…');
+  status('search-st', 'Searching…');
   try {
-    const r = await fetch(P({ src: 'place', q }));
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const j = await r.json();
+    const j = await findPlace(q);
     if (j.lng == null) { status('search-st', 'Not found.', true); return; }
     map.flyTo({ center: [j.lng, j.lat], zoom: 13, pitch: 60, duration: 1500 });
     dropPin(j.lng, j.lat, j.label || q);

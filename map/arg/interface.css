@@ -1,0 +1,68 @@
+/* GUILD://INTERFACE: the Passport Map in the Guild's cyberpunk skin. Loaded only on /map/interface/. */
+body.cyber{--cy-bg:#070a10;--cy-panel:rgba(8,12,20,.92);--cy-ink:#d8f3ff;--cy-dim:#7fa6b8;--cy-mag:#ff2bd6;--cy-cyan:#19e3ff;--cy-amber:#ffb000;--cy-rule:rgba(25,227,255,.25);
+  --paper:#0b1018;--paper-2:#0e1520;--ink:#d8f3ff;--ink-2:#7fa6b8;--red:#ff2bd6;--red-2:#19e3ff;--rule:rgba(25,227,255,.22);
+  background:var(--cy-bg);color:var(--cy-ink)}
+/* the map itself: paper turned to night, neon in the inks */
+body.cyber #map canvas{filter:invert(1) hue-rotate(180deg) saturate(1.6) contrast(1.15) brightness(.82)}
+body.cyber .panel,body.cyber .card,body.cyber .ask,body.cyber .guide{background:var(--cy-panel);color:var(--cy-ink);border-color:var(--cy-cyan);box-shadow:0 0 0 1px rgba(25,227,255,.25),0 0 22px rgba(255,43,214,.18)}
+body.cyber .panel h1,body.cyber .panel h2,body.cyber .ask header h2{color:var(--cy-cyan);text-shadow:0 0 6px rgba(25,227,255,.6)}
+body.cyber button,body.cyber select,body.cyber input,body.cyber textarea{background:#0b1220;color:var(--cy-ink);border-color:var(--cy-cyan)}
+body.cyber button:hover{background:var(--cy-mag);color:#05070b}
+body.cyber .askbtn,body.cyber .guidebtn{background:#0b1220;color:var(--cy-mag);border-color:var(--cy-mag);box-shadow:0 0 12px rgba(255,43,214,.45)}
+body.cyber .msg.ai{background:#0c1624}
+body.cyber .msg.me{background:#140c1c}
+body.cyber a{color:var(--cy-cyan)}
+body.cyber .maplibregl-ctrl-group{background:#0b1220;filter:invert(1) hue-rotate(180deg)}
+
+/* scanlines, vignette, and the glitch */
+.cy-scan{position:fixed;inset:0;z-index:9;pointer-events:none;background:
+  repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);mix-blend-mode:multiply}
+.cy-flash{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:10;pointer-events:none;font:700 12px/1 "IBM Plex Mono",monospace;letter-spacing:.3em;
+  color:var(--cy-mag);text-shadow:2px 0 var(--cy-cyan),-2px 0 var(--cy-mag);opacity:0;transition:opacity .15s}
+body.cy-g1 #map canvas{animation:cy-shift .18s steps(2) 3}
+body.cy-g2 #map canvas{animation:cy-shift .12s steps(2) 6}
+body.cy-g3 #map canvas{animation:cy-shift .08s steps(2) 10}
+body.cy-g1 .cy-flash,body.cy-g2 .cy-flash,body.cy-g3 .cy-flash{opacity:1}
+body.cy-g2 .side,body.cy-g3 .side,body.cy-g3 .panel{animation:cy-tear .1s steps(2) 4}
+@keyframes cy-shift{0%{transform:translate(0,0);filter:invert(1) hue-rotate(180deg) saturate(1.6) contrast(1.15) brightness(.82)}
+  50%{transform:translate(-4px,1px);filter:invert(1) hue-rotate(250deg) saturate(3) contrast(1.6) brightness(1)}
+  100%{transform:translate(3px,-1px);filter:invert(1) hue-rotate(120deg) saturate(2) contrast(1.3) brightness(.9)}}
+@keyframes cy-tear{0%{clip-path:inset(0 0 60% 0);transform:translateX(-3px)}100%{clip-path:inset(40% 0 0 0);transform:translateX(3px)}}
+@media (prefers-reduced-motion:reduce){body.cy-g1 #map canvas,body.cy-g2 #map canvas,body.cy-g3 #map canvas,body.cy-g2 .side,body.cy-g3 .side,body.cy-g3 .panel{animation:none}}
+
+/* the case net: docked at the top of the right-hand column */
+#arg{background:var(--cy-panel);border:1px solid var(--cy-mag);box-shadow:0 0 18px rgba(255,43,214,.25);color:var(--cy-ink);font:12px/1.45 "IBM Plex Mono",monospace;
+  display:flex;flex-direction:column;min-height:0;max-height:46%;flex:0 1 auto}
+#arg header{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--cy-rule)}
+#arg header b{color:var(--cy-mag);letter-spacing:.2em;font-size:11px;text-shadow:0 0 6px rgba(255,43,214,.7);flex:1}
+#arg .stab{font-size:10px;color:var(--cy-dim)}
+#arg .stab i{display:inline-block;width:70px;height:6px;background:#1a2230;vertical-align:middle;margin-left:4px;position:relative}
+#arg .stab i span{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--cy-mag),var(--cy-cyan))}
+#arg nav{display:flex;border-bottom:1px solid var(--cy-rule)}
+#arg nav button{flex:1;border:0;border-right:1px solid var(--cy-rule);background:transparent;color:var(--cy-dim);padding:5px 0;font-size:10px;letter-spacing:.18em}
+#arg nav button[aria-pressed=true]{color:var(--cy-cyan);background:rgba(25,227,255,.08)}
+#arg .body{overflow:auto;padding:8px 10px;min-height:0}
+#arg .case{display:block;width:100%;text-align:left;border:1px solid var(--cy-rule);background:transparent;color:var(--cy-ink);padding:6px 8px;margin:0 0 6px}
+#arg .case:hover{border-color:var(--cy-mag);background:rgba(255,43,214,.08)}
+#arg .case small,#arg .meta{color:var(--cy-dim);font-size:10px;display:block}
+#arg .bar{height:3px;background:#1a2230;margin-top:4px}
+#arg .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--cy-mag),var(--cy-cyan))}
+#arg h4{margin:0 0 4px;color:var(--cy-cyan);font-size:12px;letter-spacing:.06em}
+#arg .brief{margin:0 0 8px;color:var(--cy-ink)}
+#arg .clue{border-left:2px solid var(--cy-cyan);padding:2px 0 2px 8px;margin:0 0 6px;cursor:pointer}
+#arg .filing{border-left:2px solid var(--cy-mag);padding:4px 0 4px 8px;margin:0 0 8px}
+#arg .filing.canon{border-left-color:var(--cy-amber)}
+#arg .tag{display:inline-block;font-size:9px;letter-spacing:.14em;padding:0 4px;border:1px solid currentColor;margin-right:4px}
+#arg .tag.canon{color:var(--cy-amber)}
+#arg .ruling{color:var(--cy-cyan);margin:3px 0 0}
+#arg form{display:flex;flex-direction:column;gap:5px;margin:8px 0 2px;border-top:1px dashed var(--cy-rule);padding-top:8px}
+#arg form .row2{display:flex;gap:6px}
+#arg textarea{min-height:4.2em;resize:vertical;padding:5px;font:inherit}
+#arg .attach{font-size:10px;color:var(--cy-dim)}
+#arg .log p{margin:0 0 4px;font-size:11px}
+#arg .log p b{color:var(--cy-mag)}
+#arg .err{color:var(--cy-amber)}
+#arg .wake{width:100%;margin:2px 0 8px;padding:6px;border:1px solid var(--cy-mag);color:var(--cy-mag);background:transparent;letter-spacing:.14em}
+#arg .wake:hover{background:var(--cy-mag);color:#05070b}
+body.cyber .side.asking #arg{max-height:30%}
+@media (max-width:640px){#arg{max-height:34dvh}}

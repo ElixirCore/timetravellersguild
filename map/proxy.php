@@ -14,6 +14,8 @@
  *   src=osmhist  OpenStreetMap historic places (memorials, battlefields, ruins, mines…) in a 0.05° cell, worldwide (Overpass)
  *   src=wdevents dated events near a point (Wikidata: strikes, riots, disasters, battles…), worldwide
  *   src=wdpeople people born in settlements near a point (Wikidata), worldwide
+ *   src=oldmaps  georeferenced old maps covering a point: Allmaps (David Rumsey, Library of Congress, Internet Archive…)
+ *                and mapwarper.net, local maps first; each with its own tile URL for an overlay
  *
  * It is not an open proxy: the host is fixed per source and only named parameters pass through.
  * No keys are needed, so secrets.php is not used.
@@ -391,6 +393,71 @@ if ($src === 'wdpeople') {
     $people = array_values($by);
     usort($people, fn($a, $b) => ($a['born'] ?? 9999) <=> ($b['born'] ?? 9999));
     return [json_encode(['people' => $people], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
+  }), 86400);
+}
+
+if ($src === 'oldmaps') {
+  [$lat, $lng] = $point();
+  @set_time_limit(60);
+  out(cached($CACHE, 'oldmaps:v2:' . $lat . ',' . $lng, 7 * 86400, function () use ($lat, $lng) {
+    $maps = []; $ok = 0;
+    $km2 = static function (float $w, float $s, float $e, float $n): float {
+      $mid = deg2rad(($s + $n) / 2); return abs(($e - $w) * 111.32 * cos($mid) * ($n - $s) * 110.57);
+    };
+    $yr = static fn(string $t): ?int => preg_match('/\b(1[0-9]\d\d|20[0-2]\d)\b/', $t, $m) ? (int) $m[1] : null;
+
+    // Allmaps: georeferenced IIIF maps from libraries (David Rumsey, Library of Congress, Internet Archive, …)
+    [$b, $c] = fetch_url('https://api.allmaps.org/maps?' . http_build_query(['intersects' => $lat . ',' . $lng, 'limit' => 60]), 25);
+    $j = $c === 200 ? json_decode($b, true) : null;
+    if (is_array($j)) {
+      $ok++;
+      foreach ($j as $m) {
+        $id = preg_match('#/maps/([0-9a-f]{8,32})$#', (string) ($m['id'] ?? ''), $mm) ? $mm[1] : '';
+        $geo = array_values(array_filter(array_map(fn($g) => $g['geo'] ?? null, $m['gcps'] ?? [])));
+        if ($id === '' || count($geo) < 3) continue;
+        $xs = array_column($geo, 0); $ys = array_column($geo, 1);
+        $w = min($xs); $e = max($xs); $s0 = min($ys); $n = max($ys);
+        if (($e - $w) * ($n - $s0) < 1e-6) continue; // georeferencing collapsed to a dot: useless as an overlay
+        $res = (string) ($m['resource']['id'] ?? '');
+        $host = strtolower((string) parse_url($res, PHP_URL_HOST));
+        $names = ['davidrumsey' => 'David Rumsey Map Collection', 'loc.gov' => 'Library of Congress', 'archive.org' => 'Internet Archive',
+          'mapwarper' => 'mapwarper.net', 'bodleian' => 'Bodleian Libraries, Oxford', 'nls.uk' => 'National Library of Scotland',
+          'nypl' => 'New York Public Library', 'harvard' => 'Harvard Library', 'yale' => 'Yale University', 'princeton' => 'Princeton University Library',
+          'leiden' => 'Leiden University Library', 'e-rara' => 'e-rara (Swiss libraries)', 'tamu' => 'Texas A&M University Libraries',
+          'digitalcommonwealth' => 'Digital Commonwealth (Boston Public Library)', 'archief.nl' => 'Nationaal Archief (Netherlands)',
+          'bl.uk' => 'British Library', 'gallica' => 'Bibliothèque nationale de France', 'bnf.fr' => 'Bibliothèque nationale de France',
+          'stanford' => 'Stanford Libraries', 'umich' => 'University of Michigan', 'contentdm' => 'a university library (CONTENTdm)'];
+        $prov = $host !== '' ? $host : 'Allmaps';
+        foreach ($names as $needle => $name) { if (str_contains($host, $needle)) { $prov = $name; break; } }
+        $maps[] = ['source' => 'allmaps', 'id' => $id, 'title' => $prov . ' map', 'provider' => $prov, 'year' => null,
+          'bbox' => [round($w, 4), round($s0, 4), round($e, 4), round($n, 4)], 'km2' => round($km2($w, $s0, $e, $n)),
+          'tiles' => 'https://allmaps.xyz/maps/' . $id . '/{z}/{x}/{y}.png', 'link' => 'https://viewer.allmaps.org/?url=' . rawurlencode('https://annotations.allmaps.org/maps/' . $id)];
+      }
+    }
+    // mapwarper.net: maps people have georeferenced, with titles; first those within the area, then the smallest that cover it.
+    foreach ([['within', 0.35, 30], ['intersect', 0.0001, 40]] as [$op, $pad, $per]) {
+      $bbox = ($lng - $pad) . ',' . ($lat - $pad) . ',' . ($lng + $pad) . ',' . ($lat + $pad);
+      [$b, $c] = fetch_url('https://mapwarper.net/api/v1/maps?' . http_build_query(['bbox' => $bbox, 'operation' => $op, 'per_page' => $per]), 20);
+      $j = $c === 200 ? json_decode($b, true) : null;
+      if (!is_array($j)) continue;
+      $ok++;
+      foreach (($j['data'] ?? []) as $m) {
+        $a = $m['attributes'] ?? []; $id = (string) ($m['id'] ?? '');
+        if (($a['status'] ?? '') !== 'warped' || !ctype_digit($id)) continue;
+        $bb = array_map('floatval', explode(',', (string) ($a['bbox'] ?? '')));
+        if (count($bb) !== 4 || $bb[2] - $bb[0] > 200) continue;
+        $title = trim((string) ($a['title'] ?? '')) ?: 'Untitled map';
+        $thumb = (string) ($m['links']['thumb'] ?? '');
+        $maps['mw' . $id] = ['source' => 'mapwarper', 'id' => $id, 'title' => mb_substr($title, 0, 120), 'provider' => 'mapwarper.net',
+          'year' => $yr($title . ' ' . ($a['date_depicted'] ?? '')), 'bbox' => array_map(fn($v) => round($v, 4), $bb), 'km2' => round($km2($bb[0], $bb[1], $bb[2], $bb[3])),
+          'tiles' => 'https://mapwarper.net/maps/tile/' . $id . '/{z}/{x}/{y}.png', 'link' => 'https://mapwarper.net/maps/' . $id,
+          'thumb' => str_starts_with($thumb, '/uploads/') ? 'https://mapwarper.net' . $thumb : ''];
+      }
+    }
+    if ($ok === 0) return ['', 503, ''];
+    $maps = array_values($maps);
+    usort($maps, fn($x, $y) => $x['km2'] <=> $y['km2']);   // the most local first
+    return [json_encode(['maps' => array_slice($maps, 0, 80)], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 200, 'application/json'];
   }), 86400);
 }
 
