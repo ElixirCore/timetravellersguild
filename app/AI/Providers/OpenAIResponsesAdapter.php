@@ -63,6 +63,12 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
         $out->providerResponseId = isset($data['id']) && is_string($data['id']) ? $data['id'] : null;
         $out->text = $this->outputText($data);
         $out->toolCalls = $this->toolCalls($data);
+        foreach (is_array($data['output'] ?? null) ? $data['output'] : [] as $item) {
+            $t = is_array($item) ? (string) ($item['type'] ?? '') : '';
+            if ($t !== '' && str_ends_with($t, '_call') && $t !== 'function_call' && $t !== 'tool_call') {
+                $out->builtinCalls[] = substr($t, 0, -5);
+            }
+        }
         return $out;
     }
 

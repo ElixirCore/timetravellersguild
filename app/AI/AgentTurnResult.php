@@ -11,4 +11,6 @@ final class AgentTurnResult
     public string $model = '';
     public ?string $providerResponseId = null;
     public ?string $error = null;
+    /** Provider-run tools used this round, e.g. web_search. */
+    public array $builtinCalls = [];
 }

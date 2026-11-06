@@ -13,7 +13,8 @@ declare(strict_types=1);
  * Everything reads the Guild's own data. The only writes are to Jack's memory of the traveller
  * at the desk, and the office tools for the Keeper. Lodging testimony stays a proposal the
  * traveller confirms (proposedActions in his reply), never a tool he runs on his own.
- * No shell, no outbound requests, no mail, no canon.
+ * No shell, no mail, no canon. No outbound requests of his own; the one exception is the provider's
+ * built-in web_search, offered only at /lodge/ to the accounts in WEB_SEARCH_EMAILS (see mayWebSearch).
  */
 final class JackTools
 {
@@ -93,6 +94,23 @@ final class JackTools
             'resolve_thread' => self::resolveThread((string) ($a['thread'] ?? ''), $ctx),
             default => JackAgent::executeTool($name, $a, $ctx['office']),
         };
+    }
+
+    /** Accounts allowed internet search at the /lodge/ desk. */
+    public const WEB_SEARCH_EMAILS = ['tobywhy@gmail.com'];
+
+    /**
+     * Internet search is only for /lodge/ and only for an allowed signed-in account.
+     * The account is read from the people session on the server, never from the request.
+     */
+    public static function mayWebSearch(array $viewer): bool
+    {
+        if (empty($viewer['known'])) return false;
+        $path = (string) (parse_url((string) ($_SERVER['HTTP_REFERER'] ?? ''), PHP_URL_PATH) ?? '');
+        if ($path !== '/lodge' && !str_starts_with($path, '/lodge/')) return false;
+        $u = self::currentUser();
+        $email = strtolower(trim((string) ($u['email'] ?? '')));
+        return $email !== '' && in_array($email, self::WEB_SEARCH_EMAILS, true);
     }
 
     /** The signed-in user row, straight from the people session. */
