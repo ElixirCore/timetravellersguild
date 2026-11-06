@@ -22,7 +22,7 @@ final class JackTools
     private const OUT_CHARS = 7000;
 
     /** @return list<array<string, mixed>> */
-    public static function definitions(array $viewer, bool $memory): array
+    public static function definitions(array $viewer, bool $memory, bool $site = false): array
     {
         $s = static fn (int $max = 200) => ['type' => 'string', 'maxLength' => $max];
         $fn = static fn (string $name, string $desc, array $props = [], array $required = []) => [
@@ -50,6 +50,11 @@ final class JackTools
                 ['what' => $s(40)], ['what']);
             $tools[] = $fn('resolve_thread', 'Close an unresolved conversation thread on your relationship record once it is settled, so you stop raising it. Pass words from the thread, or "all".',
                 ['thread' => $s()], ['thread']);
+        }
+        if ($site) {
+            $tools[] = $fn('list_site', 'List the public sections of timetravellersguild.com (the site you live on), with their addresses and titles. Use it to see what the Guild is made of.');
+            $tools[] = $fn('read_site_page', 'Read one public page of timetravellersguild.com as text, as a signed-out visitor sees it. Pass a path such as /ledger/ or /lore/. Faster and fuller than web search for the Guild itself.',
+                ['path' => $s(300)], ['path']);
         }
         // The existing public field tools, plus the office tools when the Keeper is at the desk.
         foreach (JackAgent::tools($viewer) as $t) $tools[] = $t;
@@ -92,6 +97,8 @@ final class JackTools
             'remember' => JackMemory::remember($subject, (string) ($a['kind'] ?? 'fact'), (string) ($a['text'] ?? '')),
             'forget' => JackMemory::forget($subject, (string) ($a['what'] ?? '')),
             'resolve_thread' => self::resolveThread((string) ($a['thread'] ?? ''), $ctx),
+            'list_site' => !empty($ctx['site']) ? self::listSite() : ['ok' => false, 'error' => 'Not at this desk.'],
+            'read_site_page' => !empty($ctx['site']) ? self::readSitePage((string) ($a['path'] ?? '')) : ['ok' => false, 'error' => 'Not at this desk.'],
             default => JackAgent::executeTool($name, $a, $ctx['office']),
         };
     }
@@ -233,5 +240,63 @@ final class JackTools
         $ctx['relationship']['threadsResolvedAt'] = gmdate('c');
         JackRelationship::save($ctx['relationship']);
         return ['ok' => true, 'closed' => $closed, 'still_open' => $keep];
+    }
+
+    /** The public sections: top-level folders with an index page, minus the private machinery. */
+    private static function listSite(): array
+    {
+        $root = dirname(__DIR__, 2);
+        $private = ['app', 'inc', 'data', 'storage', 'scripts', 'tests', 'prompts', 'archive', 'database', 'research', 'workbench', 'console', 'io', 'n', 'ok', 'c'];
+        $out = [];
+        foreach (scandir($root) ?: [] as $d) {
+            if ($d[0] === '.' || $d[0] === '_' || !is_dir("$root/$d") || in_array($d, $private, true)) continue;
+            $index = is_file("$root/$d/index.php") ? "$root/$d/index.php" : (is_file("$root/$d/index.html") ? "$root/$d/index.html" : '');
+            if ($index === '') continue;
+            $head = (string) @file_get_contents($index, false, null, 0, 12000);
+            $title = preg_match('#<title>([^<]{1,140})</title>#i', $head, $m) ? html_entity_decode(trim($m[1]), ENT_QUOTES) : '';
+            $desc = preg_match('#<meta name="description" content="([^"]{1,240})"#i', $head, $m) ? html_entity_decode($m[1], ENT_QUOTES) : '';
+            $out[] = array_filter(['path' => '/' . $d . '/', 'title' => $title, 'about' => $desc]);
+        }
+        return ['ok' => true, 'site' => 'https://timetravellersguild.com', 'sections' => $out,
+            'note' => 'Public sections only. Read any of them with read_site_page; follow the links you find there.'];
+    }
+
+    /** Fetch one public page of the Guild's own site, signed out, and reduce it to text and links. */
+    private static function readSitePage(string $path): array
+    {
+        $path = trim($path);
+        if (preg_match('#^https?://(www\.)?timetravellersguild\.com(/.*)?$#i', $path, $m)) $path = $m[2] ?? '/';
+        if ($path === '' || $path[0] !== '/' || str_starts_with($path, '//') || preg_match('~\.\.|[\s\\\\]~', $path)) {
+            return ['ok' => false, 'error' => 'Give a path on timetravellersguild.com, such as /ledger/.'];
+        }
+        $ch = curl_init('https://timetravellersguild.com' . $path);
+        if ($ch === false) return ['ok' => false, 'error' => 'The door would not open.'];
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_MAXREDIRS => 3,
+            CURLOPT_TIMEOUT => 12, CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_USERAGENT => 'JackTheClerk/1 (+https://timetravellersguild.com)',
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS, CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTPS,
+        ]);
+        $html = curl_exec($ch);
+        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $final = (string) curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+        $type = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        if (!is_string($html)) return ['ok' => false, 'error' => 'No answer from that page.'];
+        if (parse_url($final, PHP_URL_HOST) !== 'timetravellersguild.com') return ['ok' => false, 'error' => 'That page leads off the site.'];
+        if (!str_contains($type, 'html') && !str_contains($type, 'text') && !str_contains($type, 'json')) {
+            return ['ok' => true, 'status' => $status, 'type' => $type, 'note' => 'Not a text page.'];
+        }
+        $title = preg_match('#<title>(.*?)</title>#is', $html, $m) ? trim(html_entity_decode(strip_tags($m[1]), ENT_QUOTES)) : '';
+        $links = [];
+        if (preg_match_all('~<a\s[^>]*href="(/[^"#]*)"[^>]*>(.*?)</a>~is', $html, $mm, PREG_SET_ORDER)) {
+            foreach ($mm as $l) {
+                $label = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($l[2]), ENT_QUOTES)) ?? '');
+                $links[$l[1]] = mb_substr($label, 0, 60);
+                if (count($links) >= 40) break;
+            }
+        }
+        $body = preg_replace('#<(script|style|noscript|svg)\b.*?</\1>#is', ' ', $html) ?? '';
+        $text = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags(preg_replace('#<(br|p|div|li|h[1-6]|tr)\b#i', "\n<$1", $body) ?? ''), ENT_QUOTES)) ?? '');
+        return ['ok' => true, 'path' => (string) parse_url($final, PHP_URL_PATH), 'status' => $status, 'title' => $title,
+            'text' => mb_substr($text, 0, 4500), 'links' => $links];
     }
 }

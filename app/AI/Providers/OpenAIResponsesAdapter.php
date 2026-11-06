@@ -52,9 +52,13 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
             $payload['tool_choice'] = in_array($request->toolChoice, ['auto', 'none', 'required'], true) ? $request->toolChoice : 'auto';
         }
 
+        $t0 = microtime(true);
         $raw = $this->post($apiKey, $payload, $request->timeoutSeconds);
         if ($raw['ok'] !== true) {
             $out->error = $raw['error'] ?? 'unavailable';
+            /* Say why in the log; the visitor only ever hears Jack. Never logs the key or the conversation. */
+            error_log(sprintf('Jack model call failed: %s after %.1fs (limit %ds, model %s, request %s)',
+                $out->error, microtime(true) - $t0, $request->timeoutSeconds, $out->model, $request->requestId));
             return $out;
         }
 
@@ -105,13 +109,17 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         // curl handles close themselves (curl_close is a no-op since PHP 8.0, deprecated in 8.5).
 
+        if ($errno === CURLE_OPERATION_TIMEDOUT) {
+            return ['ok' => false, 'error' => 'timeout'];
+        }
         if ($errno !== 0 || !is_string($response) || $response === '') {
-            return ['ok' => false, 'error' => 'unavailable'];
+            return ['ok' => false, 'error' => 'network ' . $errno];
         }
 
         $data = json_decode($response, true);
         if (!is_array($data) || $status >= 400) {
-            return ['ok' => false, 'error' => 'unavailable'];
+            $msg = is_array($data) ? (string) ($data['error']['message'] ?? '') : '';
+            return ['ok' => false, 'error' => 'http ' . $status . ($msg !== '' ? ': ' . mb_substr($msg, 0, 200) : '')];
         }
 
         return ['ok' => true, 'data' => $data];
