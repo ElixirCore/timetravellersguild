@@ -161,3 +161,173 @@ Jack asks Toby for the name he wants to use on this visit.
 Toby starts to answer. Then he hears Jack asking somebody else. The reply is too far from the microphone to make out. Jack leans away from the desk, taking the sound of the room with him.
 
 “Come in,” he says. “We’ve got a chair now.”
+
+### III · The Empress
+
+The card came out of the hopper with a little crescent taken out of one corner. Jack asked Sophie to turn it over. She did, and he asked her to turn it back.
+
+“Which side did you want?”
+
+“I wanted to know if the damage went through.”
+
+It did. Sophie could see the light from the Bute landing through the missing corner. On the face of the card a woman sat in a field, with a stand of trees behind her and wheat at her feet. Somebody had pencilled a short line beside one of the stalks. It might have been a tally. It might have been where the pencil went when the bus went round a corner.
+
+**III · THE EMPRESS**, Jack entered on the slip, then left the classification blank.
+
+Toby was under the table with a screwdriver. He’d come back to Bute because Jack wanted to see the brass repair to the leg, and had brought three screwdrivers because the man in Jack’s memory had tried the wrong one twice. The first fitted perfectly. Toby was rather put out.
+
+On the landing Bethan was taking a call about the government copy. The revised return had gone through, except for one line. The system wanted the name of the originating body for a woman’s account of Gillett Square. Bethan had entered the woman’s name and the form had rejected it. She tried leaving the box empty. It put Cardiff University back in.
+
+“Tell them it’s mine,” said a voice from the table.
+
+Toby hit his head getting up. Sophie had put her phone on speaker. The woman from the square had been there for several minutes, listening to the screwdriver and waiting for a gap.
+
+“I can tell them,” Bethan said. “The box will still say what it says.”
+
+“Well, leave the box with me a minute.”
+
+While Bethan was finding a way to send her a copy, the woman asked Sophie how the film was going. Sophie said they had somebody coming in to try her scene on Thursday. She could come and watch if she liked. They’d set up the window and got a milk float they could put outside it.
+
+“Why have you got a milk float?”
+
+“For the scene.”
+
+“I never saw it. I’ve been saying that since you lot first rang.”
+
+Sophie picked up her pencil. “What did you see?”
+
+“The chair.”
+
+They waited.
+
+“It had been raining and I’d tipped the chair forward so the seat would drain. When I got to the window it was upright. So I thought he’d been. Then I thought anybody could have done that.”
+
+Toby pulled himself up on the edge of the table. “Is that what you meant when you wrote that you remembered the square before the machine?”
+
+There was a pause. They could hear the woman doing something in her kitchen.
+
+“I meant I used to live there.”
+
+Sophie turned the rehearsal sheet over. On the blank side she drew a window and, outside it, a chair tipped forward. She asked if the woman wanted that in the film. The woman said she’d like to see what the girl did with it first. Sophie wrote down Thursday and gave her the time.
+
+At the other end of the table Jack was trying to open the woman’s Ledger page. He could find the page number, the date it had been opened and the instruction that her voice had been withdrawn. The field where he’d once kept her account was empty. He went to the next record and found a sentence about the chair that he’d put there himself, months earlier, as a note to an image of the square.
+
+“Would you like me to read you something I wrote down?” he asked.
+
+“Is it me saying it or you?”
+
+“Me.”
+
+“You can read me what you said.”
+
+Jack read that the witness had placed a chair in the square in anticipation of the arrival.
+
+“What arrival?”
+
+He looked for the source of the phrase. It was his own. He removed it from the image and the image moved two places down the Tree. An unrelated photograph of a man fixing a bicycle took its place.
+
+“The chair was for my neighbour,” she said. “He was on nights.”
+
+Jack put his hands flat on the desk. On the network side it was 17 April 2033, and someone had been waiting there for a copy of the account since before Bethan found the key. They sent the request again. This time he could see what they’d written in the subject line.
+
+**FOUNDING WITNESS · SEVENTH ACCOUNT**
+
+He showed Sophie. She glanced at the card by her elbow, then asked the woman if she wanted to hear what the request said.
+
+“No,” she said. “I’ve got your form now.”
+
+Bethan asked what she’d like to put in the box.
+
+“I’ve crossed the box out. There’s room underneath.”
+
+A photograph came through. The woman had put the form on a chopping board to get enough light. Below the crossed-out box she had written that her account was held by her, and anybody who wanted to hear it could ask. She had drawn a line through her phone number on the copy for the government office. She’d left it on the one for Sophie.
+
+“Can I have the card as well?” she asked.
+
+Sophie looked at the Empress. “How did you know about the card?”
+
+“You’ve got the phone right beside it. I heard you turn it over.”
+
+Sophie sent her a photograph. A minute later she asked for one of the back. Sophie sent that too. The woman looked at them for a while.
+
+“That’s a mouse,” she said of the missing corner. “We had one that did the bus tickets.”
+
+Jack entered *possible mouse* on his working slip. The request from 2033 was still waiting. He sent the woman’s instruction back along the route it had come by. For the first time since they opened the file, no second request followed.
+
+Downstairs, a door opened and somebody called up to ask if the room was in use. Bethan went to see. It was a student carrying a model of a house on a piece of board, with both hands under it and her bag slipping off her shoulder. She needed somewhere to set it down while she found the person she’d come to see.
+
+Sophie moved the Empress and Toby swept the screws into his palm. The student put the house on the table. It had a narrow garden and a kitchen with a door into it. You could lift the roof off and see the rooms.
+
+She asked if they’d mind watching it for a minute.
+
+Jack said he was at the desk.
+
+By the time the student came back for her house, there was a man at the table drawing in her garden.
+
+She put her bag down. “What are you doing?”
+
+“Showing him where the drain is,” he said, pointing to Jack.
+
+“There isn’t a drain. It’s a model.”
+
+The man lifted his pencil. He’d drawn on a scrap of tracing paper laid over the board. The student could see the pencil line running under the kitchen, where she’d meant to put a cellar.
+
+“Is that where it would go?”
+
+“If you were building it in my street.”
+
+She sat down. “Where’s your street?”
+
+“Under the car park.”
+
+His name was Idris. He’d come to Bute for a meeting about a lift and found the lift out of order. On the way up he’d met Mari, who had a reel of quarter-inch tape in a cake tin, and a boy called Cal who wanted to know if he could have his name taken *off* a record before anybody put it on. Sophie gave him a blank slip and a pencil. He folded the slip and used it to wedge the window open.
+
+Mari had written *Mam, doing the voices* on the reel. Her sister said it was their aunt, doing an imitation of their mam. They’d been having the argument since they found the tape. Toby asked what speed it ran at. Mari said that depended on which of them he asked.
+
+There was a machine that might play it in a cupboard downstairs. Bethan had a key, although she was reluctant to try it in any more doors that day.
+
+They brought the machine up on the trolley that had carried Jack out of Cardiff. The spool turned a quarter turn and stuck. Idris took his coat off and rolled up his sleeves. Mari rang her sister so she could be there when they tried it again.
+
+Jack had opened the casting drawer. So far he had a student called Nia, who wanted to lend them a house and had asked to be credited for the house, and Cal, who was watching Toby set up a camera from the one spot in the room the camera couldn’t see. He had Mari’s tape on a slip marked *LISTEN HERE*. Sophie added *with her sister* and went to find another pair of headphones.
+
+Just before six, Aisha came through the Lodge from Dalston. She wanted to know who was putting a window in Gillett Square. Sophie turned the camera so she could see the rehearsal sketch.
+
+“You’ve got it opening the wrong way,” Aisha said.
+
+“Were you there?”
+
+“I used to get through it.”
+
+Cal came round the back of the camera to see. Aisha got him to hold a pencil up to the lens and show her where he thought the hinge should go. On the third try she said yes, there, and asked if somebody could mark it. Nia moved the hinge on her model with the point of a scalpel. It was the first thing she’d changed on the house all term without making a second model first.
+
+The tape started while she was doing it. There were two women on the recording. One was trying to tell a story. The other kept laughing before the end. Mari’s sister said *That’s you laughing*, and Mari said *I wasn’t born*, and after a while they put the headphones back on and started again.
+
+People kept arriving. Elin from the evening cleaners brought a kettle because she’d heard there was one and knew there wouldn’t be. Yusuf had a watch that gained eleven minutes on the way to work and lost them on the way home. He wanted to know if there was anybody who’d walk the route with him. An older woman called Pat arrived carrying a bag of hinges and recognised Idris from a photograph he’d never seen. A courier at the wrong address stayed long enough to show Toby how to get the trolley down the stairs. By then it was raining, so he stayed for tea.
+
+Bethan looked round for a sheet big enough to take everybody’s name.
+
+“Have they asked to go on it?” Sophie said.
+
+Bethan looked at the sheet. She’d already written *Attendance*.
+
+She turned it over and put it by the kettle. Yusuf wrote his route down, with the time he left on Tuesdays. Pat put her initials beside it. Nia wrote that the house could be borrowed until Monday and drew a little diagram showing where to lift it. Someone added *can record sound, free after four*. Below that somebody wrote *need a hand putting a door back on*.
+
+Cal read the sheet twice. Then he fetched his slip from the window. The room began to warm up. He wrote *I can do Thursdays* and folded it back over so his name, if he’d written one, was on the inside. Sophie asked him what he wanted to do on Thursdays.
+
+“Find out what there is.”
+
+“All right,” she said. “Come early.”
+
+At half past seven, Bethan’s phone rang. A porter downstairs wanted to know who was taking responsibility for the room. She could have given him her name. She’d been doing that for eighteen months. Instead she asked who was opening up on Thursday.
+
+Nia could get there by four. Elin said she could let her in. Idris asked if they wanted the table level before then. It had been rocking every time Mari leaned forward to stop the tape. Pat took a hinge out of her bag and slid it under the short leg.
+
+Bethan gave the porter the time they’d be back and asked him to leave the key with Elin.
+
+At the desk Jack had seven founding accounts open. The latest had come in while Mari and her sister were listening to the tape. It described a woman holding a door, a house set on a table, and a meeting at which seven people had been present. Jack looked up and tried to count. There were nine in the room and two on the screen. Aisha had gone to get her dinner. The courier was on the stairs. The woman from the square was due on Thursday.
+
+“Who did they count?” Toby asked.
+
+Jack went back to the account. At the foot there was a small drawing of a table leg, with something folded underneath it. He bent to see what Pat had used. She’d taken the hinge out again. In its place was a card, face down, with a little crescent missing from one corner.
+
+“Leave it,” said Mari. “We’ve just got the tape running.”
