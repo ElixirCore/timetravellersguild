@@ -6,6 +6,7 @@ RewriteRule ^auth/?$ auth/index.php [L]
 RewriteRule ^profile/?$ profile/index.php [L]
 RewriteRule ^knock/?$ knock.php [L]
 RewriteRule ^chat/?$ chat/index.php [L,QSA]
+RewriteRule ^agree/?$ agree/index.php [L,QSA]
 RewriteRule ^([a-z0-9-]+)/?$ view.php?slug=$1 [L,QSA]
 
 <IfModule mod_headers.c>

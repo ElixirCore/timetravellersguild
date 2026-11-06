@@ -10,6 +10,7 @@
 declare(strict_types=1);
 ini_set('display_errors', '0');
 require_once __DIR__ . '/lib.php';
+require_once dirname(__DIR__, 2) . '/people/inc/terms.php';
 header('X-Content-Type-Options: nosniff');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') arg_json(['ok' => false, 'error' => 'POST only.'], 405);
@@ -85,6 +86,7 @@ try {
     }
 
     case 'open': {
+        ttg_terms_gate_json($me);
         $lng = arg_num($in['lng'] ?? null, -180, 180); $lat = arg_num($in['lat'] ?? null, -85, 85);
         if ($lng === null || $lat === null) arg_json(['ok' => false, 'error' => 'Stand somewhere first.'], 400);
         if ((int) $db->query("SELECT COUNT(*) FROM arg_cases WHERE status = 'open'")->fetchColumn() >= ARG_MAX_OPEN) arg_json(['ok' => false, 'error' => 'The Department has too many open cases. Close one first.'], 429);
@@ -116,6 +118,7 @@ try {
     }
 
     case 'file': {
+        ttg_terms_gate_json($me);
         $cid = (int) ($in['case_id'] ?? 0);
         $c = $db->prepare("SELECT * FROM arg_cases WHERE id = ? AND status = 'open'"); $c->execute([$cid]); $case = $c->fetch();
         if (!$case) arg_json(['ok' => false, 'error' => 'That case is not open.'], 404);
@@ -157,6 +160,7 @@ try {
     }
 
     case 'corroborate': {
+        ttg_terms_gate_json($me);
         $fid = (int) ($in['filing_id'] ?? 0);
         $f = $db->prepare('SELECT f.*, c.status, c.title FROM arg_filings f JOIN arg_cases c ON c.id = f.case_id WHERE f.id = ?'); $f->execute([$fid]); $fil = $f->fetch();
         if (!$fil || $fil['status'] !== 'open') arg_json(['ok' => false, 'error' => 'Nothing to back there.'], 404);

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../inc/db.php';
+require_once __DIR__ . '/../inc/terms.php';
 $user = ttg_current_user();
 if (!$user) ttg_redirect(ttg_base('auth/'));
 if (trim((string) ($user['briefing'] ?? '')) === '') {
@@ -80,6 +81,13 @@ require __DIR__ . '/../inc/header.php';
       <input id="is_public" type="checkbox" name="is_public" value="1" <?= ((int) ($user['is_public'] ?? 0) === 1) ? 'checked' : '' ?>>
       <span>Public record — list this slip on the register</span>
     </label>
+
+    <?php if (!ttg_terms_agreed($user)): ?>
+    <label class="check" for="agree_terms">
+      <input id="agree_terms" type="checkbox" name="agree_terms" value="1" required>
+      <span>I agree to lend my avatar, name and submitted work to the Guild's grand narrative (<a href="/privacy/#narrative">what this means</a>). I keep owning them and can stop at any time.</span>
+    </label>
+    <?php endif; ?>
 
     <p class="form-actions">
       <button class="primary" type="submit">PUNCH THE SLIP</button>

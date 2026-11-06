@@ -18,4 +18,4 @@ $pos = strrpos($html, '})();');
 if ($pos !== false) $html = substr_replace($html, $bridge."\n", $pos, 0);
 $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>Guild Field Network | ARG test</title>', $html);
 $html = str_replace('</head>', '<script>window.TTG_MAP='.json_encode($cfg, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_QUOT|JSON_HEX_APOS).';</script><link rel="stylesheet" href="/map/arg/field.css?v=3"></head>', $html);
-echo str_replace('</body>', '<script src="/map/arg/field.js?v=3"></script></body>', $html);
+echo str_replace('</body>', '<script src="/assets/terms-gate.js?v=1"></script><script src="/map/arg/field.js?v=3"></script></body>', $html);

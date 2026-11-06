@@ -61,6 +61,12 @@ function ttg_migrate(PDO $pdo): void {
     if (empty($have['briefing'])) {
         $pdo->exec("ALTER TABLE users ADD COLUMN briefing TEXT NOT NULL DEFAULT ''");
     }
+    if (empty($have['terms_version'])) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN terms_version TEXT NOT NULL DEFAULT ''");
+    }
+    if (empty($have['terms_agreed_at'])) {
+        $pdo->exec("ALTER TABLE users ADD COLUMN terms_agreed_at TEXT NOT NULL DEFAULT ''");
+    }
     $linkCols = [];
     foreach ($pdo->query('PRAGMA table_info(magic_links)')->fetchAll() as $col) {
         $linkCols[(string) ($col['name'] ?? '')] = true;

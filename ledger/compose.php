@@ -167,6 +167,7 @@ if ($json === false) $json = '{}';
 </div>
 
 <script>window.TTG_COMPOSE=<?= $json ?>;</script>
+<script src="/assets/terms-gate.js?v=1"></script>
 <script src="/ledger/assets/compose.js?v=2" defer></script>
 </body>
 </html>

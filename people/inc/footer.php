@@ -17,11 +17,10 @@
 </nav>
 <footer class="site-footer">
   <span>Station XIII · Punch register · not canon</span>
-  <span><a href="/jack/tarot/">punchcard tarot</a> · <a href="/join/">join</a></span>
+  <span><a href="/jack/tarot/">punchcard tarot</a> · <a href="/join/">join</a> · <a href="/privacy/">privacy</a></span>
 </footer>
 <?= function_exists('ttg_limbs') ? ttg_limbs('people', 'paper') : '' ?>
 <script src="<?= ttg_h(ttg_base('assets/js/people.js')) ?>?v=punch3" defer></script>
 <?= function_exists('ttg_html_visit_tracker') ? ttg_html_visit_tracker() : '' ?>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 ini_set('display_errors', '0');
 require_once __DIR__ . '/inc/ledger.php';
+require_once dirname(__DIR__) . '/people/inc/terms.php';
 
 header('X-Content-Type-Options: nosniff');
 
@@ -55,6 +56,7 @@ $op = (string) ($in['op'] ?? '');
 try {
     switch ($op) {
         case 'save': {
+            ttg_terms_gate_json($me);
             if (!$keeper && !ttg_ledger_rate_ok($meId)) {
                 ttg_json(['ok' => false, 'error' => 'The clerk needs a breather. Try again within the hour.'], 429);
             }

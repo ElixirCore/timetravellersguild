@@ -29,6 +29,8 @@ if ($ohost === '' || $ohost !== $host) fail(403, 'Same-origin only.');
 require_once __DIR__ . '/../people/inc/db.php';
 $user = ttg_current_user();
 if (!$user) fail(403, 'Sign in first.');
+require_once __DIR__ . '/../people/inc/terms.php';
+ttg_terms_gate_json($user);
 
 $raw = (string) file_get_contents('php://input', false, null, 0, 10001);
 $in  = json_decode($raw, true);

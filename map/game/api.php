@@ -12,6 +12,7 @@
 declare(strict_types=1);
 ini_set('display_errors', '0');
 require_once __DIR__ . '/lib.php';
+require_once dirname(__DIR__, 2) . '/people/inc/terms.php';
 header('X-Content-Type-Options: nosniff');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') game_json(['ok' => false, 'error' => 'POST only.'], 405);
@@ -64,6 +65,7 @@ try {
     }
 
     case 'lodge': {
+        ttg_terms_gate_json($me);
         $kind = (string) ($in['kind'] ?? ''); $how = (string) ($in['how'] ?? '');
         if (!isset(GAME_KINDS[$kind])) game_json(['ok' => false, 'error' => 'Say what it is.'], 422);
         if (!isset(GAME_HOW[$how])) game_json(['ok' => false, 'error' => 'Say how you know it.'], 422);
@@ -82,6 +84,7 @@ try {
     }
 
     case 'hand': {
+        ttg_terms_gate_json($me);
         $it = game_item_for((int) ($in['item_id'] ?? 0), $uid);
         $act = (string) ($in['act'] ?? '');
         if (!isset(GAME_ACTS[$act])) game_json(['ok' => false, 'error' => 'Witness it, remember it differently, correct it or carry it.'], 400);

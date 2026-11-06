@@ -1,11 +1,21 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__ . '/../inc/db.php';
+require_once __DIR__ . '/../inc/terms.php';
 
 $user = ttg_current_user();
 if (!$user) ttg_redirect(ttg_base('auth/'));
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') ttg_redirect(ttg_base('profile/'));
 ttg_require_csrf();
+
+/* The avatar and name are lent to the grand narrative: agree once, here on the slip or at /people/agree/. */
+if (!ttg_terms_agreed($user)) {
+    if (empty($_POST['agree_terms'])) {
+        http_response_code(422);
+        exit('Tick the grand narrative agreement on your slip to save it. Go back to keep your changes.');
+    }
+    ttg_terms_record((int) $user['id']);
+}
 
 $name = trim((string) ($_POST['display_name'] ?? ''));
 $role = trim((string) ($_POST['role'] ?? 'traveller'));

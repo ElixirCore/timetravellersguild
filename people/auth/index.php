@@ -12,6 +12,7 @@ require __DIR__ . '/../inc/header.php';
     <p class="beat-label">ZIPLOCK · MAGIC LINK</p>
     <h1>ENTER THE REGISTER</h1>
     <p>No password. A single-use link is sent to your email. Then you punch your own slip.</p>
+    <p class="brief-note">Your email is used only to sign you in. Before your first submission you'll be asked to lend your avatar and work to the Guild's grand narrative. <a href="/privacy/">Privacy policy</a>.</p>
     <?php if ($briefNote !== ''): ?>
       <p class="brief-hold">Your front-door briefing travels with this link and is filed on your slip.</p>
       <p class="brief-note"><?= ttg_h($briefNote) ?></p>

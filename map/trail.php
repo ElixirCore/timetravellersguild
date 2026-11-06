@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') fail(405, 'POST only.');
+require_once __DIR__ . '/../people/inc/terms.php';
+ttg_terms_gate_json($user);
 
 /* same-origin */
 $host   = strtolower($_SERVER['HTTP_HOST'] ?? '');

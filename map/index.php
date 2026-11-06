@@ -48,7 +48,7 @@ if ($play) {
 }
 $html = file_get_contents(__DIR__ . '/index.html');
 // Inject endpoint overrides (and the optional MapTiler key) before </head>
-$inject = '<script>window.TTG_MAP=' . json_encode($cfg, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script>';
+$inject = '<script>window.TTG_MAP=' . json_encode($cfg, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ';</script><script src="/assets/terms-gate.js?v=1"></script>';
 if ($interface) {
     $inject .= '<link rel="stylesheet" href="/map/arg/interface.css?v=1">';
     $html = str_replace('<title>Passport Map — Time Travellers Guild</title>', '<title>GUILD://INTERFACE — Time Travellers Guild</title>', $html);
