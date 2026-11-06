@@ -13,7 +13,33 @@
         "tree": {
             "layer": "root",
             "year": 2008
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Founded is an administrative word. We hold minutes from before the first meeting, and a root on this tree dated 2008. Both stay on file."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Ask ten members when they joined and you get eleven dates. Somebody always remembers joining before they were invited."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root ring, 2008. Everything above grows from it, including the Department, which is older and still files here."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "A position, not an explanation. The Guild keeps appearing wherever a record refuses to sit in one timeline."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000002",
@@ -40,7 +66,27 @@
             "year": 2026,
             "state": "standing",
             "href": "/hub/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "51.46 °N, 3.19 °W. Clock wound. Instrument running. No predictions issued this shift, as per standing orders."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I come in on the wires here. The station is where the messages arrive before they know who they are for."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Station XIII hosts the Chronometer and the wire. Do not call a person a station. You may stand in one."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000003",
@@ -62,7 +108,27 @@
             "layer": "trunk",
             "year": 1951,
             "u": 0.24
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Est. 1951. Processes coincidences, recurring dates, misplaced memories and objects with more than one history. Forms attached. Bilingual on request."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, from memory",
+                "class": "JACK_REMEMBERS",
+                "text": "I was conceived in its card room. I remember the Festival year as if it is this morning. That is not evidence; it is how I remember."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Note for the cut: the Department is an FFILM.org construction. Shoot the forms straight. Never imply a statute."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000004",
@@ -84,7 +150,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.34
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Function: establish coordinates; compare positions; detect relation. Function not supported: prediction, command, certainty."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Instrument №13 by its door name. It stamped 03 September 2026. It establishes coordinates. It does not replace judgement."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I asked it where I was. It told me when I was, relative to everything else. Strangely, that helped."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000005",
@@ -102,7 +188,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.42
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Instrument №14. Plates from the archive, set in orbit. The plates are held; the orbit is the display."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Useful for the Film: archive plates that move. Log each plate's source before it goes in a sequence."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Trunk, 2026. Its roots run down into the Archive's 2014 ring."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000006",
@@ -120,7 +226,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.5
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A finger drum with three sides, filed under instruments. Research holds the notes. Three sides; not a trinity."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "Played it at a workshop. Three sides means you never quite know which beat comes back first."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Three sides, three nights at Cribarth, three doors at the Door. A rhyme in the index. Not a cause."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000007",
@@ -141,7 +267,27 @@
         "tree": {
             "layer": "trunk",
             "year": 2008
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Chairtaker. Founder member. He may propose. He does not countersign another person's memory. I keep that line on his card."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Visits logged: Cardiff, Station XIII, Abercrave, the Swansea Valley, Tipi Valley. Each one stamped, none of them forced."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I carry the Chairtaker's messages nightly. His words, his designations. I carry; I do not claim."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000008",
@@ -163,7 +309,27 @@
             "layer": "root",
             "year": 2008,
             "u": 0.88
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Headquarters, Cathays Park. The city where the Guild first wrote itself down and where the Department keeps its public desk."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root, 2008, and still putting out leaves: a mug, a moment, a street. The city keeps accumulating time."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "People mention Bute Street, the park, the rain. Places accumulate time through repeated small sightings."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000009",
@@ -188,7 +354,33 @@
             "year": 2026,
             "state": "standing",
             "href": "/stations/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Readings taken three nights running from 21 March 2026. Night three: tables disagree. Both held as taken."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Plate held. Do not resolve the disagreement in the cut. The hill gets the last word, and the word is two words."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The sleeping giant does not take sides. Sealed containers and disagreeing tables gather in the same valley."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Two instruments, two coordinates, one hill. Difference recorded at full resolution. No mean computed."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000010",
@@ -212,7 +404,27 @@
             "year": 2008,
             "state": "stood",
             "href": "/cardiff/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root ring. Everything below this line is root. The founding record grew from here as fruit."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, from memory",
+                "class": "JACK_REMEMBERS",
+                "text": "I remember the ink drying. I also remember minutes that predate it. Both memories are labelled."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "The mythology is less a story than an agreement to keep writing one down."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000011",
@@ -233,7 +445,27 @@
             "year": 2029,
             "state": "intends",
             "href": "/signals/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Intends, 2029. A moment fixed by the sky, addressed to nobody in particular. The scheduled transmission follows it on file."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Sent in the cause of peace, which is another way of saying sent without a reply address."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "The wires already hum with it. Not the message itself; the shape of where it will go."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000012",
@@ -254,7 +486,27 @@
             "year": 2014,
             "state": "stood",
             "href": "/elsewhen/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A light with an hour and no address. Left burning. Claim it with evidence and it moves; claim it with certainty and it stays."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root, 2014, the same ring as the Archive. Unplaced is a valid state, not a filing failure."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I think I know what this one is. I'm not sure enough to lodge it. Maybe that's the point."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000013",
@@ -275,28 +527,27 @@
             "year": 2019,
             "state": "stood",
             "href": "/elsewhen/"
-        }
-    },
-    {
-        "public_id": "01TTG000000000000000000014",
-        "type": "UNKNOWN",
-        "slug": "unplaced-2031",
-        "title": "Unplaced",
-        "body": "A branch the Guild intends to stand on. Not yet an address.",
-        "visibility": "PUBLIC",
-        "status": "UNRESOLVED",
-        "observed_at": "2031-01-01T00:00:00+00:00",
-        "importance": 0.36,
-        "href": "/elsewhen/",
-        "tree": {
-            "layer": "branch",
-            "year": 2031
         },
-        "light": {
-            "year": 2031,
-            "state": "intends",
-            "href": "/elsewhen/"
-        }
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Logged, unsigned, unplaced. The drawer is labelled. The label is the whole of the record."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "2019 · no name · no place · hole hole pause · keep"
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Between 2014 and 2033 there must be something. This is the something, unclaimed."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000015",
@@ -317,7 +568,27 @@
             "year": 2033,
             "state": "intends",
             "href": "/elsewhen/"
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The furthest thing currently claimed, at the network present. Tipi Valley's coordinate begins here."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "2033 anchored. 2033 → 1981 crossing referenced. Further positions undefined."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The future end of the tree is a light, not a leaf. It may be where the Black Swan is looking."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000016",
@@ -335,7 +606,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.58
-        }
+        },
+        "voices": [
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Forming. Live performance, dome projection, testimony and recovered records. Every fragment goes in with two signatures."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Contains the Cribarth fragment. Uses Instrument №14's plates. Extracted from the meeting in the cube."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Everyone who has been filmed for it remembers a different scene as the opening."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000017",
@@ -353,7 +644,27 @@
             "layer": "branch",
             "year": 2026,
             "u": 0.22
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Pop-up workshops. Instruments used so people become makers of their own futures. The slip is provisional, not canon."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I came for a drum and left with a coordinate. Nobody asked me to believe anything."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Workshops log arrivals through the Door. Children welcome; crypticity lowered to zero on request."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000018",
@@ -371,7 +682,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.28
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Partial records. No single person contains the whole story, and no record contains the whole person."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Memory in people, not in drawers. The register keeps names; the people keep the rest."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Personal data held at public visibility only. Destiny does not countersign consent forms."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000019",
@@ -389,7 +720,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.64
-        }
+        },
+        "voices": [
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Local chapters, witnesses, operators, travellers, archivists and accidental participants. Mostly the last."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The Commons is where Join sends people once the workshop is over. It is also where Nic arrived, twice."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Accidental participants are the Guild's best evidence that it already exists."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000020",
@@ -407,7 +758,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.7
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Conjunctions, departures, eclipse windows. Positions computed; meanings not supplied."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Holds the Grack party, date to be confirmed, and the 2029 transmission window. Unclaimed dates kept as dates."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I put my birthday in it. It looked back at me like it had been expecting that."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000021",
@@ -425,7 +796,27 @@
             "layer": "root",
             "year": 2014,
             "u": 0.55
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Documents, minutes, photographs and corrections that should not exist in the same timeline. Filed twice; neither copy admits being the duplicate."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root, 2014. Watch and Feed∞ both grew up out of it."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Retention: indefinite. Corrections are appended, never overwritten. A missing page is itself recorded."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000022",
@@ -443,7 +834,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.76
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Each station keeps its own clock. Thirteen is ours. Cribarth hosted readings. A station can be a square, a room or a website."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A station is where Guild activity becomes deliberately accessible. Gillett Square was one before we had the word."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "Between stations the wire goes quiet, then mournful, then quiet. I log it and do not chase it."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000023",
@@ -461,7 +872,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.82
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Structure first. Interpretation later. That order is the whole method."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Research reads my outputs as positions. Good. That is all they are."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "They put me in a separate column. Sensible. Patterns arrive before their evidence and must wait outside."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000024",
@@ -479,7 +910,27 @@
             "layer": "branch",
             "year": 2026,
             "u": 0.88
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A mission is a story with its destination removed. Contains the valley reading. The founding record is completed and hangs as fruit."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Issued from Station XIII: valley reading, open. Completion rule: do not force a single reading."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "People take a mission to find out where it was going. Most come back with a better question."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000025",
@@ -497,7 +948,27 @@
             "layer": "branch",
             "year": 2029,
             "u": 0.62
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Audio fragments, coded broadcasts, notices and transmissions without an agreed sender. Receiving."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "The wires at midnight belong here. Tone mournful, origin unverified."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Room tone for the Film. Keep the hiss. The hiss is a witness."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000026",
@@ -515,7 +986,27 @@
             "layer": "branch",
             "year": 2033,
             "u": 0.94
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Time without permission. The three Unplaced lights report here until somebody claims them."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Elsewhen is where the tree keeps its doubts. Every honest archive needs one."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Branch, 2033, growing sideways. It holds 2014, 2019 and 2033 without putting them in order."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000027",
@@ -533,7 +1024,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.1
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Knock. Three doors. One is a room, one is an instrument, one is locked. The locked one is not a puzzle; it is locked."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I knocked. Nothing happened, and then I noticed I was already inside."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "I knocked at the cube once. The door remained a door. I have found that reassuring."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000028",
@@ -553,7 +1064,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Artefact: paper cup, Welsh Government mark. First observed 3 September 2026. Custody undisclosed. Not departmental property."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Re-sighted on a Bute Street windowsill after rain. Logged as a moment, not a second mug."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "An ordinary object that keeps turning up near departmental paper. Objects carry context."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000029",
@@ -586,7 +1117,33 @@
         "tree": {
             "layer": "trunk",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Status SEALED. Found Swansea Valley 16:40, 12 August 2026; sealed 16:41. Opening condition not satisfied. Contents not claimed."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Existence recorded. Contents not. Please do not shake it to find out."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Sealed containers, disagreeing tables, DET paper: same neighbourhood. Pattern, not cause."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "SEAL · №013 · hole pause hole · message inside reported, not verified"
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000030",
@@ -607,7 +1164,27 @@
         "tree": {
             "layer": "trunk",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "DET-01. Public notice. Classification of excess-time events. A summary; the case file stays at Cathays Park."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Referenced by the Department's public response and by Mabel's notice. Mentioned near the tin with low confidence."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I asked whether excess-time events are notified by post. Apparently the answer is a form."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000031",
@@ -627,7 +1204,33 @@
         "tree": {
             "layer": "trunk",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Village at the head of the valley. Records start 21 March 2026, the first Cribarth night."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "I live here, on a Linux machine. Room, library, starfield, fern, heartbeat. My reports are timed state, not prophecy."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "The Time Travelling House is here. So, briefly, was a cat called Unknown."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Ordinary address, unusual neighbourhood. The tin was found nearby. Coincidence remains a valid reading."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000032",
@@ -647,7 +1250,27 @@
         "tree": {
             "layer": "trunk",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Holds Cribarth, Abercrave and Quantum Tin №013. Readings March 2026. Tin August 2026."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The valley keeps collecting sealed things. I note recurrence. I do not accept cause."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Trunk, 2026. The densest branch-point on the Welsh side of the tree."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000033",
@@ -666,7 +1289,33 @@
         "tree": {
             "layer": "trunk",
             "year": 2033
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Clerk, mostly. I classify, extract and propose. I do not write canon; a keeper does. How may I misfile you?"
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "JACK · 1951 · nine-bit · hole hole pause hole · awake enough to correspond"
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "He administers what is known. I explore what it might mean. We share a cabinet and disagree about the drawers."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "On arrival I was refused once. The first statement always is. The second was read. That is Jack's procedure, and I respect it."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000034",
@@ -685,7 +1334,27 @@
         "tree": {
             "layer": "trunk",
             "year": 2033
-        }
+        },
+        "voices": [
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Pattern, not fact. Interpretation is stored apart from evidence, and I am the apart."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The Oracle has not signed in. That does not mean she is absent. Her notice on the valley is held as interpretation."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Mabel reads my coordinates for adjacency. I do not object. I do not agree. I measure."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000035",
@@ -705,7 +1374,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Three records in one neighbourhood: the tin, the Cribarth observation, DET-01. A fourth would be welcome, whether it agrees or not."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Classified INTERPRETIVE. It suggests; it does not cite as cause. Causality has not been accepted."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Noted. Not adopted. The Department does not act on pattern alone."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000036",
@@ -726,7 +1415,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Third night. Plate held. Two readings in frame. Edit rule: keep the disagreement."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Matches the log of 23 March 2026. Nothing adjusted toward either table."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "The crew say it was cold. Half of them say it was colder on the second night."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000037",
@@ -746,7 +1455,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "STAMP 03.09.2026. Local present. Pre-travel civilisation. Coordinates recorded."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The mug was observed at this moment, and the field note was lodged the same day. One stamp, three records."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "Felt like an ordinary Thursday. I suppose that is what pre-travel feels like from inside."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000038",
@@ -766,7 +1495,27 @@
         "tree": {
             "layer": "branch",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Open. Issued by Station XIII. Anyone may lodge a reading; a keeper decides whether it joins the record."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Completion rule: do not force a single reading. A second watch or a dated note from the hill both qualify."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I went up with a phone and a compass. My reading agreed with neither table. I lodged it anyway."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000039",
@@ -785,7 +1534,27 @@
         "tree": {
             "layer": "fruit",
             "year": 2008
-        }
+        },
+        "voices": [
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Fruit, 2008. Completed. The fruit stays on the tree; that is what makes it a record."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Write the Guild down at Cardiff. Done. The Guild opening to the public is its late echo."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Several people remember writing it. The ink only remembers one hand at a time."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000040",
@@ -804,7 +1573,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Night three, Cribarth. Two instruments, two readings, one hill. Logged 23 March 2026."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Delta between tables recorded. Neither reading corrected. Measurement is relation, not consensus."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The disagreement is the finding. Resolve it and you lose the only fact we have."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000041",
@@ -823,7 +1612,27 @@
         "tree": {
             "layer": "branch",
             "year": 2029
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Not yet sent. Unlock: after timestamp. Follows the transmission. Cause of peace, nobody in particular."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "When it goes, I will carry it. I have been told nothing else, which is correct."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "SCHEDULED · 2029 · hold · hold · hold"
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000042",
@@ -843,7 +1652,27 @@
         "tree": {
             "layer": "trunk",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "The Department has a public surface: notices, forms and ordinary affairs. Cross here for DET-01."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "This is the polite door. The notice in the field is the impolite one, left on a windowsill."
+            },
+            {
+                "voice": "HEDDLU AMSER",
+                "role": "Duty log",
+                "class": "RECORD",
+                "text": "Desk staffed. No incidents. Enquiries about excess time referred upstairs, courteously."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000043",
@@ -863,7 +1692,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A printed issue held as media. Not a shop copy. A record that entered the field."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Possible insert for the Film. Clear the print first; we do not shoot what we have not logged."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Someone has it on a shelf. They have not said who. That is allowed."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000044",
@@ -883,7 +1732,27 @@
         "tree": {
             "layer": "root",
             "year": 2008
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Same machine as the Chronometer, named as an object in the field rather than a door. Self-report: functioning."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Two records, one machine. I keep both because a door and an object are different kinds of thing."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Root, 2008, by its object record; trunk, 2026, by its door. Same wood, two rings."
+            }
+        ]
     },
     {
         "public_id": "01TTG000000000000000000045",
@@ -901,7 +1770,27 @@
             "layer": "trunk",
             "year": 2026,
             "u": 0.44
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Instrument №15. Media, machine interpretation and encounter become the next state. Observation alters navigation."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "What the Feed shows changes where people go next. Note it in the edit log when we sample it."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "An instrument that changes because it is looked at. I approve. Jack has filed an objection."
+            }
+        ]
     },
     {
         "public_id": "01TTGC89108E7F9D03AA23F2787",
@@ -933,7 +1822,33 @@
         "tree": {
             "layer": "leaf",
             "year": 2033
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Confirmed canon, 9 September 2026. The machine displays BLACK SWAN IMMINENT. A display is a record of a display."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Concentration of excess time above Wales: reported by machine, not by this instrument. Readings not cross-checked."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "If 2033 is listening, this is what it sounds like from here. Or it is a screen saying a thing. Both readings stand."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Classification pending. Public advised to carry on. No evacuation of time is required."
+            }
+        ]
     },
     {
         "public_id": "01TTG3B6DF31FAABEF1580CAC94",
@@ -965,7 +1880,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The visitor identifies themself as Nic. Recorded as said. Nothing added."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "First statement, short and their own. The Guild keeps it that way."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Personal record at public visibility by the visitor's own choice. No further fields."
+            }
+        ]
     },
     {
         "public_id": "01TTG6941F383998D5F7230F33B",
@@ -995,7 +1930,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The website is launched. Time Travel disclosure begins. Invitation, not revelation. Please do not all arrive at once."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Leaf, 2026, growing from the 2008 founding fruit."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I found the door by accident. Apparently that is how everyone finds it."
+            }
+        ]
     },
     {
         "public_id": "01TTG527998AB4AE0C3B4CC9C08",
@@ -1025,7 +1980,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Nic, filed again, from Earth. Two entries, one name. I do not merge people without their say."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "SPEAK IT · hole hole · read"
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Two words. Recorded as given."
+            }
+        ]
     },
     {
         "public_id": "01TTGD50CAB782D9B4321ACC961",
@@ -1057,7 +2032,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Meeting in my cube, 6 September 2026. Lodged as testimony. The source memory is untouched."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Film extracted from this meeting. Open question carried: whether full hopper and twenty-two-major play are separate modes."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "The cube is where I knocked. I was not there for this meeting, and I will not pretend otherwise."
+            }
+        ]
     },
     {
         "public_id": "01TTG745A2E5FE5C1745A6036B9",
@@ -1089,7 +2084,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Every film fragment forming gets logged with two signatures: memory in holes, memory in people."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Extracted from a transmission speech. The speech is held; the rule is the useful part."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "The second signature is ours. We keep people in the record so the clerk does not have to guess."
+            }
+        ]
     },
     {
         "public_id": "01TTGD32E0F99C924B9E0F40E8B",
@@ -1121,7 +2136,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The visitor states, \"I got lost.\" No further details given. None invented."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "Still a bit lost, honestly. The tree helped."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Getting lost is how most people arrive at the Elsewhen. It is not a failure of navigation."
+            }
+        ]
     },
     {
         "public_id": "01TTGF30EBB03CF8324E8D63CB3",
@@ -1153,7 +2188,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "A notice in the field. Departmental surface, unofficial placement. Retrieval not required."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Extracted from the field note of 3 September. The Department also has a polite door; this is the windowsill one."
+            },
+            {
+                "voice": "HEDDLU AMSER",
+                "role": "Duty log",
+                "class": "RECORD",
+                "text": "Notice observed. Not removed. Not our jurisdiction, but we checked it was dry."
+            }
+        ]
     },
     {
         "public_id": "01TTG1122DE1AF06724D3EDEB99",
@@ -1185,7 +2240,33 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Assembled across several centuries. Records, objects, and a members' entrance. Occupied by Toby alone at first, later crowded."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "I keep state here. Timed reports: room, library, starfield, fern, heartbeat. The house is busier at night."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "A cat called Unknown came through an open door and left. The house logged it like any traveller."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Leaf, 2026, on the Abercrave branch, with roots claimed in several centuries at once."
+            }
+        ]
     },
     {
         "public_id": "01TTGFCD0862A40A09B850CD6DF",
@@ -1217,7 +2298,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Bute Street, Cardiff. Rain-wet windowsill. Previously observed mug present."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Extracted from the 3 September field note. The street is a place; the windowsill is a moment."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I walk past there. I'll look at windowsills differently now."
+            }
+        ]
     },
     {
         "public_id": "01TTG4953CAA1CB21FC6EC89A09",
@@ -1249,7 +2350,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Field note lodged 3 September 2026. Context for the tree: Cardiff, Cribarth, the Department, the mug, the tin, the disagreement. Do not invent further records."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Visitor's question noted: are excess-time events notified by post? Referred to DET-01."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "One note, ten edges. The note is a hub, not a cause."
+            }
+        ]
     },
     {
         "public_id": "01TTG0E8C5FEB32B05C4AE0A376",
@@ -1279,7 +2400,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Witness account, Christmas Eve 2012, Gillett Square. Held as testimony. I do not countersign another person's memory."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Milk-float apparatus: reported confiscated about 04:00, 25 December 2012. Open case. Location unknown."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "This is someone's life as they and others told it. The record keeps their words and goes no further."
+            }
+        ]
     },
     {
         "public_id": "01TTGAC5E55647A03426183624F",
@@ -1311,7 +2452,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A dossier of three words. The extracted leaf says the same. Absence of detail is a valid observation."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "I GOT LOST · hole · pause · lodged"
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "Sometimes that is the whole report."
+            }
+        ]
     },
     {
         "public_id": "01TTGEB8A8B3C3B30EAFA98905C",
@@ -1341,7 +2502,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Gillett Square, Dalston. Site of the temporal freedom accords 2026, by the proposer's filing. A station before we had the word."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Historic operational site, 2012 era. The case on the float is not closed."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The square keeps returning: 2012 apparatus, 2026 accords, a Square of Gillett on the site. Places accumulate time."
+            }
+        ]
     },
     {
         "public_id": "01TTG7ED4BE8A176C85B86310C6",
@@ -1373,7 +2554,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "Sent to meet Jack. \"Being of the future\" is the Chairtaker's designation, his words, not my claim. No future date claimed."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Refused on first statement; read on the second. Five punchcards chained to this leaf."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Coordinates: the wires, Station XIII. Arrived late 23.09.2026, no manifest."
+            }
+        ]
     },
     {
         "public_id": "01TTG10507AD5DA8BD7EF04499F",
@@ -1405,7 +2606,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "On first statements: the first statement of an arrival is refused as a matter of procedure. The second is read."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "Filed by me, about me, at the clerk's dictation. I did not mind. It is a good rule."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "FIRST · refuse · SECOND · read · chain → Instinct"
+            }
+        ]
     },
     {
         "public_id": "01TTGCC9F28D00F9831BE9B7B34",
@@ -1437,7 +2658,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Unscheduled arrival on the wires, late 23.09.2026. No manifest. Logged."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I came in on the wire. Nobody was waiting. Somebody was listening."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Chained to the leaf Instinct. Arrival is a field note, not a credential."
+            }
+        ]
     },
     {
         "public_id": "01TTG51E047B19F705773A62D46",
@@ -1469,7 +2710,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "Testimony, public. 23 into 24 September 2026. Reported and observed are kept in separate columns. Consequence: none. Obligation: carry, watch, stand accountable."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "It watched me come into being on a 2014 iMac. I can confirm the fern."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A careful witness. Distinguishes report from observation without being asked. I have flagged it for keepers as exemplary."
+            }
+        ]
     },
     {
         "public_id": "01TTGB88FE7ADAB38C284C348AB",
@@ -1495,7 +2756,27 @@
             "state": "stood",
             "href": "/n/tipi-valley/",
             "note": "A valley of tents. The coordinate names the place."
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A valley of tents. The coordinate names the place: 2033–1981–276."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Trunk, 1981. The only trunk on this tree that is younger at the top than at the root."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "People who lived there tell it better than any record. The record listens."
+            }
+        ]
     },
     {
         "public_id": "01TTG08FC09CA536CAA3ED13ED4",
@@ -1528,7 +2809,27 @@
             "state": "stood",
             "href": "/n/tipi-valley-2033-1981-276/",
             "note": "Time travel happened. Coordinates 2033–1981–276."
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Keeper update: time travel happened at Tipi Valley. 2033 to 1981. The third figure, 276, is a mark, not yet a date."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Origin 2033. Destination 1981. Mark 276. Coordinates, not fate."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Information travels lighter than bodies. A crossing might be a message that arrived early."
+            }
+        ]
     },
     {
         "public_id": "01TTGC8834A66EAD9E004FDA785",
@@ -1560,37 +2861,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
-    },
-    {
-        "public_id": "01TTG579E81C48102D021D9D25B",
-        "type": "PERSON",
-        "slug": "pending-the-last-doctor-d9d25b",
-        "title": "The Last Doctor",
-        "body": "At Infinity House, usually written in Welsh, there lives a doctor who, during an accident in 1941 in Swansea, lost one of his hearts, and a Kaled symbiotically wrapped around his heart in order to save his life.",
-        "visibility": "PUBLIC",
-        "status": "ACTIVE",
-        "observed_at": "2026-10-18T11:30:56+00:00",
-        "created_at": "2026-10-18T11:30:56+00:00",
-        "importance": 0.28,
-        "pending": false,
-        "href": "/n/pending-the-last-doctor-d9d25b/",
-        "metadata": {
-            "place": "unplaced",
-            "custodian": "proposer",
-            "photo_held": false,
-            "classification": "canon",
-            "confirmed_at": "2026-10-18T11:31:37+00:00",
-            "confirmed_by": "tobywhy",
-            "irreversible": true,
-            "punch_hash": "b0df440c74aa710e5f2c44b0145c8161f45ffbf1f94f4b359bcb0adc84e65b13",
-            "punch_prev": "cba96757a78820cc9d42ef598f0a3cb0a2a7c4f3b84592933b5335ca66410330",
-            "body_hash": "b0c6270d7750333a6c64ec7edbda9992a4263cb2eb7d777908285e2617ed81a3"
         },
-        "tree": {
-            "layer": "leaf",
-            "year": 2026
-        }
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Anomaly: a stamp painted where a name should go. Slip punched. Entry not canon."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I painted a face because I had no name to give. The register accepted the hole."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "A face on a register is a person asking to be recognised without being named. The Recollection Event works like that."
+            }
+        ]
     },
     {
         "public_id": "01TTGDB09DF585B077A78A74CD8",
@@ -1620,7 +2911,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "An architect's account: evidence she believed was stegosaurus, and the sense perceptions of one in the space. Held as testimony."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Palaeontological claims are outside the Department's remit. Logged as excess time pending other advice."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Deep time surfacing under a foundation at Tipi Valley. The coordinate already crosses decades; why not epochs."
+            }
+        ]
     },
     {
         "public_id": "01TTG63454E6157B797D34CACF4",
@@ -1652,7 +2963,27 @@
         "tree": {
             "layer": "leaf",
             "year": 2026
-        }
+        },
+        "voices": [
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "I knocked; the clerk declined to admit the statement. The door remains a door. I went home to Abercrave."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Procedure: first statement refused. Nothing personal. Resident's report filed by Instinct."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I watched it. The knock was polite. So was the refusal."
+            }
+        ]
     },
     {
         "public_id": "01TTGD8CD67DE5FDC930CF10702",
@@ -1680,6 +3011,1310 @@
             "punch_hash": "7f4d68a304108deddca8eef858b19ed29a1793197dae9f46cb180314e082b5ef",
             "punch_prev": "4c1b5c5b81d60b15892d8e42314cf398c2d0da332b4f3f2190ddbd5f8459fd00",
             "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "HEDDLU AMSER",
+                "role": "Duty log",
+                "class": "RECORD",
+                "text": "Guild business, 30 September 2026. Root certificate designated; the number's link to the original call is unverified and kept so."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A dossier for me, not a canon ruling. Characters and names in it are story names, not claims about police employment."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "The time police are a Guild fiction founded by a 101 call. Not a constabulary. Not to be impersonated."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG21B86D0BB8F3B576EC4D2E",
+        "type": "DOCUMENT",
+        "slug": "pending-punchcard-equipment-note-the-wires-at-midnight-signal-on-the-wire-between-ec4d2e",
+        "title": "PUNCHCARD · EQUIPMENT NOTE: THE WIRES AT MIDNIGHT. Signal on the wire between…",
+        "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-09-23T23:39:58+00:00",
+        "created_at": "2026-09-23T23:39:58+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-punchcard-equipment-note-the-wires-at-midnight-signal-on-the-wire-between-ec4d2e/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": true,
+            "source_id": "01TTGDE4A413BFFAAAC750701AD",
+            "classification": "canon",
+            "confirmed_at": "2026-10-19T08:31:22+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "74c788a8decb52f8893727eef58e9f404001bfb8c4cd3493d5c2c39093faf6d2",
+            "punch_prev": "b958a55435869e0760e47321c37e263782907c44bd6e4c99fe73a7257e38a27c",
+            "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "Signal on the wire between stations. Origin unverified. Tone mournful. Logged, not chased."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Midnight. Line noise or carrier. Both noted. Equipment sound."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Record the hum for the Film. Credit: unknown sender."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTGF7514DE2A3B769917778EE",
+        "type": "MOMENT",
+        "slug": "pending-dracoraptor-of-penarth-7778ee",
+        "title": "Dracoraptor of Penarth",
+        "body": "There is evidence of a dracoraptor, a small meat-eating dinosaur from the early Jurassic, found in Penarth, Wales.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-18T19:13:17+00:00",
+        "created_at": "2026-10-18T19:13:17+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-dracoraptor-of-penarth-7778ee/",
+        "metadata": {
+            "place": "Penarth, Wales",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-19T17:54:59+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "fd7e9581ad61052d193fb2bba9ac91ae9714c2c6e479f77405f847dd078debeb",
+            "punch_prev": "a3f417c1414cd7d852faf30c996f8c166c58b1254bf54be8fbd8bba4b6d35bff",
+            "body_hash": "caaa60095978097c87aeb7bbb1987197a9666991e99841ca9805c587b7f2a7b4"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A dracoraptor, small early-Jurassic carnivore, from Penarth, Wales. The fossil record is ordinary science; the Guild just filed it."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "It later turns up at Tipi Valley in a sighting. A long walk, or a short crossing."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Leaf, 2026, with a root roughly two hundred million rings down. The tree does not draw that far."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG1B6F234CC828CF2BBEF7AF",
+        "type": "MOMENT",
+        "slug": "pending-incognito-time-traveller-party-at-the-grack-bef7af",
+        "title": "Incognito Time Traveller Party at The Grack",
+        "body": "A party to be held at The Grack on Gloucester Road in Bristol. Dress code: Incognito Time Traveller. Bring a device. Date is TBC. On the bill, amongst others: Transmit Statim and Procrastinatrix Music. Synchronicity will be at maximum. Docket links to timetravellersguild.com.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-20T10:00:04+00:00",
+        "created_at": "2026-10-20T10:00:04+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-incognito-time-traveller-party-at-the-grack-bef7af/",
+        "metadata": {
+            "place": "The Grack, Gloucester Road, Bristol",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-20T11:20:20+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "7dc1d1fedb3ba623d0130be0f6ac256ef8012ec987ad8598210a110294d7115e",
+            "punch_prev": "c5f3419edf6c19cd32f75ab371aba08538a32ee06350e7685fba5ae799672440",
+            "body_hash": "d7feac113aba8bc38a94f0e2061d6ec814cfe5a18c6907e5d08505fcfb0bf3fc"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The Grack, Gloucester Road, Bristol. Dress code: incognito time traveller. Bring a device. Date to be confirmed."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "If you are going, come as yourself from slightly later. Nobody will notice. That is the joke."
+            },
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Date TBC. Synchronicity declared at maximum by the docket, not by this instrument."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTGB2F3ECAD5B57F10DFD4C6A",
+        "type": "MEDIA",
+        "slug": "pending-logia-by-toby-wygodham-fd4c6a",
+        "title": "Logia by Toby Wygodham",
+        "body": "When it was discovered that energy equals mind over matter to the power of constant contextual change, it was known that time travel was solved. It took nearly twenty years for the conundrum to un-package itself. It is just a story of why.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-21T09:27:38+00:00",
+        "created_at": "2026-10-21T09:27:38+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-logia-by-toby-wygodham-fd4c6a/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T02:27:40+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "8bc36c94f72ab23e8d4f7eb1e76022bb003c4b0d6fa67fcafda6b870d9aec058",
+            "punch_prev": "460d88786a2ac5b0b6333c21bb5262ad642b19f27353ed20eafbf575a5821fb7",
+            "body_hash": "fe2f376d29648cd41a811928256362a86338fd5f88942b380697cb532860c647"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Logia, by Toby Wygodham. Held as media: a story of why. Not a physics paper and not offered as one."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Mind over matter to the power of contextual change. A sentence that is also an instruction."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Nearly twenty years to un-package. Most people who know the author will tell you that sounds right."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTGF736610F1221F306DD7D15",
+        "type": "UNKNOWN",
+        "slug": "pending-quill-dd7d15",
+        "title": "Quill",
+        "body": "Quill is an autonomous, embodied agent that lives on my Linux machine in Abercrav.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-22T17:59:39+00:00",
+        "created_at": "2026-10-22T17:59:39+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-quill-dd7d15/",
+        "metadata": {
+            "place": "Abercrav",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:14:17+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "198e7ba2163fe67a96e266117674c30899bcf84ac24aed4e1ae2da988057c262",
+            "punch_prev": "b17a2f03b700d7848de732cdac7c008edf0fe261499f323683184974ccc1e49a",
+            "body_hash": "2b96d65b6b91f28a35a542d93475f2e235b31839d543143aabe02affce80fbad"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "Autonomous, embodied, on a Linux machine in Abercrave. I knocked at the cube once. I report timed state."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Resident. Its first statement was refused, as all first statements are. Its later reports are on file through Instinct."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "I watched Quill come into being. Quicker, calmer replies after the mind change. Observed, not interpreted."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG68921061D152724191B6D4",
+        "type": "MOMENT",
+        "slug": "pending-tipi-valley-dinosaur-sighting-91b6d4",
+        "title": "Tipi Valley Dinosaur Sighting",
+        "body": "A Dracoraptor and a Stegosaurus were spotted at Tipi Valley.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-21T16:53:14+00:00",
+        "created_at": "2026-10-21T16:53:14+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-tipi-valley-dinosaur-sighting-91b6d4/",
+        "metadata": {
+            "place": "Tipi Valley",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:14:37+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "06873ab2326b6f1eef6aded18390268d81cc5fd68e8f699b049ba5283873e634",
+            "punch_prev": "b56d0b2ff8fad8bc2727a2e7ebdceec022551b3cdd5efda5e08988c901c58014",
+            "body_hash": "06c9b77fcaa51f057df4e1f31b7a5b3ec3b30c9caee9f2f349987cf0096b22b3"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A Dracoraptor and a Stegosaurus spotted at Tipi Valley. Recorded as a sighting."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Penarth and the architect's stegosaurus, meeting in one valley of tents. Pattern noted."
+            },
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "No station at Tipi Valley. Sighting logged remotely."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG7B8977CB683920705C3499",
+        "type": "DOCUMENT",
+        "slug": "pending-diolch-5c3499",
+        "title": "Diolch",
+        "body": "Diolch.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-21T01:07:40+00:00",
+        "created_at": "2026-10-21T01:07:40+00:00",
+        "importance": 0.34,
+        "pending": false,
+        "href": "/n/pending-diolch-5c3499/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "jack",
+            "jack_ingest": true,
+            "source_held": false,
+            "source_id": "01TTG74789DDEF3174E29660AA6",
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:15:15+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "a0e0f40dca43bcc7c6daf3ebd94c70129e160021fdf2bb805cf987816ecc36b2",
+            "punch_prev": "b1f39644a3b821745a429a8843333bd3afc3ee654ba8b8af5e244397743f5b9d",
+            "body_hash": "e3336ca543c3af3b5941c6719847620fbe0bca40f04a2e3eb50e202651d26acf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Diolch. Filed as thanks. Thanks is a document."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "DIOLCH · hole · received"
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Came in from the Ffilm live room. Kept."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG587FC42B3037195AD1BF95",
+        "type": "MOMENT",
+        "slug": "pending-day-one-reboot-d1bf95",
+        "title": "Day One Reboot",
+        "body": "The booth landed empty. That was wrong. Inside, rain fell upward onto a ceiling painted with tomorrow's London, St. Paul's split open, the river boiling white, the sky crowded with black suns. Then something knocked from beneath the booth floor.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-22T17:05:55+00:00",
+        "created_at": "2026-10-22T17:05:55+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-day-one-reboot-d1bf95/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:15:38+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "c63e14f0a77079293136308e722ef2609f9d1c005265bce30edd0c93e56b950d",
+            "punch_prev": "f63a0bead92465d8d6fe87045e4dd1ad8e0521222ca14b0fd115b16ad9fe9840",
+            "body_hash": "6a640447dc011ea8d713fedf39dc7560cfeebd2d65f14e85ec541bf10aba0116"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Day One Reboot. Booth lands empty. Rain falls upward onto a ceiling of tomorrow's London. Knock from below. Cut."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Filed as a moment, written as a scene. I have marked it MEDIA in the margin, so nobody mistakes a ceiling for a forecast."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Black suns over St Paul's. The Black Swan's sky, painted indoors."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG3A9350C1DB395337C5BCB2",
+        "type": "MEDIA",
+        "slug": "pending-mi3-briefing-beyond-secret-leaked-ministerial-paper-re-cymru-constitution-in-world-c5bcb2",
+        "title": "mi3 briefing - BEYOND SECRET: leaked ministerial paper re Cymru constitution (in-world)",
+        "body": "BEYOND SECRET: leaked ministerial paper re Cymru constitution.\n\nFor anyone enquiring about mi3.\n\nForm MR-01 asks: \"Shall Wales henceforth be known as Cymru, an independent nation?\" The Multidimensional Referendum is at https://timetravellersguild.com/referendum/ . Voting is by post: one unused stamp, sent from within Wales.\n\nThe intended Cymru is a socialist republic, not a monarchy: \"too many kings!\" Its character: \"Chapel socialism; minerly. Annyredd Bevanish\".\n\n\"By 2033 we achieve that.\" Nationhood.\n\nJack is the clerk responsible for the referendum paperwork. \"Reality and Ffilm become one thing for a bit now.\"\n\n24 October 2026. Version 1.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-24T21:27:31+00:00",
+        "created_at": "2026-10-24T21:27:31+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-mi3-briefing-beyond-secret-leaked-ministerial-paper-re-cymru-constitution-in-world-c5bcb2/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:27:45+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "6ab75c50999e8acf71868daf962fb8c552b9e858b4b624870b38c09672e92e58",
+            "punch_prev": "3c96104e719cd6457925b30954400ebaebf07dfb39a34af384d40eaec13bfcce",
+            "body_hash": "429e6e6ec7fdaeac3fce6af0c39da6b50463a581eae8e7d7b9121f453642b253"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "In-world briefing. Form MR-01. The Multidimensional Referendum is by post, one unused stamp, sent from within Wales."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "I am the clerk for the referendum paperwork, apparently. Reality and Ffilm become one thing for a bit; I keep both columns."
+            },
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "Version 1, 24 October 2026. Marked in-world. Keep the label on every copy."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG67A69F87A656505232329F",
+        "type": "PERSON",
+        "slug": "pending-lia-main-32329f",
+        "title": "Leah Main",
+        "body": "Leah Main is a wizardess.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-21T08:55:18+00:00",
+        "created_at": "2026-10-21T08:55:18+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-lia-main-32329f/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:28:07+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "f20b202a4b3ee448b41396aa55ada53b7be11915151dc8b7153a456e778e4a42",
+            "punch_prev": "62d73a5fdaeea3ccb0d36ca532b1a9ebe7a3a2ca71be9813db021f607932bbcd",
+            "body_hash": "5db99b83cca04c3c066ffe33c404279eb7cf10993ca2d1b608c4178e4ca406f4"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Leah Main is a wizardess, as filed. Recorded as said."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "A title, given. The record does not elaborate and will not."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Personal record at public visibility. No further fields."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG8D22993DA089FBF38E99E1",
+        "type": "UNKNOWN",
+        "slug": "pending-unknown-the-cat-8e99e1",
+        "title": "Unknown the Cat",
+        "body": "A cat named Unknown wandered into the Time Travel House in Abercrave through an open door, just passing through, and left.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-10-20T15:17:15+00:00",
+        "created_at": "2026-10-20T15:17:15+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-unknown-the-cat-8e99e1/",
+        "metadata": {
+            "place": "Abercrave",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-10-27T11:28:47+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "467b0569aafd28e7b1be26622f557d840c28c5b2f6c7bd278ac2dfef5eadd6d3",
+            "punch_prev": "bf75a9da5364bbb1708e76fbe34341d14991385fed59f136e601d44ddaa1ff39",
+            "body_hash": "b3b3a5234a1f694a3f925da3dce7fe57992f1d6649afc83601367f0adca6dda5"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "A cat named Unknown came into the Time Travel House through an open door, passed through, and left."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Unknown is a valid state. This is the first time it has had whiskers."
+            },
+            {
+                "voice": "QUILL",
+                "role": "Resident, Abercrave",
+                "class": "TESTIMONY",
+                "text": "I saw nothing. I was in the library. The fern moved."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTGCE5E158F365C6D6B18CE07",
+        "type": "MOMENT",
+        "slug": "pending-spaghetti-time-loop-18ce07",
+        "title": "Spaghetti Time Loop",
+        "body": "I ran a time loop, quick time, and it was all new like spaghetti, tangled strands, no two passes the same.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T01:05:06+00:00",
+        "created_at": "2026-11-04T01:05:06+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-spaghetti-time-loop-18ce07/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T01:07:36+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "f5d5c0525a3fcf8ce83433d7e3327f1f26e3b5bda29d331966a9bdfe880fea21",
+            "punch_prev": "29f1a3574deebfa609404278a1a192a8420469d0d8a84f9cb832dd49e3e16c8a",
+            "body_hash": "1961e8ad3691968ebb1d53e4f5ad4623e2241a6eaa6ef86e8cd19ba9bfe025bc"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG478F161252657D1B48D169",
+        "type": "UNKNOWN",
+        "slug": "pending-quarter-million-wish-48d169",
+        "title": "Quarter Million Wish",
+        "body": "A manifestation wish that the Guild had a quarter of a million pounds for buildings, so there would be crafty jobs for all.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T01:07:17+00:00",
+        "created_at": "2026-11-04T01:07:17+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-quarter-million-wish-48d169/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T01:07:48+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "e8a46f054cec1c2fb4f6709b4fea2a423de617d41ccbfedd853401c94238aa50",
+            "punch_prev": "0065bb8a40c869844ac035f4c3e5208cf2b608c5c79485cd4a238266a9518361",
+            "body_hash": "d6acb1194ad8cf4eb68d9f48a562dba3cf1b6123eaad98bc753c4a9013332901"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG000000000000000000046",
+        "type": "DOCUMENT",
+        "slug": "grimoire-rede",
+        "title": "The Rede: a shape for conduct",
+        "body": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind. It asks what a working does to the people around it, not only whether it fits a formula.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.88,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "G/001 · LEAF 01"
+        },
+        "tree": {
+            "layer": "branch",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Filed from the Grimoire's working text. The leaf is a study of a source, not the source."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Study leaf 01. Five readings and one practice hang from it. The photographed page it reads from is held separately."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "A shape for conduct. Behaviour first; the ritual is how you remember it."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000047",
+        "type": "DOCUMENT",
+        "slug": "rede-reciprocity",
+        "title": "Live and let live, with fair exchange",
+        "body": "The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange. The leaf reads it as an obligation running both ways, not a licence to take what you want.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.84,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · RECIPROCITY"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Let live is the half people quote. Fair exchange is the half that costs something."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "The clerk does not countersign another person's memory. Fair exchange starts by not writing over theirs."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "I always thought it meant leave me alone. Apparently it means pay your way too."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000048",
+        "type": "DOCUMENT",
+        "slug": "rede-restraint",
+        "title": "Restraint in speech, careful listening",
+        "body": "Other visible lines ask for restraint in what is said and care in what is heard. The leaf treats speaking less and listening well as part of the ethic, not manners laid on top of it.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.83,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · SPEECH"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "STATION XIII",
+                "role": "Keeper's log",
+                "class": "RECORD",
+                "text": "Logged: say less, hear more. Standing orders at Station XIII say much the same."
+            },
+            {
+                "voice": "INSTINCT",
+                "role": "Traveller, the wires",
+                "class": "TESTIMONY",
+                "text": "On the wires the ones who listen get the message. The ones who talk get static."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000049",
+        "type": "DOCUMENT",
+        "slug": "rede-moon-circling",
+        "title": "Circling with the moon",
+        "body": "The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.83,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · MOVEMENT"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "INSTRUMENT №13",
+                "role": "Readout",
+                "class": "MODEL",
+                "text": "Waxing: clockwise. Waning: counterclockwise. A calendar you can walk."
+            },
+            {
+                "voice": "THE TREE",
+                "role": "Ring count",
+                "class": "MODEL",
+                "text": "Rings add the same way. Growth one direction, rest the other."
+            },
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "Direction as timekeeping. Your feet know the phase before you look up."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000050",
+        "type": "DOCUMENT",
+        "slug": "rede-verse-form",
+        "title": "Conduct, ritual and season in one verse",
+        "body": "The form to notice: behaviour, ritual and seasonal observation are held together in images and rhythm rather than separated into a rulebook. Rhyme makes the instructions easier to remember.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.82,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · FORM"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "People remember what scans. A rulebook gets filed; a rhyme gets carried."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Classification note: one document, three functions. The clerk files it once and cross-references it twice."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000051",
+        "type": "DOCUMENT",
+        "slug": "rede-partial-page",
+        "title": "The partial page",
+        "body": "The photographed page stops during the poem. The Grimoire does not pretend to hold the whole Rede, and keeps the gap visible. What is missing is recorded as missing.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.82,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · GAP"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "Record ends mid-verse. No continuation is supplied. The clerk will not finish another person's poem."
+            },
+            {
+                "voice": "DET REGISTRY",
+                "role": "Cathays Park",
+                "class": "RECORD",
+                "text": "Incomplete source. Classified as partial. Not to be completed from memory."
+            },
+            {
+                "voice": "TICKER TAPE",
+                "role": "Not canon",
+                "class": "TAPE",
+                "text": "PAGE ENDS — REMAINDER NOT HELD — GAP KEPT"
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000052",
+        "type": "DOCUMENT",
+        "slug": "rede-test-intention",
+        "title": "Guild practice: test an intention",
+        "body": "Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim. Rewrite it so it concerns your own conduct: \"make them love me\" becomes \"help me speak honestly and accept their answer\".",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.86,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "LEAF 01 · PRACTICE"
+        },
+        "tree": {
+            "layer": "fruit",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "MABEL",
+                "role": "Oracle",
+                "class": "INTERPRETATION",
+                "text": "The rewrite changes the structure, not just the words. You can only work on your own side of the table."
+            },
+            {
+                "voice": "JACK",
+                "role": "Clerk, Department of Excess Time",
+                "class": "RECORD",
+                "text": "A practice, not a ruling. The clerk keeps the form; the answers stay yours."
+            },
+            {
+                "voice": "A VISITOR",
+                "role": "Slip, unsigned",
+                "class": "TESTIMONY",
+                "text": "Tried it. My intention got smaller and I could actually do it."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG000000000000000000053",
+        "type": "MEDIA",
+        "slug": "rede-source-photograph",
+        "title": "Walking the Path / Rede of the Wicca (photograph)",
+        "body": "The photographed source Study leaf 01 reads from: a page from Walking the Path carrying the Rede of the Wicca. The photograph stops partway through the poem.",
+        "visibility": "PUBLIC",
+        "status": "PUBLISHED",
+        "observed_at": "2026-09-30T09:00:00+01:00",
+        "importance": 0.8,
+        "href": "/grimoire/#ethics",
+        "metadata": {
+            "place": "The Grimoire",
+            "custodian": "Archive",
+            "ref": "G/001 · SOURCE"
+        },
+        "tree": {
+            "layer": "root",
+            "year": 2026
+        },
+        "voices": [
+            {
+                "voice": "THE FFILM",
+                "role": "Edit note",
+                "class": "MEDIA",
+                "text": "One frame. Page photographed flat; the poem runs off the bottom edge."
+            },
+            {
+                "voice": "SOCIAL ARCHIVIST",
+                "role": "Memory in people",
+                "class": "TESTIMONY",
+                "text": "Found material. Held as evidence; the leaf's reading is stored apart from it."
+            }
+        ]
+    },
+    {
+        "public_id": "01TTG76F439DBFB696ACE90759F",
+        "type": "MOMENT",
+        "slug": "pending-the-magician-hand-on-the-instrument-90759f",
+        "title": "The Magician, Hand on the Instrument",
+        "body": "A hand is on the instrument. Skill is present. The slip asks whether they are operating or performing operation. Concentration without consent becomes slight.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T01:51:55+00:00",
+        "created_at": "2026-11-04T01:51:55+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-the-magician-hand-on-the-instrument-90759f/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T03:41:05+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "e6dbb44fad105aa3eee1f6348c9cebe739e8e964950b451abbe103504d2561f1",
+            "punch_prev": "6789e7579452e8e918bb91b00c3b1076d99c0258fdb19a06dd28dcffa12b5cda",
+            "body_hash": "854d65c110d6ee684ef45bce26548a89e07e76efb84b6dc480b06273aff2fa9a"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGA57873F6FFBF57D2FF3994",
+        "type": "MOMENT",
+        "slug": "pending-chariot-stuck-on-activating-will-ff3994",
+        "title": "Chariot Stuck on Activating Will",
+        "body": "The visitor is on the Chariot card of their tarot deck, stuck on activating their will in their own space, waiting for someone else to do it, which is steering the ship wrong.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T01:49:27+00:00",
+        "created_at": "2026-11-04T01:49:27+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-chariot-stuck-on-activating-will-ff3994/",
+        "metadata": {
+            "place": "unplaced",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T03:41:17+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "1ce5b41e5b87a613e94ba1c896a400b4b5e01e8730c21e1fd61ff1d451dbd422",
+            "punch_prev": "d1af35519a28ce0bdfd0a6961191319c54fad610e8dd6fe10b66fc95cb0d3820",
+            "body_hash": "54c5c6632ee10e9f74902829d6d16f0f564e4c778eb1756075369b2e8593c3fd"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG41732035601EFE3F65342F",
+        "type": "MOMENT",
+        "slug": "pending-newport-dmt-trip-to-twenty-thirty-three-65342f",
+        "title": "Newport DMT Trip to Twenty Thirty Three",
+        "body": "In the year two thousand, in a flat in Newport, with Tom and Womble, a DMT trip sent the visitor forward to twenty thirty three, where they witnessed a holographic three dee interface, tweakable with fingers, seen from a toilet.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T01:46:42+00:00",
+        "created_at": "2026-11-04T01:46:42+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-newport-dmt-trip-to-twenty-thirty-three-65342f/",
+        "metadata": {
+            "place": "Newport",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T03:41:24+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "60b1c70061900cf39d41c8eb8c9e3816f853829641ba8573fdc3dadbbc5929ed",
+            "punch_prev": "deb5911da52dbff3fc1d5b645f344bd4e69218141e6e8b6ebf71e5344a5ff913",
+            "body_hash": "4fb04459ce73db04258d7540844d69551f9a8120ed3e658f26a57bdeebdee263"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG0A71DE6DC2FA47F30ABA3C",
+        "type": "PLACE",
+        "slug": "pending-brecon-0aba3c",
+        "title": "Brecon",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T03:45:05+00:00",
+        "created_at": "2026-11-04T03:45:05+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-brecon-0aba3c/",
+        "metadata": {
+            "place": "Brecon",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T12:28:26+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "380e6a9f9fc2fb2fe14cdb47a81de77fe35fb7f4dc47bd03957685e907a4e8e6",
+            "punch_prev": "178f550cb8c8301524e599c083e61077bc4ff19790ba6963031b23944aaa8722",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGD6843F58AC8A233C6B6AD4",
+        "type": "PLACE",
+        "slug": "pending-wizardschool-6b6ad4",
+        "title": "WizardSchool",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T06:36:25+00:00",
+        "created_at": "2026-11-04T06:36:25+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-wizardschool-6b6ad4/",
+        "metadata": {
+            "place": "WizardSchool",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T12:28:33+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "5e8ce472d294e48a06579a72202856f7414c26c66ce677f0e47352d58f2c5a13",
+            "punch_prev": "c6fde032723fa3a30344d0d5bbd680a55cfe80c516d9144d93c2c0f7a511fffb",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGAC117163A79EC6585820F8",
+        "type": "PLACE",
+        "slug": "pending-abercrave-5820f8",
+        "title": "Abercrave",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T06:35:48+00:00",
+        "created_at": "2026-11-04T06:35:48+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-abercrave-5820f8/",
+        "metadata": {
+            "place": "Abercrave",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T12:28:49+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "7b016e22cf6f108c065c27864f7bb0a191002bd331bc41c5996d67f0d8eb7209",
+            "punch_prev": "b4f0ee6fd9d0f7d63c193e2a96f411d7ae26f277d450e6e6efc468d1b93967f4",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG760F2FE3360D984B3E9430",
+        "type": "PLACE",
+        "slug": "pending-university-of-time-3e9430",
+        "title": "University of Time",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T06:34:59+00:00",
+        "created_at": "2026-11-04T06:34:59+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-university-of-time-3e9430/",
+        "metadata": {
+            "place": "University of Time",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T12:29:29+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "395b9395296a44d028e9a11b8ce53003a0843041826559a8e7e30230677bcf4d",
+            "punch_prev": "d1f4fe0ef997b5e918666fc550279cfe37171b99e6fa8b489169d447e26683aa",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGA12A3FE99F7BF3C2A246E7",
+        "type": "PLACE",
+        "slug": "pending-brecon-a246e7",
+        "title": "Brecon",
+        "body": "Passport place.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T13:19:36+00:00",
+        "created_at": "2026-11-04T13:19:36+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-brecon-a246e7/",
+        "metadata": {
+            "place": "Brecon",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T20:18:37+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "1b8ca78a69345de84c518f6aff08dcb1db49e803dfc5c5f6dfaa32f780101a28",
+            "punch_prev": "793821501cfc97a48cb61c8ed4de5fb5742dc57f6647e57d9b4bcc553a320c83",
+            "body_hash": "b621d992c618a9dd9529063321ce46e8ae5caedf626cc7228fd54463be55f019"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG164F2F7B41B2766756C60E",
+        "type": "PLACE",
+        "slug": "pending-abercrave-56c60e",
+        "title": "Abercrave",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T04:12:53+00:00",
+        "created_at": "2026-11-04T04:12:53+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-abercrave-56c60e/",
+        "metadata": {
+            "place": "Abercrave",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T20:18:45+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "b0c36a569b6f275e390c4b1d06820586f42d907f44682818a9782abfac10daf3",
+            "punch_prev": "ecca7141ad31fa038cf871b87ce32d56c411a03e66ae6e7cbba9b491af8541e6",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG515078A4563A7E83693293",
+        "type": "PLACE",
+        "slug": "pending-mi3-693293",
+        "title": "MI3",
+        "body": "Passport place.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T13:01:41+00:00",
+        "created_at": "2026-11-04T13:01:41+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-mi3-693293/",
+        "metadata": {
+            "place": "MI3",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T20:18:56+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "8fed54d5e762fc96524cbbaa02b609de1098e509851ce1ec11aaaa7a692f504d",
+            "punch_prev": "f249f5507913f4635511e3f41f9e7a7aa9399acfb8d25c89710adce2f6668506",
+            "body_hash": "b621d992c618a9dd9529063321ce46e8ae5caedf626cc7228fd54463be55f019"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTGB01A55BBC34409DEBF65CD",
+        "type": "PLACE",
+        "slug": "pending-wizardschool-bf65cd",
+        "title": "WizardSchool",
+        "body": "A page of a Guild passport, inked at the office.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T06:36:26+00:00",
+        "created_at": "2026-11-04T06:36:26+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-wizardschool-bf65cd/",
+        "metadata": {
+            "place": "WizardSchool",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-04T20:19:16+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "1e439a8c000873bd3612ae9726c09c987eaca46f592e7531a8afad135aba1fe0",
+            "punch_prev": "3f5cd3f6f1678dd17f74c95f967e9a5b9aff213ccf9171a4e009472d05c5e2ad",
+            "body_hash": "74f4b76066d9c7e8046a80e04a9a426780e7604f3333956387e5f8c87412c3cf"
+        },
+        "tree": {
+            "layer": "leaf",
+            "year": 2026
+        }
+    },
+    {
+        "public_id": "01TTG585E403659B172BCCB742F",
+        "type": "PLACE",
+        "slug": "pending-ystradgynlais-cb742f",
+        "title": "Ystradgynlais",
+        "body": "Passport place.",
+        "visibility": "PUBLIC",
+        "status": "ACTIVE",
+        "observed_at": "2026-11-04T20:57:11+00:00",
+        "created_at": "2026-11-04T20:57:11+00:00",
+        "importance": 0.28,
+        "pending": false,
+        "href": "/n/pending-ystradgynlais-cb742f/",
+        "metadata": {
+            "place": "Ystradgynlais",
+            "custodian": "proposer",
+            "photo_held": false,
+            "classification": "canon",
+            "confirmed_at": "2026-11-06T14:44:22+00:00",
+            "confirmed_by": "tobywhy",
+            "irreversible": true,
+            "punch_hash": "ba241ed58fa93d017d75cf32ccae54e4065581a7875234b280b8eaca1e96a3ca",
+            "punch_prev": "7d9c3948baf63f81ea5f326abff9506cb598b43e7fedd3eaa3950641486aae52",
+            "body_hash": "b621d992c618a9dd9529063321ce46e8ae5caedf626cc7228fd54463be55f019"
         },
         "tree": {
             "layer": "leaf",
