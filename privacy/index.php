@@ -49,6 +49,10 @@ require dirname(__DIR__) . '/people/inc/header.php';
       <dd>Ledger pages and the images on them, items and accounts you lodge on the Passport Map, case filings and corroborations, passport stamps and guide trail points, with the places, years and notes you give them.</dd>
       <dt>Talking to Jack</dt>
       <dd>What you type or say to Jack is used to answer you. If you're signed in, Jack keeps a short <b>personal memory</b> of you (notes he chooses to keep, and your recent exchanges) so he can carry on where you left off. Ask him what he remembers, or ask him to forget, at any time. He never keeps passwords, keys or card numbers. If you're not signed in, he keeps nothing about you between visits.</dd>
+      <dt>Your story so far</dt>
+      <dd>As you take part, the Guild keeps your story in short beats: what you submit, and turns Jack adds when a sitting moves it. You can read it on your slip, write what it is about in your own words, and take any beat out. Only you see it.</dd>
+      <dt>Jack's mind display</dt>
+      <dd>A public display (Mindform) shows Jack's own state as he works: his mode, which of his memories surfaced, which tools he used and which sites he cited. It never shows what anyone said to him, who they are, or what he replied; at most it notes whether the person at the desk was signed in.</dd>
       <dt>Chat</dt>
       <dd>Messages you send to other travellers are delivered to them and kept so the conversation stays readable. They are not used in the narrative.</dd>
       <dt>Visits</dt>

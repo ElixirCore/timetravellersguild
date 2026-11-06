@@ -15,6 +15,7 @@ declare(strict_types=1);
 ini_set('display_errors', '0');
 require_once __DIR__ . '/inc/ledger.php';
 require_once dirname(__DIR__) . '/people/inc/terms.php';
+require_once dirname(__DIR__) . '/app/Narrative/Narrative.php';
 
 header('X-Content-Type-Options: nosniff');
 
@@ -155,6 +156,11 @@ try {
             ttg_ledger_db()->prepare('UPDATE entries SET title=?, note=?, status=?, doc=?, updated_at=?, published_at=?, edited_by=? WHERE id=?')
                 ->execute([$title, $note, $status, json_encode($doc, JSON_UNESCAPED_SLASHES), $now, $publishedAt, $meId, $id]);
 
+            /* The story so far: a new page, or a page entering the book, moves the traveller's story. */
+            if ((int) $entry['user_id'] === $meId && ($id !== (int) ($in['id'] ?? 0) || ($publish && (string) $entry['status'] !== 'ledger'))) {
+                $named = $title !== '' ? '“' . $title . '”' : 'an untitled page';
+                Narrative::recordAct($meId, 'ledger', $publish ? 'You punched ' . $named . ' into the ledger, where every traveller can read it.' : 'You began ' . $named . ', a private slip in the ledger.', $publish ? '/ledger/#entry-' . $id : '/ledger/compose/?id=' . $id);
+            }
             ttg_json(['ok' => true, 'id' => $id, 'status' => $status, 'url' => '/ledger/#entry-' . $id]);
         }
 

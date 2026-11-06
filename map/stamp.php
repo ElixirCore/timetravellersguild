@@ -104,4 +104,6 @@ fflush($fh);
 flock($fh, LOCK_UN);
 fclose($fh);
 
+require_once __DIR__ . '/../app/Narrative/Narrative.php';
+Narrative::recordAct((int) $user['id'], 'stamp', 'You took a passport stamp at ' . $name . '.', '/passport/');
 echo json_encode(['ok' => true, 'duplicate' => false, 'place' => $place + ['lng' => $lng, 'lat' => $lat]]);

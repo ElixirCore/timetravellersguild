@@ -13,6 +13,7 @@ declare(strict_types=1);
 ini_set('display_errors', '0');
 require_once __DIR__ . '/lib.php';
 require_once dirname(__DIR__, 2) . '/people/inc/terms.php';
+require_once dirname(__DIR__, 2) . '/app/Narrative/Narrative.php';
 header('X-Content-Type-Options: nosniff');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') game_json(['ok' => false, 'error' => 'POST only.'], 405);
@@ -80,7 +81,9 @@ try {
         game_quota('desk_items', $uid, 20);
         $db->prepare('INSERT INTO desk_items(user_id, kind, how, body, source_url, near_title, near_url, lng, lat, year, audience, created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
             ->execute([$uid, $kind, $how, $body, $src, game_clean((string) ($in['near_title'] ?? ''), 160), game_url($in['near_url'] ?? ''), $lng, $lat, $year, $aud, time()]);
-        game_json(['ok' => true, 'id' => (int) $db->lastInsertId()]);
+        $newId = (int) $db->lastInsertId();
+        Narrative::recordAct($uid, 'map', 'You lodged ' . strtolower(GAME_KINDS[$kind]) . ' on the Passport Map' . ($year ? ' for ' . $year : '') . ': “' . mb_substr($body, 0, 90) . (mb_strlen($body) > 90 ? '…' : '') . '”', '/map/play/');
+        game_json(['ok' => true, 'id' => $newId]);
     }
 
     case 'hand': {

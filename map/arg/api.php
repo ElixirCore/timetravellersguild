@@ -11,6 +11,7 @@ declare(strict_types=1);
 ini_set('display_errors', '0');
 require_once __DIR__ . '/lib.php';
 require_once dirname(__DIR__, 2) . '/people/inc/terms.php';
+require_once dirname(__DIR__, 2) . '/app/Narrative/Narrative.php';
 header('X-Content-Type-Options: nosniff');
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') arg_json(['ok' => false, 'error' => 'POST only.'], 405);
@@ -156,6 +157,7 @@ try {
         }
         $db->commit();
         arg_log('file', $cid, $uid, arg_name($uid) . ' filed ' . $step . ' (' . $class . ') on ' . $case['title'] . ($clue ? ' · new lead' : ''));
+        Narrative::recordAct($uid, 'case', 'You filed a ' . strtolower((string) $step) . ' on the case “' . (string) ($case['title'] ?? 'unnamed') . '”, and Jack ruled it ' . strtolower((string) $class) . '.', '/map/interface/');
         arg_json(['ok' => true, 'filing_id' => $fid, 'classification' => $class, 'ruling' => $ruling, 'stability_delta' => $delta, 'glitch' => max(0, min(3, (int) ($out['glitch'] ?? 1))), 'clue' => $clue]);
     }
 

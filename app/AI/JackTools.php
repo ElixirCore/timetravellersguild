@@ -16,6 +16,9 @@ declare(strict_types=1);
  * No shell, no mail, no canon. No outbound requests of his own; the one exception is the provider's
  * built-in web_search, offered only at /lodge/ to the accounts in WEB_SEARCH_EMAILS (see mayWebSearch).
  */
+require_once dirname(__DIR__) . '/Narrative/Narrative.php';
+require_once __DIR__ . '/JackLife.php';
+
 final class JackTools
 {
     /** Tool output is clipped so one call cannot flood a round. */
@@ -40,6 +43,8 @@ final class JackTools
             $fn('trace_map', 'Trace the filed path of a holding or the outbound nerves of a map node by id. Read-only.', ['id' => $s(120)], ['id']),
             $fn('desk_items', 'What travellers have lodged on the Passport Map (recollections, objects, documents, names, questions), near a point or matching words. Only items this visitor may see. Read-only.',
                 ['query' => $s(), 'lat' => ['type' => 'number'], 'lng' => ['type' => 'number'], 'radius_km' => ['type' => 'number', 'minimum' => 0.1, 'maximum' => 500]]),
+            $fn('remember_my_life', 'Recall your own life (your autobiographical memory, 1951 to now) about a subject or year: returns your memories with the REAL artefacts that surround them (image, source, licence). Use it when asked about your past, or when a memory would help.',
+                ['about' => $s(200)], ['about']),
             $fn('find_traveller', 'Find a traveller with a public Guild profile by name, place or interest. Public profiles only. Read-only.', ['query' => $s()], ['query']),
         ];
         if ($memory) {
@@ -48,6 +53,10 @@ final class JackTools
                 ['kind' => ['type' => 'string', 'enum' => JackMemory::KINDS], 'text' => $s(300)], ['kind', 'text']);
             $tools[] = $fn('forget', 'Erase from your memory of this traveller: a note id, a kind (e.g. "thread"), "sittings", or "all". Do it whenever they ask.',
                 ['what' => $s(40)], ['what']);
+            $tools[] = $fn('add_story_beat', 'Add one beat to this traveller\'s story so far, when something in this sitting moves it. Join it to the last beat with "therefore" (it follows) or "but" (it turns); never "and then". Yes-and what they brought; never harm or mock them. One or two sentences, second person.',
+                ['joint' => ['type' => 'string', 'enum' => Narrative::JOINTS], 'kind' => ['type' => 'string', 'enum' => Narrative::KINDS], 'text' => $s(400)], ['joint', 'kind', 'text']);
+            $tools[] = $fn('set_story_premise', 'Set what this traveller\'s story is about, in a sentence close to their own words, once it is clear.', ['premise' => $s(240)], ['premise']);
+            $tools[] = $fn('close_story_thread', 'Mark an open thread in their story as paid off, by beat id.', ['id' => ['type' => 'integer']], ['id']);
             $tools[] = $fn('resolve_thread', 'Close an unresolved conversation thread on your relationship record once it is settled, so you stop raising it. Pass words from the thread, or "all".',
                 ['thread' => $s()], ['thread']);
         }
@@ -81,7 +90,7 @@ final class JackTools
     {
         $viewer = $ctx['viewer'];
         $subject = $ctx['subject'];
-        $memoryTool = in_array($name, ['recall_memory', 'remember', 'forget', 'resolve_thread'], true);
+        $memoryTool = in_array($name, ['recall_memory', 'remember', 'forget', 'resolve_thread', 'add_story_beat', 'set_story_premise', 'close_story_thread'], true);
         if ($memoryTool && !$ctx['memory']) {
             return ['ok' => false, 'error' => 'No memory is kept for this visitor (not signed in, or memory withdrawn).'];
         }
@@ -93,10 +102,14 @@ final class JackTools
             'trace_map' => ['ok' => true, 'trace' => JackMap::trace((string) ($a['id'] ?? ''))],
             'desk_items' => self::deskItems($a),
             'find_traveller' => self::findTraveller((string) ($a['query'] ?? '')),
+            'remember_my_life' => ['ok' => true, 'memories' => array_map(static fn ($h) => JackLife::full($h['memory']), JackLife::recall((string) ($a['about'] ?? ''), 3))],
             'recall_memory' => ['ok' => true] + JackMemory::load($subject),
             'remember' => JackMemory::remember($subject, (string) ($a['kind'] ?? 'fact'), (string) ($a['text'] ?? '')),
             'forget' => JackMemory::forget($subject, (string) ($a['what'] ?? '')),
             'resolve_thread' => self::resolveThread((string) ($a['thread'] ?? ''), $ctx),
+            'add_story_beat' => self::storyUser($ctx) ? Narrative::add(self::storyUser($ctx), (string) ($a['joint'] ?? ''), (string) ($a['kind'] ?? 'turn'), 'jack', 'jack', (string) ($a['text'] ?? '')) : ['ok' => false, 'error' => 'No story for this visitor.'],
+            'set_story_premise' => self::storyUser($ctx) ? (Narrative::setPremise(self::storyUser($ctx), (string) ($a['premise'] ?? '')) ?? ['ok' => true]) : ['ok' => false],
+            'close_story_thread' => self::storyUser($ctx) ? ['ok' => Narrative::closeThread(self::storyUser($ctx), (int) ($a['id'] ?? 0))] : ['ok' => false],
             'list_site' => !empty($ctx['site']) ? self::listSite() : ['ok' => false, 'error' => 'Not at this desk.'],
             'read_site_page' => !empty($ctx['site']) ? self::readSitePage((string) ($a['path'] ?? '')) : ['ok' => false, 'error' => 'Not at this desk.'],
             default => JackAgent::executeTool($name, $a, $ctx['office']),
@@ -118,6 +131,13 @@ final class JackTools
         $u = self::currentUser();
         $email = strtolower(trim((string) ($u['email'] ?? '')));
         return $email !== '' && in_array($email, self::WEB_SEARCH_EMAILS, true);
+    }
+
+    /** The signed-in traveller's user id, for their story. */
+    private static function storyUser(array $ctx): int
+    {
+        $u = self::currentUser();
+        return $u && !empty($ctx['memory']) ? (int) $u['id'] : 0;
     }
 
     /** The signed-in user row, straight from the people session. */

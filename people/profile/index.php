@@ -96,6 +96,9 @@ require __DIR__ . '/../inc/header.php';
     <p class="status" id="status" role="status"><?= $punched ? 'The slip is punched. Not canon.' : 'Hands on. The stamp is yours. He does not write this for you.' ?></p>
   </form>
 
+  <section class="connected slip" id="storySoFar" aria-label="Your story so far"></section>
+  <script src="/assets/narrative.js?v=1" data-csrf="<?= ttg_h(ttg_csrf_token()) ?>" data-mount="#storySoFar" defer></script>
+
   <?php if ($briefNote !== ''): ?>
   <section class="connected slip">
     <p class="beat-label">ARRIVAL · FRONT DOOR BRIEFING</p>
