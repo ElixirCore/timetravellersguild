@@ -21,25 +21,35 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
         }
 
         $input = [];
-        $bundle = trim($request->instructions . "\n\n" . $request->contextText);
-        if ($bundle !== '') {
+        if ($request->previousResponseId !== null && $request->toolOutputs !== []) {
+            /* A tool round: the stored response already holds the instructions and the slip. */
+            foreach ($request->toolOutputs as $o) {
+                $input[] = ['type' => 'function_call_output', 'call_id' => (string) $o['call_id'], 'output' => (string) $o['output']];
+            }
+        } else {
+            $bundle = trim($request->instructions . "\n\n" . $request->contextText);
+            if ($bundle !== '') {
+                $input[] = [
+                    'role' => 'developer',
+                    'content' => [['type' => 'input_text', 'text' => $bundle]],
+                ];
+            }
             $input[] = [
-                'role' => 'developer',
-                'content' => [['type' => 'input_text', 'text' => $bundle]],
+                'role' => 'user',
+                'content' => [['type' => 'input_text', 'text' => $request->userMessage]],
             ];
         }
-        $input[] = [
-            'role' => 'user',
-            'content' => [['type' => 'input_text', 'text' => $request->userMessage]],
-        ];
 
         $payload = [
             'model' => $out->model,
             'input' => $input,
         ];
+        if ($request->previousResponseId !== null && $request->toolOutputs !== []) {
+            $payload['previous_response_id'] = $request->previousResponseId;
+        }
         if ($request->tools !== []) {
             $payload['tools'] = $request->tools;
-            $payload['tool_choice'] = 'auto';
+            $payload['tool_choice'] = in_array($request->toolChoice, ['auto', 'none', 'required'], true) ? $request->toolChoice : 'auto';
         }
 
         $raw = $this->post($apiKey, $payload, $request->timeoutSeconds);
@@ -87,7 +97,7 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
         $response = curl_exec($ch);
         $errno = curl_errno($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // curl handles close themselves (curl_close is a no-op since PHP 8.0, deprecated in 8.5).
 
         if ($errno !== 0 || !is_string($response) || $response === '') {
             return ['ok' => false, 'error' => 'unavailable'];
