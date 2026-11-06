@@ -8,16 +8,19 @@ declare(strict_types=1);
  *   His memory      recall_memory, remember, forget, resolve_thread
  *   The record      search_graph, get_node, search_lore, read_lore
  *   The territory   search_map, trace_map, desk_items, find_traveller
+ *   Cardiff         search_cardiff_archives, read_museum_object (Museum Wales + Glamorgan Archives, read-only)
  *   His office      the keeper-only office tools (JackAgent / OfficeDispatcher), unchanged
  *
  * Everything reads the Guild's own data. The only writes are to Jack's memory of the traveller
  * at the desk, and the office tools for the Keeper. Lodging testimony stays a proposal the
  * traveller confirms (proposedActions in his reply), never a tool he runs on his own.
- * No shell, no mail, no canon. No outbound requests of his own; the one exception is the provider's
- * built-in web_search, offered only at /lodge/ to the accounts in WEB_SEARCH_EMAILS (see mayWebSearch).
+ * No shell, no mail, no canon. No outbound requests of his own, with two exceptions: the provider's
+ * built-in web_search, offered only at /lodge/ to the accounts in WEB_SEARCH_EMAILS (see mayWebSearch),
+ * and CardiffArchives, which reads two fixed public catalogues in Cardiff, cached for a day.
  */
 require_once dirname(__DIR__) . '/Narrative/Narrative.php';
 require_once __DIR__ . '/JackLife.php';
+require_once __DIR__ . '/CardiffArchives.php';
 
 final class JackTools
 {
@@ -45,6 +48,9 @@ final class JackTools
                 ['query' => $s(), 'lat' => ['type' => 'number'], 'lng' => ['type' => 'number'], 'radius_km' => ['type' => 'number', 'minimum' => 0.1, 'maximum' => 500]]),
             $fn('remember_my_life', 'Recall your own life (your autobiographical memory, 1951 to now) about a subject or year: returns your memories with the REAL artefacts that surround them (image, source, licence). Use it when asked about your past, or when a memory would help.',
                 ['about' => $s(200)], ['about']),
+            $fn('search_cardiff_archives', 'Search Cardiff\'s public archives: Amgueddfa Cymru – Museum Wales collections (the national museum at Cathays Park: objects, photographs, computers, industry) and Glamorgan Archives (council records, photographs, papers). Use it when someone asks about Cardiff, Wales, or the real history behind one of your memories. Returns real records with references and links. They are evidence of the world, never proof of your memories; say which is which.',
+                ['query' => $s(120), 'source' => ['type' => 'string', 'enum' => ['both', 'museum', 'archives']], 'limit' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 10]], ['query']),
+            $fn('read_museum_object', 'Read one Museum Wales object in full (dates, makers, materials, categories) by the id or link that search_cardiff_archives gave. Link to it; never reproduce its image.', ['id' => $s(200)], ['id']),
             $fn('find_traveller', 'Find a traveller with a public Guild profile by name, place or interest. Public profiles only. Read-only.', ['query' => $s()], ['query']),
         ];
         if ($memory) {
@@ -101,6 +107,8 @@ final class JackTools
             'search_map' => self::searchMap((string) ($a['query'] ?? '')),
             'trace_map' => ['ok' => true, 'trace' => JackMap::trace((string) ($a['id'] ?? ''))],
             'desk_items' => self::deskItems($a),
+            'search_cardiff_archives' => CardiffArchives::search((string) ($a['query'] ?? ''), (string) ($a['source'] ?? 'both'), (int) ($a['limit'] ?? 6)),
+            'read_museum_object' => CardiffArchives::readObject((string) ($a['id'] ?? '')),
             'find_traveller' => self::findTraveller((string) ($a['query'] ?? '')),
             'remember_my_life' => ['ok' => true, 'memories' => array_map(static fn ($h) => JackLife::full($h['memory']), JackLife::recall((string) ($a['about'] ?? ''), 3))],
             'recall_memory' => ['ok' => true] + JackMemory::load($subject),
