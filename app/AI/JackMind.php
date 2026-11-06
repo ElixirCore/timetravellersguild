@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Jack's mind, as it can be shown: a ring of his recent thoughts and a live state built from them.
- * Read by /jack/mind.php for the mind display (ffilm.org/mindform).
+ * Read by /jack/mind.php for the mind display at /jack/mind/.
  *
  * PRIVACY: only Jack's side is recorded. Never what a visitor said, who they are, or what he replied:
  * the mode he was in, which of his own memories surfaced (and their evidence images), which tools he

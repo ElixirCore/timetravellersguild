@@ -2,18 +2,13 @@
 declare(strict_types=1);
 
 /**
- * /jack/mind.php — Jack's mind, as public JSON, for the mind display (ffilm.org/mindform).
+ * /jack/mind.php — Jack's mind, as public JSON, for the mind display at /jack/mind/.
  * Live state, his recent thoughts (his side only: no visitor words, names or replies),
  * and the whole of his remembered life with its evidence for the idle collage.
  */
 require_once dirname(__DIR__) . '/app/AI/JackLife.php';
 require_once dirname(__DIR__) . '/app/AI/JackMind.php';
 
-$origin = (string) ($_SERVER['HTTP_ORIGIN'] ?? '');
-if (in_array($origin, ['https://ffilm.org', 'https://www.ffilm.org', 'https://timetravellersguild.com'], true)) {
-    header('Access-Control-Allow-Origin: ' . $origin);
-    header('Vary: Origin');
-}
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');

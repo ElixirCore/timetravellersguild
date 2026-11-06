@@ -52,7 +52,7 @@ require dirname(__DIR__) . '/people/inc/header.php';
       <dt>Your story so far</dt>
       <dd>As you take part, the Guild keeps your story in short beats: what you submit, and turns Jack adds when a sitting moves it. You can read it on your slip, write what it is about in your own words, and take any beat out. Only you see it.</dd>
       <dt>Jack's mind display</dt>
-      <dd>A public display (Mindform) shows Jack's own state as he works: his mode, which of his memories surfaced, which tools he used and which sites he cited. It never shows what anyone said to him, who they are, or what he replied; at most it notes whether the person at the desk was signed in.</dd>
+      <dd>A public display (<a href="/jack/mind/">Jack's mind</a>) shows Jack's own state as he works: his mode, which of his memories surfaced, which tools he used and which sites he cited. It never shows what anyone said to him, who they are, or what he replied; at most it notes whether the person at the desk was signed in.</dd>
       <dt>Chat</dt>
       <dd>Messages you send to other travellers are delivered to them and kept so the conversation stays readable. They are not used in the narrative.</dd>
       <dt>Visits</dt>

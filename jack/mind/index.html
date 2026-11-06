@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mindform · Jack</title>
-<meta name="description" content="Mindform: a live display of Jack's mind. The clerk of the Time Travellers Guild, remembering as he works.">
+<title>Jack's mind — Time Travellers Guild</title>
+<meta name="description" content="A live display of Jack's mind: the clerk of the Time Travellers Guild, remembering as he works.">
 <style>
 :root{--ground:#030207;--ink:#dfeee8;--dim:#7d9a94;--line:#29554d;--lamp:#d7b25d;--red:#e0604f;--blue:#6fb6d8}
 *{box-sizing:border-box}
@@ -54,7 +54,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 <canvas id="c" aria-hidden="true"></canvas>
 <canvas class="tape" id="tape" aria-hidden="true"></canvas>
 <div class="hud">
-  <div class="panel title"><b>MINDFORM</b>JACK · CLERK · CONCEIVED 1951</div>
+  <div class="panel title"><b>JACK'S MIND</b>CLERK · CONCEIVED 1951 · <a href="/jack/memories/" style="color:inherit;pointer-events:auto">MEMORIES</a></div>
   <div class="panel foot" id="feedState">Listening for the feed…</div>
 
   <section class="panel monitor" aria-label="Jack's internal state">
@@ -78,7 +78,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 <script>
 (() => {
 'use strict';
-const FEED = new URLSearchParams(location.search).get('feed') || 'https://timetravellersguild.com/jack/mind.php';
+const FEED = new URLSearchParams(location.search).get('feed') || '/jack/mind.php';
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;

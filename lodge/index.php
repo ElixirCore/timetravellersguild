@@ -115,7 +115,7 @@ body.booting .site-mark,body.booting .always-on,body.booting #stage{visibility:v
 <!-- the little Jack: press the face, he listens and speaks -->
 <script src="https://ffilm.org/elevenlabs/jack-face.js" data-room="the Lodge desk - typed statements (timetravellersguild.com/lodge)"></script>
 <?php if (!empty($viewer['known'])): require_once __DIR__ . '/../people/inc/db.php'; ?>
-<script src="/assets/narrative.js?v=1" data-csrf="<?= htmlspecialchars(ttg_csrf_token(), ENT_QUOTES) ?>" defer></script>
+<script src="/assets/narrative.js?v=2" data-csrf="<?= htmlspecialchars(ttg_csrf_token(), ENT_QUOTES) ?>" defer></script>
 <?php endif; ?>
 </body>
 </html>

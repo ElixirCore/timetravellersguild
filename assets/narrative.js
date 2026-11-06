@@ -30,6 +30,8 @@
     '.ttg-story .threads{border-top:1px dashed #6d6655;margin-top:10px;padding-top:8px}',
     '.ttg-story form{display:flex;gap:6px;margin:0 0 10px}',
     '.ttg-story input{flex:1;font:13px Georgia,serif;padding:6px;border:1px solid #6d6655;background:#fffaf0}',
+    '.ttg-story .kept{font:700 11px ui-monospace,Menlo,monospace;color:#2f7a4f;margin:0 0 10px}',
+    '.ttg-story form button:disabled{opacity:.6}',
     '.ttg-story form button{font:700 11px ui-monospace,Menlo,monospace;background:#1b1a17;color:#f6efd8;border:0;padding:6px 10px;cursor:pointer}'
   ].join('');
   document.head.appendChild(css);
@@ -60,13 +62,21 @@
     document.body.append(tab, box);
   }
 
+  var editing = false, flash = '';
   function render(s) {
     if (!s || !s.ok) {
       box.innerHTML = '<h2>Your story so far</h2><p>' + esc((s && s.error) || 'The story drawer did not answer.') + '</p>';
       return;
     }
     var h = '<h2>Your story so far</h2><p class="act">' + esc(ACTS[s.act] || ('Act ' + s.act)) + '</p>';
-    h += '<form data-f="premise"><input name="premise" maxlength="240" placeholder="What is your story about? (in your words)" value="' + esc(s.premise) + '"><button type="submit">Keep</button></form>';
+    if (s.premise && !editing) {
+      h += '<p class="premise">Your story: ' + esc(s.premise) + ' <button type="button" class="x" data-edit="1">change</button>'
+        + (flash ? ' <span class="kept" role="status">' + esc(flash) + '</span>' : '') + '</p>';
+    } else {
+      h += '<form data-f="premise"><input name="premise" maxlength="240" placeholder="What is your story about? (in your words)" value="' + esc(s.premise) + '" aria-label="What your story is about"><button type="submit">Keep</button></form>';
+    }
+    if (flash && (!s.premise || editing)) h += '<p class="kept" role="status">' + esc(flash) + '</p>';
+    flash = '';
     if (!s.beats.length) {
       h += '<p>Nothing yet. Your story begins with the first thing you bring the Guild: a page in the ledger, something lodged on the map, a word with Jack.</p>';
     } else {
@@ -88,10 +98,25 @@
 
   box.addEventListener('submit', function (e) {
     e.preventDefault();
-    var v = e.target.querySelector('input').value;
-    api({ op: 'premise', premise: v }).then(render);
+    var f = e.target, v = f.querySelector('input').value.trim(), b = f.querySelector('button');
+    b.disabled = true; b.textContent = 'Keeping…';
+    api({ op: 'premise', premise: v }).then(function (s) {
+      editing = false;
+      flash = s && s.ok ? (v ? 'Kept.' : 'Cleared.') : '';
+      render(s);
+    }).catch(function () {
+      b.disabled = false; b.textContent = 'Keep';
+      flash = 'Could not keep it: the story drawer did not answer. Try again.';
+      var p = box.querySelector('.kept') || box.appendChild(document.createElement('p'));
+      p.className = 'kept'; p.textContent = flash; flash = '';
+    });
   });
   box.addEventListener('click', function (e) {
+    if (e.target.closest('[data-edit]')) {
+      editing = true; load();
+      setTimeout(function () { var i = box.querySelector('input'); if (i) { i.focus(); i.select(); } }, 250);
+      return;
+    }
     var b = e.target.closest('[data-w]'); if (!b) return;
     if (!confirm('Take this beat out of your story? The story keeps going from the beat before it.')) return;
     api({ op: 'withdraw', id: +b.getAttribute('data-w') }).then(render);
