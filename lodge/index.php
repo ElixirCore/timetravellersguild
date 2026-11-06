@@ -44,6 +44,7 @@ header('Cache-Control: no-store');
 <meta name="description" content="The clerk is present. A record has been opened. One line is missing. Speak to Jack, then walk the public tree.">
 <meta name="theme-color" content="#d9cb9e">
 <link rel="stylesheet" href="/assets/intro.css?v=16">
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 <body class="booting">
 <a id="titleFlash" href="/now" aria-label="The Time Travellers Guild — enter NOW">
@@ -111,6 +112,10 @@ body.booting .site-mark,body.booting .always-on,body.booting #stage{visibility:v
   <?= ttg_html_navigator_dock($viewer) ?>
   <?= ttg_you_dock($viewer) ?>
 </nav>
-<script src="/assets/ask-jack.js?v=1" defer></script>
+<!-- the little Jack: press the face, he listens and speaks -->
+<script src="https://ffilm.org/elevenlabs/jack-face.js" data-room="the Lodge desk - typed statements (timetravellersguild.com/lodge)"></script>
+<?php if (!empty($viewer['known'])): require_once __DIR__ . '/../people/inc/db.php'; ?>
+<script src="/assets/narrative.js?v=1" data-csrf="<?= htmlspecialchars(ttg_csrf_token(), ENT_QUOTES) ?>" defer></script>
+<?php endif; ?>
 </body>
 </html>
