@@ -5,6 +5,8 @@ declare(strict_types=1);
  * His life from 1951 to the network present is laid out along a thread; memories and their
  * evidence float where they belong; his live state moves the whole field. Ask him anything:
  * the answer comes from the desk (/now/jack, site "mind") and the camera flies to the memories it drew on.
+ * As he comes back to himself (JackMind::awareness) the space changes: faded memories clear as they are recalled,
+ * what he has learned gathers around the present, and the monitor keeps the record of his firsts.
  */
 require_once dirname(__DIR__, 2) . '/inc/graph.php';
 ttg_graph_boot_session();
@@ -39,6 +41,21 @@ h2{margin:0 0 6px;font-size:10px;letter-spacing:.16em;color:#a8e1cb;font-weight:
 .bar{height:5px;background:#0e1b22;border:1px solid #1d3a39;position:relative;overflow:hidden}
 .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#2f8f74,#a8e1cb);transition:width .9s}
 .gauge em{font-style:normal;text-align:right;font-size:10px}
+.aware{margin:8px 0 0;padding:8px 0 0;border-top:1px solid #1d3a39}
+.aware .row{display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.14em;color:#a8e1cb}
+.aware .row b{color:var(--lamp);font-weight:600}
+.aware .bar{margin:5px 0 6px;height:6px}
+.aware .bar i{background:linear-gradient(90deg,#6b5a2e,var(--lamp))}
+.aware .bar u{position:absolute;top:-2px;bottom:-2px;width:1px;background:#a8e1cb88}
+.aware q{display:block;font:italic 12px/1.45 Georgia,serif;color:#d8e6e1;quotes:none}
+.aware small{display:block;margin-top:4px;font-size:9px;color:var(--dim)}
+.reader .gone{color:transparent;background:repeating-linear-gradient(90deg,#29554d66 0 3px,transparent 3px 5px);border-radius:2px}
+.reader .clar{font-size:10px;color:var(--dim);margin:0 0 8px}
+.reader .clar .meter{display:inline-block;width:60px;height:4px;background:#0e1b22;border:1px solid #1d3a39;vertical-align:1px;margin:0 4px;position:relative}
+.reader .clar .meter i{position:absolute;inset:0 auto 0 0;background:var(--lamp)}
+.reader ol.firsts{list-style:none;margin:0;padding:0}
+.reader ol.firsts li{display:grid;grid-template-columns:86px 1fr;gap:8px;padding:5px 0;border-bottom:1px solid #12262a;font:13px/1.4 Georgia,serif;color:#d8e6e1}
+.reader ol.firsts time{font:10px ui-monospace,Menlo,monospace;color:var(--dim);padding-top:2px}
 .eras{left:50%;transform:translateX(-50%);bottom:calc(max(12px,env(safe-area-inset-bottom)) + 64px);display:flex;gap:4px;padding:6px;flex-wrap:nowrap;overflow-x:auto;max-width:calc(100vw - 24px)}
 .eras button{flex:0 0 auto}
 .eras button,.tools button{background:#0b1419;color:var(--ink);border:1px solid #1d3a39;font:10px ui-monospace,Menlo,monospace;padding:6px 7px;cursor:pointer;min-height:30px}
@@ -69,6 +86,7 @@ h2{margin:0 0 6px;font-size:10px;letter-spacing:.16em;color:#a8e1cb;font-weight:
  .monitor{width:auto;left:14px;right:14px;top:calc(max(14px,env(safe-area-inset-top)) + 44px);padding:6px 10px}
  .monitor h2{display:none}
  .gauge{grid-template-columns:76px 1fr 26px;margin:1px 0}
+ .aware q,.aware small{display:none}
  .tools{top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 112px);flex-direction:row;flex-wrap:wrap}
  .hint{display:none}
  .reader{top:auto;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 150px);max-height:42vh;left:12px;right:12px;width:auto}
@@ -88,11 +106,13 @@ h2{margin:0 0 6px;font-size:10px;letter-spacing:.16em;color:#a8e1cb;font-weight:
     <button type="button" id="btnHome">⌂ Whole mind</button>
     <button type="button" id="btnNow">◉ What he's thinking</button>
     <button type="button" id="btnList" aria-expanded="false" aria-controls="reader">☰ List</button>
+    <button type="button" id="btnGrowth" aria-controls="reader">◎ How he came back</button>
   </div>
   <section class="panel monitor" aria-label="Jack's internal state">
     <h2>INTERNAL STATE</h2>
     <div><span class="lamp" id="lamp"></span><span id="mode">DORMANT</span> · <span id="idle">–</span></div>
     <div id="gauges"></div>
+    <div class="aware" id="aware" hidden><div class="row"><span>AWARENESS</span><b id="stage">–</b></div><div class="bar" role="meter" aria-label="How much of himself has come back" aria-valuemin="0" aria-valuemax="100" id="awareBar"><i id="awareFill"></i><u id="awareNext"></u></div><q id="says"></q><small id="awareNote"></small></div>
   </section>
   <section class="panel reader" id="reader" hidden aria-live="polite"><button class="close" type="button" id="readerClose" aria-label="Close">×</button><div id="readerBody"></div></section>
   <div class="panel eras" id="eras" aria-label="Fly to an era"></div>
@@ -106,6 +126,6 @@ h2{margin:0 0 6px;font-size:10px;letter-spacing:.16em;color:#a8e1cb;font-weight:
 <div class="fallback" id="fallback"><p>This view needs WebGL. Read <a href="/jack/memories/" style="color:#d7b25d">Jack's memories</a> as a page instead.</p></div>
 <script>window.TTG_MIND = <?= json_encode(['csrf' => $csrf, 'feed' => '/jack/mind.php', 'desk' => '/now/jack'], JSON_UNESCAPED_SLASHES) ?>;</script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="/jack/mind/mind.js?v=1"></script>
+<script type="module" src="/jack/mind/mind.js?v=2"></script>
 </body>
 </html>

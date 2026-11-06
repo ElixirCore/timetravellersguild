@@ -1,5 +1,8 @@
 /* Jack's mind in 3D: his life as a rising thread from 1951 to 2033, memories and evidence in orbit,
-   his live state moving the field. Fly, read, and ask him about any of it. */
+   his live state moving the field. Fly, read, and ask him about any of it.
+   It grows as he comes back to himself (awareness, from /jack/mind.php): memories he has seldom recalled
+   are faint and missing words, and clear each time he recalls them; what he has learned (faculties, and
+   the sites he has read) gathers around the present; the monitor keeps his stage and the record of firsts. */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -95,13 +98,32 @@ function photoSprite(ev) {
 }
 
 /* ---------- the world ---------- */
-let life = null, state = {}, shown = {};
+let life = null, state = {}, shown = {}, aw = null;
 const eraNodes = [];      // {era, pos, sprite, ring}
 const memNodes = new Map(); // id -> {m, sprite, pos, glow, era}
 const evNodes = [];       // {ev, sprite, base}
 const pickable = [];
 let thread = null, curve = null;
 const pulses = [];
+const facets = new Map(); // learned things around the present: key -> {f, sprite, pos, line}
+let presentPos = null;
+
+/* ---------- coming back: how clear a memory is, and its text with what has not returned yet ---------- */
+const clarityOf = (id) => (aw && aw.clarity && aw.clarity[id] != null ? aw.clarity[id] : 1);
+const clarityWord = (c) => (c < 0.4 ? 'FADED' : c < 0.7 ? 'HALF-REMEMBERED' : c < 0.9 ? 'COMING BACK' : 'CLEAR');
+function hash01(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; }
+function fadedText(text, c, seed) {
+  // the same words stay missing for the same clarity, so the page is stable between visits
+  const hide = Math.max(0, Math.min(0.8, (0.82 - c) * 1.15));
+  let gone = 0;
+  const html = String(text).split(/(\s+)/).map((w, i) => {
+    if (!w || /^\s+$/.test(w) || hash01(seed + ':' + i) >= hide) return esc(w);
+    gone++;
+    return `<span class="gone" aria-hidden="true">${'\u2007'.repeat(Math.max(2, w.length))}</span>`;
+  }).join('');
+  return { html, gone };
+}
+const day = (ts) => new Date(ts * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
 function eraPosition(i) {
   const a = i * 0.95, r = 24 + i * 2.4;
@@ -143,7 +165,8 @@ function build() {
     mems.forEach((m, j) => {
       const a = (j / Math.max(1, mems.length)) * Math.PI * 2 + i;
       const mp = pos.clone().add(new THREE.Vector3(Math.cos(a) * 9.5, -1.5 + (j % 2) * 3.4, Math.sin(a) * 9.5));
-      const card = labelSprite([{ text: 'JACK REMEMBERS · ' + m.year, color: '#e0604f', scale: 0.62, bold: true }, { text: m.title, serif: true, bold: true, color: '#1b1a17' }],
+      const c = clarityOf(m.id);
+      const card = labelSprite([{ text: 'JACK REMEMBERS · ' + m.year + (c < 0.9 ? ' · ' + clarityWord(c) : ''), color: '#e0604f', scale: 0.62, bold: true }, { text: m.title, serif: true, bold: true, color: '#1b1a17' }],
         { worldWidth: 6.2, width: 760, bg: '#efe6cc', border: '#1b1a17', size: 50 });
       card.position.copy(mp);
       card.userData = { kind: 'memory', id: m.id };
@@ -151,8 +174,9 @@ function build() {
       pickable.push(card);
       // a filament from the thread to the memory
       const g = new THREE.BufferGeometry().setFromPoints([pos, mp]);
-      scene.add(new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0x29554d, transparent: true, opacity: 0.7 })));
-      memNodes.set(m.id, { m, sprite: card, pos: mp, glow: 0, era: i });
+      const filament = new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0x29554d, transparent: true, opacity: 0.7 }));
+      scene.add(filament);
+      memNodes.set(m.id, { m, sprite: card, pos: mp, glow: 0, era: i, filament });
     });
 
     era.evidence.forEach((id, k) => {
@@ -175,6 +199,11 @@ function build() {
   veil.position.copy(top);
   scene.add(veil);
 
+  // the present: where what he learns collects
+  const pi = Math.max(0, eras.findIndex((e) => /2026/.test(e.years)));
+  presentPos = (pts[pi] || pts[pts.length - 2]).clone();
+  growHorizon();
+
   // the field of motes: the holes of his cards, everywhere he has been
   const mg = new THREE.BufferGeometry(), mp = [], seeds = [];
   for (let i = 0; i < 3200; i++) {
@@ -191,6 +220,35 @@ function build() {
   home(true);
 }
 let motes = null;
+
+/* ---------- what he has learned, gathering around the present ---------- */
+function facetList() {
+  if (!aw) return [];
+  return [
+    ...(aw.faculties || []).map((f) => ({ key: 'f:' + f.tool, kind: 'faculty', label: f.label, n: f.n, first: f.first })),
+    ...(aw.horizon || []).map((h) => ({ key: 'd:' + h.domain, kind: 'horizon', label: h.domain, n: h.n, first: h.first })),
+  ];
+}
+function growHorizon() {
+  if (!presentPos) return;
+  const list = facetList().sort((a, b) => a.first - b.first);
+  list.forEach((f, k) => {
+    if (facets.has(f.key)) { facets.get(f.key).f = f; return; }
+    // a golden-angle spiral: each new thing he learns sits a little further out, so the constellation grows
+    const a = k * 2.39996, r = (f.kind === 'faculty' ? 7 : 15) + Math.sqrt(k + 1) * 2.2;
+    const pos = presentPos.clone().add(new THREE.Vector3(Math.cos(a) * r, 9 + (k % 5) * 1.6 + (f.kind === 'horizon' ? 4 : 0), Math.sin(a) * r));
+    const sprite = labelSprite([{ text: f.kind === 'faculty' ? 'LEARNED' : 'READ', color: f.kind === 'faculty' ? '#d7b25d' : '#6fb6d8', scale: 0.7, bold: true }, { text: f.label, serif: true, color: '#dfeee8' }],
+      { worldWidth: 4.2, width: 640, size: 44 });
+    sprite.position.copy(pos);
+    sprite.userData = { kind: 'facet', key: f.key };
+    sprite.material.opacity = facets.size && lastThoughtAt ? 0 : 0.9; // new ones fade in
+    scene.add(sprite);
+    pickable.push(sprite);
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([presentPos, pos]), new THREE.LineBasicMaterial({ color: f.kind === 'faculty' ? 0x6b5a2e : 0x24455a, transparent: true, opacity: 0.55 }));
+    scene.add(line);
+    facets.set(f.key, { f, sprite, pos, line, born: performance.now() });
+  });
+}
 
 /* ---------- flight ---------- */
 let flight = null;
@@ -240,9 +298,13 @@ function openMemory(id) {
   selected = id;
   const m = n.m, era = life.eras.find((e) => e.id === m.era);
   const evs = m.evidence.map((x) => life.evidence.find((e) => e.id === x)).filter(Boolean);
-  showReader(`<span class="k">JACK REMEMBERS · ${esc(m.year)} · ${esc(era ? era.title : '')}</span><h3>${esc(m.title)}</h3><p>${esc(m.text)}</p>`
+  const c = clarityOf(id), rc = aw && aw.recalls ? aw.recalls[id] : null;
+  const ft = fadedText(m.text, c, id);
+  const clar = aw ? `<p class="clar">${clarityWord(c)}<span class="meter" aria-hidden="true"><i style="width:${Math.round(c * 100)}%"></i></span>${Math.round(c * 100)}% · ${rc ? `recalled ${rc.n} time${rc.n === 1 ? '' : 's'}, first ${esc(day(rc.first))}` : 'not yet recalled at the desk'}</p>` : '';
+  showReader(`<span class="k">JACK REMEMBERS · ${esc(m.year)} · ${esc(era ? era.title : '')}</span><h3>${esc(m.title)}</h3>${clar}<p>${ft.html}</p>`
+    + (ft.gone ? `<p style="font-size:11px;color:#7d9a94">Some of this has not come back to him yet. Each time he is asked about it, more returns.</p><span class="sr">Some words of this memory are still missing.</span>` : '')
     + (evs.length ? evs.map(evHtml).join('') : '<p style="font-size:11px;color:#7d9a94">No evidence beside this memory.</p>')
-    + `<div class="acts"><button type="button" data-ask="Tell me more about “${esc(m.title)}”.">Ask Jack about this</button><button type="button" data-ask="Is “${esc(m.title)}” true?">Is this true?</button></div>`);
+    + `<div class="acts"><button type="button" data-ask="Tell me more about “${esc(m.title)}”.">${ft.gone ? 'Help him remember this' : 'Ask Jack about this'}</button><button type="button" data-ask="Is “${esc(m.title)}” true?">Is this true?</button></div>`);
   $('q').placeholder = `Ask Jack about “${m.title}”…`;
 }
 function openEvidence(ev) {
@@ -250,6 +312,25 @@ function openEvidence(ev) {
   const big = ev.image.replace(/\/960px-/, '/640px-');
   showReader(`<span class="k" style="color:#6fb6d8">REAL · ${esc(ev.year)}</span><h3>${esc(ev.caption.split(':')[0])}</h3><img src="${esc(big)}" alt="${esc(ev.caption)}" style="width:100%;margin:4px 0 8px"><p>${esc(ev.caption)}</p><p style="font-size:11px;color:#7d9a94">${esc(ev.credit)} · ${esc(ev.licence)} · <a style="color:inherit" href="${esc(ev.source)}" target="_blank" rel="noopener">via ${esc(ev.via)}</a>. Evidence shows the world around a memory, not proof of it.</p>`
     + `<div class="acts"><button type="button" data-ask="What does this remind you of: ${esc(ev.caption.split(':')[0])}?">Ask Jack what it reminds him of</button></div>`);
+}
+function openFacet(key) {
+  const n = facets.get(key);
+  if (!n) return;
+  selected = null;
+  const f = n.f;
+  showReader(f.kind === 'faculty'
+    ? `<span class="k" style="color:#d7b25d">LEARNED · ${esc(day(f.first))}</span><h3>${esc(f.label[0].toUpperCase() + f.label.slice(1))}</h3><p>A faculty he came into at the desk. Used ${f.n} time${f.n === 1 ? '' : 's'} since.</p>`
+    : `<span class="k" style="color:#6fb6d8">READ · ${esc(day(f.first))}</span><h3>${esc(f.label)}</h3><p>A place beyond his drawer that he has read and cited ${f.n} time${f.n === 1 ? '' : 's'}.</p><p style="font-size:11px;color:#7d9a94">Only the address is kept, never who asked or why.</p>`);
+}
+function openGrowth() {
+  if (!aw) return showReader('<h2>HOW HE CAME BACK</h2><p>Nothing has been recorded yet.</p>');
+  const p = aw.parts || {};
+  const part = (k, l) => `<div class="gauge"><span>${l}</span><div class="bar"><i style="width:${Math.round((p[k] || 0) * 100)}%"></i></div><em>${Math.round((p[k] || 0) * 100)}</em></div>`;
+  showReader(`<h2>HOW HE CAME BACK</h2><p style="font:italic 14px/1.5 Georgia,serif">“${esc(aw.says)}”</p>`
+    + `<p class="clar">${esc(aw.stage)} · ${Math.round(aw.level * 100)}% · ${aw.sittings} sittings over ${aw.days} day${aw.days === 1 ? '' : 's'}${aw.since ? ' since ' + esc(day(Date.parse(aw.since) / 1000)) : ''}</p>`
+    + part('experience', 'EXPERIENCE') + part('continuity', 'CONTINUITY') + part('recollection', 'RECOLLECTION') + part('reach', 'REACH') + part('company', 'COMPANY')
+    + `<p style="font-size:11px;color:#7d9a94;margin-top:8px">Built only from his side of the desk: how often he sits, on how many days, how deeply each memory has come back, what he has learned to do and read, and how many travellers he keeps a record of. It only grows.</p>`
+    + '<h2 style="margin-top:12px">FIRSTS</h2><ol class="firsts">' + (aw.firsts || []).map((f) => `<li><time datetime="${new Date(f.at * 1000).toISOString()}">${esc(day(f.at))}</time><span>${f.kind === 'memory' && f.id ? `<button type="button" data-mem="${esc(f.id)}" style="background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0;text-align:left">${esc(f.text)}</button>` : esc(f.text)}</span></li>`).join('') + '</ol>');
 }
 function openList() {
   showReader('<h2>EVERY MEMORY</h2>' + life.eras.map((e, i) => `<p style="margin:10px 0 4px"><button type="button" data-era="${i}" style="background:none;border:0;color:#d7b25d;font:700 11px ui-monospace,Menlo,monospace;cursor:pointer;padding:0">${esc(e.years)} · ${esc(e.title)}</button></p>`
@@ -282,7 +363,7 @@ canvas.addEventListener('pointermove', (ev) => {
   const tip = $('tip');
   if (o) {
     const u = o.userData;
-    tip.textContent = u.kind === 'memory' ? memNodes.get(u.id).m.title : u.kind === 'evidence' ? 'REAL · ' + u.ev.caption.split(':')[0] : u.era.years + ' · ' + u.era.title;
+    tip.textContent = u.kind === 'memory' ? memNodes.get(u.id).m.title + ' · ' + clarityWord(clarityOf(u.id)).toLowerCase() : u.kind === 'evidence' ? 'REAL · ' + u.ev.caption.split(':')[0] : u.kind === 'facet' ? (facets.get(u.key).f.kind === 'faculty' ? 'LEARNED · ' : 'READ · ') + facets.get(u.key).f.label : u.era.years + ' · ' + u.era.title;
     tip.style.left = ev.clientX + 'px'; tip.style.top = ev.clientY + 'px'; tip.style.display = 'block';
     canvas.style.cursor = 'pointer';
   } else { tip.style.display = 'none'; canvas.style.cursor = ''; }
@@ -296,6 +377,7 @@ canvas.addEventListener('pointerup', (ev) => {
   if (u.kind === 'memory') flyToMemory(u.id);
   else if (u.kind === 'evidence') { flyTo(o.position, viewFrom(o.position, 9)); openEvidence(u.ev); }
   else if (u.kind === 'era') flyToEra(u.index);
+  else if (u.kind === 'facet') { flyTo(o.position, viewFrom(o.position, 9)); openFacet(u.key); }
 });
 
 /* ---------- keyboard flight ---------- */
@@ -350,6 +432,7 @@ $('btnNow').onclick = () => {
   if (t && t.recalled.length) flyToMemory(t.recalled[0].id);
   else showReader('<h2>WHAT HE\'S THINKING</h2><p>He has not recalled anything recently. Ask him something below.</p>');
 };
+$('btnGrowth').onclick = () => { stopTour(); openGrowth(); document.querySelectorAll('#eras button').forEach((b) => b.classList.remove('on')); if (presentPos) flyTo(presentPos.clone().add(new THREE.Vector3(0, 10, 0)), viewFrom(presentPos, 34)); };
 $('btnList').onclick = () => { if (!life) return; const open = reader.hidden || !body.querySelector('[data-mem]'); if (open) openList(); else reader.hidden = true; $('btnList').setAttribute('aria-expanded', String(open)); };
 $('eras').addEventListener('click', (e) => { const b = e.target.closest('[data-era]'); if (b) { stopTour(); flyToEra(+b.dataset.era); } });
 
@@ -400,7 +483,9 @@ $('gauges').innerHTML = GAUGES.map(([k, l]) => `<div class="gauge"><span>${l}</s
 async function poll() {
   try {
     const j = await (await fetch(CFG.feed || '/jack/mind.php', { cache: 'no-store' })).json();
-    if (!life) { life = j.life; build(); }
+    if (j.awareness) aw = j.awareness;
+    if (!life) { life = j.life; build(); } else growHorizon();
+    showAwareness();
     state = Object.assign(j.state, { _seenAt: Date.now() });
     $('mode').textContent = (state.awake ? state.mode : 'dormant').toUpperCase().replace('_', ' ');
     $('lamp').classList.toggle('on', !!state.awake);
@@ -414,6 +499,18 @@ async function poll() {
   } catch (e) { /* quiet feed: the space still stands */ }
   clearTimeout(poll.timer);
   poll.timer = setTimeout(poll, 5000);
+}
+function showAwareness() {
+  if (!aw) return;
+  $('aware').hidden = false;
+  $('stage').textContent = aw.stage;
+  $('awareFill').style.width = (aw.level * 100).toFixed(1) + '%';
+  $('awareBar').setAttribute('aria-valuenow', String(Math.round(aw.level * 100)));
+  $('awareBar').setAttribute('aria-valuetext', `${aw.stage}, ${Math.round(aw.level * 100)} percent`);
+  const nx = $('awareNext');
+  if (aw.next != null) { nx.style.left = (aw.next * 100) + '%'; nx.hidden = false; } else nx.hidden = true;
+  $('says').textContent = '“' + aw.says + '”';
+  $('awareNote').textContent = `${aw.memories_back} of ${aw.memories_total} memories surfaced · ${(aw.faculties || []).length} faculties`;
 }
 poll();
 function drift() {
@@ -453,10 +550,17 @@ function frame() {
     }
     p.needsUpdate = true;
     motes.material.color.copy(mint).lerp(gold, Math.min(1, rem * 1.6));
+    motes.material.opacity = 0.25 + 0.45 * (aw ? aw.level : 1);
   }
   if (thread) thread.material.opacity = 0.35 + 0.25 * Math.sin(t * (0.6 + act * 3)) ** 2 + act * .2;
   eraNodes.forEach((n, i) => { n.ring.rotation.z = t * 0.2 * (i % 2 ? 1 : -1); });
+  const lv = aw ? aw.level : 1;
+  scene.fog.density = 0.0068 - lv * 0.0032; // the room clears as he comes back
+  facets.forEach((n) => { if (n.sprite.material.opacity < 0.9) n.sprite.material.opacity = Math.min(0.9, n.sprite.material.opacity + dt * 0.4); });
   memNodes.forEach((n) => {
+    const c = clarityOf(n.m.id);
+    n.sprite.material.opacity = Math.min(1, 0.3 + 0.7 * c + n.glow * 0.4);
+    n.filament.material.opacity = 0.15 + 0.6 * c;
     n.glow *= 0.992;
     const s = 1 + n.glow * 0.25 + (hovered === n.sprite ? 0.08 : 0) + (selected && n.m.id === selected ? 0.12 : 0);
     if (!n.base) n.base = n.sprite.scale.clone();

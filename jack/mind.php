@@ -5,6 +5,7 @@ declare(strict_types=1);
  * /jack/mind.php — Jack's mind, as public JSON, for the mind display at /jack/mind/.
  * Live state, his recent thoughts (his side only: no visitor words, names or replies),
  * and the whole of his remembered life with its evidence for the idle collage.
+ * awareness: how much of himself has come back, from his lifetime ledger (aggregates, his side only).
  */
 require_once dirname(__DIR__) . '/app/AI/JackLife.php';
 require_once dirname(__DIR__) . '/app/AI/JackMind.php';
@@ -25,6 +26,7 @@ $thoughts = array_map(static function (array $t) use ($byId): array {
 echo json_encode([
     'ok' => true,
     'state' => JackMind::state(),
+    'awareness' => JackMind::awareness(),
     'thoughts' => array_slice($thoughts, 0, 20),
     'life' => [
         'about' => $life['about'] ?? '',
