@@ -25,7 +25,7 @@ if (!$me) {
 <title>Compose — The Ledger — Time Travellers Guild</title>
 <meta name="theme-color" content="#0e1418">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="/ledger/assets/compose.css?v=1">
+<link rel="stylesheet" href="/ledger/assets/compose.css?v=2">
 </head>
 <body class="gate">
 <main class="gate-card">
@@ -56,7 +56,18 @@ $boot = [
     'keeper_note' => '',
     'doc' => ['v' => 1, 'page' => ['w' => TTG_LEDGER_PAGE_W, 'h' => TTG_LEDGER_PAGE_H], 'layers' => []],
     'img_base' => '',
+    'ash_days' => TTG_LEDGER_ASH_DAYS,
+    'burnt' => 0,
 ];
+/* Arriving straight after a burn: offer the way back. */
+$burntId = (int) ($_GET['burnt'] ?? 0);
+if ($burntId > 0) {
+    $b = ttg_ledger_entry($burntId);
+    if ($b && (string) $b['status'] === 'burnt' && ttg_ledger_can_edit($b, $me)) {
+        $boot['burnt'] = $burntId;
+        $boot['burnt_title'] = (string) $b['title'];
+    }
+}
 if ($entryId > 0) {
     $entry = ttg_ledger_entry($entryId);
     if (!$entry || !ttg_ledger_can_edit($entry, $me)) {
@@ -84,7 +95,7 @@ if ($json === false) $json = '{}';
 <title>The Composer — The Ledger — Time Travellers Guild</title>
 <meta name="theme-color" content="#0e1418">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="/ledger/assets/compose.css?v=1">
+<link rel="stylesheet" href="/ledger/assets/compose.css?v=2">
 </head>
 <body>
 <header class="top">
@@ -93,11 +104,23 @@ if ($json === false) $json = '{}';
     <span class="beat">THE COMPOSER<?= $keeper ? ' · KEEPER' : '' ?></span>
   </div>
   <div class="top-actions">
+    <button type="button" id="btnNew" class="btn">+ New page</button>
+    <button type="button" id="btnMine" class="btn" aria-expanded="false" aria-controls="drawer">My pages</button>
     <span id="saveStatus" class="save-status" role="status" aria-live="polite"></span>
     <button type="button" id="btnSave" class="btn">Save slip</button>
     <button type="button" id="btnPublish" class="btn gold">Punch into the ledger</button>
   </div>
 </header>
+<div id="banner" class="banner" hidden role="status" aria-live="polite"></div>
+<aside id="drawer" class="drawer" hidden aria-label="My pages">
+  <div class="drawer-head">
+    <p class="beat-label">MY PAGES</p>
+    <button type="button" class="btn" id="drawerClose">Close</button>
+  </div>
+  <p class="hint">Every page you have started. Open one to keep working on it, or start a new page. Burnt pages wait in the ashes for <?= (int) TTG_LEDGER_ASH_DAYS ?> days before they are gone for good.</p>
+  <button type="button" class="btn gold" id="drawerNew">+ Start a new page</button>
+  <ol id="mineList" class="mine-list"></ol>
+</aside>
 
 <div class="bench">
   <aside class="side" id="side" aria-label="Layers">
@@ -115,10 +138,15 @@ if ($json === false) $json = '{}';
       <?php endif; ?>
       <p class="hint" id="entryState"></p>
       <div class="side-actions">
-        <button type="button" class="btn danger" id="btnWithdraw" hidden>Lift from the ledger</button>
-        <button type="button" class="btn danger" id="btnDelete" hidden>Burn this page</button>
+        <button type="button" class="btn" id="btnWithdraw" hidden>Lift out of the book</button>
       </div>
     </div>
+    <details class="danger-zone" id="dangerZone" hidden>
+      <summary>Burn the whole page…</summary>
+      <p class="hint">This burns the <b>entire page</b>: every image on it, its title and its line. To take out just one image, use <b>Remove</b> on its layer above instead.</p>
+      <p class="hint">A burnt page waits in the ashes for <?= (int) TTG_LEDGER_ASH_DAYS ?> days. You can restore it from <b>My pages</b> until then.</p>
+      <button type="button" class="btn danger" id="btnDelete">Burn the whole page</button>
+    </details>
   </aside>
 
   <section class="stage-wrap">
@@ -139,6 +167,6 @@ if ($json === false) $json = '{}';
 </div>
 
 <script>window.TTG_COMPOSE=<?= $json ?>;</script>
-<script src="/ledger/assets/compose.js?v=1" defer></script>
+<script src="/ledger/assets/compose.js?v=2" defer></script>
 </body>
 </html>

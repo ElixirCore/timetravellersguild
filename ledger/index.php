@@ -47,6 +47,7 @@ $json = json_encode([
     'entries' => $entries,
     'keeper' => $keeper,
     'signed_in' => (bool) $me,
+    'me_slug' => (string) ($me['slug'] ?? ''),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 if ($json === false) $json = '{"entries":[],"keeper":false,"signed_in":false}';
 ?>
@@ -82,12 +83,12 @@ if ($json === false) $json = '{"entries":[],"keeper":false,"signed_in":false}';
     <div class="group">
       <span id="status" role="status" aria-live="polite"></span>
       <button type="button" id="readbtn" aria-pressed="false">Read as text</button>
-      <a class="btn" href="/ledger/compose/"><?= $me ? 'Compose a page' : 'Sign in to compose' ?></a>
+      <a class="btn" href="/ledger/compose/"><?= $me ? '+ New page' : 'Sign in to compose' ?></a>
     </div>
   </div>
   <p class="note" id="note">Doors: <a href="/people/">the register</a> · <a href="/now">the tree</a> · <a href="/passport/">the passport</a>. A page is its traveller's own collage; a keeper tends the binding.</p>
 </div>
 <script>window.TTG_LEDGER=<?= $json ?>;</script>
-<script src="/ledger/assets/book.js?v=1" defer></script>
+<script src="/ledger/assets/book.js?v=2" defer></script>
 </body>
 </html>

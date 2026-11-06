@@ -27,6 +27,8 @@ const TTG_LEDGER_MAX_BODY = 64000000;
 const TTG_LEDGER_SAVE_LIMIT = 60;
 const TTG_LEDGER_PAGE_W = 1000;
 const TTG_LEDGER_PAGE_H = 1400;
+/** Burnt pages stay in the ashes this long before they are purged for good. */
+const TTG_LEDGER_ASH_DAYS = 30;
 
 const TTG_LEDGER_BLENDS = [
     'source-over', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
@@ -173,4 +175,17 @@ function ttg_ledger_public_row(array $entry): array {
         'keeper_touched' => $keeperTouched,
         'img' => '/ledger/img.php?e=' . (int) $entry['id'] . '&k=composite',
     ];
+}
+
+/** Purge pages that have lain in the ashes longer than TTG_LEDGER_ASH_DAYS. */
+function ttg_ledger_purge_ashes(): void {
+    $db = ttg_ledger_db();
+    $stmt = $db->prepare("SELECT id FROM entries WHERE status = 'burnt' AND updated_at < ?");
+    $stmt->execute([time() - TTG_LEDGER_ASH_DAYS * 86400]);
+    foreach ($stmt->fetchAll() as $row) {
+        $dir = ttg_ledger_store_dir() . '/' . (int) $row['id'];
+        foreach (glob($dir . '/*.png') ?: [] as $f) @unlink($f);
+        @rmdir($dir);
+        $db->prepare("DELETE FROM entries WHERE id = ? AND status = 'burnt'")->execute([(int) $row['id']]);
+    }
 }

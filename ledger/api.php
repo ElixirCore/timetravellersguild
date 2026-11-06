@@ -7,7 +7,8 @@ declare(strict_types=1);
  *   {op:"mine"}                    → my slips (and every page, for a keeper)
  *   {op:"get", id}                 → one page's document (owner or keeper)
  *   {op:"withdraw", id}            → lift a page out of the ledger
- *   {op:"delete", id}              → burn a page and its images
+ *   {op:"delete", id}              → burn a page: it goes to the ashes (recoverable for 30 days)
+ *   {op:"restore", id}             → bring a burnt page back as a private slip
  *   {op:"keeper", id, title, note, keeper_note}  → keeper tends a page
  */
 
@@ -143,6 +144,7 @@ try {
             }
 
             $status = (string) $entry['status'];
+            if ($status === 'burnt') $status = 'draft';
             $publishedAt = $entry['published_at'] !== null ? (int) $entry['published_at'] : null;
             if ($publish && $status !== 'ledger') {
                 $status = 'ledger';
@@ -155,7 +157,8 @@ try {
         }
 
         case 'mine': {
-            $out = ['ok' => true, 'keeper' => $keeper];
+            ttg_ledger_purge_ashes();
+            $out = ['ok' => true, 'keeper' => $keeper, 'ash_days' => TTG_LEDGER_ASH_DAYS];
             $stmt = ttg_ledger_db()->prepare('SELECT id, title, status, updated_at, published_at FROM entries WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100');
             $stmt->execute([$meId]);
             $out['mine'] = array_map(static function (array $row): array {
@@ -219,11 +222,23 @@ try {
             if (!ttg_ledger_can_edit($entry, $me)) {
                 ttg_json(['ok' => false, 'error' => 'Only the traveller who inked this page, or a keeper, may burn it.'], 403);
             }
-            $dir = ttg_ledger_store_dir() . '/' . (int) $entry['id'];
-            foreach (glob($dir . '/*.png') ?: [] as $f) @unlink($f);
-            @rmdir($dir);
-            ttg_ledger_db()->prepare('DELETE FROM entries WHERE id = ?')->execute([(int) $entry['id']]);
-            ttg_json(['ok' => true]);
+            if ((string) $entry['status'] === 'ledger') {
+                ttg_json(['ok' => false, 'error' => 'This page is in the book. Lift it out of the ledger before you burn it.'], 409);
+            }
+            /* Burnt pages go to the ashes, not the void: restorable until they are purged. */
+            ttg_ledger_db()->prepare("UPDATE entries SET status='burnt', updated_at=? WHERE id=?")->execute([time(), (int) $entry['id']]);
+            ttg_json(['ok' => true, 'status' => 'burnt', 'ash_days' => TTG_LEDGER_ASH_DAYS]);
+        }
+
+        case 'restore': {
+            $entry = ttg_ledger_entry((int) ($in['id'] ?? 0));
+            if (!$entry) ttg_json(['ok' => false, 'error' => 'No such page. It may have been purged from the ashes.'], 404);
+            if (!ttg_ledger_can_edit($entry, $me)) {
+                ttg_json(['ok' => false, 'error' => 'Only the traveller who inked this page, or a keeper, may restore it.'], 403);
+            }
+            if ((string) $entry['status'] !== 'burnt') ttg_json(['ok' => true, 'status' => (string) $entry['status']]);
+            ttg_ledger_db()->prepare("UPDATE entries SET status='draft', updated_at=? WHERE id=?")->execute([time(), (int) $entry['id']]);
+            ttg_json(['ok' => true, 'status' => 'draft']);
         }
 
         case 'keeper': {

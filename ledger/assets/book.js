@@ -98,8 +98,9 @@
     el.appendChild(h('p', 'byline', 'Punched by ' + st.author + (st.keeper_touched ? ' · tended by a keeper' : '')));
     if (st.note) el.appendChild(h('p', '', st.note));
     if (st.keeper_note) el.appendChild(h('p', 'keepernote', 'The keeper notes: ' + st.keeper_note));
-    if (KEEPER) {
-      const a = h('a', 'keeper-edit', 'Keeper · edit this page');
+    const MINE = DATA.me_slug && st.author_slug === DATA.me_slug;
+    if (MINE || KEEPER) {
+      const a = h('a', 'keeper-edit', MINE ? 'Edit your page' : 'Keeper · edit this page');
       a.href = '/ledger/compose/?id=' + st.id;
       el.appendChild(a);
     }

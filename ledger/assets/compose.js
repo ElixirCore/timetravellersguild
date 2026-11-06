@@ -237,11 +237,14 @@
   }
   function removeLayer(i) {
     if (i < 0 || i >= layers.length) return;
-    layers.splice(i, 1);
+    const [gone] = layers.splice(i, 1);
     dirty = true;
     select(Math.min(i, layers.length - 1));
     render();
     syncPublish();
+    showBanner('Removed the image \u201c' + (gone.name || 'layer') + '\u201d from this page. The rest of the page is untouched.', [
+      ['Undo', () => { layers.splice(Math.min(i, layers.length), 0, gone); select(Math.min(i, layers.length - 1)); render(); syncPublish(); hideBanner(); }],
+    ], 9000);
   }
 
   function renderLayerList() {
@@ -262,7 +265,7 @@
       up.addEventListener('click', () => { if (i < layers.length - 1) { layers.splice(i, 1); layers.splice(i + 1, 0, L); sel = i + 1; dirty = true; render(); renderLayerList(); renderOverlay(); } });
       const dn = document.createElement('button'); dn.type = 'button'; dn.className = 'mini'; dn.textContent = '▼'; dn.title = 'Send nearer the page';
       dn.addEventListener('click', () => { if (i > 0) { layers.splice(i, 1); layers.splice(i - 1, 0, L); sel = i - 1; dirty = true; render(); renderLayerList(); renderOverlay(); } });
-      const del = document.createElement('button'); del.type = 'button'; del.className = 'mini'; del.textContent = '✕'; del.title = 'Remove the layer';
+      const del = document.createElement('button'); del.type = 'button'; del.className = 'mini'; del.textContent = 'Remove'; del.title = 'Remove this one image from the page (you can undo)';
       del.addEventListener('click', () => removeLayer(i));
       r1.append(eye, name, up, dn, del);
       const r2 = document.createElement('div'); r2.className = 'row2';
@@ -358,12 +361,14 @@
   function updateEntryState() {
     const el = $('entryState');
     const st = BOOT.status;
-    el.textContent = st === 'ledger' ? 'This page is in the ledger. The book shows it.'
-      : st === 'withdrawn' ? 'Lifted out of the ledger. Punch it back in when it is ready.'
+    el.textContent = st === 'ledger' ? 'This page is in the book. To burn it, lift it out of the book first.'
+      : st === 'withdrawn' ? 'Lifted out of the book. Punch it back in when it is ready.'
+      : st === 'burnt' ? 'This page is in the ashes. Restore it to keep working on it.'
       : BOOT.id ? 'A private slip. Only you' + (BOOT.keeper ? ' and keepers' : '') + ' can see it until it is punched in.'
-      : 'A new page. Save it as a private slip, or punch it straight into the ledger.';
+      : 'A new, blank page. Save it as a private slip, or punch it straight into the ledger.';
     $('btnWithdraw').hidden = !(BOOT.id && st === 'ledger');
-    $('btnDelete').hidden = !BOOT.id;
+    $('dangerZone').hidden = !BOOT.id || st === 'ledger' || st === 'burnt';
+    if ($('dangerZone').hidden) $('dangerZone').open = false;
     $('btnPublish').textContent = st === 'ledger' ? 'Save changes in the ledger' : 'Punch into the ledger';
   }
 
@@ -438,13 +443,92 @@
     } catch (err) { setStatus(err.message || 'Could not lift the page.'); }
   });
   $('btnDelete').addEventListener('click', async () => {
-    if (!BOOT.id || !confirm('Burn this page and all its layers? This cannot be undone.')) return;
+    if (!BOOT.id) return;
+    const name = $('title').value.trim() || 'Untitled';
+    const n = layers.length;
+    if (!confirm('Burn the whole page \u201c' + name + '\u201d and all ' + n + ' image' + (n === 1 ? '' : 's') + ' on it?\n\n'
+      + 'To remove just one image, cancel and use Remove on its layer.\n\n'
+      + 'The page waits in the ashes for ' + (BOOT.ash_days || 30) + ' days; you can restore it from My pages.')) return;
     try {
       await api({ op: 'delete', id: BOOT.id });
       dirty = false;
-      location.href = '/ledger/';
+      location.href = '/ledger/compose/?burnt=' + BOOT.id;
     } catch (err) { setStatus(err.message || 'Could not burn the page.'); }
   });
+
+  /* ---------- banner (undo, restore) ---------- */
+  let bannerT = 0;
+  function showBanner(text, actions, ms) {
+    const b = $('banner');
+    clearTimeout(bannerT);
+    b.innerHTML = '';
+    const p = document.createElement('span'); p.textContent = text; b.appendChild(p);
+    for (const [label, fn] of actions || []) {
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn'; btn.textContent = label;
+      btn.addEventListener('click', fn); b.appendChild(btn);
+    }
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'btn'; x.textContent = 'Dismiss';
+    x.addEventListener('click', hideBanner); b.appendChild(x);
+    b.hidden = false;
+    if (ms) bannerT = setTimeout(hideBanner, ms);
+  }
+  function hideBanner() { clearTimeout(bannerT); $('banner').hidden = true; }
+
+  async function restore(id) {
+    try {
+      await api({ op: 'restore', id });
+      location.href = '/ledger/compose/?id=' + id;
+    } catch (err) { showBanner(err.message || 'Could not restore the page.', []); }
+  }
+
+  /* ---------- new page, and my pages ---------- */
+  function newPage() {
+    if (dirty && !confirm('Leave this page? Unsaved changes will be lost. (Save slip first to keep them.)')) return;
+    dirty = false;
+    location.href = '/ledger/compose/';
+  }
+  $('btnNew').addEventListener('click', newPage);
+  $('drawerNew').addEventListener('click', newPage);
+
+  const STATUS_LABEL = { draft: 'Private slip', ledger: 'In the book', withdrawn: 'Lifted out', burnt: 'In the ashes' };
+  function openDrawer(open) {
+    $('drawer').hidden = !open;
+    $('btnMine').setAttribute('aria-expanded', String(open));
+    if (open) loadMine();
+  }
+  $('btnMine').addEventListener('click', () => openDrawer($('drawer').hidden));
+  $('drawerClose').addEventListener('click', () => openDrawer(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('drawer').hidden) openDrawer(false); });
+
+  async function loadMine() {
+    const ol = $('mineList');
+    ol.innerHTML = '<li class="hint">Fetching your pages\u2026</li>';
+    let j;
+    try { j = await api({ op: 'mine' }); } catch (err) { ol.innerHTML = ''; const li = document.createElement('li'); li.className = 'hint'; li.textContent = err.message || 'Could not fetch your pages.'; ol.appendChild(li); return; }
+    ol.innerHTML = '';
+    if (!j.mine.length) { const li = document.createElement('li'); li.className = 'hint'; li.textContent = 'No pages yet. This one will be your first.'; ol.appendChild(li); return; }
+    for (const row of j.mine) {
+      const li = document.createElement('li');
+      li.className = 'mine' + (row.id === BOOT.id ? ' here' : '') + (row.status === 'burnt' ? ' ash' : '');
+      const im = document.createElement('img'); im.src = row.thumb + '&t=' + row.updated_at; im.alt = ''; im.loading = 'lazy';
+      const txt = document.createElement('div'); txt.className = 'mine-txt';
+      const t = document.createElement('b'); t.textContent = row.title || 'Untitled';
+      const meta = document.createElement('span');
+      meta.textContent = (STATUS_LABEL[row.status] || row.status) + ' \u00b7 ' + new Date(row.updated_at * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + (row.id === BOOT.id ? ' \u00b7 open now' : '');
+      txt.append(t, meta);
+      const act = document.createElement('div'); act.className = 'mine-act';
+      if (row.status === 'burnt') {
+        const r = document.createElement('button'); r.type = 'button'; r.className = 'btn'; r.textContent = 'Restore';
+        r.addEventListener('click', () => restore(row.id)); act.appendChild(r);
+      } else if (row.id !== BOOT.id) {
+        const a = document.createElement('a'); a.className = 'btn'; a.textContent = 'Open'; a.href = '/ledger/compose/?id=' + row.id;
+        a.addEventListener('click', (e) => { if (dirty && !confirm('Leave this page? Unsaved changes will be lost.')) e.preventDefault(); else dirty = false; });
+        act.appendChild(a);
+      }
+      li.append(im, txt, act);
+      ol.appendChild(li);
+    }
+  }
 
   window.addEventListener('beforeunload', (e) => {
     if (dirty) { e.preventDefault(); e.returnValue = ''; }
@@ -486,6 +570,14 @@
       if (layers.length) sel = layers.length - 1;
     }
     render(); renderOverlay(); renderLayerList(); updateEntryState(); syncPublish();
+    if (BOOT.burnt) {
+      history.replaceState(null, '', '/ledger/compose/');
+      showBanner('Burnt \u201c' + (BOOT.burnt_title || 'Untitled') + '\u201d. It waits in the ashes for ' + (BOOT.ash_days || 30) + ' days. This is a new, blank page.', [
+        ['Restore it', () => restore(BOOT.burnt)],
+      ]);
+    } else if (BOOT.status === 'burnt') {
+      showBanner('This page is in the ashes.', [['Restore it', () => restore(BOOT.id)]]);
+    }
   }
   boot();
 })();

@@ -36,6 +36,10 @@ if ($uri === '/department' || str_starts_with($uri, '/department/')) {
     return true;
 }
 
+if ($uri === '/ledger/compose' || $uri === '/ledger/compose/') {
+    require $root . '/ledger/compose.php';
+    return true;
+}
 if ($uri === '/now/jack' || $uri === '/now/jack/') {
     require $root . '/now/jack.php';
     return true;
