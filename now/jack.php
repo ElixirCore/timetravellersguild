@@ -140,6 +140,18 @@ try {
     $runtime .= "\n\n" . JackLife::runtimeText($q);
     $lifeRecall = array_map(static fn ($h) => $h['memory']['id'], JackLife::recall($q, 3));
 } catch (Throwable $e) { error_log('Jack life: ' . $e->getMessage()); }
+/* Standing inside the display of his mind (/jack/mind/), perhaps pointing at one memory. */
+if ($site === 'mind') {
+    $runtime .= "\n\n=== WHERE THE VISITOR IS ===\nThey are inside the display of your mind at /jack/mind/: your life laid out in space, era by era, memories and their evidence floating where they belong. They are interrogating you about it. Answer from your own memories (use remember_my_life when it helps), in the first person, briefly. Mark what is your memory and what is real evidence.\n";
+    $pointed = preg_replace('/[^a-z0-9.\-]/', '', strtolower(trim((string) ($_POST['focus'] ?? ''))));
+    foreach ($pointed !== '' ? JackLife::data()['memories'] : [] as $pm) {
+        if ($pm['id'] === $pointed) {
+            $runtime .= 'They are pointing at your memory [' . $pm['id'] . '] ' . $pm['year'] . ', "' . $pm['title'] . '": ' . $pm['text'] . "\n";
+            $lifeRecall[] = $pm['id'];
+            break;
+        }
+    }
+}
 if ($memoryOn && ($storyUser = JackTools::currentUser())) {
     try { $runtime .= "\n\n" . Narrative::runtimeText((int) $storyUser['id']); } catch (Throwable $e) { error_log('Jack story: ' . $e->getMessage()); }
 }
@@ -287,4 +299,5 @@ echo json_encode([
     'ops' => array_slice($ops, 0, 6),
     'consulted' => array_values(array_unique($consulted)),
     'remembered' => $memoryOn,
+    'recalled' => array_values(array_unique(array_merge($lifeRecall, $lifeTool ?? []))),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
