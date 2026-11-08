@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/JackLore.php';
+require_once __DIR__ . '/JackThought.php';
 
 final class JackRuntime
 {
@@ -245,6 +246,9 @@ final class JackRuntime
         }
 
         $lines[] = '=== END RUNTIME POSITION ===';
+        $held = JackThought::runtimeText();
+        if ($held !== '') $lines[] = "\n" . $held;
+
         return implode("\n", $lines);
     }
 

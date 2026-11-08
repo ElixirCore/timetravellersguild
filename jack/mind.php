@@ -9,6 +9,7 @@ declare(strict_types=1);
  */
 require_once dirname(__DIR__) . '/app/AI/JackLife.php';
 require_once dirname(__DIR__) . '/app/AI/JackMind.php';
+require_once dirname(__DIR__) . '/app/AI/JackThought.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -28,6 +29,8 @@ echo json_encode([
     'state' => JackMind::state(),
     'awareness' => JackMind::awareness(),
     'thoughts' => array_slice($thoughts, 0, 20),
+    'novel' => JackThought::recent(12),
+    'held' => JackThought::heldPublic(),
     'life' => [
         'about' => $life['about'] ?? '',
         'eras' => $life['eras'],

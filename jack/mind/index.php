@@ -124,8 +124,8 @@ h2{margin:0 0 6px;font-size:10px;letter-spacing:.16em;color:#a8e1cb;font-weight:
   <div class="panel hint">Drag to look · right-drag or two fingers to move · scroll or pinch to approach · click a memory to read it · WASD / arrows to fly, Q E up and down · 1–9 jump to an era · Esc to close</div>
 </div>
 <div class="fallback" id="fallback"><p>This view needs WebGL. Read <a href="/jack/memories/" style="color:#d7b25d">Jack's memories</a> as a page instead.</p></div>
-<script>window.TTG_MIND = <?= json_encode(['csrf' => $csrf, 'feed' => '/jack/mind.php', 'desk' => '/now/jack'], JSON_UNESCAPED_SLASHES) ?>;</script>
+<script>window.TTG_MIND = <?= json_encode(['csrf' => $csrf, 'feed' => '/jack/mind.php', 'desk' => '/now/jack', 'think' => '/jack/think.php'], JSON_UNESCAPED_SLASHES) ?>;</script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="/jack/mind/mind.js?v=2"></script>
+<script type="module" src="/jack/mind/mind.js?v=6"></script>
 </body>
 </html>

@@ -44,6 +44,9 @@ final class OpenAIResponsesAdapter implements AgentModelAdapter
             'model' => $out->model,
             'input' => $input,
         ];
+        if ($request->maxOutputTokens !== null) {
+            $payload['max_output_tokens'] = max(16, $request->maxOutputTokens);
+        }
         if ($request->previousResponseId !== null && $request->toolOutputs !== []) {
             $payload['previous_response_id'] = $request->previousResponseId;
         }

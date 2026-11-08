@@ -426,12 +426,7 @@ $('btnTour').onclick = () => {
   $('btnTour').setAttribute('aria-pressed', 'true'); $('btnTour').textContent = '■ Stop tour';
 };
 $('btnHome').onclick = () => { stopTour(); home(false); };
-$('btnNow').onclick = () => {
-  stopTour();
-  const t = thoughts[0];
-  if (t && t.recalled.length) flyToMemory(t.recalled[0].id);
-  else showReader('<h2>WHAT HE\'S THINKING</h2><p>He has not recalled anything recently. Ask him something below.</p>');
-};
+$('btnNow').onclick = () => { stopTour(); thinkNow(); };
 $('btnGrowth').onclick = () => { stopTour(); openGrowth(); document.querySelectorAll('#eras button').forEach((b) => b.classList.remove('on')); if (presentPos) flyTo(presentPos.clone().add(new THREE.Vector3(0, 10, 0)), viewFrom(presentPos, 34)); };
 $('btnList').onclick = () => { if (!life) return; const open = reader.hidden || !body.querySelector('[data-mem]'); if (open) openList(); else reader.hidden = true; $('btnList').setAttribute('aria-expanded', String(open)); };
 $('eras').addEventListener('click', (e) => { const b = e.target.closest('[data-era]'); if (b) { stopTour(); flyToEra(+b.dataset.era); } });
@@ -443,6 +438,62 @@ function pulseTo(memId) {
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffe2a0 }));
   scene.add(mesh);
   pulses.push({ mesh, t: 1, to: (n.era + 1) / (life.eras.length + 1), mem: n, born: performance.now() });
+}
+
+/* ---------- what he is thinking: one new thought from everything known, kept for good ---------- */
+let novel = [], held = null, lastNovelAt = 0, awaitingThought = false, awaitTimer = null;
+const whenThought = (at) => new Date(at * 1000).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+function thoughtHtml(t) {
+  const r = t.read || {};
+  const read = [[r.memories, 'memories'], [r.records, 'records'], [r.links, 'links'], [r.lore, 'lore entries'], [r.earlier_thoughts, 'earlier thoughts']].filter(([n]) => n != null).map(([n, l]) => n + ' ' + l).join(' · ');
+  const drew = (t.drew_on || []).map((d) => d.kind === 'memory'
+    ? `<p style="margin:4px 0"><button type="button" data-mem="${esc(d.id)}" style="background:none;border:0;color:#dfeee8;font:13px Georgia,serif;padding:0;cursor:pointer;text-decoration:underline">${esc(d.title)}</button></p>`
+    : d.kind === 'record' ? `<p style="margin:4px 0"><a href="/n/${encodeURIComponent(d.id)}/" style="color:#dfeee8;font:13px Georgia,serif">${esc(d.title)}</a></p>`
+    : `<p style="margin:4px 0;font:13px Georgia,serif">${esc(d.title)}</p>`).join('');
+  const earlier = novel.filter((x) => x.id !== t.id).slice(0, 6).map((x) => `<p style="margin:10px 0 0;font:13px/1.5 Georgia,serif;color:#b9cdc7"><span style="display:block;font:10px ui-monospace,Menlo,monospace;color:#7d9a94">${esc(whenThought(x.at))}</span>${esc(x.text)}</p>`).join('');
+  const changed = (t.changes || []).map((c) => `<p style="margin:6px 0;font:13px/1.45 Georgia,serif"><span style="display:block;font:10px ui-monospace,Menlo,monospace;color:#d7b25d;text-transform:uppercase;letter-spacing:.08em">${esc(c.did)}</span>${esc(c.text)}${c.why ? `<span style="display:block;color:#7d9a94;font-size:12px">${esc(c.why)}</span>` : ''}</p>`).join('');
+  const inferred = (t.inferred || []).map((c) => `<p style="margin:6px 0;font:13px/1.45 Georgia,serif"><span style="display:block;font:10px ui-monospace,Menlo,monospace;color:#d7b25d;text-transform:uppercase;letter-spacing:.08em">${esc(c.did)}${c.a ? ' · ' + esc(c.a) : ''}${c.b ? ' ~ ' + esc(c.b) : ''}</span>${esc(c.text)}${c.why ? `<span style="display:block;color:#7d9a94;font-size:12px">${esc(c.why)}</span>` : ''}</p>`).join('');
+  const list = (rows, label, colour) => rows && rows.length ? `<span class="k" style="color:${colour};display:block;margin-top:14px">${label}</span>` + rows.map((b) => `<p style="margin:6px 0;font:13px/1.45 Georgia,serif">${esc(b.text)}</p>`).join('') : '';
+  return `<span class="k" style="color:#d7b25d">WHAT HE'S THINKING</span><div class="jack"><p>${esc(t.text)}</p></div>`
+    + `<p style="color:#7d9a94;font-size:11px">${esc(whenThought(t.at))}${t.source === 'alone' ? ' · alone, unasked' : ''}${read ? '<br>Having read ' + esc(read) : ''}</p>`
+    + (changed ? '<span class="k" style="color:#d7b25d;display:block;margin-top:14px">HOW IT CHANGED HIM</span>' + changed : '')
+    + (inferred ? `<span class="k" style="color:#d7b25d;display:block;margin-top:14px">WHAT HE ADDED TO THE GRAPH <span style="opacity:.7">· JACK'S INFERENCE · NOT CANON</span></span>` + inferred : '')
+    + (drew ? '<span class="k" style="color:#e0604f;display:block;margin-top:14px">WHAT IT RESTS ON</span>' + drew : '')
+    + (held ? list(held.holds, 'WHAT HE NOW HOLDS', '#dfeee8') + list(held.doubts, 'WHAT HE DOUBTS', '#7d9a94') + list(held.dropped, 'WHAT HE HAS GIVEN UP', '#e0604f') : '')
+    + (earlier ? '<span class="k" style="color:#7d9a94;display:block;margin-top:14px">EARLIER THOUGHTS</span>' + earlier : '');
+}
+function showThought(t) {
+  showReader(thoughtHtml(t));
+  const mems = (t.drew_on || []).filter((d) => d.kind === 'memory' && memNodes.has(d.id));
+  mems.forEach((d, i) => setTimeout(() => pulseTo(d.id), i * 400));
+  if (mems[0]) { const n = memNodes.get(mems[0].id); n.glow = 1; flyTo(n.pos, viewFrom(n.pos, 13), 2200); }
+}
+async function thinkNow() {
+  const prior = novel[0] || null;
+  awaitingThought = true;
+  clearTimeout(awaitTimer);
+  awaitTimer = setTimeout(() => { if (awaitingThought && (novel[0] || prior)) { awaitingThought = false; showThought(novel[0] || prior); } }, 240000);
+  showReader(`<span class="k" style="color:#d7b25d">WHAT HE'S THINKING</span><p class="jack" style="color:#7d9a94">Jack is going through everything he knows. It takes him a minute or two.</p>`);
+  try {
+    const fd = new FormData();
+    fd.set('csrf', CFG.csrf || '');
+    const j = await (await fetch(CFG.think || '/jack/think.php', { method: 'POST', body: fd, credentials: 'same-origin', headers: { Accept: 'application/json' } })).json();
+    if (j.latest && !novel.some((x) => x.id === j.latest.id)) novel = [j.latest, ...novel];
+    if (j.held) held = j.held;
+    if (j.busy) return; // he is already thinking; the feed brings it when it is done
+    awaitingThought = false;
+    clearTimeout(awaitTimer);
+    if (j.latest) {
+      lastNovelAt = Math.max(lastNovelAt, j.latest.at);
+      showThought(j.latest);
+      if (j.ceiling) body.insertAdjacentHTML('afterbegin', `<p style="color:#7d9a94;font:italic 13px/1.5 Georgia,serif;margin:0 0 10px">He has thought enough aloud for one day. This is the last one he kept.</p>`);
+    }
+    else showReader(`<span class="k" style="color:#d7b25d">WHAT HE'S THINKING</span><p>Nothing he would put his name to yet. Ask again shortly.</p>`);
+  } catch (e) {
+    // The line dropped, but he finishes and keeps the thought regardless; the feed brings it.
+    if (prior) { awaitingThought = false; showThought(prior); }
+    setTimeout(poll, 4000);
+  }
 }
 
 /* ---------- asking ---------- */
@@ -490,6 +541,15 @@ async function poll() {
     $('mode').textContent = (state.awake ? state.mode : 'dormant').toUpperCase().replace('_', ' ');
     $('lamp').classList.toggle('on', !!state.awake);
     thoughts = j.thoughts || [];
+    novel = j.novel || novel;
+    held = j.held || held;
+    const nt = novel[0];
+    if (nt && nt.at > lastNovelAt) {
+      const firstSeen = lastNovelAt === 0;
+      lastNovelAt = nt.at;
+      if (awaitingThought) { awaitingThought = false; showThought(nt); }
+      else if (!firstSeen) (nt.drew_on || []).filter((d) => d.kind === 'memory').forEach((d, i) => setTimeout(() => pulseTo(d.id), i * 350));
+    }
     const t = thoughts[0];
     if (t && t.at > lastThoughtAt) {
       const first = lastThoughtAt === 0;

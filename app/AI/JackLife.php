@@ -99,6 +99,24 @@ final class JackLife
         return $na > 0 && $nb > 0 ? $dot / (sqrt($na) * sqrt($nb)) : 0.0;
     }
 
+    /**
+     * How close $text comes in meaning to the nearest of $against, 0..1.
+     * @param list<string> $against
+     * @return float|null null when embeddings are unavailable
+     */
+    public static function closestMeaning(string $text, array $against): ?float
+    {
+        $v = self::embed($text);
+        if ($v === null) return null;
+        $best = 0.0;
+        foreach ($against as $a) {
+            $w = self::embed($a);
+            if ($w === null) return null;
+            $best = max($best, self::cosine($v, $w));
+        }
+        return $best;
+    }
+
     private static function words(string $s): array
     {
         $w = preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($s)) ?: [];

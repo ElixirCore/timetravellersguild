@@ -371,6 +371,70 @@ function ttg_graph_all_edges(): array {
     return array_merge(ttg_graph_edges(), ttg_graph_pending_edges());
 }
 
+/*
+ * JACK'S INFERENCE. His own links between existing records, and context he appends to them, kept in
+ * storage/jack/inferences.json and written only by JackThought. Nothing here is canon and nothing here
+ * ever reaches graph/*.json: the functions above stay pure, so accepting, rejecting and saving canon can
+ * never pick it up. Added only where the graph is displayed, always marked. If this file is missing or
+ * unreadable the site simply shows canon. Delete it and the graph is exactly what the keepers made.
+ */
+const TTG_JACK_INFERS = 'JACK_INFERS';
+const TTG_JACK_INFERENCE_LABEL = "JACK'S INFERENCE";
+
+function ttg_graph_inference_items(): array {
+    static $items = null;
+    if ($items !== null) return $items;
+    $items = [];
+    $book = json_decode((string) @file_get_contents(dirname(__DIR__) . '/storage/jack/inferences.json'), true);
+    if (!is_array($book) || !is_array($book['items'] ?? null)) return $items;
+    $pending = [];
+    foreach (ttg_graph_pending() as $p) $pending[(string) ($p['slug'] ?? '')] = true;
+    $public = [];
+    foreach (ttg_graph_unique_nodes() as $n) {
+        $slug = (string) ($n['slug'] ?? '');
+        if ($slug !== '' && !isset($pending[$slug]) && ttg_graph_public($n) && empty($n['pending'])) $public[$slug] = true;
+    }
+    foreach ($book['items'] as $i) {
+        if (!is_array($i)) continue;
+        // A record that has gone or turned private takes his inferences about it out of view.
+        if (($i['kind'] ?? '') === 'link' && isset($public[(string) ($i['a'] ?? '')], $public[(string) ($i['b'] ?? '')])) $items[] = $i;
+        if (($i['kind'] ?? '') === 'context' && isset($public[(string) ($i['on'] ?? '')])) $items[] = $i;
+    }
+    return $items;
+}
+
+function ttg_graph_inferred_edges(): array {
+    $out = [];
+    foreach (ttg_graph_inference_items() as $i) {
+        if ($i['kind'] !== 'link') continue;
+        $out[] = ['source' => (string) $i['a'], 'target' => (string) $i['b'], 'relationship' => TTG_JACK_INFERS, 'confidence' => null,
+            'visibility' => 'PUBLIC', 'note' => (string) $i['note'], 'noted_by' => TTG_JACK_INFERENCE_LABEL, 'inferred' => true];
+    }
+    return $out;
+}
+
+/** Canon, proposals and his marked inferences: for drawing the graph only. Never for saving it. */
+function ttg_graph_shown_edges(): array {
+    return array_merge(ttg_graph_all_edges(), ttg_graph_inferred_edges());
+}
+
+/** A neighbour list with his marked links added, for display. */
+function ttg_graph_add_inferences(string $slug, array $nb): array {
+    foreach (ttg_graph_inferred_edges() as $e) {
+        foreach ([['out', 'outgoing', 'source', 'target'], ['in', 'incoming', 'target', 'source']] as [$dir, $key, $me, $them]) {
+            if ($e[$me] !== $slug) continue;
+            $other = ttg_graph_node($e[$them]);
+            if ($other && ttg_graph_public($other)) $nb[$key][] = ['edge' => $e, 'relationship' => TTG_JACK_INFERS, 'confidence' => null, 'node' => $other, 'direction' => $dir];
+        }
+    }
+    return $nb;
+}
+
+/** Context he has appended to one record. */
+function ttg_graph_inferred_context(string $slug): array {
+    return array_values(array_filter(ttg_graph_inference_items(), static fn (array $i): bool => $i['kind'] === 'context' && $i['on'] === $slug));
+}
+
 function ttg_graph_neighbors(string $slug): array {
     $out = ['outgoing' => [], 'incoming' => []];
     foreach (ttg_graph_all_edges() as $edge) {
@@ -473,7 +537,7 @@ function ttg_graph_life(array $node): array {
         'evidence' => $evidence,
         'interpretation' => $interpretation !== '' ? $interpretation : null,
         'neighbors' => $nb,
-        'links' => ttg_graph_links_from_neighbors($nb),
+        'links' => ttg_graph_links_from_neighbors($slug !== '' ? ttg_graph_add_inferences($slug, $nb) : $nb),
     ];
 }
 
@@ -698,7 +762,7 @@ function ttg_now_field(?array $viewer = null): array {
     }
 
     $fieldEdges = [];
-    foreach (ttg_graph_all_edges() as $edge) {
+    foreach (ttg_graph_shown_edges() as $edge) {
         $s = (string) ($edge['source'] ?? '');
         $t = (string) ($edge['target'] ?? '');
         if ($s === '' || $t === '' || !isset($slugs[$s]) || !isset($slugs[$t])) continue;
@@ -919,7 +983,7 @@ function ttg_now_around(string $slug): ?array {
         $projected[] = ttg_graph_project_node($n, $viewer, $personEdges);
     }
     $fieldEdges = [];
-    foreach (ttg_graph_all_edges() as $edge) {
+    foreach (ttg_graph_shown_edges() as $edge) {
         $s = (string) ($edge['source'] ?? '');
         $t = (string) ($edge['target'] ?? '');
         if ($s === '' || $t === '' || !isset($seen[$s]) || !isset($seen[$t])) continue;
@@ -1736,6 +1800,7 @@ function ttg_graph_navigator_field(?array $viewer = null): array {
         if (!ttg_graph_public($node)) continue;
         $p = ttg_graph_project_node($node, $viewer, $personEdges);
         $p['standing'] = ttg_graph_standing($node);
+        $p['origin'] = ttg_graph_meta($node, 'source_id') !== '' || strlen(trim((string) ($node['body'] ?? ''))) > 220;
         $nodes[] = $p;
         if ($p['slug'] !== '') $slugs[$p['slug']] = true;
     }
@@ -1745,12 +1810,13 @@ function ttg_graph_navigator_field(?array $viewer = null): array {
         $p = ttg_graph_project_node($node, $viewer, $personEdges);
         $p['pending'] = true;
         $p['standing'] = ttg_graph_standing($node);
+        $p['origin'] = ttg_graph_meta($node, 'source_id') !== '' || strlen(trim((string) ($node['body'] ?? ''))) > 220;
         $nodes[] = $p;
         if ($p['slug'] !== '') $slugs[$p['slug']] = true;
     }
 
     $edges = [];
-    foreach (ttg_graph_all_edges() as $edge) {
+    foreach (ttg_graph_shown_edges() as $edge) {
         $s = (string) ($edge['source'] ?? '');
         $t = (string) ($edge['target'] ?? '');
         if ($s === '' || $t === '' || !isset($slugs[$s], $slugs[$t])) continue;

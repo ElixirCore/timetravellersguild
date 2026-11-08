@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/JackStore.php';
+
 /**
  * Jack's mind, as it can be shown: a ring of his recent thoughts and a live state built from them.
  * Read by /jack/mind.php for the mind display at /jack/mind/.
@@ -35,44 +37,29 @@ final class JackMind
             'story' => !empty($t['story']),
             'timeout' => !empty($t['timeout']),
         ];
-        $dir = dirname(self::path());
-        if (!is_dir($dir)) @mkdir($dir, 0775, true);
-        $fp = @fopen(self::path(), 'c+');
-        if ($fp === false) return;
-        try {
-            if (!flock($fp, LOCK_EX)) return;
-            $raw = stream_get_contents($fp);
-            $all = is_string($raw) && $raw !== '' ? json_decode($raw, true) : [];
-            if (!is_array($all)) $all = [];
+        $path = self::path();
+        JackStore::locked($path, static function () use ($path, $t): void {
+            $all = JackStore::read($path);
+            if ($all === null) return;
             $all[] = $t;
-            $all = array_slice($all, -self::MAX);
-            rewind($fp); ftruncate($fp, 0); fwrite($fp, json_encode($all, JSON_UNESCAPED_SLASHES)); fflush($fp);
-            flock($fp, LOCK_UN);
-        } finally {
-            fclose($fp);
-        }
+            JackStore::saveJson($path, array_slice($all, -self::MAX), JSON_UNESCAPED_SLASHES);
+        });
         self::grow($t);
     }
 
-    /** Add one thought to the lifetime ledger. Never shrinks; seeded from the ring the first time. */
+    /** Add one thought to the lifetime ledger. Never shrinks; seeded from the ring the first time, and never over a damaged ledger. */
     private static function grow(array $t): void
     {
-        $fp = @fopen(self::growthPath(), 'c+');
-        if ($fp === false) return;
-        try {
-            if (!flock($fp, LOCK_EX)) return;
-            $raw = stream_get_contents($fp);
-            $g = is_string($raw) && $raw !== '' ? json_decode($raw, true) : null;
-            if (!is_array($g)) {
+        $path = self::growthPath();
+        JackStore::locked($path, static function () use ($path, $t): void {
+            $g = JackStore::read($path);
+            if ($g === null) return;
+            if ($g === []) {
                 $g = self::emptyGrowth();
                 foreach (self::thoughts() as $old) if ((int) ($old['at'] ?? 0) < (int) $t['at']) $g = self::addTo($g, $old);
             }
-            $g = self::addTo($g, $t);
-            rewind($fp); ftruncate($fp, 0); fwrite($fp, json_encode($g, JSON_UNESCAPED_SLASHES)); fflush($fp);
-            flock($fp, LOCK_UN);
-        } finally {
-            fclose($fp);
-        }
+            JackStore::saveJson($path, self::addTo($g, $t), JSON_UNESCAPED_SLASHES);
+        });
     }
 
     private static function emptyGrowth(): array

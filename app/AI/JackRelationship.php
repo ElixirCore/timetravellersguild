@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/JackStore.php';
+
 final class JackRelationship
 {
     public static function file(): string
@@ -34,7 +36,10 @@ final class JackRelationship
 
     public static function load(string $userId): array
     {
-        foreach (self::all() as $row) {
+        $rows = JackStore::read(self::file());
+        // Damaged: we cannot know who has withdrawn, so nobody is treated as having agreed.
+        if ($rows === null) return ['standing' => 'withdrawn'] + self::blank($userId);
+        foreach ($rows as $row) {
             if ((string) ($row['userId'] ?? '') === $userId) {
                 return array_merge(self::blank($userId), $row);
             }
@@ -88,50 +93,20 @@ final class JackRelationship
     {
         $id = (string) ($row['userId'] ?? '');
         if ($id === '') return false;
-        $dir = dirname(self::file());
-        if (!is_dir($dir) && !@mkdir($dir, 0775, true)) return false;
         $path = self::file();
-        $fp = @fopen($path, 'c+');
-        if ($fp === false) return false;
-        if (!flock($fp, LOCK_EX)) {
-            fclose($fp);
-            return false;
-        }
-        rewind($fp);
-        $raw = stream_get_contents($fp);
-        $list = is_string($raw) && $raw !== '' ? json_decode($raw, true) : [];
-        if (!is_array($list)) $list = [];
-        $found = false;
-        foreach ($list as $i => $existing) {
-            if ((string) ($existing['userId'] ?? '') === $id) {
-                $list[$i] = $row;
-                $found = true;
-                break;
+        return JackStore::locked($path, static function () use ($path, $id, $row): bool {
+            $list = JackStore::read($path);
+            if ($list === null) return false;
+            $found = false;
+            foreach ($list as $i => $existing) {
+                if ((string) ($existing['userId'] ?? '') === $id) {
+                    $list[$i] = $row;
+                    $found = true;
+                    break;
+                }
             }
-        }
-        if (!$found) $list[] = $row;
-        $json = json_encode($list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        if ($json === false) {
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return false;
-        }
-        rewind($fp);
-        ftruncate($fp, 0);
-        fwrite($fp, $json . "\n");
-        fflush($fp);
-        flock($fp, LOCK_UN);
-        fclose($fp);
-        return true;
-    }
-
-    /** @return list<array<string, mixed>> */
-    private static function all(): array
-    {
-        $path = self::file();
-        if (!is_file($path)) return [];
-        $raw = @file_get_contents($path);
-        $data = is_string($raw) ? json_decode($raw, true) : [];
-        return is_array($data) ? $data : [];
+            if (!$found) $list[] = $row;
+            return JackStore::saveJson($path, $list, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }) === true;
     }
 }

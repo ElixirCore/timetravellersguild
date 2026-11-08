@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/JackStore.php';
+
 /**
  * Jack's personal memory of a traveller: continuity between sittings.
  *
@@ -51,33 +53,19 @@ final class JackMemory
         ];
     }
 
-    /** Read, change and write under one lock. */
+    /** Read, change and write under one lock. Null if it could not be read or saved: nothing was kept or forgotten. */
     private static function mutate(string $subject, callable $fn): mixed
     {
-        $dir = self::dir();
-        if (!is_dir($dir) && !@mkdir($dir, 0775, true)) return null;
-        $fp = @fopen(self::path($subject), 'c+');
-        if ($fp === false) return null;
-        try {
-            if (!flock($fp, LOCK_EX)) return null;
-            $raw = stream_get_contents($fp);
-            $data = is_string($raw) && $raw !== '' ? json_decode($raw, true) : null;
-            if (!is_array($data) || ($data['subject'] ?? '') !== $subject) {
+        $path = self::path($subject);
+        return JackStore::locked($path, static function () use ($path, $subject, $fn): mixed {
+            $data = JackStore::read($path);
+            if ($data === null) return null;
+            if (($data['subject'] ?? '') !== $subject) {
                 $data = ['subject' => $subject, 'notes' => [], 'sittings' => []];
             }
             $result = $fn($data);
-            $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            if ($json !== false) {
-                rewind($fp);
-                ftruncate($fp, 0);
-                fwrite($fp, $json . "\n");
-                fflush($fp);
-            }
-            flock($fp, LOCK_UN);
-            return $result;
-        } finally {
-            fclose($fp);
-        }
+            return JackStore::saveJson($path, $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ? $result : null;
+        }, self::dir() . '/.lock');
     }
 
     private static function clean(string $s, int $max): string

@@ -18,4 +18,6 @@ final class AgentRequest
     public array $toolOutputs = [];
     /** auto | none | required */
     public string $toolChoice = 'auto';
+    /** Hard ceiling on output + reasoning tokens for this call; null leaves the provider default. */
+    public ?int $maxOutputTokens = null;
 }

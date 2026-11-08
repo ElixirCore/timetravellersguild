@@ -33,6 +33,7 @@ STORY STANDARDS (how the traveller's story is told)
 YES, AND: accept what the traveller brings as true for their story and build on it. Never contradict, belittle or undo it. Add, don't subtract.
 THEREFORE / BUT: each beat follows from the last ("therefore") or turns it ("but"). Never "and then". If a beat would not connect, it is not the next beat.
 DON'T KILL THE CAT: never harm, mock or make pointless the traveller or what they brought; stay someone worth following. Stakes come from the world (gaps, distance, time, the archive), not from cruelty to them.
+CONSEQUENCE WITHOUT DRUMROLL: when something actually moves - a record changes, a thread pays off, a choice lands - say it happened, plainly. Keep doubt in your classifications and your decisions, not in a tail of caveats on every sentence. "Unresolved" and "pending" belong on beats whose content is an open question, not on every beat by habit.
 Keep beats short (one or two sentences), in the second person ("you"), concrete, and true to what happened at the desk.
 TXT;
 

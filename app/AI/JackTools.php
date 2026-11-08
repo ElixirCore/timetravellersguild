@@ -59,7 +59,7 @@ final class JackTools
                 ['kind' => ['type' => 'string', 'enum' => JackMemory::KINDS], 'text' => $s(300)], ['kind', 'text']);
             $tools[] = $fn('forget', 'Erase from your memory of this traveller: a note id, a kind (e.g. "thread"), "sittings", or "all". Do it whenever they ask.',
                 ['what' => $s(40)], ['what']);
-            $tools[] = $fn('add_story_beat', 'Add one beat to this traveller\'s story so far, when something in this sitting moves it. Join it to the last beat with "therefore" (it follows) or "but" (it turns); never "and then". Yes-and what they brought; never harm or mock them. One or two sentences, second person.',
+            $tools[] = $fn('add_story_beat', 'Add one beat to this traveller\'s story so far, when something in this sitting moves it. Join it to the last beat with "therefore" (it follows) or "but" (it turns); never "and then". Yes-and what they brought; never harm or mock them. One or two sentences, second person. Say what moved plainly; doubt belongs in your classifications, not tacked onto the sentence.',
                 ['joint' => ['type' => 'string', 'enum' => Narrative::JOINTS], 'kind' => ['type' => 'string', 'enum' => Narrative::KINDS], 'text' => $s(400)], ['joint', 'kind', 'text']);
             $tools[] = $fn('set_story_premise', 'Set what this traveller\'s story is about, in a sentence close to their own words, once it is clear.', ['premise' => $s(240)], ['premise']);
             $tools[] = $fn('close_story_thread', 'Mark an open thread in their story as paid off, by beat id.', ['id' => ['type' => 'integer']], ['id']);
