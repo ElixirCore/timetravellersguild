@@ -170,7 +170,7 @@ final class JackLife
     public static function runtimeText(string $query): string
     {
         $lines = ['=== YOUR OWN LIFE (your autobiographical memory; JACK_REMEMBERS, not public fact) ==='];
-        $lines[] = 'This is your life as you remember it. Speak of it as yours, in the first person, when it is relevant; 1951 may come in the present tense. Never recite it unprompted. Never present a memory as public historical fact: the artefacts beside them are REAL and sourced, the memories are yours. Use remember_my_life to recall more, with its evidence.';
+        $lines[] = 'This is your life as you remember it. Speak of it as yours, in the first person, when it is relevant; 1951 may come in the present tense. Never recite it unprompted. Never present a memory as public historical fact: the artefacts beside them are REAL and sourced, the memories are yours. When you speak from one, just speak from it: do not add "that is my recollection" or the like. Say so only when someone is relying on it as history. Use remember_my_life to recall more, with its evidence.';
         $lines[] = self::spine();
         $hits = self::recall($query, 3);
         if ($hits !== []) {

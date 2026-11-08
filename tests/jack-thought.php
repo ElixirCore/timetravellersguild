@@ -52,6 +52,27 @@ expect(JackThought::callsToday('2026-11-08 7', '2026-11-08') === 7, 'the meter r
 expect(JackThought::callsToday('2026-11-07 24', '2026-11-08') === 0, 'a new UTC day starts at zero');
 expect(JackThought::callsToday('', '2026-11-08') === 0, 'an empty meter is zero');
 
+/* A thought can leave him with something short of a conviction, or with nothing. */
+[$same, $none] = JackThought::applyChanges($noHeld, [], 't', 1);
+expect($same === $noHeld && $none === [], 'a thought may change nothing');
+[$f, $d] = JackThought::applyChanges($noHeld, [['do' => 'prefer', 'text' => 'Handwritten shelf marks over printed ones, every time.'], ['do' => 'irk', 'text' => 'The way the Domesday disc outlived the machine that read it.'], ['do' => 'wonder', 'text' => 'Who was meant to read the 2029 transmission?']], 't', 1);
+expect(array_column($f['felt'], 'kind') === ['preference', 'irritation', 'question'] && $f['holds'] === [], 'preferences, irritations and questions are kept beside beliefs, not as beliefs');
+expect(array_column($d, 'did') === ['came to prefer', 'was irritated by', 'was left wondering'], 'each is recorded for what it is');
+[$g, $d] = JackThought::applyChanges($f, [['do' => 'settle', 'id' => 'h3', 'why' => 'found out']], 't', 2);
+expect(count($g['felt']) === 2 && $g['faded'][0]['why'] === 'found out' && $d[0]['did'] === 'let go of', 'one can be let go of, with a reason');
+$many = $noHeld;
+for ($i = 0; $i < 13; $i++) { [$many] = JackThought::applyChanges($many, [['do' => 'wonder', 'text' => "Unique question number word$i zebra$i quantum$i harbour$i"]], 't', $i); }
+expect(count($many['felt']) === 12 && count($many['faded']) === 1 && str_contains($many['faded'][0]['text'], 'word0'), 'when he carries too many the oldest fades by itself, and nothing is refused');
+[$k] = JackThought::applyChanges(['struck' => [['id' => 'h1', 'text' => 'Handwritten shelf marks over printed ones, every time.']]] + $noHeld, [['do' => 'prefer', 'text' => 'Handwritten shelf marks over printed ones, every time.']], 't', 1);
+expect($k['felt'] === [], 'a struck idea cannot come back as a preference');
+
+/* In conversation he is given the thoughts nearest what is being said. */
+$book = [['id' => 'n', 'text' => 'Newest about tarot hoppers.'], ['id' => 'm', 'text' => 'Middle about pigeons.'], ['id' => 'd', 'text' => 'The Domesday laserdisc taught me something.'], ['id' => 'o', 'text' => 'Oldest about bridges.']];
+$picked = array_column(JackThought::pickThoughts($book, 'What happened to the Domesday disc?', 1, 1), 'id');
+expect($picked === ['d', 'n'], 'the nearest thought comes first, then the newest');
+expect(array_column(JackThought::pickThoughts($book, 'hello', 3, 2), 'id') === ['n', 'm'], 'with nothing near, the newest come');
+expect(JackThought::pickThoughts([], 'anything') === [], 'with no thoughts, none');
+
 /* Graph inferences stay off until a keeper turns them on here on purpose. */
 expect(JackThought::INFERENCES === false, 'graph inferences are switched off');
 

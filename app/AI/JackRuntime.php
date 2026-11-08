@@ -246,7 +246,7 @@ final class JackRuntime
         }
 
         $lines[] = '=== END RUNTIME POSITION ===';
-        $held = JackThought::runtimeText();
+        $held = JackThought::runtimeText($message);
         if ($held !== '') $lines[] = "\n" . $held;
 
         return implode("\n", $lines);

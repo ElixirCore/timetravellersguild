@@ -12,7 +12,7 @@ require_once dirname(__DIR__) . '/app/AI/JackThought.php';
 $id = (string) ($argv[1] ?? '');
 if ($id === '') {
     $h = JackThought::held();
-    foreach (['holds', 'doubts', 'dropped', 'struck'] as $k) {
+    foreach (['holds', 'doubts', 'felt', 'dropped', 'faded', 'struck'] as $k) {
         echo strtoupper($k), "\n";
         foreach ($h[$k] as $b) echo '  ', $b['id'], '  ', $b['text'], "\n";
     }

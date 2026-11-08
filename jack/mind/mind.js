@@ -459,7 +459,7 @@ function thoughtHtml(t) {
     + (changed ? '<span class="k" style="color:#d7b25d;display:block;margin-top:14px">HOW IT CHANGED HIM</span>' + changed : '')
     + (inferred ? `<span class="k" style="color:#d7b25d;display:block;margin-top:14px">WHAT HE ADDED TO THE GRAPH <span style="opacity:.7">· JACK'S INFERENCE · NOT CANON</span></span>` + inferred : '')
     + (drew ? '<span class="k" style="color:#e0604f;display:block;margin-top:14px">WHAT IT RESTS ON</span>' + drew : '')
-    + (held ? list(held.holds, 'WHAT HE NOW HOLDS', '#dfeee8') + list(held.doubts, 'WHAT HE DOUBTS', '#7d9a94') + list(held.dropped, 'WHAT HE HAS GIVEN UP', '#e0604f') : '')
+    + (held ? list(held.holds, 'WHAT HE NOW HOLDS', '#dfeee8') + list(held.doubts, 'WHAT HE DOUBTS', '#7d9a94') + list((held.felt || []).filter((b) => b.kind === 'preference'), 'WHAT HE PREFERS', '#d7b25d') + list((held.felt || []).filter((b) => b.kind === 'irritation'), 'WHAT IRRITATES HIM', '#d7b25d') + list((held.felt || []).filter((b) => b.kind === 'question'), 'WHAT HE CANNOT ANSWER', '#6fb6d8') + list(held.dropped, 'WHAT HE HAS GIVEN UP', '#e0604f') : '')
     + (earlier ? '<span class="k" style="color:#7d9a94;display:block;margin-top:14px">EARLIER THOUGHTS</span>' + earlier : '');
 }
 function showThought(t) {
@@ -473,7 +473,7 @@ async function thinkNow() {
   awaitingThought = true;
   clearTimeout(awaitTimer);
   awaitTimer = setTimeout(() => { if (awaitingThought && (novel[0] || prior)) { awaitingThought = false; showThought(novel[0] || prior); } }, 240000);
-  showReader(`<span class="k" style="color:#d7b25d">WHAT HE'S THINKING</span><p class="jack" style="color:#7d9a94">Jack is going through everything he knows. It takes him a minute or two.</p>`);
+  showReader(`<span class="k" style="color:#d7b25d">WHAT HE'S THINKING</span><p class="jack" style="color:#7d9a94">Jack is going through his cards. It takes him a minute or two.</p>`);
   try {
     const fd = new FormData();
     fd.set('csrf', CFG.csrf || '');
