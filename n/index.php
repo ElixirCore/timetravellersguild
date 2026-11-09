@@ -74,8 +74,6 @@ $relWord = static function (string $rel): string {
     return str_replace('_', ' ', strtolower($rel));
 };
 $isRecord = $slug !== '' && $node && ttg_graph_public($node);
-$jackContext = $isRecord ? ttg_graph_inferred_context($slug) : [];
-if ($isRecord && isset($neighbors)) $neighbors = ttg_graph_add_inferences($slug, $neighbors);
 // Filings: the same record in other hands. Labelled by class, kept apart from the body.
 $voices = [];
 if ($isRecord && is_array($node['voices'] ?? null)) {
@@ -153,7 +151,9 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
   <?php if ($isRecord): ?>
     <p class="status"><?= ttg_h((string) $meta['status']) ?></p>
   <?php endif; ?>
-  <p class="copy"><?= ttg_h($body) ?></p>
+  <?php foreach (preg_split('~\n\s*\n~', trim($body)) ?: [] as $para): ?>
+    <?php if (trim($para) !== ''): ?><p class="copy"><?= ttg_h(trim($para)) ?></p><?php endif; ?>
+  <?php endforeach; ?>
 
   <?php if ($voices): ?>
   <section class="filings" aria-label="Filings">
@@ -197,15 +197,6 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
       <p>No interpretation has been accepted. The evidence stands alone.</p>
     <?php endif; ?>
   </div>
-  <?php endif; ?>
-
-  <?php if ($jackContext): ?>
-  <section class="related" style="border-left:2px dotted currentColor;padding-left:.8rem">
-    <h2>Jack's inference <small style="font-weight:400;opacity:.7">not canon · not on file · his own reading</small></h2>
-    <?php foreach ($jackContext as $c): ?>
-      <p><?= ttg_h((string) $c['text']) ?></p>
-    <?php endforeach; ?>
-  </section>
   <?php endif; ?>
 
   <dl>

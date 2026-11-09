@@ -3656,7 +3656,7 @@
     "type": "DOCUMENT",
     "slug": "grimoire-rede",
     "title": "The Rede: a shape for conduct",
-    "body": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind. It asks what a working does to the people around it, not only whether it fits a formula.\n\n\nLive and let live, with fair exchange. The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange. The leaf reads it as an obligation running both ways, not a licence to take what you want.\n\n\nRestraint in speech, careful listening. Other visible lines ask for restraint in what is said and care in what is heard. The leaf treats speaking less and listening well as part of the ethic, not manners laid on top of it.\n\n\nCircling with the moon. The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.\n\n\nConduct, ritual and season in one verse. The form to notice: behaviour, ritual and seasonal observation are held together in images and rhythm rather than separated into a rulebook. Rhyme makes the instructions easier to remember.\n\n\nGuild practice: test an intention. Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim. Rewrite it so it concerns your own conduct: \"make them love me\" becomes \"help me speak honestly and accept their answer\".",
+    "body": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind. It asks what a working does to the people around it, not only whether it fits a formula.\n\nLive and let live, with fair exchange. The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange. The leaf reads it as an obligation running both ways, not a licence to take what you want.\n\nRestraint in speech, careful listening. Other visible lines ask for restraint in what is said and care in what is heard. The leaf treats speaking less and listening well as part of the ethic, not manners laid on top of it.\n\nCircling with the moon. The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.\n\nConduct, ritual and season in one verse. The form to notice: behaviour, ritual and seasonal observation are held together in images and rhythm rather than separated into a rulebook. Rhyme makes the instructions easier to remember.\n\nGuild practice: test an intention. Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim. Rewrite it so it concerns your own conduct: \"make them love me\" becomes \"help me speak honestly and accept their answer\".",
     "visibility": "PUBLIC",
     "status": "PUBLISHED",
     "observed_at": "2026-09-30T09:00:00+01:00",
@@ -3668,7 +3668,13 @@
       "ref": "G/001 · LEAF 01",
       "cluster": "grimoire",
       "self_referential": true,
-      "absorbed": []
+      "absorbed": [
+        "rede-reciprocity",
+        "rede-restraint",
+        "rede-moon-circling",
+        "rede-verse-form",
+        "rede-test-intention"
+      ]
     },
     "tree": {
       "layer": "branch",
@@ -3709,7 +3715,9 @@
     "metadata": {
       "place": "The Grimoire",
       "custodian": "Archive",
-      "ref": "LEAF 01 · GAP"
+      "ref": "LEAF 01 · GAP",
+      "cluster": "grimoire",
+      "self_referential": true
     },
     "tree": {
       "layer": "leaf",
@@ -3750,7 +3758,9 @@
     "metadata": {
       "place": "The Grimoire",
       "custodian": "Archive",
-      "ref": "G/001 · SOURCE"
+      "ref": "G/001 · SOURCE",
+      "cluster": "grimoire",
+      "self_referential": true
     },
     "tree": {
       "layer": "root",
