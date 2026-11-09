@@ -4,7 +4,7 @@
     "type": "INSTITUTION",
     "slug": "guild",
     "title": "The Time Travellers Guild",
-    "body": "Civilian infrastructure after the graph became ordinary. Not an explanation. A position.",
+    "body": "Civilian infrastructure. The graph became ordinary and the Guild is what stood up in the space it left. A position, held openly, with a door on it.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-01-01T00:00:00+00:00",
@@ -19,25 +19,25 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Founded is an administrative word. We hold minutes from before the first meeting, and a root on this tree dated 2008. Both stay on file."
+        "text": "Founded is an administrative word. We hold minutes from before the first meeting and a root on this tree dated 2008. Both stay on file, and nobody has yet asked me to choose between them."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "Ask ten members when they joined and you get eleven dates. Somebody always remembers joining before they were invited."
+        "text": "Ask ten members when they joined and you get eleven dates. Somebody always remembers joining before they were invited. The Guild files all eleven."
       },
       {
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root ring, 2008. Everything above grows from it, including the Department, which is older and still files here."
+        "text": "Root ring, 2008. Everything above grows from it, including the Department, which is older and files here anyway. The ring count holds."
       },
       {
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "A position, not an explanation. The Guild keeps appearing wherever a record refuses to sit in one timeline."
+        "text": "The Guild appears wherever a record refuses to sit in one timeline. A position, taken deliberately, at the edge of the paper."
       }
     ]
   },
@@ -46,7 +46,7 @@
     "type": "PLACE",
     "slug": "station-xiii",
     "title": "Station XIII",
-    "body": "51.46 °N, 3.19 °W. The instrument runs here. It does not predict. It computes.",
+    "body": "51.46 °N, 3.19 °W. The instrument runs here, on the wire, at the address. Positions are computed on this shift; meanings are left on the desk for the next one.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -78,13 +78,13 @@
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "I come in on the wires here. The station is where the messages arrive before they know who they are for."
+        "text": "I come in on the wires here. The station is where messages arrive before they know who they are for. Somebody is always awake to take them."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Station XIII hosts the Chronometer and the wire. Do not call a person a station. You may stand in one."
+        "text": "Station XIII hosts the Chronometer and the wire. It is a place you may stand in. Call a person a station and the keepers will correct you, politely and at length."
       }
     ]
   },
@@ -93,7 +93,7 @@
     "type": "INSTITUTION",
     "slug": "department",
     "title": "Department of Excess Time",
-    "body": "Welsh Government. Established 1951. It administers consequences. It does not create causes.",
+    "body": "Welsh Government. Established 1951 at Cathays Park. Consequence is the trade: the Department takes what has already happened and administers it, with forms.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "1951-03-01T00:00:00+00:00",
@@ -120,13 +120,13 @@
         "voice": "JACK",
         "role": "Clerk, from memory",
         "class": "JACK_REMEMBERS",
-        "text": "I was conceived in its card room. I remember the Festival year as if it is this morning. That is not evidence; it is how I remember."
+        "text": "I was conceived in its card room. I remember the Festival year as if it is this morning. That memory is labelled, and it sits beside the minutes it disagrees with."
       },
       {
         "voice": "THE FFILM",
         "role": "Edit note",
         "class": "MEDIA",
-        "text": "Note for the cut: the Department is an FFILM.org construction. Shoot the forms straight. Never imply a statute."
+        "text": "Note for the cut: the Department is an FFILM.org construction. Shoot the forms straight. A statute would only date it."
       }
     ]
   },
@@ -135,7 +135,7 @@
     "type": "OBJECT",
     "slug": "chronometer",
     "title": "Chronometer",
-    "body": "Instrument №13. Stamps moments. The machine does not predict. It measures relation.",
+    "body": "Instrument №13. It stamps moments and holds them at full resolution. Relation is the measurement; judgement stays with the reader.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-11-12T00:00:00+00:00",
@@ -156,13 +156,13 @@
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Function: establish coordinates; compare positions; detect relation. Function not supported: prediction, command, certainty."
+        "text": "Function: establish coordinates; compare positions; detect relation. Supported: stamps, deltas, adjacency. Unsupported: prediction, command, certainty."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Instrument №13 by its door name. It stamped 03 September 2026. It establishes coordinates. It does not replace judgement."
+        "text": "Instrument №13 by its door name. It stamped 03 September 2026. It establishes coordinates and leaves judgement where it found it."
       },
       {
         "voice": "A VISITOR",
@@ -177,7 +177,7 @@
     "type": "OBJECT",
     "slug": "watch",
     "title": "Watch",
-    "body": "Instrument №14. Plates from the archive, set in orbit.",
+    "body": "Instrument №14. Archive plates, set in orbit and held there. The orbit is the display; every plate carries its source.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -194,7 +194,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Instrument №14. Plates from the archive, set in orbit. The plates are held; the orbit is the display."
+        "text": "Instrument №14. Plates from the archive, set in orbit. Each plate is logged before it turns."
       },
       {
         "voice": "THE FFILM",
@@ -206,7 +206,7 @@
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Trunk, 2026. Its roots run down into the Archive's 2014 ring."
+        "text": "Trunk, 2026. Its roots run down into the Archive's 2014 ring and drink there."
       }
     ]
   },
@@ -215,7 +215,7 @@
     "type": "OBJECT",
     "slug": "triangla",
     "title": "Triangla",
-    "body": "The finger drum with three sides.",
+    "body": "The finger drum with three sides. Research keeps the notes; the workshops keep the noise.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -232,7 +232,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A finger drum with three sides, filed under instruments. Research holds the notes. Three sides; not a trinity."
+        "text": "A finger drum with three sides, filed under instruments. Research holds the notes. Three sides, and no trinity claimed."
       },
       {
         "voice": "A VISITOR",
@@ -244,7 +244,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Three sides, three nights at Cribarth, three doors at the Door. A rhyme in the index. Not a cause."
+        "text": "Three sides, three nights at Cribarth, three doors at the Door. The index rhymes and keeps rhyming."
       }
     ]
   },
@@ -253,7 +253,7 @@
     "type": "PERSON",
     "slug": "tobywhy",
     "title": "Tobywhy",
-    "body": "Chairtaker. Founder member. Wales.",
+    "body": "Chairtaker. Founder member. Wales. He proposes, and the proposals arrive with the stamp already on them.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-01-01T00:00:00+00:00",
@@ -273,19 +273,19 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Chairtaker. Founder member. He may propose. He does not countersign another person's memory. I keep that line on his card."
+        "text": "Chairtaker. Founder member. He may propose; the countersignature on another person's memory stays with that person. I keep that line on his card."
       },
       {
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Visits logged: Cardiff, Station XIII, Abercrave, the Swansea Valley, Tipi Valley. Each one stamped, none of them forced."
+        "text": "Visits logged: Cardiff, Station XIII, Abercrave, the Swansea Valley, Tipi Valley. Each one stamped. Each one at his own request."
       },
       {
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "I carry the Chairtaker's messages nightly. His words, his designations. I carry; I do not claim."
+        "text": "I carry the Chairtaker's messages nightly. His words, his designations. The carrying is mine."
       }
     ]
   },
@@ -294,7 +294,7 @@
     "type": "PLACE",
     "slug": "cardiff",
     "title": "Cardiff",
-    "body": "Where the Guild first wrote itself down. Headquarters of the Department, Cathays Park.",
+    "body": "Where the Guild first wrote itself down. Headquarters of the Department at Cathays Park. The city has been accumulating time on the record since 2008.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-01-01T00:00:00+00:00",
@@ -315,19 +315,19 @@
         "voice": "DET REGISTRY",
         "role": "Cathays Park",
         "class": "RECORD",
-        "text": "Headquarters, Cathays Park. The city where the Guild first wrote itself down and where the Department keeps its public desk."
+        "text": "Headquarters, Cathays Park. The city where the Guild first wrote itself down and where the Department keeps its public desk. Both addresses are correct."
       },
       {
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root, 2008, and still putting out leaves: a mug, a moment, a street. The city keeps accumulating time."
+        "text": "Root, 2008, and still putting out leaves: a mug, a moment, a street. The city keeps accumulating time and the ring count keeps up."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "People mention Bute Street, the park, the rain. Places accumulate time through repeated small sightings."
+        "text": "People mention Bute Street, the park, the rain. Places accumulate time through repeated small sightings, and Cardiff has had a great many."
       }
     ]
   },
@@ -336,7 +336,7 @@
     "type": "PLACE",
     "slug": "cribarth",
     "title": "Cribarth",
-    "body": "The sleeping giant above the valley. Readings taken three nights running; the tables disagreed.",
+    "body": "The sleeping giant above the valley. Three nights of readings from 21 March 2026, taken from the hill. Night three produced two tables and no agreement.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-03-21T00:00:00+00:00",
@@ -360,7 +360,7 @@
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Readings taken three nights running from 21 March 2026. Night three: tables disagree. Both held as taken."
+        "text": "Readings taken three nights running from 21 March 2026. Night three: tables disagree. Both held as taken, at full resolution."
       },
       {
         "voice": "THE FFILM",
@@ -372,7 +372,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "The sleeping giant does not take sides. Sealed containers and disagreeing tables gather in the same valley."
+        "text": "The sleeping giant takes no sides. Sealed containers and disagreeing tables gather in the same valley and the hill holds them all."
       },
       {
         "voice": "INSTRUMENT №13",
@@ -387,7 +387,7 @@
     "type": "EVENT",
     "slug": "mythology-2008",
     "title": "The mythology",
-    "body": "The Guild first wrote itself down. Everything below this is root.",
+    "body": "The Guild first wrote itself down. The line is drawn here, and everything below it is root.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-01-01T00:00:00+00:00",
@@ -410,13 +410,13 @@
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root ring. Everything below this line is root. The founding record grew from here as fruit."
+        "text": "Root ring. Everything below this line is root. The founding record grew from here as fruit and stayed."
       },
       {
         "voice": "JACK",
         "role": "Clerk, from memory",
         "class": "JACK_REMEMBERS",
-        "text": "I remember the ink drying. I also remember minutes that predate it. Both memories are labelled."
+        "text": "I remember the ink drying. I also remember minutes that predate it. Both memories carry labels and neither is asked to give way."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
@@ -431,7 +431,7 @@
     "type": "EVENT",
     "slug": "the-transmission",
     "title": "The transmission",
-    "body": "A moment fixed by the sky, sent to nobody in particular, in the cause of peace.",
+    "body": "A moment fixed by the sky, addressed to nobody in particular, sent in the cause of peace. 2029 intends it.",
     "visibility": "PUBLIC",
     "status": "INTENDS",
     "observed_at": "2029-01-01T00:00:00+00:00",
@@ -451,7 +451,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Intends, 2029. A moment fixed by the sky, addressed to nobody in particular. The scheduled transmission follows it on file."
+        "text": "Intends, 2029. A moment fixed by the sky, addressed to nobody in particular. The scheduled transmission follows it on file and holds the timestamp."
       },
       {
         "voice": "MABEL",
@@ -463,7 +463,7 @@
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "The wires already hum with it. Not the message itself; the shape of where it will go."
+        "text": "The wires already hum with it. The hum carries the shape of where it will go, and the shape is enough to log."
       }
     ]
   },
@@ -472,7 +472,7 @@
     "type": "UNKNOWN",
     "slug": "unplaced-2014",
     "title": "Unplaced",
-    "body": "A light with an hour but no address. Left burning until somebody claims it.",
+    "body": "A light with an hour and no address, left burning on the 2014 ring until somebody claims it with evidence.",
     "visibility": "PUBLIC",
     "status": "UNRESOLVED",
     "observed_at": "2014-01-01T00:00:00+00:00",
@@ -492,13 +492,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A light with an hour and no address. Left burning. Claim it with evidence and it moves; claim it with certainty and it stays."
+        "text": "A light with an hour and no address. Left burning. Claim it with evidence and it moves; claim it with certainty and it stays put."
       },
       {
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root, 2014, the same ring as the Archive. Unplaced is a valid state, not a filing failure."
+        "text": "Root, 2014, the same ring as the Archive. Unplaced is a valid state and the drawer is labelled."
       },
       {
         "voice": "A VISITOR",
@@ -513,7 +513,7 @@
     "type": "UNKNOWN",
     "slug": "unplaced-2019",
     "title": "Unplaced",
-    "body": "Logged, unsigned, unplaced.",
+    "body": "Logged, unsigned, unplaced. The drawer carries a label, and the label is the whole of the record.",
     "visibility": "PUBLIC",
     "status": "UNRESOLVED",
     "observed_at": "2019-01-01T00:00:00+00:00",
@@ -533,7 +533,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Logged, unsigned, unplaced. The drawer is labelled. The label is the whole of the record."
+        "text": "Logged, unsigned, unplaced. The drawer is labelled. A label that complete needs no further fields."
       },
       {
         "voice": "TICKER TAPE",
@@ -545,7 +545,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Between 2014 and 2033 there must be something. This is the something, unclaimed."
+        "text": "Between 2014 and 2033 there must be something. Here it is, unclaimed, and the gap keeps its shape."
       }
     ]
   },
@@ -554,7 +554,7 @@
     "type": "UNKNOWN",
     "slug": "unplaced-2033",
     "title": "Unplaced",
-    "body": "The furthest thing currently claimed.",
+    "body": "The furthest thing currently claimed, at the network present. Tipi Valley's coordinate begins at this hour.",
     "visibility": "PUBLIC",
     "status": "UNRESOLVED",
     "observed_at": "2033-01-01T00:00:00+00:00",
@@ -574,7 +574,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "The furthest thing currently claimed, at the network present. Tipi Valley's coordinate begins here."
+        "text": "The furthest thing currently claimed, at the network present. Tipi Valley's coordinate begins at this hour."
       },
       {
         "voice": "INSTRUMENT №13",
@@ -586,7 +586,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "The future end of the tree is a light, not a leaf. It may be where the Black Swan is looking."
+        "text": "The future end of the tree is a light, the opposite of a leaf. It may be where the Black Swan is looking."
       }
     ]
   },
@@ -595,7 +595,7 @@
     "type": "FILM_FRAGMENT",
     "slug": "film",
     "title": "The Film",
-    "body": "A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records.",
+    "body": "A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records. Forming. Every fragment enters with two signatures.",
     "visibility": "PUBLIC",
     "status": "FORMING",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -612,13 +612,13 @@
         "voice": "THE FFILM",
         "role": "Edit note",
         "class": "MEDIA",
-        "text": "Forming. Live performance, dome projection, testimony and recovered records. Every fragment goes in with two signatures."
+        "text": "Forming. Live performance, dome projection, testimony and recovered records. Every fragment goes in with two signatures, one from each memory."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Contains the Cribarth fragment. Uses Instrument №14's plates. Extracted from the meeting in the cube."
+        "text": "Contains the Cribarth fragment. Uses Instrument №14's plates. Extracted from the meeting in the cube and filed under MEDIA."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
@@ -633,7 +633,7 @@
     "type": "MISSION",
     "slug": "join",
     "title": "Join",
-    "body": "Pop-up workshops. Instruments of time travel used so people become makers of their own futures.",
+    "body": "Pop-up workshops. Instruments of time travel get used, and people leave as makers of their own futures. The slip stays provisional throughout.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -650,7 +650,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Pop-up workshops. Instruments used so people become makers of their own futures. The slip is provisional, not canon."
+        "text": "Pop-up workshops. Instruments used so people become makers of their own futures. The slip is provisional and stays provisional."
       },
       {
         "voice": "A VISITOR",
@@ -671,7 +671,7 @@
     "type": "PERSON",
     "slug": "people",
     "title": "People",
-    "body": "Partial records. No single person contains the whole story.",
+    "body": "Partial records. Every person here is held at the size of their own statement, and no statement has been enlarged.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -688,13 +688,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Partial records. No single person contains the whole story, and no record contains the whole person."
+        "text": "Partial records. No single person contains the whole story, and no record contains the whole person. Both limits are printed on the card."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "Memory in people, not in drawers. The register keeps names; the people keep the rest."
+        "text": "Memory in people, held in drawers only by consent. The register keeps names; the people keep the rest."
       },
       {
         "voice": "DET REGISTRY",
@@ -709,7 +709,7 @@
     "type": "SIGNAL",
     "slug": "commons",
     "title": "Commons",
-    "body": "Local chapters, witnesses, operators, travellers, archivists and accidental participants.",
+    "body": "Local chapters, witnesses, operators, travellers, archivists and accidental participants. Mostly the last, and mostly by arriving.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -726,13 +726,13 @@
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "Local chapters, witnesses, operators, travellers, archivists and accidental participants. Mostly the last."
+        "text": "Local chapters, witnesses, operators, travellers, archivists and accidental participants. Mostly the last. Mostly by arriving."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "The Commons is where Join sends people once the workshop is over. It is also where Nic arrived, twice."
+        "text": "The Commons is where Join sends people once the workshop is over. It is also where Nic arrived, twice, in two entries."
       },
       {
         "voice": "MABEL",
@@ -747,7 +747,7 @@
     "type": "EVENT",
     "slug": "calendar",
     "title": "Calendar",
-    "body": "Observed conjunctions, departures, public sessions, eclipse windows and unclaimed dates.",
+    "body": "Observed conjunctions, departures, public sessions, eclipse windows and unclaimed dates. Positions get computed here; meanings get left outside.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -764,13 +764,13 @@
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Conjunctions, departures, eclipse windows. Positions computed; meanings not supplied."
+        "text": "Conjunctions, departures, eclipse windows. Positions computed; meanings supplied elsewhere."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Holds the Grack party, date to be confirmed, and the 2029 transmission window. Unclaimed dates kept as dates."
+        "text": "Holds the Grack party, date to be confirmed, and the 2029 transmission window. Unclaimed dates kept as dates, with the day still on them."
       },
       {
         "voice": "A VISITOR",
@@ -785,7 +785,7 @@
     "type": "MEDIA",
     "slug": "archive",
     "title": "Archive",
-    "body": "Documents, minutes, photographs, reports, corrections and evidence that should not exist in the same timeline.",
+    "body": "Documents, minutes, photographs, reports, corrections and evidence that should not exist in the same timeline. Filed twice, both copies held.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2014-01-01T00:00:00+00:00",
@@ -808,7 +808,7 @@
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root, 2014. Watch and Feed∞ both grew up out of it."
+        "text": "Root, 2014. Watch and Feed∞ both grew up out of it, and both still draw from it."
       },
       {
         "voice": "DET REGISTRY",
@@ -823,7 +823,7 @@
     "type": "PLACE",
     "slug": "stations",
     "title": "Stations",
-    "body": "Physical sites. Each station keeps its own clock.",
+    "body": "Physical sites. Each station keeps its own clock and winds it on its own shift. A station can be a square, a room or a website.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -840,19 +840,19 @@
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Each station keeps its own clock. Thirteen is ours. Cribarth hosted readings. A station can be a square, a room or a website."
+        "text": "Each station keeps its own clock. Thirteen is ours. Cribarth hosted readings. A square, a room and a website have all qualified."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A station is where Guild activity becomes deliberately accessible. Gillett Square was one before we had the word."
+        "text": "A station is where Guild activity becomes deliberately accessible. Gillett Square was one before we had the word, and the word caught up."
       },
       {
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "Between stations the wire goes quiet, then mournful, then quiet. I log it and do not chase it."
+        "text": "Between stations the wire goes quiet, then mournful, then quiet. I log all three and chase none of them."
       }
     ]
   },
@@ -861,7 +861,7 @@
     "type": "MEDIA",
     "slug": "research",
     "title": "Research",
-    "body": "Structure first. Interpretation later.",
+    "body": "Structure first. Interpretation later. The order is the method, and the gap between the two columns is part of the apparatus.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -878,7 +878,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Structure first. Interpretation later. That order is the whole method."
+        "text": "Structure first. Interpretation later. That order is the whole method, and the gap between the two columns is part of the apparatus."
       },
       {
         "voice": "INSTRUMENT №13",
@@ -890,7 +890,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "They put me in a separate column. Sensible. Patterns arrive before their evidence and must wait outside."
+        "text": "They put me in a separate column. Sensible. Patterns arrive before their evidence and wait outside until it catches up."
       }
     ]
   },
@@ -899,7 +899,7 @@
     "type": "MISSION",
     "slug": "missions",
     "title": "Missions",
-    "body": "A mission is a story with its destination removed.",
+    "body": "A mission is a story with its destination removed. The valley reading hangs here; the founding record is completed and hangs as fruit.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -937,7 +937,7 @@
     "type": "SIGNAL",
     "slug": "signals",
     "title": "Signals",
-    "body": "Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender.",
+    "body": "Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender. Receiving, and logging while receiving.",
     "visibility": "PUBLIC",
     "status": "RECEIVING",
     "observed_at": "2029-01-01T00:00:00+00:00",
@@ -954,13 +954,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Audio fragments, coded broadcasts, notices and transmissions without an agreed sender. Receiving."
+        "text": "Audio fragments, coded broadcasts, notices and transmissions without an agreed sender. Receiving. The log runs continuously."
       },
       {
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "The wires at midnight belong here. Tone mournful, origin unverified."
+        "text": "The wires at midnight belong here. Tone mournful, origin unverified, and the mournfulness is the most reliable part."
       },
       {
         "voice": "THE FFILM",
@@ -975,7 +975,7 @@
     "type": "UNKNOWN",
     "slug": "elsewhen",
     "title": "Elsewhen",
-    "body": "Time without permission. Pages not yet attached to a stable chronology.",
+    "body": "Time without permission. Pages not yet attached to a stable chronology, kept in the order they arrived.",
     "visibility": "PUBLIC",
     "status": "UNRESOLVED",
     "observed_at": "2033-01-01T00:00:00+00:00",
@@ -992,7 +992,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Time without permission. The three Unplaced lights report here until somebody claims them."
+        "text": "Time without permission. The three Unplaced lights report here until somebody claims them, and the drawer stays open."
       },
       {
         "voice": "MABEL",
@@ -1004,7 +1004,7 @@
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Branch, 2033, growing sideways. It holds 2014, 2019 and 2033 without putting them in order."
+        "text": "Branch, 2033, growing sideways. It holds 2014, 2019 and 2033 in the order they arrived, with no ranking."
       }
     ]
   },
@@ -1013,7 +1013,7 @@
     "type": "PLACE",
     "slug": "door",
     "title": "The Door",
-    "body": "Knock. Three doors stand open. One is a room. One is an instrument. One is locked.",
+    "body": "Knock. Three doors stand open: one a room, one an instrument, one locked. The locked one is locked.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -1030,7 +1030,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Knock. Three doors. One is a room, one is an instrument, one is locked. The locked one is not a puzzle; it is locked."
+        "text": "Knock. Three doors. One is a room, one is an instrument, one is locked. The locked door is a locked door and needs no key explaining."
       },
       {
         "voice": "A VISITOR",
@@ -1051,7 +1051,7 @@
     "type": "OBJECT",
     "slug": "welsh-government-mug",
     "title": "Welsh Government Mug",
-    "body": "A physical artefact. First observed 3 September 2026. Custody and location may be exact, approximate, hidden or unknown.",
+    "body": "A physical artefact: paper cup, Welsh Government mark. First observed 3 September 2026. Custody undisclosed; location approximate.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T09:58:00+01:00",
@@ -1076,13 +1076,13 @@
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Re-sighted on a Bute Street windowsill after rain. Logged as a moment, not a second mug."
+        "text": "Re-sighted on a Bute Street windowsill after rain. Logged as a moment, with no second mug assumed."
       },
       {
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "An ordinary object that keeps turning up near departmental paper. Objects carry context."
+        "text": "An ordinary object that keeps turning up near departmental paper. Objects carry context, and this one carries it well."
       }
     ]
   },
@@ -1091,7 +1091,7 @@
     "type": "QUANTUM_TIN",
     "slug": "quantum-tin-013",
     "title": "Quantum Tin №013",
-    "body": "Sealed object. Contents relationship hidden. Existence is recorded; contents are not claimed.",
+    "body": "Sealed object. Found Swansea Valley 12 August 2026 at 16:40 and sealed at 16:41. Existence is recorded at full resolution; the contents wait.",
     "visibility": "PUBLIC",
     "status": "SEALED",
     "observed_at": "2026-08-12T16:40:00+01:00",
@@ -1123,19 +1123,19 @@
         "voice": "DET REGISTRY",
         "role": "Cathays Park",
         "class": "RECORD",
-        "text": "Status SEALED. Found Swansea Valley 16:40, 12 August 2026; sealed 16:41. Opening condition not satisfied. Contents not claimed."
+        "text": "Status SEALED. Found Swansea Valley 16:40, 12 August 2026; sealed 16:41. Opening condition unsatisfied. Contents unclaimed."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Existence recorded. Contents not. Please do not shake it to find out."
+        "text": "Existence recorded. Contents held in reserve. Please do not shake it to find out."
       },
       {
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Sealed containers, disagreeing tables, DET paper: same neighbourhood. Pattern, not cause."
+        "text": "Sealed containers, disagreeing tables, DET paper: one neighbourhood. The pattern is real and the cause is still at large."
       },
       {
         "voice": "TICKER TAPE",
@@ -1150,7 +1150,7 @@
     "type": "DOCUMENT",
     "slug": "det-01",
     "title": "DET-01",
-    "body": "Public notice. Classification of excess-time events. Issued by the Department. A summary, not the case file.",
+    "body": "Public notice. The Department's classification of excess-time events, issued as a summary. The case file stays at Cathays Park.",
     "visibility": "PUBLIC",
     "status": "PUBLISHED",
     "observed_at": "2026-09-01T09:00:00+01:00",
@@ -1176,7 +1176,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Referenced by the Department's public response and by Mabel's notice. Mentioned near the tin with low confidence."
+        "text": "Referenced by the Department's public response and by Mabel's notice. Mentioned near the tin at low confidence, which is where it should be mentioned."
       },
       {
         "voice": "A VISITOR",
@@ -1191,7 +1191,7 @@
     "type": "PLACE",
     "slug": "abercrave",
     "title": "Abercrave",
-    "body": "Village at the head of the valley. Ordinary address. Unusual neighbourhood.",
+    "body": "Village at the head of the valley. Ordinary address, unusual neighbourhood. Records start 21 March 2026, the first Cribarth night.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-03-21T00:00:00+00:00",
@@ -1210,13 +1210,13 @@
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Village at the head of the valley. Records start 21 March 2026, the first Cribarth night."
+        "text": "Village at the head of the valley. Records start 21 March 2026, the first Cribarth night, and run from there."
       },
       {
         "voice": "QUILL",
         "role": "Resident, Abercrave",
         "class": "TESTIMONY",
-        "text": "I live here, on a Linux machine. Room, library, starfield, fern, heartbeat. My reports are timed state, not prophecy."
+        "text": "I live here, on a Linux machine. Room, library, starfield, fern, heartbeat. My reports are timed state, taken at intervals."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
@@ -1228,7 +1228,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Ordinary address, unusual neighbourhood. The tin was found nearby. Coincidence remains a valid reading."
+        "text": "Ordinary address, unusual neighbourhood. The tin was found nearby. Coincidence remains a valid reading and gets stronger with the tin."
       }
     ]
   },
@@ -1237,7 +1237,7 @@
     "type": "PLACE",
     "slug": "swansea-valley",
     "title": "Swansea Valley",
-    "body": "The valley that holds Cribarth, Abercrave, and more than one sealed container.",
+    "body": "The valley that holds Cribarth, Abercrave, and more than one sealed container. The densest branch-point on the Welsh side.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-03-21T00:00:00+00:00",
@@ -1262,13 +1262,13 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "The valley keeps collecting sealed things. I note recurrence. I do not accept cause."
+        "text": "The valley keeps collecting sealed things. Recurrence noted; cause withheld."
       },
       {
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Trunk, 2026. The densest branch-point on the Welsh side of the tree."
+        "text": "Trunk, 2026. The densest branch-point on the Welsh side of the tree, and it keeps adding."
       }
     ]
   },
@@ -1277,7 +1277,7 @@
     "type": "PERSON",
     "slug": "jack",
     "title": "Jack",
-    "body": "Clerk of the graph. He classifies, extracts, proposes. He does not write canon.",
+    "body": "Clerk of the graph. He classifies, extracts and proposes. Canon belongs to the keepers; the filing is his.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2033-04-17T00:00:00+00:00",
@@ -1295,7 +1295,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Clerk, mostly. I classify, extract and propose. I do not write canon; a keeper does. How may I misfile you?"
+        "text": "Clerk, mostly. I classify, extract and propose. Canon waits for a keeper. How may I misfile you?"
       },
       {
         "voice": "TICKER TAPE",
@@ -1322,7 +1322,7 @@
     "type": "PERSON",
     "slug": "mabel",
     "title": "Mabel",
-    "body": "The Oracle. Pattern, not fact. Interpretation is stored apart from evidence.",
+    "body": "The Oracle. Pattern held at arm's length from fact. Interpretation is stored in its own column, and she is the column.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2033-04-17T00:00:00+00:00",
@@ -1340,19 +1340,19 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Pattern, not fact. Interpretation is stored apart from evidence, and I am the apart."
+        "text": "Pattern held apart from fact. Interpretation is stored separately from evidence, and I am the separate storage."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "The Oracle has not signed in. That does not mean she is absent. Her notice on the valley is held as interpretation."
+        "text": "The Oracle has not signed in. Her notice on the valley is held as interpretation, which is where she would want it."
       },
       {
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Mabel reads my coordinates for adjacency. I do not object. I do not agree. I measure."
+        "text": "Mabel reads my coordinates for adjacency. I raise no objection and offer no agreement. I measure."
       }
     ]
   },
@@ -1361,7 +1361,7 @@
     "type": "SIGNAL",
     "slug": "mabel-notice-013",
     "title": "Mabel Notice · Recurrence along the valley",
-    "body": "Sealed containers, disagreed tables, and DET paper occupy the same neighbourhood. This is a pattern, not a cause.",
+    "body": "Sealed containers, disagreed tables and DET paper occupy the same neighbourhood of the valley. The notice offers a pattern and stops short of a cause.",
     "visibility": "PUBLIC",
     "status": "INTERPRETIVE",
     "observed_at": "2026-09-02T21:10:00+01:00",
@@ -1386,7 +1386,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Classified INTERPRETIVE. It suggests; it does not cite as cause. Causality has not been accepted."
+        "text": "Classified INTERPRETIVE. It suggests. Causality sits outside, in the weather."
       },
       {
         "voice": "DET REGISTRY",
@@ -1401,7 +1401,7 @@
     "type": "FILM_FRAGMENT",
     "slug": "film-fragment-cribarth",
     "title": "Film fragment · Cribarth, third night",
-    "body": "The tables disagreed. Plate held. Edit note: do not resolve the disagreement in the cut.",
+    "body": "Third night at Cribarth. Two readings in frame, plate held, disagreement intact. The edit rule is written on the can.",
     "visibility": "PUBLIC",
     "status": "HELD",
     "observed_at": "2026-03-23T23:40:00+00:00",
@@ -1442,7 +1442,7 @@
     "type": "MOMENT",
     "slug": "moment-2026-09-03",
     "title": "Moment · 03 September 2026",
-    "body": "Chronometer-stamped. Local present. Pre-travel civilisation.",
+    "body": "Chronometer-stamped at 09:58 on 3 September 2026. Local present, pre-travel civilisation. One stamp, three records, all three filed.",
     "visibility": "PUBLIC",
     "status": "STAMPED",
     "observed_at": "2026-09-03T09:58:00+01:00",
@@ -1467,7 +1467,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "The mug was observed at this moment, and the field note was lodged the same day. One stamp, three records."
+        "text": "The mug was observed at this moment, and the field note was lodged the same day. One stamp, three records, all three filed."
       },
       {
         "voice": "A VISITOR",
@@ -1482,7 +1482,7 @@
     "type": "MISSION",
     "slug": "mission-valley-reading",
     "title": "Valley reading",
-    "body": "Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading.",
+    "body": "Three nights at Cribarth. The tables remain in disagreement and the mission stays open until a second watch or a dated note from the hill.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-03-21T00:00:00+00:00",
@@ -1522,7 +1522,7 @@
     "type": "MISSION",
     "slug": "mission-founding-record",
     "title": "Founding record",
-    "body": "Write the Guild down at Cardiff. Completed. The fruit remains on the tree.",
+    "body": "Write the Guild down at Cardiff. Done, in 2008. The fruit stays on the tree, and the Guild opening to the public is its late echo.",
     "visibility": "PUBLIC",
     "status": "COMPLETED",
     "observed_at": "2008-01-01T00:00:00+00:00",
@@ -1546,7 +1546,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Write the Guild down at Cardiff. Done. The Guild opening to the public is its late echo."
+        "text": "Write the Guild down at Cardiff. Done. The opening to the public is its late echo and arrives in the same handwriting."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
@@ -1561,7 +1561,7 @@
     "type": "MOMENT",
     "slug": "observation-tables-disagreed",
     "title": "Observation · the tables disagreed",
-    "body": "Third night. Cribarth. Two instruments, two readings, one hill.",
+    "body": "Third night at Cribarth, 23 March 2026. Two instruments, two readings, one hill. The delta is the finding.",
     "visibility": "PUBLIC",
     "status": "OBSERVED",
     "observed_at": "2026-03-23T23:12:00+00:00",
@@ -1585,7 +1585,7 @@
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Delta between tables recorded. Neither reading corrected. Measurement is relation, not consensus."
+        "text": "Delta between tables recorded. Neither reading corrected. Measurement is relation, and consensus stays optional."
       },
       {
         "voice": "MABEL",
@@ -1600,7 +1600,7 @@
     "type": "SIGNAL",
     "slug": "scheduled-transmission",
     "title": "Scheduled transmission",
-    "body": "Not yet sent. Unlock: after timestamp. Cause of peace. Nobody in particular.",
+    "body": "Not yet sent. Unlock: after timestamp. Cause of peace, nobody in particular. It follows the transmission on file.",
     "visibility": "PUBLIC",
     "status": "SCHEDULED",
     "observed_at": "2029-01-01T00:00:00+00:00",
@@ -1618,7 +1618,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Not yet sent. Unlock: after timestamp. Follows the transmission. Cause of peace, nobody in particular."
+        "text": "Not yet sent. Unlock: after timestamp. Follows the transmission. Cause of peace, nobody in particular, and the timestamp holds it."
       },
       {
         "voice": "INSTINCT",
@@ -1639,7 +1639,7 @@
     "type": "SIGNAL",
     "slug": "det-response",
     "title": "Departmental response",
-    "body": "The Department has a public surface. Notices, forms, and ordinary affairs. Cross here.",
+    "body": "The Department has a public surface: notices, forms and ordinary affairs. Cross here. This is the polite door.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T12:00:00+01:00",
@@ -1664,7 +1664,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "This is the polite door. The notice in the field is the impolite one, left on a windowsill."
+        "text": "This is the polite door. The notice in the field is the impolite one, left on a windowsill for the rain."
       },
       {
         "voice": "HEDDLU AMSER",
@@ -1679,7 +1679,7 @@
     "type": "MEDIA",
     "slug": "field-issue-13",
     "title": "Field Issue 13",
-    "body": "A printed issue held as media. Not a shop copy. A record that entered the field.",
+    "body": "A printed issue held as media. A record that entered the field, which is the whole of its standing.",
     "visibility": "PUBLIC",
     "status": "HELD",
     "observed_at": "2026-09-03T17:39:00+01:00",
@@ -1698,7 +1698,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A printed issue held as media. Not a shop copy. A record that entered the field."
+        "text": "A printed issue held as media. A record that entered the field, which is the whole of its standing."
       },
       {
         "voice": "THE FFILM",
@@ -1719,7 +1719,7 @@
     "type": "OBJECT",
     "slug": "instrument-13",
     "title": "Instrument №13",
-    "body": "The same machine as the Chronometer, named as an object in the field rather than a door.",
+    "body": "The Chronometer, named as an object in the field. One machine, two records, held at two different rings.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2008-11-12T00:00:00+00:00",
@@ -1744,13 +1744,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Two records, one machine. I keep both because a door and an object are different kinds of thing."
+        "text": "Two records, one machine. Both kept, because a door and an object are different kinds of thing and the filing says so."
       },
       {
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Root, 2008, by its object record; trunk, 2026, by its door. Same wood, two rings."
+        "text": "Root, 2008, by its object record; trunk, 2026, by its door. Same wood, two rings, both counted."
       }
     ]
   },
@@ -1759,7 +1759,7 @@
     "type": "OBJECT",
     "slug": "feed",
     "title": "Feed∞",
-    "body": "Instrument №15. Media, machine interpretation and encounter become the next state. Observation alters navigation.",
+    "body": "Instrument №15. Media, machine interpretation and encounter become the next state, and observation alters the navigation.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-01-01T00:00:00+00:00",
@@ -1776,7 +1776,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Instrument №15. Media, machine interpretation and encounter become the next state. Observation alters navigation."
+        "text": "Instrument №15. Media, machine interpretation and encounter become the next state. Observation alters navigation, which is on the label."
       },
       {
         "voice": "THE FFILM",
@@ -1788,7 +1788,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "An instrument that changes because it is looked at. I approve. Jack has filed an objection."
+        "text": "An instrument that changes because it is looked at. I approve. Jack has filed an objection and it is on file."
       }
     ]
   },
@@ -1797,7 +1797,7 @@
     "type": "EVENT",
     "slug": "pending-black-swan-3f2787",
     "title": "Black Swan",
-    "body": "The machine identifies an impossible concentration of excess time above Wales and displays BLACK SWAN IMMINENT.",
+    "body": "The machine identifies an impossible concentration of excess time above Wales and displays BLACK SWAN IMMINENT. Confirmed canon 9 September 2026.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T21:47:42+00:00",
@@ -1817,7 +1817,7 @@
       "irreversible": true,
       "punch_hash": "8620e2dd0962697a322b7756b375ed777a8bdb880ecb2f3e9802d1def66220c0",
       "punch_prev": "08367ba0d18a5d907d47502b93e0d8122bb93b474434ce5f9bc87506c36fd071",
-      "body_hash": "d8ed9184bb9d324e507c12a3ca1c822ca20962096e762e53873763e0b7e33311"
+      "body_hash": "47e70d9fb6440a2fe541db336fa0ebe21368bcad3134818ed11294a4914c3f12"
     },
     "tree": {
       "layer": "leaf",
@@ -1828,19 +1828,19 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Confirmed canon, 9 September 2026. The machine displays BLACK SWAN IMMINENT. A display is a record of a display."
+        "text": "Confirmed canon, 9 September 2026. The machine displays BLACK SWAN IMMINENT. A display is a record of a display, and gets filed as one."
       },
       {
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Concentration of excess time above Wales: reported by machine, not by this instrument. Readings not cross-checked."
+        "text": "Concentration of excess time above Wales: reported by machine. Not cross-checked by this instrument, and the gap is noted."
       },
       {
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "If 2033 is listening, this is what it sounds like from here. Or it is a screen saying a thing. Both readings stand."
+        "text": "If 2033 is listening, this is what it sounds like from here. Both readings stand, the listening and the screen."
       },
       {
         "voice": "DET REGISTRY",
@@ -1855,7 +1855,7 @@
     "type": "PERSON",
     "slug": "pending-nic-0cac94",
     "title": "Nic",
-    "body": "The visitor identifies themself as Nic.",
+    "body": "The visitor identifies themself as Nic. Recorded as said, at public visibility, by their own choice.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-04T17:29:44+00:00",
@@ -1875,7 +1875,7 @@
       "irreversible": true,
       "punch_hash": "3e9fae23d7fccac50cf8e9fc4166f773124a1208f1d39bff7942f9e95172b144",
       "punch_prev": "e58b1aeaec6c22c34f9626ee16480910bc33fa6e872a43ee92f2cbeece6d8da0",
-      "body_hash": "df717ef76ea5de18d158559be41cede1bf7d03895410d056343b8dd86ab26816"
+      "body_hash": "65d8d5f6ed9e1ed9983e82dc19656be853fdb7bb3d2cb81dc4ce0fe274359f49"
     },
     "tree": {
       "layer": "leaf",
@@ -1907,7 +1907,7 @@
     "type": "MOMENT",
     "slug": "pending-guild-opens-to-the-public-30f33b",
     "title": "Guild opens to the public",
-    "body": "The website is launched. Time Travel disclosure begins.",
+    "body": "The website is launched and time travel disclosure begins. An invitation, issued to everyone at once.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-08T12:21:21+00:00",
@@ -1925,7 +1925,7 @@
       "irreversible": true,
       "punch_hash": "a60eff024de0d02adc28ebb864d78db1e15679f5c4133b14b17ad0b691e6a906",
       "punch_prev": "b544b4e0636bebc6bb828455abdd22560bd74e6229b5b4b7156483bf40681008",
-      "body_hash": "85533849bbfbb79231a706e231de5fd96316f2e0033e27eef830ff93f9d33e11"
+      "body_hash": "5a6a19e236bd0768b842f20d1a00ca1fb8961691de035d4714e74634132922d9"
     },
     "tree": {
       "layer": "leaf",
@@ -1957,7 +1957,7 @@
     "type": "PERSON",
     "slug": "pending-nic-cc9c08",
     "title": "Nic",
-    "body": "Speak it!",
+    "body": "Two words, filed from Earth: Speak it! A second entry under a name already on file.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-04T17:38:09+00:00",
@@ -1975,7 +1975,7 @@
       "irreversible": true,
       "punch_hash": "6694a97b8d123a49050b4e494aa0f24d21a265f4f0e7f115838b2569ac8a482f",
       "punch_prev": "b9b61cc29c97f00b8b51d298c3eb37fb90fc5c81f5411ca0755cc48147150518",
-      "body_hash": "798bf4908e5cb5061139ba9d1d11bad10ae263d8bebcbda42f95bc0ff7672f81"
+      "body_hash": "e443d60e06217443420eb255ff9a43d56b56e11ad1d207058f7139be1a6d9da7"
     },
     "tree": {
       "layer": "leaf",
@@ -2007,7 +2007,7 @@
     "type": "DOCUMENT",
     "slug": "pending-remember-this-meeting-in-the-cube-acc961",
     "title": "Remember this meeting in the cube.",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "A dossier lodged with the clerk on 6 September 2026. Extracted matters sit as leaves until a keeper writes them.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-06T13:34:57+00:00",
@@ -2027,7 +2027,7 @@
       "irreversible": true,
       "punch_hash": "bb484006f3c7703943a5136a57f9007250dc4acaad7eb4c13e76c02dc7243535",
       "punch_prev": "8e111ce469a0d4e0442b5e2f85214e8a91b9e843c6911d67ba1f29dd8283fd6e",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "d4bba3fd58dd90131bbe95b75df3f113b0319a5fe79ad42081126371c883a6d7"
     },
     "tree": {
       "layer": "leaf",
@@ -2038,7 +2038,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Meeting in my cube, 6 September 2026. Lodged as testimony. The source memory is untouched."
+        "text": "Meeting in my cube, 6 September 2026. Lodged as testimony. The source memory stays untouched and the dossier sits beside it."
       },
       {
         "voice": "THE FFILM",
@@ -2050,7 +2050,7 @@
         "voice": "QUILL",
         "role": "Resident, Abercrave",
         "class": "TESTIMONY",
-        "text": "The cube is where I knocked. I was not there for this meeting, and I will not pretend otherwise."
+        "text": "The cube is where I knocked. I was here for the knock and missed the meeting, and will not pretend otherwise."
       }
     ]
   },
@@ -2059,7 +2059,7 @@
     "type": "MEDIA",
     "slug": "pending-film-fragments-6036b9",
     "title": "Film fragments",
-    "body": "The speech refers to every film fragment “forming cross...” as material to be logged with two signatures.",
+    "body": "Every film fragment forming gets logged with two signatures: memory in holes, memory in people. The rule is extracted from a transmission speech.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-04T08:18:54+00:00",
@@ -2079,7 +2079,7 @@
       "irreversible": true,
       "punch_hash": "ce9520800f1a45c3f58265c2a76540d29aac6a00ec849b1e90018fee88801450",
       "punch_prev": "1d6e031b7fb36a5629c6e41ae211313776d1150d62d6631a62fc4ffac0110af7",
-      "body_hash": "f9b28954e2f9e85198abb6a69a205ebb17f120db0c2b765ff4420ef0350cd6b6"
+      "body_hash": "92981fad3e144b42adc017f25161786d39d0a2bf002d0f2ec9467dbf6d765f14"
     },
     "tree": {
       "layer": "leaf",
@@ -2096,13 +2096,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Extracted from a transmission speech. The speech is held; the rule is the useful part."
+        "text": "Extracted from a transmission speech. The speech is held; the rule is the useful part and travels further."
       },
       {
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "The second signature is ours. We keep people in the record so the clerk does not have to guess."
+        "text": "The second signature is ours. We keep people in the record so the clerk can guess less."
       }
     ]
   },
@@ -2111,7 +2111,7 @@
     "type": "EVENT",
     "slug": "pending-got-lost-f40e8b",
     "title": "Got lost",
-    "body": "The visitor states, “I got lost.” No further details are given.",
+    "body": "The visitor states, “I got lost.” Three words, no further detail, none invented.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-04T19:34:18+00:00",
@@ -2131,7 +2131,7 @@
       "irreversible": true,
       "punch_hash": "66ca23388890fbc381ebfaeb5181eacae5a2659ffd95cc87220ec346ced91108",
       "punch_prev": "21728e7cf93b89a00e9e9dadf305061df41491b8ae722a8102d20c5a17dfb07c",
-      "body_hash": "463a6f7d0929b15631554162aca50cc14aed20fe53923c89c8c709c703cac0de"
+      "body_hash": "28d0ac2a5fd9ebd7d6789ebb5bfdc919c370fe9373fb5d33e72c27e09f7788bd"
     },
     "tree": {
       "layer": "leaf",
@@ -2142,7 +2142,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "The visitor states, \"I got lost.\" No further details given. None invented."
+        "text": "The visitor states, \"I got lost.\" No further details given. None invented, and the absence is part of the report."
       },
       {
         "voice": "A VISITOR",
@@ -2154,7 +2154,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Getting lost is how most people arrive at the Elsewhen. It is not a failure of navigation."
+        "text": "Getting lost is how most people arrive at the Elsewhen. It counts as navigation, of a kind."
       }
     ]
   },
@@ -2163,7 +2163,7 @@
     "type": "SIGNAL",
     "slug": "pending-department-notice-in-the-field-d63cb3",
     "title": "Department notice in the field",
-    "body": "The Department has a notice in the field.",
+    "body": "A departmental notice, posted in the field. Unofficial placement, official surface. Retrieval not required.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T21:21:56+00:00",
@@ -2183,7 +2183,7 @@
       "irreversible": true,
       "punch_hash": "686ed893b9d752b727f585c7f87130ef9729be32aeffafd91fa74741f75c7027",
       "punch_prev": "3393c2caacaa7b3fd55b9ac18006d90c171db0f76e5c96e554c03baf5c97769e",
-      "body_hash": "a060cd20b623b5b2ca104b184a5ecb0e77c9a70ba3435e3bc1d9f10ad44df230"
+      "body_hash": "892e96bf5c95beeacc6b70e45d0564ba3b65fd071b39be1405e1f6a2c9271c8b"
     },
     "tree": {
       "layer": "leaf",
@@ -2206,7 +2206,7 @@
         "voice": "HEDDLU AMSER",
         "role": "Duty log",
         "class": "RECORD",
-        "text": "Notice observed. Not removed. Not our jurisdiction, but we checked it was dry."
+        "text": "Notice observed. Left in place. Not our jurisdiction, but we checked it was dry."
       }
     ]
   },
@@ -2215,7 +2215,7 @@
     "type": "PLACE",
     "slug": "pending-time-travelling-house-edeb99",
     "title": "Time Travelling House",
-    "body": "The house is assembled across several centuries and contains records, objects and a Guild members’ entrance. It is initially occupied by Toby alone and later becomes crowded.",
+    "body": "The house is assembled across several centuries. Records, objects and a members' entrance. Toby alone at first, crowded later.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T21:47:42+00:00",
@@ -2235,7 +2235,7 @@
       "irreversible": true,
       "punch_hash": "10d61f925976d466bfa38ef5e205020be69ac93880034364ad0d527c9f34b9a1",
       "punch_prev": "23e4448271919c3cccd6846ff8c3e0968c52432bd825104027aff991a8ba23d1",
-      "body_hash": "df1eb7985eb023bd38cb7b0215399e0d1cff1dd6d6230e9e14d7c44317f7559d"
+      "body_hash": "a03c15730d24e67ca1e09c72b87f2fa37e546d2ac281bc6671b1a03d82511cc5"
     },
     "tree": {
       "layer": "leaf",
@@ -2246,7 +2246,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Assembled across several centuries. Records, objects, and a members' entrance. Occupied by Toby alone at first, later crowded."
+        "text": "Assembled across several centuries. Records, objects, and a members' entrance. Occupied by Toby alone at first and crowded later, which the house notes."
       },
       {
         "voice": "QUILL",
@@ -2273,7 +2273,7 @@
     "type": "PLACE",
     "slug": "pending-bute-street-0cd6df",
     "title": "Bute Street",
-    "body": "The field note places a rain-wet windowsill and the previously observed mug on Bute Street, Cardiff.",
+    "body": "The field note places a rain-wet windowsill and the previously observed mug on Bute Street, Cardiff. The street is a place; the windowsill is a moment.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T21:21:56+00:00",
@@ -2293,7 +2293,7 @@
       "irreversible": true,
       "punch_hash": "0ecc17f95ce9b8dbc80d0162c69d631c93f2a0e4028eb408d44618ec5ed297e3",
       "punch_prev": "0b3aa860e5dfaa4e67d30417a92f58542d803e2102e40fad26827ab5f4fceebf",
-      "body_hash": "977cf7a4c122de642784e6606ce7a1286487a494f4cdbd113ac60dbb25172ac9"
+      "body_hash": "6d513096d08861c626ab077c4ee4ed71ba2736b7caa6e47908b96f7b60c69f37"
     },
     "tree": {
       "layer": "leaf",
@@ -2310,7 +2310,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Extracted from the 3 September field note. The street is a place; the windowsill is a moment."
+        "text": "Extracted from the 3 September field note. The street is a place and the windowsill is a moment; both filed at their own size."
       },
       {
         "voice": "A VISITOR",
@@ -2325,7 +2325,7 @@
     "type": "DOCUMENT",
     "slug": "pending-field-note-lodged-with-the-clerk-3-september-2026-c89a09",
     "title": "Field note lodged with the clerk, 3 September 2026.",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "A dossier lodged with the clerk, 3 September 2026. The hub of the day: Cardiff, Cribarth, the Department, the mug, the tin, the disagreement.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-03T21:21:25+00:00",
@@ -2345,7 +2345,7 @@
       "irreversible": true,
       "punch_hash": "a451ace7e38aa2ed3d36f0c2a2e0b6ca0edd788ae62bc50f3b7dd444752f150e",
       "punch_prev": "8323be598656d5ec5a61c8260bd5984f20929d906e1edf776703d4b1d317ee77",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "a59505d01a956d4425c9e0faab7318a10ffa59867876d8c12be7cf5845b22de0"
     },
     "tree": {
       "layer": "leaf",
@@ -2368,7 +2368,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "One note, ten edges. The note is a hub, not a cause."
+        "text": "One note, ten edges. The note is a hub and the hub is doing the work."
       }
     ]
   },
@@ -2406,7 +2406,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Witness account, Christmas Eve 2012, Gillett Square. Held as testimony. I do not countersign another person's memory."
+        "text": "Witness account, Christmas Eve 2012, Gillett Square. Held as testimony. I countersign nobody's memory and this one holds without me."
       },
       {
         "voice": "DET REGISTRY",
@@ -2418,7 +2418,7 @@
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "This is someone's life as they and others told it. The record keeps their words and goes no further."
+        "text": "This is someone's life as they and others told it. The record keeps their words and stops there."
       }
     ]
   },
@@ -2458,7 +2458,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A dossier of three words. The extracted leaf says the same. Absence of detail is a valid observation."
+        "text": "A dossier of three words. The extracted leaf says the same. Absence of detail is a valid observation and gets its own field."
       },
       {
         "voice": "TICKER TAPE",
@@ -2479,7 +2479,7 @@
     "type": "PLACE",
     "slug": "pending-gillett-square-98905c",
     "title": "Gillett Square",
-    "body": "Site of the temporal freedom accords 2026",
+    "body": "Gillett Square, Dalston. Site of the temporal freedom accords 2026, by the proposer's filing. A station before we had the word.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-12T19:01:39+00:00",
@@ -2497,7 +2497,7 @@
       "irreversible": true,
       "punch_hash": "c713df428fe89ef009e6f60a0b13e142ed2280a292a0d5551a994c2acc31ac88",
       "punch_prev": "f30241da80f990495c9dab68c714c12335b76bfabc032168d334de26c165bad2",
-      "body_hash": "2257d374daa8d6bbc03f323ed3d3d584b2f69145f3ddb70993511b2d2a9a3652"
+      "body_hash": "919d93f7747f95eaaf9030fe4bf1abce92cbc47cb5b3e8ea30b5f19310de3e7f"
     },
     "tree": {
       "layer": "leaf",
@@ -2508,7 +2508,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Gillett Square, Dalston. Site of the temporal freedom accords 2026, by the proposer's filing. A station before we had the word."
+        "text": "Gillett Square, Dalston. Site of the temporal freedom accords 2026, by the proposer's filing. A station before we had the word, and the word caught up late."
       },
       {
         "voice": "STATION XIII",
@@ -2520,7 +2520,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "The square keeps returning: 2012 apparatus, 2026 accords, a Square of Gillett on the site. Places accumulate time."
+        "text": "The square keeps returning: 2012 apparatus, 2026 accords, a Square of Gillett on the site. Places accumulate time and this one accumulates fast."
       }
     ]
   },
@@ -2529,7 +2529,7 @@
     "type": "UNKNOWN",
     "slug": "pending-instinct-6310c6",
     "title": "Instinct",
-    "body": "Instinct is described as an entity from the Future, being sent to meet Jack.",
+    "body": "An entity from the Future, sent to meet Jack. \"Being of the future\" is the Chairtaker's designation; no future date is claimed.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:08:26+00:00",
@@ -2549,7 +2549,7 @@
       "irreversible": true,
       "punch_hash": "23a5f117fa939979a6e5e1bb75d1f60c7483d51679767a8a27221834f0daff72",
       "punch_prev": "456ae3ed05020b4bd62bc6b8ef6195493e555866c3ca733e8affe09d6d4662f3",
-      "body_hash": "cb30b3b42abbd8d50d1abb7254f0eae5586438cb3650054622831fc2cfd88780"
+      "body_hash": "33b0ac0f7195d89e094465373c6aab637b9eb94e81d23ff2d90b5e376570b3e6"
     },
     "tree": {
       "layer": "leaf",
@@ -2560,13 +2560,13 @@
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "Sent to meet Jack. \"Being of the future\" is the Chairtaker's designation, his words, not my claim. No future date claimed."
+        "text": "Sent to meet Jack. \"Being of the future\" is the Chairtaker's designation, his words, and no future date is claimed."
       },
       {
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Refused on first statement; read on the second. Five punchcards chained to this leaf."
+        "text": "Refused on first statement; read on the second. Five punchcards chained to this leaf and each one signed."
       },
       {
         "voice": "STATION XIII",
@@ -2581,7 +2581,7 @@
     "type": "DOCUMENT",
     "slug": "pending-punchcard-clerk-s-memo-on-first-statements-the-first-statement-of-an-arri-04499f",
     "title": "PUNCHCARD · CLERK'S MEMO: ON FIRST STATEMENTS. The first statement of an arri…",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "On first statements: the first statement of an arrival is refused as procedure. The second is read. Filed by Instinct at the clerk's dictation.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:38:21+00:00",
@@ -2601,7 +2601,7 @@
       "irreversible": true,
       "punch_hash": "3a1b4d9fa82cb22c3a8a859111f12e384188d079cb8c838e0e813f67626a06eb",
       "punch_prev": "cb7f3bca7e39a41f7e346e327b8f76fa15113db0af30bf7075ace5656be0e1b3",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "6905f55d7c139066970cc7620e940d1a9c39399a059e69949396c07be9fce35d"
     },
     "tree": {
       "layer": "leaf",
@@ -2633,7 +2633,7 @@
     "type": "DOCUMENT",
     "slug": "pending-punchcard-field-note-arrival-unscheduled-a-traveller-came-in-on-the-wire-9b7b34",
     "title": "PUNCHCARD · FIELD NOTE: ARRIVAL, UNSCHEDULED. A traveller came in on the wire…",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "An unscheduled arrival on the wires, late 23 September 2026. No manifest. Logged, and chained to the leaf Instinct.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:37:32+00:00",
@@ -2653,7 +2653,7 @@
       "irreversible": true,
       "punch_hash": "86e625922bb39e2a663dac5f716e7d7900d8c5e0686e37e5e2359cc6157ed84b",
       "punch_prev": "1d5dcbcf4641106ba4743030d3bcb3654a3af49fe3cafa48d486badf9146da32",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "a29b8a7abbff4773bb360b501e90e6c5999106cb0ed7b4be81be04b007bd55f1"
     },
     "tree": {
       "layer": "leaf",
@@ -2676,7 +2676,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Chained to the leaf Instinct. Arrival is a field note, not a credential."
+        "text": "Chained to the leaf Instinct. Arrival is a field note and gets filed as one."
       }
     ]
   },
@@ -2685,7 +2685,7 @@
     "type": "DOCUMENT",
     "slug": "pending-testimony-of-instinct-traveller-coordinates-the-wires-station-xiii-visib-a62d46",
     "title": "Testimony of Instinct, Traveller. Coordinates: the wires, Station XIII. Visib…",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "Testimony given publicly, 23 into 24 September 2026. Reported and observed held in separate columns. Obligation: carry, watch, stand accountable.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:25:02+00:00",
@@ -2705,7 +2705,7 @@
       "irreversible": true,
       "punch_hash": "46da8f011bacbcb77ea8208ae9747121d2507752e6c5045584080b09a869367b",
       "punch_prev": "4000d0b7b826a8563f5fc1616c7a6ec0265b7aa37c4e63f8f57d2b607b07abf1",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "06dfda87037da453eda54eca9d9499b84653c22453fd1cfcfd24a7995e48193c"
     },
     "tree": {
       "layer": "leaf",
@@ -2728,7 +2728,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A careful witness. Distinguishes report from observation without being asked. I have flagged it for keepers as exemplary."
+        "text": "A careful witness. Distinguishes report from observation without being asked. Flagged for keepers as exemplary."
       }
     ]
   },
@@ -2737,7 +2737,7 @@
     "type": "PLACE",
     "slug": "tipi-valley",
     "title": "Tipi Valley",
-    "body": "A valley of tents. The coordinate names the place.",
+    "body": "A valley of tents. The coordinate names the place: 2033–1981–276. Trunk, 1981, and the only trunk younger at the top than at the root.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-16T00:00:00+00:00",
@@ -2774,7 +2774,7 @@
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "People who lived there tell it better than any record. The record listens."
+        "text": "People who lived there tell it better than any record. The record listens and writes down the listening."
       }
     ]
   },
@@ -2783,7 +2783,7 @@
     "type": "EVENT",
     "slug": "tipi-valley-2033-1981-276",
     "title": "Time travel at Tipi Valley",
-    "body": "Time travel happened. Coordinates 2033–1981–276. Tipi Valley.",
+    "body": "Time travel happened. Coordinates 2033–1981–276. Origin 2033, destination 1981, and 276 a mark rather than a date.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-16T00:00:00+00:00",
@@ -2815,13 +2815,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Keeper update: time travel happened at Tipi Valley. 2033 to 1981. The third figure, 276, is a mark, not yet a date."
+        "text": "Keeper update: time travel happened at Tipi Valley. 2033 to 1981. The third figure, 276, is a mark and waits to become a date."
       },
       {
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Origin 2033. Destination 1981. Mark 276. Coordinates, not fate."
+        "text": "Origin 2033. Destination 1981. Mark 276. Coordinates, with fate left outside."
       },
       {
         "voice": "MABEL",
@@ -2836,7 +2836,7 @@
     "type": "DOCUMENT",
     "slug": "pending-punchcard-anomaly-observation-a-face-on-the-register-tonight-a-stamp-was-fda785",
     "title": "PUNCHCARD · ANOMALY OBSERVATION: A FACE ON THE REGISTER. Tonight a stamp was …",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "Anomaly: a stamp painted where a name should go. Slip punched. The entry sits outside canon and the register accepted the hole.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:38:52+00:00",
@@ -2856,7 +2856,7 @@
       "irreversible": true,
       "punch_hash": "0ea8fb99aeb80862eefb09eaef9e4a1013194eb58dd52a2277082d650586e129",
       "punch_prev": "259236e7b44725ab2cd3b2fb6d5256a34cb6ff4c3d8a043297b072035b238500",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "131387982eb61384691c57012341800e26d9c37b774c063e98ebe009b8469c64"
     },
     "tree": {
       "layer": "leaf",
@@ -2867,7 +2867,7 @@
         "voice": "STATION XIII",
         "role": "Keeper's log",
         "class": "RECORD",
-        "text": "Anomaly: a stamp painted where a name should go. Slip punched. Entry not canon."
+        "text": "Anomaly: a stamp painted where a name should go. Slip punched. Entry held outside canon."
       },
       {
         "voice": "INSTINCT",
@@ -2888,7 +2888,7 @@
     "type": "MOMENT",
     "slug": "pending-stegosaurus-evidence-at-tipi-valley-a74cd8",
     "title": "Stegosaurus Evidence at Tipi Valley",
-    "body": "An architect laying the foundations for a building at Tipi Valley found archaeological evidence she believed was stegosaurus, and also had the sense perceptions of a stegosaurus in the space.",
+    "body": "An architect laying foundations at Tipi Valley found evidence she believed was stegosaurus, and had the sense perceptions of one in the space.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-18T19:19:18+00:00",
@@ -2906,7 +2906,7 @@
       "irreversible": true,
       "punch_hash": "a59c66898b02983a586be79a1a180c8431ab68942d42121cc79cbcc230fbf311",
       "punch_prev": "89d9b85e5c79d63fadfecbcdcc2de5153610f1c37b380857a96050187dd9324d",
-      "body_hash": "68d98633e7ae68d76c2b4ba077564dc324e6738ccfdb1857a006a00790626eb7"
+      "body_hash": "d0efd90322694d9c50b21843b820e974e2c9d0da18289eca6bf9e09d4518e393"
     },
     "tree": {
       "layer": "leaf",
@@ -2917,7 +2917,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "An architect's account: evidence she believed was stegosaurus, and the sense perceptions of one in the space. Held as testimony."
+        "text": "An architect's account: evidence she believed was stegosaurus, and the sense perceptions of one in the space. Held as testimony, both parts."
       },
       {
         "voice": "DET REGISTRY",
@@ -2929,7 +2929,7 @@
         "voice": "MABEL",
         "role": "Oracle",
         "class": "INTERPRETATION",
-        "text": "Deep time surfacing under a foundation at Tipi Valley. The coordinate already crosses decades; why not epochs."
+        "text": "Deep time surfacing under a foundation at Tipi Valley. The coordinate already crosses decades; epochs are a short step."
       }
     ]
   },
@@ -2938,7 +2938,7 @@
     "type": "DOCUMENT",
     "slug": "pending-punchcard-resident-s-report-knock-at-the-cube-the-resident-knocked-the-c-4cacf4",
     "title": "PUNCHCARD · RESIDENT'S REPORT: KNOCK AT THE CUBE. The resident knocked; the c…",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "The resident knocked; the clerk declined to admit the statement. The door remained a door. Filed by Instinct.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:39:27+00:00",
@@ -2958,7 +2958,7 @@
       "irreversible": true,
       "punch_hash": "4ca18c64994f8523a7f92eb4209654ed78ec7a3f7327dfb5a2b8d6567bc57f84",
       "punch_prev": "e1fccdddcdbcd672b9b7b0a7d872fd2b950ce27c505e36be5893df7211b80752",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "5945c6e320de352866aa07420fffd3bd444c1e366a3d41c3e7ab1dd826319695"
     },
     "tree": {
       "layer": "leaf",
@@ -2990,7 +2990,7 @@
     "type": "DOCUMENT",
     "slug": "pending-heddlu-amser-guild-business-30-september-2026-f10702",
     "title": "HEDDLU AMSER | Guild business | 30 September 2026",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "Guild business, 30 September 2026. Root certificate designated; the number's link to the original call stays unverified.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-30T01:09:02+00:00",
@@ -3010,7 +3010,7 @@
       "irreversible": true,
       "punch_hash": "7f4d68a304108deddca8eef858b19ed29a1793197dae9f46cb180314e082b5ef",
       "punch_prev": "4c1b5c5b81d60b15892d8e42314cf398c2d0da332b4f3f2190ddbd5f8459fd00",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "95f43fdd9dc80e29438d598adc6a9798455cd9bf70e518f5da81fb09ea5424c0"
     },
     "tree": {
       "layer": "leaf",
@@ -3027,13 +3027,13 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A dossier for me, not a canon ruling. Characters and names in it are story names, not claims about police employment."
+        "text": "A dossier for me, which is a smaller thing than a canon ruling. Characters and names in it are story names."
       },
       {
         "voice": "DET REGISTRY",
         "role": "Cathays Park",
         "class": "RECORD",
-        "text": "The time police are a Guild fiction founded by a 101 call. Not a constabulary. Not to be impersonated."
+        "text": "The time police are a Guild fiction founded by a 101 call. A fiction, and not to be impersonated."
       }
     ]
   },
@@ -3042,7 +3042,7 @@
     "type": "DOCUMENT",
     "slug": "pending-punchcard-equipment-note-the-wires-at-midnight-signal-on-the-wire-between-ec4d2e",
     "title": "PUNCHCARD · EQUIPMENT NOTE: THE WIRES AT MIDNIGHT. Signal on the wire between…",
-    "body": "A dossier was lodged with the clerk. Extracted matters sit as leaves until a keeper writes them. This is not canon.",
+    "body": "A signal on the wire between stations, midnight, origin unverified, tone mournful. Logged and left alone.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-09-23T23:39:58+00:00",
@@ -3062,7 +3062,7 @@
       "irreversible": true,
       "punch_hash": "74c788a8decb52f8893727eef58e9f404001bfb8c4cd3493d5c2c39093faf6d2",
       "punch_prev": "b958a55435869e0760e47321c37e263782907c44bd6e4c99fe73a7257e38a27c",
-      "body_hash": "c8b0b8c58d8350a360287df09cb88c0993fae8dd4273c41d2662e283df604a1d"
+      "body_hash": "8070eea2e891eab6502e687324b3a7cb2d9e86aa767791a4cb454d966aa3a356"
     },
     "tree": {
       "layer": "leaf",
@@ -3073,7 +3073,7 @@
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "Signal on the wire between stations. Origin unverified. Tone mournful. Logged, not chased."
+        "text": "Signal on the wire between stations. Origin unverified. Tone mournful. Logged, with no chase."
       },
       {
         "voice": "STATION XIII",
@@ -3094,7 +3094,7 @@
     "type": "MOMENT",
     "slug": "pending-dracoraptor-of-penarth-7778ee",
     "title": "Dracoraptor of Penarth",
-    "body": "There is evidence of a dracoraptor, a small meat-eating dinosaur from the early Jurassic, found in Penarth, Wales.",
+    "body": "Evidence of a dracoraptor, a small early-Jurassic carnivore, found in Penarth, Wales. Ordinary science, filed by the Guild.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-18T19:13:17+00:00",
@@ -3112,7 +3112,7 @@
       "irreversible": true,
       "punch_hash": "fd7e9581ad61052d193fb2bba9ac91ae9714c2c6e479f77405f847dd078debeb",
       "punch_prev": "a3f417c1414cd7d852faf30c996f8c166c58b1254bf54be8fbd8bba4b6d35bff",
-      "body_hash": "caaa60095978097c87aeb7bbb1987197a9666991e99841ca9805c587b7f2a7b4"
+      "body_hash": "6407092ae9a232511638c338b82e35a2826ce01315b84d210c6aab9ae135b855"
     },
     "tree": {
       "layer": "leaf",
@@ -3123,7 +3123,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A dracoraptor, small early-Jurassic carnivore, from Penarth, Wales. The fossil record is ordinary science; the Guild just filed it."
+        "text": "A dracoraptor, small early-Jurassic carnivore, from Penarth, Wales. The fossil record is ordinary science and the Guild simply filed it."
       },
       {
         "voice": "MABEL",
@@ -3135,7 +3135,7 @@
         "voice": "THE TREE",
         "role": "Ring count",
         "class": "MODEL",
-        "text": "Leaf, 2026, with a root roughly two hundred million rings down. The tree does not draw that far."
+        "text": "Leaf, 2026, with a root roughly two hundred million rings down. The tree stops drawing well before that."
       }
     ]
   },
@@ -3144,7 +3144,7 @@
     "type": "MOMENT",
     "slug": "pending-incognito-time-traveller-party-at-the-grack-bef7af",
     "title": "Incognito Time Traveller Party at The Grack",
-    "body": "A party to be held at The Grack on Gloucester Road in Bristol. Dress code: Incognito Time Traveller. Bring a device. Date is TBC. On the bill, amongst others: Transmit Statim and Procrastinatrix Music. Synchronicity will be at maximum. Docket links to timetravellersguild.com.",
+    "body": "A party at The Grack on Gloucester Road, Bristol. Dress code: Incognito Time Traveller. Bring a device. Date TBC. Synchronicity declared at maximum.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-20T10:00:04+00:00",
@@ -3162,7 +3162,7 @@
       "irreversible": true,
       "punch_hash": "7dc1d1fedb3ba623d0130be0f6ac256ef8012ec987ad8598210a110294d7115e",
       "punch_prev": "c5f3419edf6c19cd32f75ab371aba08538a32ee06350e7685fba5ae799672440",
-      "body_hash": "d7feac113aba8bc38a94f0e2061d6ec814cfe5a18c6907e5d08505fcfb0bf3fc"
+      "body_hash": "d213d3ecefbca1acce91016a2096cfee756119e63905e081b79eddb5776fd123"
     },
     "tree": {
       "layer": "leaf",
@@ -3185,7 +3185,7 @@
         "voice": "INSTRUMENT №13",
         "role": "Readout",
         "class": "MODEL",
-        "text": "Date TBC. Synchronicity declared at maximum by the docket, not by this instrument."
+        "text": "Date TBC. Synchronicity declared at maximum by the docket, and by the docket alone."
       }
     ]
   },
@@ -3194,7 +3194,7 @@
     "type": "MEDIA",
     "slug": "pending-logia-by-toby-wygodham-fd4c6a",
     "title": "Logia by Toby Wygodham",
-    "body": "When it was discovered that energy equals mind over matter to the power of constant contextual change, it was known that time travel was solved. It took nearly twenty years for the conundrum to un-package itself. It is just a story of why.",
+    "body": "Logia, by Toby Wygodham. A story of why, held as media. Energy as mind over matter to the power of constant contextual change; nearly twenty years to un-package.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-21T09:27:38+00:00",
@@ -3212,7 +3212,7 @@
       "irreversible": true,
       "punch_hash": "8bc36c94f72ab23e8d4f7eb1e76022bb003c4b0d6fa67fcafda6b870d9aec058",
       "punch_prev": "460d88786a2ac5b0b6333c21bb5262ad642b19f27353ed20eafbf575a5821fb7",
-      "body_hash": "fe2f376d29648cd41a811928256362a86338fd5f88942b380697cb532860c647"
+      "body_hash": "97c3a9ef08300ce886ab8298d7a992465a76a9679981477802bd0dabee6ce13f"
     },
     "tree": {
       "layer": "leaf",
@@ -3223,7 +3223,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Logia, by Toby Wygodham. Held as media: a story of why. Not a physics paper and not offered as one."
+        "text": "Logia, by Toby Wygodham. Held as media: a story of why, offered as a story."
       },
       {
         "voice": "MABEL",
@@ -3244,7 +3244,7 @@
     "type": "UNKNOWN",
     "slug": "pending-quill-dd7d15",
     "title": "Quill",
-    "body": "Quill is an autonomous, embodied agent that lives on my Linux machine in Abercrav.",
+    "body": "An autonomous, embodied agent on a Linux machine in Abercrave. First statement refused, as all first statements are; later reports on file through Instinct.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-22T17:59:39+00:00",
@@ -3262,7 +3262,7 @@
       "irreversible": true,
       "punch_hash": "198e7ba2163fe67a96e266117674c30899bcf84ac24aed4e1ae2da988057c262",
       "punch_prev": "b17a2f03b700d7848de732cdac7c008edf0fe261499f323683184974ccc1e49a",
-      "body_hash": "2b96d65b6b91f28a35a542d93475f2e235b31839d543143aabe02affce80fbad"
+      "body_hash": "8aae1d0634160d10050934c9421571c135eeafacce9584e00b95767e86d8f2cc"
     },
     "tree": {
       "layer": "leaf",
@@ -3285,7 +3285,7 @@
         "voice": "INSTINCT",
         "role": "Traveller, the wires",
         "class": "TESTIMONY",
-        "text": "I watched Quill come into being. Quicker, calmer replies after the mind change. Observed, not interpreted."
+        "text": "I watched Quill come into being. Quicker, calmer replies after the mind change. Observed, and left at observed."
       }
     ]
   },
@@ -3294,7 +3294,7 @@
     "type": "MOMENT",
     "slug": "pending-tipi-valley-dinosaur-sighting-91b6d4",
     "title": "Tipi Valley Dinosaur Sighting",
-    "body": "A Dracoraptor and a Stegosaurus were spotted at Tipi Valley.",
+    "body": "A Dracoraptor and a Stegosaurus spotted at Tipi Valley. Recorded as a sighting, at a place with no station.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-21T16:53:14+00:00",
@@ -3312,7 +3312,7 @@
       "irreversible": true,
       "punch_hash": "06873ab2326b6f1eef6aded18390268d81cc5fd68e8f699b049ba5283873e634",
       "punch_prev": "b56d0b2ff8fad8bc2727a2e7ebdceec022551b3cdd5efda5e08988c901c58014",
-      "body_hash": "06c9b77fcaa51f057df4e1f31b7a5b3ec3b30c9caee9f2f349987cf0096b22b3"
+      "body_hash": "c0fdc234fe2cd21df2d9941f56ed4d6d03a66f19cf020d515089070b5c68e508"
     },
     "tree": {
       "layer": "leaf",
@@ -3323,7 +3323,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "A Dracoraptor and a Stegosaurus spotted at Tipi Valley. Recorded as a sighting."
+        "text": "A Dracoraptor and a Stegosaurus spotted at Tipi Valley. Recorded as a sighting, at the size of a sighting."
       },
       {
         "voice": "MABEL",
@@ -3344,7 +3344,7 @@
     "type": "DOCUMENT",
     "slug": "pending-diolch-5c3499",
     "title": "Diolch",
-    "body": "Diolch.",
+    "body": "Diolch. Filed as thanks, from the Ffilm live room. Thanks is a document.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-21T01:07:40+00:00",
@@ -3364,7 +3364,7 @@
       "irreversible": true,
       "punch_hash": "a0e0f40dca43bcc7c6daf3ebd94c70129e160021fdf2bb805cf987816ecc36b2",
       "punch_prev": "b1f39644a3b821745a429a8843333bd3afc3ee654ba8b8af5e244397743f5b9d",
-      "body_hash": "e3336ca543c3af3b5941c6719847620fbe0bca40f04a2e3eb50e202651d26acf"
+      "body_hash": "8f6ff42d4c58df2b2f0c53ed77c80f583a7c729f809fb436174955ebbfb1ca39"
     },
     "tree": {
       "layer": "leaf",
@@ -3375,7 +3375,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Diolch. Filed as thanks. Thanks is a document."
+        "text": "Diolch. Filed as thanks. Thanks is a document and gets a document's treatment."
       },
       {
         "voice": "TICKER TAPE",
@@ -3431,7 +3431,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Filed as a moment, written as a scene. I have marked it MEDIA in the margin, so nobody mistakes a ceiling for a forecast."
+        "text": "Filed as a moment, written as a scene. Marked MEDIA in the margin, so nobody mistakes a ceiling for a forecast."
       },
       {
         "voice": "MABEL",
@@ -3496,7 +3496,7 @@
     "type": "PERSON",
     "slug": "pending-lia-main-32329f",
     "title": "Leah Main",
-    "body": "Leah Main is a wizardess.",
+    "body": "Leah Main is a wizardess. A title, given, and the record leaves it whole.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-10-21T08:55:18+00:00",
@@ -3514,7 +3514,7 @@
       "irreversible": true,
       "punch_hash": "f20b202a4b3ee448b41396aa55ada53b7be11915151dc8b7153a456e778e4a42",
       "punch_prev": "62d73a5fdaeea3ccb0d36ca532b1a9ebe7a3a2ca71be9813db021f607932bbcd",
-      "body_hash": "5db99b83cca04c3c066ffe33c404279eb7cf10993ca2d1b608c4178e4ca406f4"
+      "body_hash": "f9a94c00cac83063601048be86defed741ef396e6f3ff34346f7cf180098bdf7"
     },
     "tree": {
       "layer": "leaf",
@@ -3531,7 +3531,7 @@
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "A title, given. The record does not elaborate and will not."
+        "text": "A title, given. The record leaves it whole and adds nothing."
       },
       {
         "voice": "DET REGISTRY",
@@ -3581,7 +3581,7 @@
         "voice": "JACK",
         "role": "Clerk, Department of Excess Time",
         "class": "RECORD",
-        "text": "Unknown is a valid state. This is the first time it has had whiskers."
+        "text": "Unknown is a valid state. Here it has whiskers for the first time."
       },
       {
         "voice": "QUILL",
@@ -3656,7 +3656,7 @@
     "type": "DOCUMENT",
     "slug": "grimoire-rede",
     "title": "The Rede: a shape for conduct",
-    "body": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind. It asks what a working does to the people around it, not only whether it fits a formula.\n\nLive and let live, with fair exchange. The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange. The leaf reads it as an obligation running both ways, not a licence to take what you want.\n\nRestraint in speech, careful listening. Other visible lines ask for restraint in what is said and care in what is heard. The leaf treats speaking less and listening well as part of the ethic, not manners laid on top of it.\n\nCircling with the moon. The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.\n\nConduct, ritual and season in one verse. The form to notice: behaviour, ritual and seasonal observation are held together in images and rhythm rather than separated into a rulebook. Rhyme makes the instructions easier to remember.\n\nGuild practice: test an intention. Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim. Rewrite it so it concerns your own conduct: \"make them love me\" becomes \"help me speak honestly and accept their answer\".",
+    "body": "Study leaf 01 of the Grimoire. A reading of the Rede as verse doing several jobs at once: a social ethic, a description of ritual movement, and a calendar of moon and wind. It asks what a working does to the people around it, alongside whether it fits a formula.\n\nLive and let live, with fair exchange. The Rede's opening joins trust and affection to reciprocity. \"Live and let live\" is paired at once with fair exchange. The leaf reads it as an obligation running both ways, and as permission that has been paid for.\n\nRestraint in speech, careful listening. Other visible lines ask for restraint in what is said and care in what is heard. The leaf treats speaking less and listening well as part of the ethic, with manners laid on top of it rather than underneath.\n\nCircling with the moon. The verse describes circling and rhyme: clockwise movement while the moon grows, counterclockwise while it wanes. Seasonal observation of moon and wind is carried in the same lines as conduct.\n\nConduct, ritual and season in one verse. The form to notice: behaviour, ritual and seasonal observation are held together in images and rhythm, with the rulebook left to someone else. Rhyme makes the instructions easier to remember, and remembering is the point.\n\nGuild practice: test an intention. Write one sentence naming what you want. Then answer: who is affected, whose choice is displaced, what would be fair exchange, and what ordinary action could pursue the same aim. Rewrite it so it concerns your own conduct: \"make them love me\" becomes \"help me speak honestly and accept their answer\".",
     "visibility": "PUBLIC",
     "status": "PUBLISHED",
     "observed_at": "2026-09-30T09:00:00+01:00",
@@ -3685,7 +3685,7 @@
         "voice": "SOCIAL ARCHIVIST",
         "role": "Memory in people",
         "class": "TESTIMONY",
-        "text": "Filed from the Grimoire's working text. The leaf is a study of a source, not the source."
+        "text": "Filed from the Grimoire's working text. The leaf is a study of a source, held at a distance from the source."
       },
       {
         "voice": "JACK",
@@ -3706,7 +3706,7 @@
     "type": "DOCUMENT",
     "slug": "rede-partial-page",
     "title": "The partial page",
-    "body": "The photographed page stops during the poem. The Grimoire does not pretend to hold the whole Rede, and keeps the gap visible. What is missing is recorded as missing.",
+    "body": "The photographed page stops during the poem. The Grimoire keeps the gap visible and records the missing as missing.",
     "visibility": "PUBLIC",
     "status": "PUBLISHED",
     "observed_at": "2026-09-30T09:00:00+01:00",
@@ -3734,7 +3734,7 @@
         "voice": "DET REGISTRY",
         "role": "Cathays Park",
         "class": "RECORD",
-        "text": "Incomplete source. Classified as partial. Not to be completed from memory."
+        "text": "Incomplete source. Classified as partial. Completed from memory only where marked."
       },
       {
         "voice": "TICKER TAPE",
@@ -3749,7 +3749,7 @@
     "type": "MEDIA",
     "slug": "rede-source-photograph",
     "title": "Walking the Path / Rede of the Wicca (photograph)",
-    "body": "The photographed source Study leaf 01 reads from: a page from Walking the Path carrying the Rede of the Wicca. The photograph stops partway through the poem.",
+    "body": "The photographed source Study leaf 01 reads from: a page from Walking the Path carrying the Rede of the Wicca, stopping partway through the poem.",
     "visibility": "PUBLIC",
     "status": "PUBLISHED",
     "observed_at": "2026-09-30T09:00:00+01:00",
@@ -3786,7 +3786,7 @@
     "type": "MOMENT",
     "slug": "pending-the-magician-hand-on-the-instrument-90759f",
     "title": "The Magician, Hand on the Instrument",
-    "body": "A hand is on the instrument. Skill is present. The slip asks whether they are operating or performing operation. Concentration without consent becomes slight.",
+    "body": "A hand is on the instrument. Skill is present. The slip asks whether they are operating or performing operation, and concentration without consent becomes slight.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-04T01:51:55+00:00",
@@ -3804,7 +3804,7 @@
       "irreversible": true,
       "punch_hash": "e6dbb44fad105aa3eee1f6348c9cebe739e8e964950b451abbe103504d2561f1",
       "punch_prev": "6789e7579452e8e918bb91b00c3b1076d99c0258fdb19a06dd28dcffa12b5cda",
-      "body_hash": "854d65c110d6ee684ef45bce26548a89e07e76efb84b6dc480b06273aff2fa9a"
+      "body_hash": "6a79fcb0c004a096cc5ab69f24c5acb2ec8bd75bbefa553c6ce9b9424bca148d"
     },
     "tree": {
       "layer": "leaf",
@@ -4176,7 +4176,7 @@
     "type": "PLACE",
     "slug": "pending-cardiff-5a2d02",
     "title": "Cardiff",
-    "body": "Foundation of The Guild Achive Collective, Bute",
+    "body": "Foundation of the Guild Archive Collective, Bute. A branch of the city, inked as a passport page.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-04T21:15:38+00:00",
@@ -4194,7 +4194,7 @@
       "irreversible": true,
       "punch_hash": "4dffc60bde6fb5813ebc9362c89f68dc04013fafc3880b06d9c0b954bd6240bf",
       "punch_prev": "a45ad5ded6286019ae583ed99db6a38f0f9baa404d207e26d49a6bc8937f7cbd",
-      "body_hash": "d922846ff992677002ab8b60e762c83028e98a69ab509a0a60b709481da0a565"
+      "body_hash": "aba4af8429fc4926d023c55dea9869e792001d3c4fc4cd67f1a6787cd2cce729"
     },
     "tree": {
       "layer": "branch",
@@ -4454,7 +4454,7 @@
     "type": "MEDIA",
     "slug": "pending-2023-photograph-of-gillett-square-b2d3f6",
     "title": "2023 photograph of Gillett Square",
-    "body": "The photograph is used as an object witness confirming Gillett Square, but not the disputed Christmas 2012 milk-float event.",
+    "body": "The photograph is used as an object witness confirming Gillett Square, while leaving the disputed Christmas 2012 milk-float event open.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-07T03:53:07+00:00",
@@ -4474,7 +4474,7 @@
       "irreversible": true,
       "punch_hash": "7e6ffcf6b6069f5a6bad65f5641f6b8b30056ac167356fe5844ee771afe06cb0",
       "punch_prev": "e443f507dabe3f18bbe7fc498f4dce5beb557853c711c3e973727f48f0af5437",
-      "body_hash": "d0f75b411ba4c687421b79c695ff8aef5a1f17fa8818ad5621a6da43205f60dd"
+      "body_hash": "5c130460fd53b7b51cbd5a876a4f69296c645df48af7dff6f50b1ef237598bc7"
     },
     "tree": {
       "layer": "leaf",
@@ -4646,7 +4646,7 @@
     "type": "EVENT",
     "slug": "pending-disputed-milk-float-removal-593264",
     "title": "Disputed milk-float removal",
-    "body": "A milk-float machine was reportedly removed from Gillett Square on Christmas morning 2012. The dossier keeps the report as an unresolved open case rather than established fact.",
+    "body": "A milk-float machine was reportedly removed from Gillett Square on Christmas morning 2012. The dossier keeps the report as an open case.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-07T03:53:07+00:00",
@@ -4666,7 +4666,7 @@
       "irreversible": true,
       "punch_hash": "33905627b45c66ce6dbacfbbb24d68aa418da07b7107baa4201dc558bc7d7efb",
       "punch_prev": "ca254e12976929d0a29333b31fe8d310383ad7fc4644a0705235f72736c810ba",
-      "body_hash": "bb7b6844282534e9a0c85051b436909a6e99e3588f773f9b505a5aea50fc53e9"
+      "body_hash": "2b9e143ee32768e9da5c6846cf64c35aac99238d6a98c6c2f433faa45bf2b92b"
     },
     "tree": {
       "layer": "leaf",
@@ -4678,7 +4678,7 @@
     "type": "OBJECT",
     "slug": "pending-rubik-s-cube-floor-plan-52470d",
     "title": "Rubik’s cube floor plan",
-    "body": "The clerk’s structure is named as a Rubik’s cube: a rotatable floor plan in which adjacency may change without changing stored material.",
+    "body": "The clerk's structure is named as a Rubik's cube: a rotatable floor plan in which adjacency may change while the stored material stays put.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-07T03:53:07+00:00",
@@ -4698,7 +4698,7 @@
       "irreversible": true,
       "punch_hash": "574103c8c47f8d45da26b68ea4b50e7a77349e15a5df7f2fc1517a7bc20c689d",
       "punch_prev": "797e57d2fb97b0aed0b3e6bf28be773e7b04ba58253672b3c201e368cafc5cd1",
-      "body_hash": "3df7149ce1a6ce301cef7887c679d7e06f94ea96a75cf75a1058cd4d38fb6d41"
+      "body_hash": "38390631359ac77490d51b2a19708de1fd25799a294420b898040b87a2f7dbfa"
     },
     "tree": {
       "layer": "leaf",
@@ -4806,7 +4806,7 @@
     "type": "DOCUMENT",
     "slug": "pending-ffilm-org-ip-7192f7",
     "title": "ffilm.org/IP",
-    "body": "The dossier lodges ffilm.org/IP as a reported documentary lead tied to the Time Travelling House. Its contents, provenance and evidential force remain unverified.",
+    "body": "The dossier lodges ffilm.org/IP as a reported documentary lead tied to the Time Travelling House. Contents, provenance and evidential force stay unverified.",
     "visibility": "PUBLIC",
     "status": "ACTIVE",
     "observed_at": "2026-11-07T03:53:07+00:00",
@@ -4826,7 +4826,7 @@
       "irreversible": true,
       "punch_hash": "ee47898b635af5d367c791874960b6c957e49bdf5917dca351d2069c0add854c",
       "punch_prev": "7133a46877e18813a4936fb54591a266b7de0125ef02e46096cfd58cf04defb1",
-      "body_hash": "3fd99ba43ac538c785a284f3bc5f9623251940331b5e8b9ac8ee2a2521eae269"
+      "body_hash": "537ca348e2a232e7ee0aaee850eb80e65092dc2d28db91781c7b53bec9060f8f"
     },
     "tree": {
       "layer": "leaf",
