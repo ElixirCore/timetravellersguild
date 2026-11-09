@@ -128,6 +128,5 @@ $jsV = '260910c';
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="/chronometer/js/chronometer.js?v=<?= ttg_h($jsV) ?>"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

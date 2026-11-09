@@ -5,6 +5,9 @@ require_once __DIR__ . '/inc/graph.php';
 ttg_graph_boot_session();
 $viewer = ttg_graph_viewer();
 $guild = ttg_guild_member($viewer);
+require_once __DIR__ . '/inc/voice-status.php';
+// Out of ElevenLabs credit: Jack cannot talk, so the desk becomes the door to /now.
+$voiceOpen = ttg_voice_credit() !== false;
 
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store');
@@ -41,7 +44,18 @@ body{min-height:100dvh;display:flex;flex-direction:column;align-items:center}
 #blurb{margin:.8rem auto 0;width:min(24rem, calc(100vw - 24px));color:#b9b3a2;text-align:center;font-size:12px}
 #blurb a{color:#b9b3a2;text-decoration:underline}
 body.booting #jackDesk{visibility:hidden}
+#jackDesk.closed .card{display:block;color:inherit;text-decoration:none;cursor:pointer}
+#jackDesk.closed .card:hover,#jackDesk.closed .card:focus-visible{outline:2px solid var(--scarlet);outline-offset:3px}
+#jackDesk.closed #jack{cursor:pointer}
+body.line-closed #jack-face{display:none!important}
+#deskAsk{display:flex;gap:.4rem;margin:.4rem auto 0;width:min(20rem,90%)}
+#deskAsk[hidden]{display:none}
+#deskAsk input{flex:1;background:var(--well);border:1.5px solid var(--navy);color:var(--ink);font:inherit;font-size:12px;padding:.35rem .5rem}
+#deskAsk button{background:var(--scarlet);color:var(--paper);border:0;font:inherit;font-size:11px;letter-spacing:.14em;padding:.35rem .8rem;cursor:pointer}
+#deskReply{margin:.7rem auto 0;width:min(24rem,calc(100vw - 24px));color:var(--paper);text-align:center;font-size:13px;min-height:1.2em}
 </style>
+<script>window.TTG_JACK_LINE_OPEN=<?= $voiceOpen ? 'true' : 'false' ?>;</script>
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 <body class="booting">
 <a id="titleFlash" href="/now" aria-label="The Time Travellers Guild — enter NOW">
@@ -64,17 +78,28 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
   <a class="door" href="/cube"><b>CUBE</b> JACK</a>
 </p>
 
+<?php if ($voiceOpen): ?>
 <main id="jackDesk">
   <div class="card">
-    <canvas id="jack" width="22" height="24" role="button" tabindex="0" aria-label="Talk to Jack. Activate to start the call; activate again to hang up."></canvas>
+    <canvas id="jack" width="22" height="24" role="button" tabindex="0" aria-label="Talk to Jack. Activate to open the desk slip."></canvas>
     <h1>JACK</h1>
     <p id="status" aria-live="polite">STANDING BY</p>
+    <form id="deskAsk" hidden autocomplete="off"><input id="deskQ" type="text" maxlength="500" placeholder="Ask him something" aria-label="Ask Jack"><button type="button" id="deskMic" hidden aria-label="Ask aloud">SPEAK</button><button type="submit">ASK</button></form>
   </div>
-  <p id="blurb">A robot of punched card stock. Click Jack, allow the microphone, and speak. Click again to hang up. Rather type? <a href="/lodge">The desk takes statements</a>.</p>
+  <p id="deskReply" aria-live="polite"></p>
+  <p id="blurb">Hi, I'm Jack, the Guild's clerk: a robot of punched card stock. People bring me what they remember, and I take it down. Click me and tell me something you remember; I answer aloud. Rather write? <a href="/lodge">The desk takes statements</a>.</p>
 </main>
 
-<script src="https://unpkg.com/@elevenlabs/client@1.28.0/dist/lib.iife.js"></script>
-<script src="https://ffilm.org/elevenlabs/ffilm-agent.js"></script>
+<?php else: ?>
+<main id="jackDesk" class="closed">
+  <a class="card" href="/now" aria-label="Enter NOW, the tree">
+    <canvas id="jack" width="22" height="24" aria-hidden="true"></canvas>
+    <h1>NOW</h1>
+    <p id="status">ENTER THE TREE</p>
+  </a>
+  <p id="blurb">Jack's voice line is closed for the present. The tree is public: <a href="/now">walk it</a>. Rather leave a statement? <a href="/lodge">The desk takes them in writing</a>.</p>
+</main>
+<?php endif; ?>
 
 <script>
 (function () {
@@ -201,6 +226,7 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
     ]
   };
 
+  var VOICE_OPEN = <?= $voiceOpen ? 'true' : 'false' ?>;
   var canvas = document.getElementById('jack');
   var ctx = canvas.getContext('2d');
   var statusEl = document.getElementById('status');
@@ -223,8 +249,24 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
   var q = new URLSearchParams(location.search);
   if (q.get('mouth')) forced = q.get('mouth');
 
+  /* The line is closed: the desk becomes the door to /now. Server-side when the
+     quota is known to be spent; here when a call fails for want of credit. */
+  var desk = document.getElementById('jackDesk');
+  function closeLine() {
+    /* The speech budget is spent. The desk stays a desk: the slip still takes
+       questions, the clerk still answers in writing (and the device voice when
+       it can); only his Deepgram voice rests. The tree is reached by its own
+       link below, never by tapping the card. */
+    if (desk.classList.contains('closed')) return;
+    desk.classList.add('closed');
+    statusEl.textContent = 'THE VOICE LINE RESTS';
+    document.getElementById('blurb').innerHTML = 'Jack\u2019s Deepgram voice is resting \u2014 the day\u2019s speech budget is spent. The slip still writes and he still answers. The tree is public: <a href="/now">walk it</a>.';
+  }
+  var NO_CREDIT = /quota|credit|insufficient|payment|limit|exceed|subscription|billing/i;
+
   var LABELS = {
     idle: 'STANDING BY',
+    ready: 'READY',
     connecting: 'WARMING THE VALVES',
     listening: 'LISTENING',
     speaking: 'SPEAKING'
@@ -241,16 +283,16 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
   }
 
   function blinkOnce() {
-    if (state !== 'idle' && state !== 'listening') return;
+    blinkTimer = setTimeout(blinkOnce, 2600 + Math.random() * 4200);
+    if (state !== 'idle' && state !== 'listening' && state !== 'ready') return;
     draw(FRAMES.blink);
     setTimeout(function () { draw(FRAMES.idle); }, 140);
-    blinkTimer = setTimeout(blinkOnce, 2600 + Math.random() * 4200);
   }
 
   function apply(next) {
     if (next === state) return;
     state = next;
-    statusEl.textContent = LABELS[next] || LABELS.idle;
+    statusEl.textContent = (desk.classList.contains('closed') && next === 'idle') ? 'THE VOICE LINE RESTS' : (LABELS[next] || LABELS.idle);
     clearTimeout(mouthTimer);
     mouthTimer = null;
     if (next === 'speaking') {
@@ -258,88 +300,416 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
     } else {
       draw(FRAMES.idle);
     }
+    if (next === 'idle') maybeRelisten();
   }
 
-  /* The call. ElevenLabs' own client SDK (window.ElevenLabsClient), no widget,
-     so Jack is the whole interface: click him to start, click again to hang up.
-     The click is the user gesture the microphone permission needs.
-     ffilm-agent.js still supplies page context and client tools. */
-  var AGENT_ID = 'agent_8101m54eqp47ez6baj4ed5kv7tkv';
-  var conversation = null;
-  var starting = false;
-  var cancelRequested = false;
+  /* The desk slip. Click Jack and the card takes a question, spoken (the
+     browser's own speech recognition writes it onto the slip) or typed; the
+     engine answers (/now/jack) and the clerk reads his own slip aloud through
+     the site's voice (/jack/speak.php). When the speech budget is spent his
+     Deepgram voice rests; the conversation continues in writing. */
+  var askForm = document.getElementById('deskAsk');
+  var askInput = document.getElementById('deskQ');
+  var replyEl = document.getElementById('deskReply');
+  var csrfToken = '';
+  var asking = false;
+  var thread = [];
+  var audio = null;
 
-  function pageContext() {
-    if (window.ffilmAgent && window.ffilmAgent.buildContext) {
-      try { return window.ffilmAgent.buildContext(); } catch (e) {}
+  /* Browsers refuse sound that starts long after a click, and his reply takes
+     seconds to arrive. An AudioContext woken during the click stays allowed,
+     so his voice plays through it whenever the reply lands. */
+  var soundCtx = null, soundSrc = null, soundWoken = false;
+  function unlockSound() {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (Ctx) {
+      try {
+        if (!soundCtx) soundCtx = new Ctx();
+        if (soundCtx.state === 'suspended') soundCtx.resume();
+        var tick = soundCtx.createBufferSource();
+        tick.buffer = soundCtx.createBuffer(1, 1, 22050);
+        tick.connect(soundCtx.destination);
+        tick.start(0);
+      } catch (e) {}
     }
-    return '';
-  }
-
-  function pageTools() {
-    return (window.ffilmAgent && window.ffilmAgent.clientTools) || {};
-  }
-
-  function startCall() {
-    if (starting || conversation) return;
-    if (!window.ElevenLabsClient || !window.ElevenLabsClient.Conversation) {
-      statusEl.textContent = 'STILL LOADING';
-      return;
+    if (!soundWoken && window.speechSynthesis && window.SpeechSynthesisUtterance) {
+      soundWoken = true;
+      try { speechSynthesis.speak(new SpeechSynthesisUtterance('')); } catch (e) {}
     }
-    starting = true;
-    cancelRequested = false;
-    apply('connecting');
-    window.ElevenLabsClient.Conversation.startSession({
-      agentId: AGENT_ID,
-      dynamicVariables: {
-        page_title: document.title,
-        page_url: location.href,
-        page_context: pageContext()
-      },
-      clientTools: pageTools(),
-      onModeChange: function (p) {
-        apply(p && p.mode === 'speaking' ? 'speaking' : 'listening');
-      },
-      onDisconnect: function () {
-        conversation = null;
-        apply('idle');
-      },
-      onError: function (msg) {
-        console.warn('[jack]', msg);
+  }
+
+  /* Resolves true once he has finished; false if this route cannot play it. */
+  function playDecoded(blob, last) {
+    return new Promise(function (resolve) {
+      if (!soundCtx || soundCtx.state !== 'running' || !blob.arrayBuffer) { resolve(false); return; }
+      blob.arrayBuffer().then(function (buf) {
+        soundCtx.decodeAudioData(buf, function (decoded) {
+          if (soundSrc) { try { soundSrc.stop(); } catch (e) {} }
+          var src = soundCtx.createBufferSource();
+          src.buffer = decoded;
+          src.connect(soundCtx.destination);
+          soundSrc = src;
+          src.onended = function () {
+            if (soundSrc === src) soundSrc = null;
+            if (last) apply('idle');
+            resolve(true);
+          };
+          apply('speaking');
+          src.start(0);
+        }, function () { resolve(false); });
+      }, function () { resolve(false); });
+    });
+  }
+  var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var micBtn = document.getElementById('deskMic');
+  var recog = null;
+
+  function getCsrf() {
+    if (csrfToken) return Promise.resolve(csrfToken);
+    return fetch('/jack/', { credentials: 'same-origin', signal: AbortSignal.timeout(15000) })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var m = html.match(/"csrf":"([a-f0-9]{32})"/);
+        if (!m) throw new Error('no_csrf');
+        csrfToken = m[1];
+        return csrfToken;
+      });
+  }
+
+  /* One part of his slip from the reader: 1 is his opening sentence, 2 the rest.
+     He starts as soon as the opening is ready, and the rest is made while he says
+     it. The clerk reads only his own queued slip: sending the answer text back
+     lets him refuse (403) when another tab's answer has taken the queue, so this
+     tab never plays someone else's reply aloud. Null means this part cannot play. */
+  function fetchSpeech(replyText, part, retried) {
+    var sbody = 'csrf=' + encodeURIComponent(csrfToken) + '&part=' + part;
+    if (replyText) sbody += '&text=' + encodeURIComponent(replyText);
+    return fetch('/jack/speak.php', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: sbody,
+      signal: AbortSignal.timeout(45000)
+    }).then(function (res) {
+      if (res.status === 429) { closeLine(true); return null; }
+      if (res.status === 400 && !retried) {
+        return res.json().then(function (j) {
+          if (!j || !/unsigned slip/.test(String(j.error || ''))) return null;
+          csrfToken = '';
+          return getCsrf().then(function () { return fetchSpeech(replyText, part, true); });
+        }, function () { return null; });
       }
-    }).then(function (c) {
-      starting = false;
-      if (cancelRequested) {
-        try { c.endSession(); } catch (e) {}
-        return;
-      }
-      conversation = c;
-    }).catch(function (err) {
-      starting = false;
-      conversation = null;
-      apply('idle');
-      var m = String((err && err.message) || err || '');
-      statusEl.textContent = /not allowed|denied|permission|microphone|device/i.test(m)
-        ? 'MIC NEEDED' : 'NO ANSWER';
+      if (!res.ok) return null;
+      var more = res.headers.get('X-Jack-More') === '1';
+      return res.blob().then(function (blob) {
+        if (!blob || !blob.size || !/^audio\//.test(blob.type || '')) return null;
+        return { blob: blob, more: more };
+      });
+    }).catch(function () { return null; });
+  }
+
+  /* Plays one part and resolves once it has finished. Only the last part lets his mouth rest. */
+  function playBlob(blob, last) {
+    return playDecoded(blob, last).then(function (played) {
+      if (played) return true;
+      return new Promise(function (resolve) {
+        var url = URL.createObjectURL(blob);
+        if (audio) { try { audio.pause(); } catch (e) {} }
+        audio = new Audio(url);
+        var done = function (ok) {
+          URL.revokeObjectURL(url);
+          if (last || !ok) apply('idle');
+          resolve(ok);
+        };
+        audio.onended = function () { done(true); };
+        audio.onerror = function () { done(false); };
+        apply('speaking');
+        audio.play().then(function () {}, function () { done(false); });
+      });
     });
   }
 
-  function endCall() {
-    var c = conversation;
-    conversation = null;
-    apply('idle');
-    if (c) {
-      try { c.endSession(); } catch (e) {}
-    }
+  function speakReply(replyText) {
+    return fetchSpeech(replyText, 1, false).then(function (first) {
+      if (!first) return false;
+      var rest = first.more ? fetchSpeech(replyText, 2, false) : null;
+      return playBlob(first.blob, !rest).then(function (ok) {
+        if (!ok || !rest) return ok;
+        return rest.then(function (second) {
+          if (!second) { apply('idle'); return true; }
+          return playBlob(second.blob, true).then(function () { return true; });
+        });
+      });
+    });
+  }
+
+  function deviceSpeak(text) {
+    try {
+      if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
+      var u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.92;
+      u.pitch = 0.72;
+      apply('speaking');
+      u.onend = u.onerror = function () { apply('idle'); };
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  /* One POST of the question. A stale desk token (a page left open past the
+     session's life) earns the clerk's 'unsigned slip' 400: take a fresh token
+     from /jack/ and try the same slip once more. Any other 400 is a real
+     refusal and is not retried. */
+  function postAsk(clean, retried) {
+    return getCsrf().then(function (token) {
+      var data = new FormData();
+      data.set('csrf', token);
+      data.set('q', clean.slice(0, 2000));
+      data.set('intent', 'ask');
+      data.set('site', 'jack');
+      data.set('thread', thread.join('\n').slice(-1500));
+      return fetch('/now/jack', {
+        method: 'POST',
+        body: data,
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(40000)
+      });
+    }).then(function (res) {
+      if (res.status === 429) { closeLine(true); throw new Error('line_closed'); }
+      if (res.status === 400 && !retried) {
+        return res.json().then(function (j) {
+          if (!j || !/unsigned slip/.test(String(j.error || ''))) throw new Error('no_answer');
+          csrfToken = '';
+          return postAsk(clean, true);
+        }, function () { throw new Error('no_answer'); });
+      }
+      if (!res.ok) throw new Error('no_answer');
+      return res.json();
+    });
+  }
+
+  function ask(ques) {
+    var clean = String(ques || '').replace(/\s+/g, ' ').trim();
+    if (!clean || asking) return;
+    asking = true;
+    apply('connecting');
+    postAsk(clean).then(function (j) {
+      var text = (j && j.text) ? j.text : 'The clerk is away from the desk. The room remains.';
+      thread.push('you: ' + clean, 'clerk: ' + text);
+      if (thread.length > 8) thread = thread.slice(-8);
+      if (replyEl) replyEl.textContent = text;
+      return speakReply(text).then(function (played) {
+        if (!played && !deviceSpeak(text)) apply('idle');
+      });
+    }).catch(function (err) {
+      if (String((err && err.message) || '') === 'line_closed') return;
+      if (replyEl) replyEl.textContent = 'The line went quiet. The room did not.';
+      apply('idle');
+    }).then(function () {
+      asking = false;
+      if (state !== 'speaking') apply('idle');
+      maybeRelisten();
+    });
   }
 
   function toggle() {
     if (forced) return;
-    if (starting) { cancelRequested = true; apply('idle'); return; }
-    if (conversation) { endCall(); return; }
-    startCall();
+    if (!askForm) return;
+    unlockSound();
+    if (askForm.hidden) {
+      askForm.hidden = false;
+      apply('ready');
+      /* One touch starts the whole conversation: the ear asks its permission
+         here, in this same tap, then Jack listens and answers in turns.
+         Refuse the microphone (or have none) and the slip stays a writing
+         slip - typing is untouched. */
+      if (SpeechRec && micBtn && !asking) {
+        convo = true;
+        startEar();
+      } else {
+        try { askInput.focus(); } catch (e) {}
+      }
+    } else {
+      askForm.hidden = true;
+      stopConvo();
+      if (!asking && state !== 'speaking') apply('idle');
+    }
   }
 
+  if (askForm) {
+    askForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      unlockSound();
+      var v = askInput.value;
+      askInput.value = '';
+      ask(v);
+    });
+  }
+
+  /* Conversation mode. One touch - on Jack's card or on the microphone
+     button - asks the ear's permission and starts the conversation: he
+     listens, a second's pause sends on its own, he answers aloud, and the
+     ear opens again by itself once he falls quiet. He never listens while
+     he is speaking, so his own voice cannot come back in as your next
+     question. The microphone button reads STOP for as long as the
+     conversation is live. */
+  var convo = false;
+  var relistenT = null;
+
+  function cancelRelisten() {
+    if (relistenT) { clearTimeout(relistenT); relistenT = null; }
+  }
+
+  function micLabel() {
+    if (micBtn) micBtn.textContent = (convo || recog) ? 'STOP' : 'SPEAK';
+  }
+
+  function stopConvo() {
+    convo = false;
+    cancelRelisten();
+    if (recog) { try { recog.stop(); } catch (e) {} recog = null; }
+    micLabel();
+    if (state === 'listening') apply('ready');
+  }
+
+  function joinHeard(base, add) {
+    /* Join a new fragment without repeating words the ear already wrote:
+       where one fragment's start repeats the other's end the overlap is
+       trimmed, and only ever at a word boundary, so "stop" + "stopwatch"
+       can never merge. */
+    add = add || '';
+    if (!base) return add;
+    if (!add) return base;
+    var b = base.trim().toLowerCase(), a = add.trim().toLowerCase();
+    if (!a) return base;
+    if (b === a) return base;
+    if (a.length > b.length && a.slice(0, b.length) === b && /\s/.test(a.charAt(b.length))) return add;
+    if (b.length > a.length && b.slice(b.length - a.length) === a && b.charAt(b.length - a.length - 1) === ' ') return base;
+    var max = Math.min(base.length, add.length);
+    for (var k = max; k > 0; k--) {
+      if (k < add.length && !/\s/.test(add.charAt(k))) continue;
+      if (base.slice(base.length - k).toLowerCase() === add.slice(0, k).toLowerCase()) return base + add.slice(k);
+    }
+    return base + add;
+  }
+
+  function maybeRelisten() {
+    /* Called whenever the desk goes quiet. In conversation mode the ear
+       opens again half a second later - long enough for the last of his
+       voice in the earphones to die away. */
+    if (!convo || recog || asking || forced) return;
+    if (!askForm || askForm.hidden) return;
+    cancelRelisten();
+    relistenT = setTimeout(function () {
+      relistenT = null;
+      if (convo && !recog && !asking && state !== 'speaking') startEar();
+    }, 500);
+  }
+
+  function startEar() {
+    if (recog || !SpeechRec || !convo) return;
+    var r = new SpeechRec();
+    recog = r;
+    r.lang = 'en-GB';
+    r.continuous = true;
+    r.interimResults = true;
+    r.maxAlternatives = 1;
+    var silence = null, maxT = null, sent = false, finalTx = '';
+    var finish = function (submit) {
+      clearTimeout(silence);
+      clearTimeout(maxT);
+      try { r.stop(); } catch (e) {}
+      if (recog === r) { recog = null; micLabel(); }
+      var said = askInput.value.trim();
+      if (submit && said && !sent) {
+        sent = true;
+        askInput.value = '';
+        ask(said);
+        return;
+      }
+      if (state === 'listening') apply('ready');
+    };
+    r.onresult = function (e) {
+      /* Build from resultIndex onward, overlap-trimming each final. Re-reading
+         the whole result list - or a speech service that re-issues an old
+         fragment - is what made the visitor's own words come back doubled. */
+      var interim = '';
+      for (var i = (e.resultIndex || 0); i < e.results.length; i++) {
+        try {
+          var res = e.results[i];
+          if (res.isFinal) finalTx = joinHeard(finalTx, res[0].transcript);
+          else interim = res[0].transcript;
+        } catch (err) {}
+      }
+      askInput.value = joinHeard(finalTx, interim).trim();
+      /* A second's pause sends the question on its own. */
+      clearTimeout(silence);
+      silence = setTimeout(function () { finish(true); }, 1000);
+    };
+    r.onerror = function (e) {
+      clearTimeout(silence);
+      clearTimeout(maxT);
+      var hard = e && (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture');
+      if (hard) { convo = false; cancelRelisten(); }
+      micLabel();
+      if (hard && replyEl) {
+        replyEl.textContent = (e.error === 'audio-capture')
+          ? 'The ear found no microphone. The slip still takes writing.'
+          : 'The microphone would not answer. The slip still takes writing.';
+      } else if (replyEl && !convo && !(askInput.value || '').trim()) {
+        replyEl.textContent = 'The ear failed. The slip still takes writing.';
+      }
+      if (state === 'listening' && (!convo || hard)) apply('ready');
+    };
+    r.onend = function () {
+      if (recog !== r) return;
+      recog = null;
+      micLabel();
+      if (sent) return;
+      if (convo && state === 'listening') {
+        /* The browser's ear dozed in the quiet; open it again so the
+           conversation simply carries on. */
+        cancelRelisten();
+        relistenT = setTimeout(function () {
+          relistenT = null;
+          if (convo && !recog && state === 'listening') startEar();
+        }, 350);
+        return;
+      }
+      if (state === 'listening') apply('ready');
+    };
+    apply('listening');
+    micLabel();
+    try { r.start(); } catch (e) {
+      recog = null;
+      convo = false;
+      micLabel();
+      apply('ready');
+      return;
+    }
+    maxT = setTimeout(function () { finish(true); }, 20000);
+  }
+
+  if (SpeechRec && micBtn) {
+    micBtn.hidden = false;
+    micBtn.addEventListener('click', function () {
+      unlockSound();
+      /* The button is STOP for as long as the conversation is live - while
+         he listens, while he thinks, while he talks. A second's pause
+         already sends on its own. */
+      if (forced) return;
+      if (recog || convo) { stopConvo(); return; }
+      if (asking) return;
+      convo = true;
+      startEar();
+    });
+  }
+
+  if (!VOICE_OPEN) {
+    closeLine();
+  }
   canvas.addEventListener('click', toggle);
   canvas.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -567,11 +937,9 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
     }
     function skip(e) {
       if (flashDone) return;
-      flashDone = true;
-      clearTimeout(watchdog);
-      if (flashRaf) cancelAnimationFrame(flashRaf);
       if (e && e.preventDefault) e.preventDefault();
-      window.location.assign((cfg && cfg.tree) || '/now');
+      /* No navigation: the desk stays put; the tree is reached by its own links. */
+      finish();
     }
     flash.addEventListener('click', skip);
     canvas.addEventListener('click', skip);
@@ -592,10 +960,14 @@ body.booting .site-mark,body.booting .always-on,body.booting #jackDesk{visibilit
 <nav id="dock" aria-label="Guild">
   <a href="/now">NOW</a>
   <a href="/cube">CUBE</a>
-  <a href="/chat">JACK</a>
+  <a href="/chat">CHAT</a>
   <?= ttg_html_navigator_dock($viewer) ?>
   <?= ttg_you_dock($viewer) ?>
 </nav>
-<script src="/assets/ask-jack.js?v=1" defer></script>
+
+<!-- the little Jack: press the face, he listens and speaks -->
+<?php if ($voiceOpen): ?>
+<?php endif; ?>
 </body>
 </html>
+

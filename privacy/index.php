@@ -53,6 +53,8 @@ require dirname(__DIR__) . '/people/inc/header.php';
       <dd>As you take part, the Guild keeps your story in short beats: what you submit, and turns Jack adds when a sitting moves it. You can read it on your slip, write what it is about in your own words, and take any beat out. Only you see it.</dd>
       <dt>Jack's mind display</dt>
       <dd>A public display (<a href="/jack/mind/">Jack's mind</a>) shows Jack's own state as he works: his mode, which of his memories surfaced, which tools he used and which sites he cited. It never shows what anyone said to him, who they are, or what he replied; at most it notes whether the person at the desk was signed in.</dd>
+      <dt id="fieldoffice">Booking a Field Office session</dt>
+      <dd>If you reserve a place at an <a href="/field-office/">If Thursday Fails</a> session, we keep your name, your email, your language and anything you choose to tell the host about what you need. We use your email only to send you that booking and any change to the session (confirmed, moved or cancelled). Only the Field Office staff (the producer and the session host) see your details; the host may print a list of names and needs for the door, which is kept with them and shredded after the session. Venue suppliers never see who has booked. A booking does not need an account, does not join you to the Guild, and does not ask for a story. Your confirmation email has a private link where you can cancel or delete your booking at any time.</dd>
       <dt>Chat</dt>
       <dd>Messages you send to other travellers are delivered to them and kept so the conversation stays readable. They are not used in the narrative.</dd>
       <dt>Visits</dt>
@@ -76,6 +78,7 @@ require dirname(__DIR__) . '/people/inc/header.php';
     <ul>
       <li><b>To run the Guild for you</b> (your account, sign-in, your work, Jack's answers): because you asked us to.</li>
       <li><b>The grand narrative</b>: because you agreed to lend your avatar and work.</li>
+      <li><b>Field Office bookings</b>: to give you the place you asked for and tell you if it changes.</li>
       <li><b>Jack's personal memory, the visit counter and server logs</b>: our legitimate interest in giving you continuity and keeping the site working and safe. You can ask Jack to forget, or ask us to switch his memory of you off.</li>
     </ul>
 
@@ -86,6 +89,7 @@ require dirname(__DIR__) . '/people/inc/header.php';
       <li>Burnt ledger pages: 30 days in the ashes, then deleted for good.</li>
       <li>Jack's memory of you: until you ask him to forget, or you close your account.</li>
       <li>Work already woven into the narrative: kept as part of it, without your name once you withdraw.</li>
+      <li>Field Office bookings: deleted 90 days after the session, or straight away if you delete your booking; cancelled bookings are deleted after 30 days.</li>
     </ul>
 
     <h2 id="rights">Your rights</h2>

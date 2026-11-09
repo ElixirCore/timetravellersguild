@@ -113,6 +113,5 @@ header('Cache-Control: no-store');
 
 <script>window.TTG_DECK=<?= $json ?>;</script>
 <script src="/jack/tarot/js/deck.js?v=g1"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -91,6 +91,5 @@ header('Cache-Control: no-store');
 <script>window.TTG_FIELD=<?= $json ?>;</script>
 <script src="/jack/body/js/sprite.js"></script>
 <script src="/assets/field.js"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

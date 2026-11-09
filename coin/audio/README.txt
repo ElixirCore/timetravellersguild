@@ -1,0 +1,3 @@
+Put Jack's recorded thank-you lines here, e.g. 0001.mp3, 0002.mp3 ...
+Then set each line's "audio" in assets/config.js, e.g. audio: "audio/0001.mp3".
+Lines without a recording use the visitor's built-in voice.

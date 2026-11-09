@@ -1,0 +1,89 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Deepgram Aura speaks for the clerk. The API key never leaves the server:
+ * it is read from DEEPGRAM_API_KEY or the private key file on each call.
+ * Error bodies from the vendor are not forwarded to the browser.
+ */
+final class DeepgramSynth implements VoiceSynth
+{
+    private const KEY_FILE = '/home/ffilsyql/ttg-private/deepgram-api-key.txt';
+    private const DEFAULT_MODEL = 'aura-2-draco-en';
+
+    public static function available(): bool
+    {
+        return self::apiKey() !== '';
+    }
+
+    private static function apiKey(): string
+    {
+        $key = function_exists('ttg_env') ? (string) ttg_env('DEEPGRAM_API_KEY') : '';
+        if ($key !== '' && !str_contains($key, 'YOUR_KEY')) {
+            return $key;
+        }
+        if (is_file(self::KEY_FILE) && is_readable(self::KEY_FILE)) {
+            $fromFile = trim((string) @file_get_contents(self::KEY_FILE));
+            if ($fromFile !== '') {
+                return $fromFile;
+            }
+        }
+        return '';
+    }
+
+    public function synthesize(string $preparedText): string
+    {
+        $preparedText = trim($preparedText);
+        if ($preparedText === '') {
+            throw new InvalidArgumentException('nothing_to_read');
+        }
+
+        $apiKey = self::apiKey();
+        if ($apiKey === '') {
+            throw new RuntimeException('voice_unconfigured');
+        }
+
+        $model = function_exists('ttg_env') ? (string) ttg_env('DEEPGRAM_MODEL') : '';
+        if ($model === '') {
+            $model = self::DEFAULT_MODEL;
+        }
+
+        $body = json_encode(['text' => $preparedText], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($body === false) {
+            throw new RuntimeException('synth_failed');
+        }
+
+        $url = 'https://api.deepgram.com/v1/speak?model=' . rawurlencode($model) . '&encoding=mp3&mip_opt_out=true';
+
+        $ch = curl_init($url);
+        if ($ch === false) {
+            throw new RuntimeException('synth_failed');
+        }
+
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Token ' . $apiKey,
+                'Content-Type: application/json',
+            ],
+            CURLOPT_POSTFIELDS => $body,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => VoiceConfig::TIMEOUT_SECONDS,
+            CURLOPT_CONNECTTIMEOUT => 10,
+        ]);
+
+        $audio = curl_exec($ch);
+        $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err = curl_error($ch);
+        curl_close($ch);
+
+        if (!is_string($audio) || $audio === '' || $err !== '' || $code < 200 || $code >= 300) {
+            throw new RuntimeException('synth_failed');
+        }
+        if (strlen($audio) > VoiceConfig::MAX_AUDIO_BYTES) {
+            throw new RuntimeException('synth_failed');
+        }
+
+        return $audio;
+    }
+}

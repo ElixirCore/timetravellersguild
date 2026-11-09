@@ -36,12 +36,14 @@ $configured  = true; // stream endpoint always present
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     html, body {
       width: 100%; height: 100%;
       background: var(--bg);
       color: var(--text);
       font-family: var(--mono);
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     /* ── Atmosphere ── */
@@ -121,7 +123,7 @@ $configured  = true; // stream endpoint always present
       background: rgba(10,2,2,0.9);
       border: 1px solid rgba(201,162,39,0.28);
       border-top: 2px solid var(--brass);
-      border-radius: 3px;
+      border-radius: 12px;
       padding: 1.4rem 1.6rem 1.6rem;
       box-shadow:
         0 0 60px rgba(196,30,42,0.08),
@@ -328,7 +330,130 @@ $configured  = true; // stream endpoint always present
       .hd { margin-bottom: 1rem; }
       #viz { height: 52px; }
     }
-  </style>
+  
+    /* -- Recorded transmissions archive -- */
+    #archive {
+      position: relative; z-index: 10;
+      display: flex; justify-content: center;
+      padding: 0 1.5rem 4rem;
+    }
+    .archive-inner {
+      width: min(520px, 94vw);
+      background: rgba(10,2,2,0.9);
+      border: 1px solid rgba(201,162,39,0.28);
+      border-top: 2px solid var(--brass);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem 1.6rem;
+      box-shadow:
+        0 0 60px rgba(196,30,42,0.08),
+        0 12px 50px rgba(0,0,0,0.7);
+    }
+    .arc-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.28em; color: var(--brass);
+      text-transform: uppercase; margin-bottom: 0.5rem; text-align: center;
+    }
+    .arc-title {
+      font-family: var(--disp);
+      font-size: clamp(1rem, 3.4vw, 1.4rem);
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text); text-align: center; margin-bottom: 1.2rem;
+      text-shadow: 0 0 30px rgba(201,162,39,0.2);
+    }
+    .arc-item {
+      border: 1px solid rgba(201,162,39,0.18);
+      border-radius: 10px;
+      padding: 0.9rem 1rem 1rem;
+      margin-bottom: 0.9rem;
+      background: rgba(20,6,6,0.6);
+    }
+    .arc-item:last-child { margin-bottom: 0; }
+    .arc-name {
+      font-family: var(--disp);
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--text); margin-bottom: 0.3rem;
+    }
+    .arc-sub {
+      font-size: 0.66rem; letter-spacing: 0.08em; color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+    .arc-intro {
+      font-size: 0.72rem; line-height: 1.65;
+      color: rgba(245,230,211,0.78);
+      margin-bottom: 1.3rem; letter-spacing: 0.02em;
+    }
+    .arc-intro em { color: var(--brass); font-style: italic; }
+    .arc-item audio {
+      width: 100%; height: 36px; display: block;
+      color-scheme: dark;
+    }
+
+    /* -- Quick nav -- */
+    .site-nav {
+      position: fixed; top: 1rem; right: 1.2rem;
+      display: flex; gap: 0.6rem;
+      font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 20;
+    }
+    .site-nav a {
+      color: var(--muted); text-decoration: none;
+      padding: 0.32rem 0.6rem;
+      border: 1px solid rgba(201,162,39,0.25);
+      border-radius: 999px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .site-nav a:hover {
+      color: var(--brass); border-color: var(--brass);
+      background: rgba(201,162,39,0.08);
+    }
+
+    /* -- Speed chip -- */
+    .rate-group {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      align-items: center; flex-shrink: 0;
+    }
+    .rate-chip {
+      font-family: var(--disp);
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--brass);
+      border: 1px solid rgba(201,162,39,0.35);
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      min-width: 3.1rem; text-align: center;
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+      user-select: none;
+    }
+    .rate-chip.hot {
+      background: rgba(201,162,39,0.16);
+      box-shadow: 0 0 14px rgba(201,162,39,0.35);
+      color: #e8cc70;
+    }
+
+    /* -- Button hint + drag affordance -- */
+    .btn-hint {
+      margin-top: 0.85rem;
+      font-size: 0.56rem; letter-spacing: 0.12em;
+      color: var(--muted); text-align: center;
+      text-transform: uppercase;
+    }
+    #btn-play { touch-action: none; cursor: grab; }
+    #btn-play.dragging { cursor: grabbing; transform: scale(1.05); }
+
+    /* -- Archive back-link -- */
+    .arc-nav { margin-top: 1.1rem; text-align: center; }
+    .arc-nav a {
+      font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid rgba(201,162,39,0.25);
+      border-radius: 999px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .arc-nav a:hover {
+      color: var(--brass); border-color: var(--brass);
+      background: rgba(201,162,39,0.08);
+    }
+</style>
 </head>
 <body>
   <canvas id="static-bg" aria-hidden="true"></canvas>
@@ -336,6 +461,10 @@ $configured  = true; // stream endpoint always present
   <div id="scanlines" aria-hidden="true"></div>
 
   <p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a> · RADIO</p>
+  <nav class="site-nav" aria-label="Radio sections">
+    <a href="#stage">Live</a>
+    <a href="#archive">Archive</a>
+  </nav>
 
   <div id="stage">
     <header class="hd">
@@ -364,7 +493,7 @@ $configured  = true; // stream endpoint always present
       </div>
 
       <div class="controls">
-        <button id="btn-play" aria-label="Play"<?= $configured ? '' : ' disabled' ?>>
+        <button id="btn-play" aria-label="Play the archive"<?= $configured ? '' : ' disabled' ?>>
           <span class="play-icon" id="play-icon">▶</span>
         </button>
         <div class="vol-group">
@@ -372,7 +501,13 @@ $configured  = true; // stream endpoint always present
           <input type="range" id="vol" min="0" max="100" value="80"
             aria-label="Volume" style="--vol-pct:80%" />
         </div>
+        <div class="rate-group">
+          <div class="vol-label">Speed</div>
+          <div id="rate-chip" class="rate-chip" aria-live="polite">1.0×</div>
+        </div>
       </div>
+
+      <p class="btn-hint">Press the button to play the archive through, one story at a time · drag it up or down for varispeed</p>
 
       <div class="status-bar">
         <div class="sig-bars" id="sig-bars" aria-label="Signal strength">
@@ -400,6 +535,75 @@ $configured  = true; // stream endpoint always present
     </footer>
   </div>
 
+  <section id="archive">
+    <div class="archive-inner">
+      <div class="arc-eyebrow">Recorded Transmissions</div>
+      <h2 class="arc-title">From the Archive</h2>
+
+      <p class="arc-intro">
+        Alys is seven. One Tuesday, on her mother's baking day, she hid in the old
+        chest in the attic and fell out of time. She has been invisible ever since:
+        the cold place on the stairs, the small lost things that come back warm,
+        the game of hide and seek that never quite ended.
+      </p>
+      <p class="arc-intro">
+        Two tellings of her story. The first is <em>Y Ferch a Syrthiodd o Ddydd
+        Mawrth</em>, a radio play in Welsh for late at night. The second moves
+        between Welsh and English, made for learners: the Welsh line first, with English
+        explanations woven through the story.
+      </p>
+
+      <article class="arc-item">
+        <div class="arc-name">Y Ferch a Syrthiodd o Ddydd Mawrth</div>
+        <div class="arc-sub">CYMRAEG · stori ysbryd am Alys · a ghost story in Welsh · 6:18</div>
+        <audio controls preload="metadata">
+          <source src="y-ferch-a-syrthiodd-o-ddydd-mawrth.m4a" type="audio/mp4" />
+          <source src="y-ferch-a-syrthiodd-o-ddydd-mawrth.ogg" type="audio/ogg" />
+        </audio>
+      </article>
+
+      <article class="arc-item">
+        <div class="arc-name">The Girl Who Fell Out of Tuesday</div>
+        <div class="arc-sub">DWYIEITHOG · BILINGUAL · for Welsh learners, i ddysgwyr · 8:54</div>
+        <audio controls preload="metadata">
+          <source src="the-girl-who-fell-out-of-tuesday-bilingual.m4a" type="audio/mp4" />
+          <source src="the-girl-who-fell-out-of-tuesday-bilingual.ogg" type="audio/ogg" />
+        </audio>
+      </article>
+
+      <p class="arc-intro">
+        And a third transmission, in a new voice: an introduction to the Guild
+        itself, to Jack its clerk, and to the story of his awakening.
+      </p>
+
+      <article class="arc-item">
+        <div class="arc-name">The Awakening of Jack</div>
+        <div class="arc-sub">DWYIEITHOG · BILINGUAL · an introduction to the Guild and its clerk · 6:58</div>
+        <audio controls preload="metadata">
+          <source src="guild-jack-awakening-bilingual.m4a" type="audio/mp4" />
+          <source src="guild-jack-awakening-bilingual.ogg" type="audio/ogg" />
+        </audio>
+      </article>
+
+      <p class="arc-intro">
+        And a fourth transmission, in an older voice: a wizard on the Welsh
+        language itself, on the truths it unlocks in the story, and on the
+        five dimensions of the Guild.
+      </p>
+
+      <article class="arc-item">
+        <div class="arc-name">The Wizard on Welsh and the Five Dimensions</div>
+        <div class="arc-sub">DWYIEITHOG · BILINGUAL · the language, the story and the five dimensions · 8:09</div>
+        <audio controls preload="metadata">
+          <source src="wizard-welsh-five-dimensions.m4a" type="audio/mp4" />
+          <source src="wizard-welsh-five-dimensions.ogg" type="audio/ogg" />
+        </audio>
+      </article>
+
+      <p class="arc-nav"><a href="#stage">↑ Back to the broadcast</a></p>
+    </div>
+  </section>
+
   <audio id="stream" preload="none" crossorigin="anonymous"
     <?= $configured ? 'src="' . htmlspecialchars($stream_url, ENT_QUOTES) . '"' : '' ?>>
   </audio>
@@ -409,6 +613,30 @@ $configured  = true; // stream endpoint always present
     const STREAM_URL     = <?= json_encode($stream_url) ?>;
     const HAS_ICECAST    = true; // always poll local meta.php
     const META_ENDPOINT  = '/radio/meta.php';
+
+    // ── Recorded transmissions the big button can tune to ──
+    const STORIES = [
+      {
+        title: 'Y Ferch a Syrthiodd o Ddydd Mawrth',
+        sub:   'CYMRAEG · a ghost story in Welsh',
+        src:   'y-ferch-a-syrthiodd-o-ddydd-mawrth.m4a'
+      },
+      {
+        title: 'The Girl Who Fell Out of Tuesday',
+        sub:   'DWYIEITHOG · for Welsh learners',
+        src:   'the-girl-who-fell-out-of-tuesday-bilingual.m4a'
+      },
+      {
+        title: 'The Awakening of Jack',
+        sub:   'DWYIEITHOG · an introduction to the Guild and its clerk',
+        src:   'guild-jack-awakening-bilingual.m4a'
+      },
+      {
+        title: 'The Wizard on Welsh and the Five Dimensions',
+        sub:   'DWYIEITHOG · the language and the five dimensions',
+        src:   'wizard-welsh-five-dimensions.m4a'
+      }
+    ];
 
     const audio       = document.getElementById('stream');
     const btnPlay     = document.getElementById('btn-play');
@@ -424,6 +652,7 @@ $configured  = true; // stream endpoint always present
     const sigBars     = document.querySelectorAll('.sig-bar');
     const vizCanvas   = document.getElementById('viz');
     const vizCtx      = vizCanvas.getContext('2d');
+    const rateChip    = document.getElementById('rate-chip');
 
     // ── State ──
     let playing     = false;
@@ -432,6 +661,12 @@ $configured  = true; // stream endpoint always present
     let sourceNode  = null;
     let animRaf     = null;
     let metaTimer   = null;
+    let mode        = 'idle';  // 'story' while an archive recording plays
+    let currentStory = null;
+    let storyIndex  = -1;
+    let rate        = 1;
+    let dragState   = null;
+    let suppressClick = false;
 
     // ── Static noise canvas ──
     const staticCanvas = document.getElementById('static-bg');
@@ -452,13 +687,33 @@ $configured  = true; // stream endpoint always present
     }
     drawStatic();
 
-    // ── Volume ──
+    // ── Volume: a GainNode carries the slider (iOS ignores audio.volume) ──
     audio.volume = 0.8;
+    let gainNode = null;
     volInput.addEventListener('input', () => {
       const v = +volInput.value;
-      audio.volume = v / 100;
+      if (gainNode) {
+        gainNode.gain.setTargetAtTime(v / 100, audioCtx.currentTime, 0.02);
+      } else {
+        audio.volume = v / 100;
+      }
       volInput.style.setProperty('--vol-pct', v + '%');
     });
+
+    // ── True varispeed: pitch follows the tape, no time-stretch ──
+    audio.preservesPitch = false;
+    if ('webkitPreservesPitch' in audio) audio.webkitPreservesPitch = false;
+
+    // Safari/WebKit has long mishandled playbackRate and preservesPitch for
+    // media elements hooked into an AudioContext (WebKit bug 240405; fixed in
+    // WebKit main only in March 2026, so most devices still have it), and
+    // iPhone ignores element playbackRate outright. On Apple engines the
+    // stories therefore play through a Web Audio buffer, where rate and pitch
+    // move reliably; other engines keep streaming element playback.
+    const appleEngine = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+      || (/Safari/.test(navigator.userAgent) && !/Chrome|Chromium|Edg|OPR|Android/.test(navigator.userAgent));
+    const rateSupported = window.__radioForceBuffer ? false : !appleEngine;
 
     // ── Web Audio visualizer ──
     function initAudioCtx() {
@@ -467,9 +722,14 @@ $configured  = true; // stream endpoint always present
       analyser  = audioCtx.createAnalyser();
       analyser.fftSize = 256;
       analyser.smoothingTimeConstant = 0.82;
+      gainNode  = audioCtx.createGain();
+      gainNode.gain.value = +volInput.value / 100;
       sourceNode = audioCtx.createMediaElementSource(audio);
-      sourceNode.connect(analyser);
+      sourceNode.connect(gainNode);
+      gainNode.connect(analyser);
       analyser.connect(audioCtx.destination);
+      // Once the element is routed through the graph its own volume is bypassed.
+      audio.volume = 1;
     }
 
     function drawViz() {
@@ -528,37 +788,175 @@ $configured  = true; // stream endpoint always present
       airText.textContent = on ? 'ON AIR' : 'STANDBY';
     }
 
-    // ── Play / pause ──
-    btnPlay.addEventListener('click', async () => {
-      if (!STREAM_URL) return;
-      if (playing) {
-        audio.pause();
-        audio.src = '';   // force disconnect from Icecast
-      } else {
-        try {
-          initAudioCtx();
-          if (audioCtx.state === 'suspended') await audioCtx.resume();
-          audio.src = STREAM_URL;
-          audio.load();
-          await audio.play();
-        } catch (e) {
-          setStatus('ERROR');
-        }
+    // ── Big red button: press plays a random story, dragging sets the speed ──
+    const RATE_MIN = 0.75, RATE_MAX = 2.5;
+
+    function fmtRate(r) { return r.toFixed(1); }
+
+    function setRate(r) {
+      if (bufferFailed && !rateSupported && !bufferSource) {
+        // Buffer playback failed on a device with no playbackRate: no way to
+        // change speed, so say so rather than show a dead control.
+        rateChip.textContent = 'n/a';
+        return;
       }
+      rate = Math.min(RATE_MAX, Math.max(RATE_MIN, Math.round(r * 20) / 20));
+      audio.playbackRate = rate;
+      if (bufferSource) bufferSource.playbackRate.value = rate;
+      rateChip.textContent = fmtRate(rate) + '\u00d7';
+      rateChip.classList.add('hot');
+      clearTimeout(rateChip._t);
+      rateChip._t = setTimeout(() => rateChip.classList.remove('hot'), 700);
+      if (playing) statusMsg.textContent = playStatus();
+    }
+
+    function playStatus() {
+      return 'PLAYING ' + (storyIndex + 1) + '/' + STORIES.length + ' · ' + fmtRate(rate) + '\u00d7';
+    }
+
+    async function startStory(i) {
+      storyIndex = i;
+      currentStory = STORIES[i];
+      try {
+        initAudioCtx();
+        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+        mode = 'story';
+        document.querySelectorAll('#archive audio').forEach(a => a.pause());
+        if (!rateSupported) { await startBuffered(i); return; }
+        audio.src = currentStory.src;
+        audio.load();
+        audio.playbackRate = rate;
+        await audio.play();
+      } catch (e) {
+        setStatus('ERROR');
+      }
+    }
+
+    // ── iPhone path: fetch + decode the story, then play it as a Web Audio
+    //    buffer so the varispeed drag moves playbackRate (pitch included) ──
+    let bufferSource = null;
+    let bufferEntry  = null;  // single-entry cache: {src, promise}
+    let bufferFailed = false;
+
+    function loadBuffer(src) {
+      if (bufferEntry && bufferEntry.src === src) return bufferEntry.promise;
+      const promise = fetch(src)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
+        .then(ab => audioCtx.decodeAudioData(ab));
+      bufferEntry = { src, promise };
+      return promise;
+    }
+
+    async function startBuffered(i) {
+      // Still inside the press gesture here: make sure the context is running
+      // before the (async) decode, so the buffer can actually sound on iOS.
+      if (audioCtx.state === 'suspended') { try { await audioCtx.resume(); } catch (_) {} }
+      setStatus('BUFFERING…');
+      setSignal(2);
+      try {
+        const buf = await loadBuffer(currentStory.src);
+        if (mode !== 'story' || storyIndex !== i) return; // stopped while loading
+        stopBufferPlayback();
+        const node = audioCtx.createBufferSource();
+        node.buffer = buf;
+        node.playbackRate.value = rate;
+        node.connect(gainNode);
+        node.onended = () => {
+          if (bufferSource === node) { bufferSource = null; advanceOrStop(); }
+        };
+        bufferSource = node;
+        bufferFailed = false;
+        node.start();
+        onPlayingUI();
+      } catch (e) {
+        // Decode failed: fall back to plain element playback so the story is
+        // still heard; varispeed is honestly marked unavailable (see setRate).
+        bufferFailed = true;
+        audio.src = currentStory.src;
+        audio.load();
+        await audio.play();
+      }
+    }
+
+    function stopBufferPlayback() {
+      if (!bufferSource) return;
+      const node = bufferSource;
+      bufferSource = null;
+      node.onended = null;
+      try { node.stop(); } catch (_) {}
+    }
+
+    async function togglePlay() {
+      if (playing || mode === 'story') {
+        // One press stops, whether the story is playing or still buffering.
+        stopBufferPlayback();
+        const elementPlaying = !audio.paused;
+        mode = 'idle';
+        storyIndex = -1;
+        currentStory = null;
+        if (elementPlaying) { audio.pause(); return; } // 'pause' event finishes the stop
+        stop();
+        return;
+      }
+      startStory(0);
+    }
+
+    // Press vs drag: under 7px of movement counts as a press.
+    btnPlay.addEventListener('pointerdown', (e) => {
+      if (btnPlay.disabled) return;
+      try { btnPlay.setPointerCapture(e.pointerId); } catch (_) {}
+      dragState = { y0: e.clientY, rate0: rate, moved: false };
+    });
+    btnPlay.addEventListener('pointermove', (e) => {
+      if (!dragState) return;
+      const dy = dragState.y0 - e.clientY;
+      if (!dragState.moved && Math.abs(dy) < 7) return;
+      if (!dragState.moved) { dragState.moved = true; btnPlay.classList.add('dragging'); }
+      setRate(dragState.rate0 + dy / 150);
+    });
+    function endDrag() {
+      if (!dragState) return;
+      if (dragState.moved) suppressClick = true;
+      dragState = null;
+      btnPlay.classList.remove('dragging');
+    }
+    btnPlay.addEventListener('pointerup', endDrag);
+    btnPlay.addEventListener('pointercancel', endDrag);
+    btnPlay.addEventListener('click', () => {
+      if (suppressClick) { suppressClick = false; return; }
+      if (!STREAM_URL) return;
+      togglePlay();
     });
 
-    audio.addEventListener('playing', () => {
+    function onPlayingUI() {
       playing = true;
       playIcon.textContent = '■';
       btnPlay.setAttribute('aria-label', 'Stop');
       setOnAir(true);
       setSignal(5);
-      statusMsg.textContent = 'ON AIR';
-      startMetaPoll();
-    });
+      if (mode === 'story' && currentStory) {
+        npTitle.className = 'np-title';
+        npTitle.textContent = currentStory.title;
+        npArtist.textContent = currentStory.sub;
+        npArtist.hidden = false;
+        listenerEl.hidden = true;
+        statusMsg.textContent = playStatus();
+      } else {
+        statusMsg.textContent = 'ON AIR';
+        startMetaPoll();
+      }
+    }
+    audio.addEventListener('playing', onPlayingUI);
 
-    audio.addEventListener('pause', () => stop());
-    audio.addEventListener('ended', () => stop());
+    audio.addEventListener('pause', () => { if (!audio.ended) stop(); });
+    function advanceOrStop() {
+      if (mode === 'story' && storyIndex >= 0 && storyIndex < STORIES.length - 1) {
+        startStory(storyIndex + 1);
+      } else {
+        stop();
+      }
+    }
+    audio.addEventListener('ended', advanceOrStop);
     audio.addEventListener('error', () => {
       stop();
       setStatus('SIGNAL LOST');
@@ -574,7 +972,11 @@ $configured  = true; // stream endpoint always present
     });
 
     function stop() {
+      stopBufferPlayback();
       playing = false;
+      mode = 'idle';
+      currentStory = null;
+      storyIndex = -1;
       playIcon.textContent = '▶';
       btnPlay.setAttribute('aria-label', 'Play');
       setOnAir(false);
@@ -586,6 +988,13 @@ $configured  = true; // stream endpoint always present
     function setStatus(msg) {
       statusMsg.textContent = msg;
     }
+
+    // ── One voice at a time: archive players pause the stage ──
+    document.querySelectorAll('#archive audio').forEach(a => {
+      a.addEventListener('play', () => {
+        if (playing || bufferSource) { stopBufferPlayback(); audio.pause(); stop(); }
+      });
+    });
 
     // ── Metadata polling ──
     function startMetaPoll() {
@@ -622,6 +1031,14 @@ $configured  = true; // stream endpoint always present
         }
       } catch { /* silent fail */ }
     }
+
+    // Read-only diagnostics (used to verify behaviour across devices).
+    window.__radioDiag = {
+      rateSupported,
+      usingBuffer: () => !!bufferSource,
+      gain: () => (gainNode ? gainNode.gain.value : null),
+      state: () => ({ playing, mode, storyIndex, rate })
+    };
 
     // ── Visualizer loop (always on) ──
     drawViz();

@@ -32,6 +32,39 @@ foreach (['root', 'trunk', 'branch', 'leaf'] as $zone) {
     }
 }
 
+// Continuity for a signed-in visitor: where they have just been, from their
+// own cards on the tape. GET params only pick which card to highlight.
+$returning = null;
+if (!empty($viewer['known'])) {
+    $trail = ttg_graph_viewer_trail($viewer, 3600, 12);
+    $from = strtolower((string) ($_GET['from'] ?? ''));
+    $from = in_array($from, ['navigator'], true) ? $from : '';
+    $want = preg_replace('/[^a-z0-9\-]/', '', strtolower((string) ($_GET['punched'] ?? ''))) ?? '';
+    $just = null;
+    foreach (array_reverse($trail) as $row) {
+        if ($row['action'] !== 'WRITE_CANON') continue;
+        if ($want !== '' && $row['slug'] !== $want) continue;
+        $just = $row;
+        break;
+    }
+    if ($trail || $from !== '') {
+        $canonN = 0;
+        $pendingN = 0;
+        foreach ($field['nodes'] as $n) {
+            if (!is_array($n)) continue;
+            if (!empty($n['pending'])) $pendingN++;
+            else $canonN++;
+        }
+        $returning = [
+            'name' => (string) ($viewer['first'] ?? $viewer['name'] ?? ''),
+            'from' => $from,
+            'just' => $just,
+            'trail' => $trail,
+            'counts' => ['canon' => $canonN, 'pending' => $pendingN],
+        ];
+    }
+}
+
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-store');
 ?>
@@ -101,21 +134,20 @@ body.booting .site-mark,body.booting .always-on,body.booting #stage{visibility:v
   </div>
 </div>
 
-<script>window.TTG_INTRO=<?= json_encode(['csrf' => $csrf, 'jack' => '/now/jack', 'act' => '/intro/act', 'playAct' => '/play/act', 'joinAct' => '/join/act.php', 'voiceAct' => '/intro/voice', 'tree' => '/now', 'navigator' => $guild ? '/navigator' : '', 'leaves' => $sample, 'brief' => ttg_briefing_relevant($brief), 'play' => ttg_play_public($play), 'viewer' => ['known' => !empty($viewer['known']), 'name' => (string) ($viewer['name'] ?? ''), 'slug' => (string) ($viewer['slug'] ?? '')]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;</script>
+<script>window.TTG_INTRO=<?= json_encode(['csrf' => $csrf, 'jack' => '/now/jack', 'act' => '/intro/act', 'playAct' => '/play/act', 'joinAct' => '/join/act.php', 'voiceAct' => '/intro/voice', 'tree' => '/now', 'navigator' => $guild ? '/navigator' : '', 'leaves' => $sample, 'brief' => ttg_briefing_relevant($brief), 'play' => ttg_play_public($play), 'returning' => $returning, 'viewer' => ['known' => !empty($viewer['known']), 'name' => (string) ($viewer['name'] ?? ''), 'slug' => (string) ($viewer['slug'] ?? '')]], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;</script>
 <script src="/jack/body/js/sprite.js?v=19"></script>
 <script src="/assets/jack-voice.js?v=3"></script>
-<script src="/assets/intro.js?v=21"></script>
+<script src="/assets/intro.js?v=23"></script>
 <nav id="dock" aria-label="Guild">
   <a href="/now">NOW</a>
   <a href="/cube">CUBE</a>
-  <a href="/chat">JACK</a>
+  <a href="/chat">CHAT</a>
   <?= ttg_html_navigator_dock($viewer) ?>
   <?= ttg_you_dock($viewer) ?>
 </nav>
 <!-- the little Jack: press the face, he listens and speaks -->
-<script src="https://ffilm.org/elevenlabs/jack-face.js" data-room="the Lodge desk - typed statements (timetravellersguild.com/lodge)"></script>
 <?php if (!empty($viewer['known'])): require_once __DIR__ . '/../people/inc/db.php'; ?>
-<script src="/assets/narrative.js?v=2" data-csrf="<?= htmlspecialchars(ttg_csrf_token(), ENT_QUOTES) ?>" defer></script>
+<script src="/assets/narrative.js?v=3" data-csrf="<?= htmlspecialchars(ttg_csrf_token(), ENT_QUOTES) ?>" defer></script>
 <?php endif; ?>
 </body>
 </html>

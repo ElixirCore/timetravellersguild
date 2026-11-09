@@ -1,0 +1,186 @@
+/* TTG-49 — a 7x7 goðen voice unit. Same darkroom as /toby. */
+:root {
+  --paper: #151210;
+  --paper-2: #1f1a17;
+  --ink: #f3ebe1;
+  --ink-2: #c8bcb0;
+  --muted: #8c8075;
+  --line: #2d2622;
+  --rose: #e0586c;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --serif: "Fraunces", "Iowan Old Style", "Palatino", Georgia, serif;
+  --sans: "Instrument Sans", ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--paper); }
+body {
+  margin: 0; min-height: 100svh;
+  background:
+    radial-gradient(1100px 460px at 50% -200px, rgb(255 215 110 / .14), transparent 72%),
+    var(--paper);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--sans);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
+}
+::selection { background: color-mix(in srgb, var(--rose) 28%, transparent); }
+
+.top { max-width: 640px; margin: 0 auto; padding: 26px 18px 14px; text-align: center; }
+.crumb { color: var(--muted); text-decoration: none; font-size: 13px; }
+.crumb:hover { color: var(--ink-2); }
+h1 { margin: 8px 0 2px; font: italic 300 clamp(34px, 8vw, 52px)/1 var(--serif); }
+h1 .dot { font-style: normal; color: var(--rose); }
+.sub { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+/* ---- the unit ---- */
+.unit {
+  position: relative;
+  max-width: 640px; margin: 14px auto 26px; padding: 16px 14px 14px;
+  background: linear-gradient(180deg, #221c18, #17120f);
+  border: 1px solid #342b25;
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / .05),
+    inset 0 -14px 30px rgb(0 0 0 / .35),
+    0 22px 44px -18px rgb(0 0 0 / .7);
+}
+.corner { position: absolute; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #57504a, #211b17 70%);
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / .15), 0 1px 1px rgb(0 0 0 / .6); }
+.corner.tl { top: 7px; left: 7px; } .corner.tr { top: 7px; right: 7px; }
+.corner.bl { bottom: 7px; left: 7px; } .corner.br { bottom: 7px; right: 7px; }
+
+/* column glyphs */
+.gridhead {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  margin: 2px 0 8px; padding-left: 62px; gap: 6px;
+}
+.gridhead span {
+  text-align: center; font-size: 15px; color: var(--muted);
+  font-family: var(--serif);
+}
+.gridhead b { display: block; font: 600 9.5px/1.2 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: #5f564e; font-weight: 600; }
+
+.board { display: flex; gap: 8px; align-items: stretch; }
+.rowlabels { display: grid; grid-template-rows: repeat(7, 1fr); gap: 6px; width: 54px; flex: none; }
+.rowlabels span {
+  display: flex; align-items: center; justify-content: flex-end;
+  font: 600 9.5px/1.1 var(--sans); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); text-align: right;
+}
+
+/* ---- pads ---- */
+.grid {
+  flex: 1;
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+}
+.pad {
+  position: relative; aspect-ratio: 1; border: 0; border-radius: 7px;
+  background: linear-gradient(180deg, #2b2320, #1a1412);
+  box-shadow:
+    inset 0 2px 3px rgb(255 255 255 / .06),
+    inset 0 -4px 6px rgb(0 0 0 / .5),
+    0 3px 5px rgb(0 0 0 / .55);
+  cursor: pointer; padding: 0;
+  transition: transform .06s var(--ease), box-shadow .12s var(--ease), background .12s var(--ease);
+  touch-action: manipulation;
+}
+.pad .g {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--serif); font-size: clamp(15px, 4.4vw, 26px);
+  color: color-mix(in srgb, var(--rc, var(--rose)) 55%, #0d0a08);
+  transition: color .12s var(--ease), text-shadow .12s var(--ease);
+  pointer-events: none;
+}
+.pad:active, .pad.hit {
+  transform: translateY(2px) scale(.97);
+  box-shadow:
+    inset 0 2px 6px rgb(0 0 0 / .6),
+    0 1px 2px rgb(0 0 0 / .5);
+}
+.pad.on {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--rc, var(--rose)) 78%, #fff 6%),
+    color-mix(in srgb, var(--rc, var(--rose)) 55%, #000 12%));
+  box-shadow:
+    0 0 14px 2px color-mix(in srgb, var(--rc, var(--rose)) 65%, transparent),
+    0 0 34px 4px color-mix(in srgb, var(--rc, var(--rose)) 32%, transparent),
+    inset 0 1px 2px rgb(255 255 255 / .35);
+}
+.pad.on .g { color: #fff; text-shadow: 0 0 8px rgb(255 255 255 / .8); }
+.pad:focus-visible { outline: 2px solid var(--rc, var(--rose)); outline-offset: 2px; }
+
+/* ---- console: knobs + brand ---- */
+.console {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px; padding: 12px 10px 4px;
+  border-top: 1px solid #342b25;
+}
+.knobbank { display: flex; gap: 26px; }
+.knobwrap { display: grid; justify-items: center; gap: 6px; }
+.knob {
+  --ang: 0deg;
+  width: 52px; height: 52px; border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, #453b34, #1d1713 72%);
+  box-shadow:
+    inset 0 2px 3px rgb(255 255 255 / .1),
+    inset 0 -5px 8px rgb(0 0 0 / .55),
+    0 4px 8px rgb(0 0 0 / .6);
+  cursor: grab; position: relative;
+  touch-action: none;
+}
+.knob:active { cursor: grabbing; }
+.knob:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.knob i {
+  position: absolute; inset: 0; transform: rotate(var(--ang));
+}
+.knob i::before {
+  content: ""; position: absolute; left: 50%; top: 4px;
+  width: 4px; height: 15px; margin-left: -2px; border-radius: 2px;
+  background: var(--rose);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--rose) 70%, transparent);
+}
+.kname { font: 600 10px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+
+.brand { display: grid; justify-items: end; gap: 2px; }
+.lamp { width: 8px; height: 8px; border-radius: 50%; background: #3a322c; transition: background .2s, box-shadow .2s; }
+.lamp.live { background: var(--rose); box-shadow: 0 0 8px var(--rose); }
+.bname { font: italic 300 20px/1 var(--serif); color: var(--ink-2); }
+.bsub { font: 600 9.5px/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+.foot { max-width: 640px; margin: 0 auto; padding: 0 18px 34px; text-align: center; }
+.foot p { color: var(--muted); font-size: 12.5px; }
+
+@media (max-width: 560px) {
+  .unit { margin: 10px 8px 20px; padding: 14px 10px 10px; border-radius: 14px; }
+  .gridhead { padding-left: 50px; gap: 4px; }
+  .board { gap: 6px; }
+  .rowlabels { width: 44px; gap: 4px; }
+  .rowlabels span { font-size: 8.5px; }
+  .grid { gap: 4px; }
+  .knobbank { gap: 18px; }
+  .knob { width: 46px; height: 46px; }
+  .bname { font-size: 17px; }
+}
+
+/* landscape phone: played aux-out into an amp — everything reachable without scrolling */
+@media (orientation: landscape) and (max-height: 560px) {
+  .top { padding: 8px 18px 4px; }
+  h1 { font-size: 26px; margin: 2px 0 0; }
+  .sub { display: none; }
+  .foot { display: none; }
+  .unit { margin: 4px auto 8px; max-width: 96vw; padding: 10px 12px 8px;
+    display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr; gap: 4px 14px; align-items: center; }
+  .gridhead { margin: 0 0 4px; }
+  .board { grid-row: 2; }
+  .grid { height: calc(100svh - 150px); }
+  .pad { aspect-ratio: auto; }
+  .console { grid-row: 1 / span 2; grid-column: 2; flex-direction: column; gap: 10px;
+    border-top: 0; border-left: 1px solid #342b25; margin-top: 0; padding: 4px 2px 4px 12px; }
+  .knobbank { flex-direction: column; gap: 14px; display: flex; }
+  .brand { justify-items: center; }
+}

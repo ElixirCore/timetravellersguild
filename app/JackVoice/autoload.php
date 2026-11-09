@@ -7,4 +7,5 @@ require_once __DIR__ . '/SpeechPrep.php';
 require_once __DIR__ . '/VoiceCache.php';
 require_once __DIR__ . '/VoiceSynth.php';
 require_once __DIR__ . '/ElevenLabsSynth.php';
+require_once __DIR__ . '/DeepgramSynth.php';
 require_once __DIR__ . '/VoiceEngine.php';

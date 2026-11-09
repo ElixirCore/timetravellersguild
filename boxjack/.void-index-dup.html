@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/boxjack/" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a0505" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="description" content="CHRONOS — Temporal Relay Booth. The Guild's K6 red telephone kiosk." />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <title>CHRONOS — Time Travellers Guild</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+  <meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM" />
+  <meta property="og:title" content="CHRONOS — Red Phonebox" />
+  <meta property="og:description" content="Temporal Relay Booth · Mk VI. The Guild's K6 red telephone kiosk." />
+  <meta property="og:url" content="https://timetravellersguild.com/box/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://timetravellersguild.com/box/" />
+</head>
+<body>
+  <p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a> · BOX</p>
+  <canvas id="scene"></canvas>
+
+  <div id="vignette" aria-hidden="true"></div>
+  <div id="flash" aria-hidden="true"></div>
+  <div id="scanlines" aria-hidden="true"></div>
+
+  <div id="hud">
+    <header class="hud-top">
+      <div class="brand">
+        <h1 class="title">CHRONOS</h1>
+        <p class="subtitle">Temporal Relay Booth · Mk VI</p>
+      </div>
+      <div class="status-cluster" aria-live="polite">
+        <div class="status-pill" id="status-pill">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">STABLE</span>
+        </div>
+        <div class="coord-chip" id="era-chip">Present Day</div>
+      </div>
+    </header>
+
+    <div class="hud-stage" aria-hidden="true">
+      <aside class="gauge-rail left">
+        <div class="gauge">
+          <div class="gauge-label">LINE</div>
+          <div class="gauge-track">
+            <div class="gauge-fill" id="energy-fill"></div>
+          </div>
+          <div class="gauge-value" id="energy-value">100%</div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-label">QUEUE</div>
+          <div class="gauge-track paradox">
+            <div class="gauge-fill" id="paradox-fill"></div>
+          </div>
+          <div class="gauge-value" id="paradox-value">02%</div>
+        </div>
+      </aside>
+
+      <div class="hud-center" id="travel-overlay" hidden>
+        <div class="vortex-readout">
+          <div class="vortex-ring"></div>
+          <div class="vortex-copy">DIALLING</div>
+        </div>
+      </div>
+
+      <aside class="gauge-rail right">
+        <div class="telemetry">
+          <div class="tel-row"><span>ΔT</span><span id="tel-dt">0.00s</span></div>
+          <div class="tel-row"><span>LAT</span><span id="tel-lat">51.50°N</span></div>
+          <div class="tel-row"><span>LON</span><span id="tel-lon">0.12°W</span></div>
+          <div class="tel-row"><span>ALT</span><span id="tel-alt">24m</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="hud-bottom">
+      <div id="time-display">
+        <div class="time-label">Current Location</div>
+        <div id="time-value" class="time-value">2026.10.19 — London</div>
+        <div id="era-value" class="era-value">Present Day</div>
+      </div>
+
+      <div id="dest-drawer" class="dest-drawer" hidden>
+        <div class="dest-drawer-head">
+          <span>Select Exchange</span>
+          <button type="button" class="icon-btn" id="btn-close-dest" aria-label="Close destinations">✕</button>
+        </div>
+        <ul id="dest-list" class="dest-list" role="listbox"></ul>
+      </div>
+
+      <div id="controls" class="controls">
+        <button id="btn-travel" class="btn btn-primary" type="button">
+          <span class="btn-icon">☎</span>
+          <span class="btn-label">Dial</span>
+        </button>
+        <button id="btn-dest" class="btn" type="button">
+          <span class="btn-icon">⌖</span>
+          <span class="btn-label">Exchanges</span>
+        </button>
+        <button id="btn-doors" class="btn" type="button">
+          <span class="btn-icon">▣</span>
+          <span class="btn-label">Open Doors</span>
+        </button>
+        <button id="btn-lamp" class="btn" type="button">
+          <span class="btn-icon">✦</span>
+          <span class="btn-label">Flash Lamp</span>
+        </button>
+        <button id="btn-interior" class="btn" type="button">
+          <span class="btn-icon">◎</span>
+          <span class="btn-label">Interior</span>
+        </button>
+        <button id="btn-reset" class="btn" type="button">
+          <span class="btn-icon">↺</span>
+          <span class="btn-label">Reset View</span>
+        </button>
+      </div>
+
+      <div id="instructions">
+        <span class="desktop-only">Drag to orbit · Scroll to zoom · Click the booth or use controls</span>
+        <span class="mobile-only">Swipe to orbit · Pinch to zoom · Tap the booth or buttons</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script src="https://ffilm.org/elevenlabs/jack-face.js" data-room="CHRONOS box"></script>
+  <script type="module" src="js/main.js?v=4"></script>
+</body>
+</html>

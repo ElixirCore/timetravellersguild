@@ -1,644 +1,575 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta charset="utf-8">
-<title>UNIKIN Passport Book</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#d9cb9e">
+<title>Passport Map — Time Travellers Guild</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;600&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet">
 <style>
-/* Layout: one full-height stage holding a CSS-3D booklet (spine at the stage centre), a status line and a small control row.
-   Closed it shows only the cover; open it shows a two-page spread. Zoom and pan act on the whole book. */
-:root {
-  --ground: #0e1418;
-  --ink: #dde7e3;
-  --dim: #8a9b97;
-  --rule: #26333a;
-  --iris: #5cc8d6;
-  --paper: #e8eeea;
-  --pink: #19313a;
-  --page-ink: #10232b;
-  --page-dim: #52666c;
-  --f-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
-  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-data: "JetBrains Mono", ui-monospace, Menlo, "Courier New", monospace;
-  --ease: cubic-bezier(.45, .05, .25, 1);
-  color-scheme: dark;
+:root{
+  --paper:#d9cb9e; --paper-2:#e8dcb6; --ink:#1b1a17; --ink-2:#4a4436; --red:#b3261e; --red-2:#e0483e;
+  --rule:rgba(27,26,23,.28); --f:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
-html, body { background: var(--ground); height: 100%; }
-body {
-  margin: 0; color: var(--ink); font: 400 14px/1.5 var(--f-body); overflow: hidden;
-  padding-block: 12px 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  box-sizing: border-box;
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font:13px/1.45 var(--f)}
+#map{position:fixed;inset:0}
+.panel{position:fixed;z-index:2;top:12px;left:12px;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 24px);
+  overflow:auto;background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:14px 14px 10px}
+.panel h1{font-size:13px;letter-spacing:.14em;margin:0 0 2px;text-transform:uppercase}
+.panel .sub{color:var(--ink-2);font-size:11px;margin:0 0 12px}
+.panel h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin:14px 0 6px;padding-top:10px;border-top:1px dashed var(--rule)}
+.row{display:flex;align-items:center;gap:8px;margin:5px 0}
+.row label{flex:1;cursor:pointer;display:flex;align-items:center;gap:8px}
+.row input[type=checkbox]{accent-color:var(--red);width:15px;height:15px;margin:0}
+.row input[type=range]{flex:1;accent-color:var(--red)}
+.row .v{min-width:3.2em;text-align:right;color:var(--ink-2)}
+.st{font-size:10px;color:var(--ink-2);margin-left:23px;min-height:1em}
+.st.err{color:var(--red)}
+select,button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:3px 6px}
+button{cursor:pointer}
+button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.stamps{list-style:none;margin:0;padding:0}
+.stamps li{display:grid;grid-template-columns:1.6em 1fr auto;gap:6px;padding:4px 2px;border-bottom:1px dotted var(--rule);cursor:pointer}
+.stamps li:hover{background:rgba(179,38,30,.08)}
+.stamps li.dim{opacity:.35}
+.stamps li .n{color:var(--red);font-weight:600}
+.stamps li .d{color:var(--ink-2);font-size:11px}
+.stamps li small{grid-column:2/4;color:var(--ink-2)}
+.empty{color:var(--ink-2);font-size:12px}
+.foot{font-size:10px;color:var(--ink-2);margin-top:12px;border-top:1px dashed var(--rule);padding-top:8px}
+.toggle{display:none}
+.card{position:fixed;z-index:3;right:12px;bottom:28px;width:min(340px,calc(100vw - 24px));max-height:45dvh;overflow:auto;
+  background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--red);padding:12px 14px;display:none}
+.card h3{margin:0 0 6px;font-size:13px}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px}
+.card dt{color:var(--ink-2)} .card dd{margin:0;word-break:break-word}
+.card pre{white-space:pre-wrap;font:11px/1.4 var(--f);margin:0}
+.card .x{position:absolute;top:6px;right:8px;border:0;background:none;font-size:16px;padding:0 4px}
+.maplibregl-ctrl-group{border-radius:0!important;border:1px solid var(--ink);box-shadow:none!important;background:var(--paper-2)!important}
+.maplibregl-ctrl-attrib{font:10px var(--f);background:rgba(232,220,182,.85)!important}
+.askbtn{position:fixed;z-index:3;top:12px;right:58px;font-weight:600;letter-spacing:.12em;padding:7px 12px;background:var(--red);color:var(--paper-2);border:1px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.ask{position:fixed;z-index:4;top:12px;right:12px;bottom:28px;width:min(380px,calc(100vw - 24px));display:none;flex-direction:column;
+  background:var(--paper-2);border:1px solid var(--ink);box-shadow:4px 4px 0 var(--red)}
+.ask.open{display:flex}
+.ask header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px dashed var(--rule)}
+.ask header h2{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.ask .log{flex:1;overflow:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:92%;padding:8px 10px;border:1px solid var(--rule);white-space:pre-wrap;word-break:break-word}
+.msg.me{align-self:flex-end;background:var(--paper)}
+.msg.ai{align-self:flex-start;background:#f3ead0}
+.msg.tool{align-self:flex-start;border:0;padding:0 2px;color:var(--ink-2);font-size:11px}
+.msg.err{border-color:var(--red);color:var(--red)}
+.ask form{display:flex;gap:6px;padding:10px 12px;border-top:1px dashed var(--rule)}
+.ask textarea{flex:1;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);padding:6px;resize:none;height:3.2em}
+.ask .hint{font-size:10px;color:var(--ink-2);padding:0 12px 8px}
+.ask .sugg{display:flex;flex-wrap:wrap;gap:6px}
+.ask .sugg button{font-size:11px;text-align:left}
+@media (max-width:640px){
+  .askbtn{top:12px;right:56px}
+  .ask{top:8px;right:8px;left:8px;width:auto;bottom:auto;height:62dvh}
+  .panel{top:auto;bottom:0;left:0;width:100%;max-height:55dvh;box-shadow:0 -3px 0 var(--ink);border-width:1px 0 0}
+  .panel.closed>*:not(.toggle){display:none}
+  .toggle{display:block;width:100%;margin-bottom:8px}
+  .card{bottom:auto;top:12px}
 }
-.app { height: 100%; display: flex; flex-direction: column; gap: 10px; max-width: 1200px; margin: 0 auto; }
-.top { display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; justify-content: space-between; }
-.top h1 { margin: 0; font: 800 20px/1 var(--f-display); letter-spacing: -.01em; }
-.top p { margin: 0; font: 400 12px/1.4 var(--f-data); color: var(--dim); }
-#stage { position: relative; flex: 1 1 auto; min-height: 320px; overflow: hidden; touch-action: none; cursor: default; user-select: none; -webkit-user-select: none; outline: none; }
-#zoom { position: absolute; inset: 0; transform-origin: 0 0; }
-.scene { position: absolute; inset: 0; perspective: 2600px; }
-.book { position: absolute; left: 50%; top: 50%; width: var(--pw); height: var(--ph); margin-top: calc(var(--ph) / -2); transform-style: preserve-3d; transform: translateX(var(--shift, 0px)); transition: transform .9s var(--ease); }
-.book.nodrag { transition: none; }
-.leaf { position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d; transform: translateZ(var(--z, 0px)) rotateY(var(--a, 0deg)); transition: transform .95s var(--ease); }
-.leaf.drag { transition: none; }
-.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
-.face.back { transform: rotateY(180deg); }
-.shade { position: absolute; inset: 0; pointer-events: none; opacity: var(--shade, 0); z-index: 5; }
-.face.front .shade { background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,0) 70%); }
-.face.back .shade { background: linear-gradient(270deg, rgba(0,0,0,.55), rgba(0,0,0,0) 70%); }
-/* pages */
-.page { position: absolute; inset: 0; font-size: calc(var(--pw) / 22); color: var(--page-ink); background: var(--lines) center / 100% 100% no-repeat, var(--paper); padding: 1.3em 1.2em; box-sizing: border-box; display: flex; flex-direction: column; gap: .7em; }
-.page.right { box-shadow: inset 12px 0 18px -12px rgba(0,0,0,.35); }
-.page.left { box-shadow: inset -12px 0 18px -12px rgba(0,0,0,.35); }
-.page::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: .45em; background: linear-gradient(90deg, #0e6f87, #2b56b6, #7b3ab0, #b5367f, #c0782c, #2c8f6a); opacity: .85; }
-.page h2 { margin: .4em 0 0; font: 800 1.5em/1.05 var(--f-display); letter-spacing: -.01em; }
-.page .eyebrow { font: 600 .62em/1 var(--f-data); letter-spacing: .16em; text-transform: uppercase; color: var(--page-dim); }
-.page p { margin: 0; font-size: .86em; line-height: 1.5; }
-.page .small { font-size: .64em; color: var(--page-dim); }
-.page dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .35em .9em; margin: 0; font-size: .8em; }
-.page dt { font: 600 .72em/1.9 var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--page-dim); }
-.page dd { margin: 0; overflow-wrap: anywhere; }
-.page dd.none { color: var(--page-dim); font-style: italic; }
-.page button.mini { font: 600 .8em/1 var(--f-data); color: #12525f; background: none; border: 0; padding: 0; margin-left: .6em; cursor: pointer; text-decoration: underline; }
-.page canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; }
-.page .stampbox { width: 78%; margin: 0 auto; }
-.page .grow { flex: 1 1 auto; }
-.page .mrz { font: 600 calc(var(--pw) * 0.0305)/1.5 var(--f-data); white-space: pre; background: rgba(255,255,255,.55); padding: .4em .5em; letter-spacing: 0; overflow: hidden; }
-.page .folio { position: absolute; bottom: .8em; font: 400 .56em/1 var(--f-data); color: var(--page-dim); }
-.page.left .folio { left: 1.3em; } .page.right .folio { right: 1.3em; }
-.page .flag { align-self: flex-start; font: 600 .62em/1 var(--f-data); letter-spacing: .1em; text-transform: uppercase; padding: .6em .8em; border: 1px solid #1f7a5a; color: #1f7a5a; }
-.page .flag.bad { border-color: #c2381a; color: #c2381a; }
-.page ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: .5em; font: 400 .66em/1.4 var(--f-data); }
-.page ol li { overflow-wrap: anywhere; }
-.page ol li b { font-weight: 600; }
-.cover, .backcover { background: #0e2c36; color: #bfeef6; padding: 0; }
-.cover::before, .backcover::before { display: none; }
-.cover canvas, .backcover canvas { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; }
-.cover .t1 { position: absolute; top: 9%; left: 0; right: 0; text-align: center; font: 800 2.3em/1 var(--f-display); letter-spacing: .32em; text-indent: .32em; color: #bfeef6; }
-.cover .t2 { position: absolute; top: 16.5%; left: 0; right: 0; text-align: center; font: 600 .6em/1 var(--f-data); letter-spacing: .5em; text-indent: .5em; color: #8fd8e6; text-transform: uppercase; }
-.cover .t3 { position: absolute; bottom: 6.5%; left: 0; right: 0; text-align: center; font: 400 .62em/1.4 var(--f-data); letter-spacing: .24em; color: #8fd8e6; text-transform: uppercase; }
-.cover { cursor: pointer; }
-.cover:focus-visible { outline: 3px solid var(--iris); outline-offset: -6px; }
-/* controls */
-.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
-.bar .group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.bar button, .bar label.btn { font: 600 12px/1 var(--f-data); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); background: transparent; border: 1px solid var(--rule); padding: 11px 13px; cursor: pointer; }
-.bar button:hover:not(:disabled), .bar label.btn:hover { border-color: var(--iris); }
-.bar button:disabled { opacity: .35; cursor: default; }
-.bar button:focus-visible, .bar label.btn:focus-within, #stage:focus-visible { outline: 2px solid var(--iris); outline-offset: 2px; }
-.bar input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-#status { font: 400 12px/1.4 var(--f-data); color: var(--dim); }
-.note { font: 400 11px/1.4 var(--f-data); color: var(--dim); margin: 0; }
-#zoom.anim { transition: transform .6s var(--ease); }
-/* plain-text reading mode */
-#reader { display: none; flex: 1 1 auto; min-height: 0; overflow: auto; background: var(--paper); color: var(--page-ink); }
-.reading #reader { display: block; }
-.reading #stage, .reading #prev, .reading #next, .reading #reset { display: none; }
-#reader .col { max-width: 68ch; margin: 0 auto; padding: 28px 22px 56px; font: 400 18px/1.6 var(--f-body); }
-#reader h2 { font: 800 34px/1.1 var(--f-display); margin: .2em 0 .4em; letter-spacing: -.01em; text-wrap: balance; }
-#reader h3 { font: 800 22px/1.2 var(--f-display); margin: 1.8em 0 .5em; padding-top: .7em; border-top: 1px solid #b9c8c4; }
-#reader h4 { font: 600 16px/1.3 var(--f-data); margin: 1.4em 0 .2em; }
-#reader p { margin: .5em 0; }
-#reader p.small { font: 400 14px/1.5 var(--f-data); color: var(--page-dim); }
-#reader .eyebrow { font: 600 12px/1 var(--f-data); letter-spacing: .16em; text-transform: uppercase; color: var(--page-dim); margin: 0; }
-#reader dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .4em 1.2em; margin: 0; }
-#reader dt { font: 600 12px/2.2 var(--f-data); letter-spacing: .1em; text-transform: uppercase; color: var(--page-dim); }
-#reader dd { margin: 0; overflow-wrap: anywhere; }
-#reader dd.none { color: var(--page-dim); font-style: italic; }
-#reader canvas { display: block; max-width: 100%; height: auto; margin: .6em 0; background: #f6faf8; }
-#reader .mrz { font: 600 clamp(9px, 2.4vw, 14px)/1.5 var(--f-data); white-space: pre; overflow-x: auto; background: rgba(0,0,0,.06); padding: .6em .8em; }
-#reader ol { padding-left: 1.2em; margin: .5em 0; font: 400 14px/1.7 var(--f-data); overflow-wrap: anywhere; }
-#reader button.mini { font: 600 13px/1 var(--f-data); color: #12525f; background: none; border: 0; padding: 0; margin-left: .7em; cursor: pointer; text-decoration: underline; }
-@media (prefers-reduced-motion: reduce) { .book, .leaf { transition-duration: .01s; } }
 </style>
 </head>
 <body>
+<div id="map" role="application" aria-label="Passport map"></div>
 
+<aside class="panel" id="panel">
+  <button class="toggle" id="toggle" type="button" aria-expanded="true">Layers ▾</button>
+  <h1>Passport Map</h1>
+  <p class="sub" id="holder">Loading record…</p>
 
-<div class="app">
-  <div class="top">
-    <h1>UNIKIN Passport</h1>
-    <p>Tap the cover or press Enter to open. Scroll or pinch to look closer.</p>
+  <h2>Topology</h2>
+  <div class="row"><label><input type="checkbox" id="l-terrain" checked> 3D terrain</label></div>
+  <div class="row"><span>Lift</span><input type="range" id="exag" min="1" max="3" step="0.1" value="1.6"><span class="v" id="exag-v">1.6×</span></div>
+  <div class="row"><label><input type="checkbox" id="l-hill" checked> Hillshade</label></div>
+  <div class="row"><label><input type="checkbox" id="l-contour" checked> Contours</label></div>
+  <div class="st" id="st-contour"></div>
+  <div class="seg" style="margin-top:6px">
+    <button type="button" id="b-tilt" aria-pressed="true">Tilted</button>
+    <button type="button" id="b-flat" aria-pressed="false">Flat</button>
+    <button type="button" id="b-spin" aria-pressed="false">Orbit</button>
   </div>
-  <div id="stage" tabindex="0" aria-label="Passport booklet. Press Enter to open, arrow keys to turn pages, plus and minus to zoom.">
-    <div id="zoom"><div class="scene"><div class="book" id="book"></div></div></div>
-  </div>
-  <div id="reader" aria-label="Passport as plain text"></div>
-  <div class="bar">
-    <div class="group">
-      <button type="button" id="prev">Back</button>
-      <button type="button" id="next">Forward</button>
-      <button type="button" id="reset">Reset zoom</button>
-    </div>
-    <div class="group">
-      <span id="status" role="status" aria-live="polite"></span>
-      <button type="button" id="readbtn" aria-pressed="false">Read as text</button>
-      <label class="btn">Load a record<input id="file" type="file" accept="application/json,.json"></label>
-    </div>
-  </div>
-  <p class="note" id="note"></p>
-</div>
 
+  <h2>Geology <span style="text-transform:none;letter-spacing:0">(BGS 1:625k)</span></h2>
+  <div class="row"><label><input type="checkbox" id="l-geo"> Show</label>
+    <select id="geo-layer" aria-label="Geology layer">
+      <option value="GBR_BGS_625k_BLS">Bedrock</option>
+      <option value="GBR_BGS_625k_BA">Bedrock age</option>
+      <option value="GBR_BGS_625k_SLT">Superficial</option>
+    </select></div>
+  <div class="row"><span>Ink</span><input type="range" id="geo-op" min="0.1" max="1" step="0.05" value="0.55"><span class="v" id="geo-op-v">55%</span></div>
+  <div class="st" id="st-geo">Tap the map with geology on to identify the rock.</div>
+
+  <h2>Heritage <span style="text-transform:none;letter-spacing:0">(Cadw)</span></h2>
+  <div class="row"><label><input type="checkbox" id="l-sam" checked> Scheduled monuments</label></div>
+  <div class="st" id="st-sam"></div>
+  <div class="row"><label><input type="checkbox" id="l-lb"> Listed buildings</label></div>
+  <div class="st" id="st-lb"></div>
+
+  <h2>Guild</h2>
+  <div class="row"><label><input type="checkbox" id="l-route" checked> Time-lines between stamps</label></div>
+  <div class="row"><label><input type="checkbox" id="l-pods" checked> TimePods</label></div>
+  <div class="st" id="st-pods"></div>
+  <div class="row"><span>Until</span><input type="range" id="t" min="0" max="0" step="1" value="0" aria-label="Show stamps up to"><span class="v" id="t-v">—</span></div>
+  <div class="seg"><button type="button" id="b-play" aria-pressed="false">▶ Replay route</button></div>
+  <ul class="stamps" id="stamps"></ul>
+
+  <div class="foot" id="foot">Map data © OpenStreetMap contributors. Terrain: Mapzen/AWS Terrain Tiles. Geology: BGS © UKRI. Heritage: Designated Historic Asset GIS Data, Cadw, OGL v3.</div>
+</aside>
+
+<button class="askbtn" id="askbtn" type="button" aria-expanded="false" aria-controls="ask">ASK</button>
+<section class="ask" id="ask" aria-label="Ask the map">
+  <header><h2>Ask the map</h2><button type="button" id="ask-x" aria-label="Close">×</button></header>
+  <div class="log" id="log" aria-live="polite">
+    <div class="msg ai">Ask about anything on the map: the rock under a spot, how high or steep it is, what monuments are near, or where your stamps have taken you. Tap the map first to ask about that point.
+      <div class="sugg" style="margin-top:8px">
+        <button type="button">What rock is under the point I tapped?</button>
+        <button type="button">Monuments within 2 km of here?</button>
+        <button type="button">Height profile from Abercrave to Cribarth</button>
+        <button type="button">Walk me through my stamps</button>
+      </div></div>
+  </div>
+  <form id="ask-f"><textarea id="ask-q" aria-label="Your question" placeholder="Ask the map…"></textarea><button type="submit" id="ask-go">Send</button></form>
+  <div class="hint">Answers come from an OpenAI model via this site. It sees the map view, the point you tapped and, when it asks, your stamp places and dates.</div>
+</section>
+
+<div class="card" id="card" role="dialog" aria-live="polite"><button class="x" id="card-x" type="button" aria-label="Close">×</button><div id="card-b"></div></div>
+
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/maplibre-contour@0.1.1/dist/index.min.js"></script>
 <script>
-(function () {
-  'use strict';
-  const $ = (id) => document.getElementById(id);
-  const TAU = Math.PI * 2;
+(() => {
+'use strict';
+/* ---------- config (override any of these before this script) ---------- */
+const CFG = Object.assign({
+  record: '../record.json',          // the signed-in member's record (same as the passport book)
+  pods: 'timepods.json',             // [{name, lng, lat, note}]
+  proxy: 'proxy.php',                // same-origin relay for BGS, Cadw and place lookups
+  agent: 'agent.php',                // same-origin relay to OpenAI (holds the key)
+  centre: [-3.70, 51.80],            // Upper Swansea Valley (start view only)
+  zoom: 10.5,
+  dem: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
+  glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+  font: ['Open Sans Semibold']
+}, window.TTG_MAP || {});
 
-  /* ================= hash, seeded generator, helpers ================= */
-  function cyrb128(str) {
-    let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
-    for (let i = 0, k; i < str.length; i++) {
-      k = str.charCodeAt(i);
-      h1 = h2 ^ Math.imul(h1 ^ k, 597399067); h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
-      h3 = h4 ^ Math.imul(h3 ^ k, 951274213); h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
-    }
-    h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067); h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
-    h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213); h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
-    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
-  }
-  function sfc32(a, b, c, d) {
-    return function () {
-      a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
-      let t = (a + b) | 0; a = b ^ b >>> 9; b = c + (c << 3) | 0; c = (c << 21 | c >>> 11);
-      d = d + 1 | 0; t = t + d | 0; c = c + t | 0; return (t >>> 0) / 4294967296;
-    };
-  }
-  const rngFor = (key) => { const s = cyrb128(key); return sfc32(s[0], s[1], s[2], s[3]); };
-  const hex = (key) => cyrb128(key).map((x) => x.toString(16).padStart(8, '0')).join('');
-  const dg = (o) => hex(JSON.stringify(o)).slice(0, 8);
-  const slugify = (s) => String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'unplaced';
-  const initials = (n) => n.split(/\s+/).filter(Boolean).map((w) => w[0].toUpperCase()).join('').slice(0, 4) || '?';
-  const gcd = (a, b) => (b ? gcd(b, a % b) : a);
-  const clean = (s) => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
-  const cv = (c) => (c >= '0' && c <= '9' ? +c : c >= 'A' && c <= 'Z' ? c.charCodeAt(0) - 55 : 0);
-  function check731(s) { const w = [7, 3, 1]; let t = 0; for (let i = 0; i < s.length; i++) t += cv(s[i]) * w[i % 3]; return t % 10; }
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const status = (id, txt, err) => { const el = $(id); if (!el) return; el.textContent = txt || ''; el.classList.toggle('err', !!err); };
+const P = (params) => CFG.proxy + '?' + new URLSearchParams(params).toString();
 
-  /* ================= derive every layer from the record ================= */
-  function derive(F) {
-    const slug = slugify(F.place), L = {};
-    let r = rngFor('rosette|' + slug);
-    const pool = [7, 9, 11, 13, 17, 19, 21, 23, 27, 29, 31, 33, 37, 39, 41, 43], curves = [];
-    for (let i = 0; i < 3; i++) curves.push({ r: pool[Math.floor(r() * pool.length)], rho: +(0.56 + r() * 0.14).toFixed(3), ph: +(r() * TAU).toFixed(3) });
-    L.rosette = { curves, digest: dg(curves) };
-    const phase = +(rngFor('micro|' + slug + '|' + F.number)() * TAU).toFixed(3);
-    const rings = [F.place.toUpperCase() + ' · ', F.number + ' · ' + F.date + ' · ', F.name.toUpperCase() + ' · UNIKIN · '];
-    L.micro = { rings, phase, digest: dg({ rings, phase }) };
-    r = rngFor('intaglio|' + F.number + '|' + F.date);
-    L.intaglio = { k1: 5 + Math.floor(r() * 14), k2: 23 + Math.floor(r() * 26), a1: +(0.35 + r() * 0.3).toFixed(3), a2: +(0.15 + r() * 0.25).toFixed(3), p1: +(r() * TAU).toFixed(3), p2: +(r() * TAU).toFixed(3) };
-    L.intaglio.digest = dg(L.intaglio);
-    const ini = initials(F.name); r = rngFor('latent|' + ini + '|' + slug);
-    L.latent = { glyph: ini, angle: Math.floor(r() * 12) * 15, period: 4 + Math.floor(r() * 2) };
-    L.latent.digest = dg(L.latent);
-    const S = clean(F.number) + clean(F.date) + clean(F.place) + String(F.ordinal), vals = S.split('').map(cv);
-    L.ring = { vals, cd: check731(S), digest: dg(vals) };
-    const gc = Array.isArray(F.grid) && F.grid.length === 81 && F.grid.some(Boolean) ? F.grid : null;
-    L.idgrid = { cells: gc, digest: dg({ c: gc, n: F.number }) };
-    const h = hex([F.prev, F.name, F.number, F.place, F.line, F.date, F.ordinal, F.town || '', F.placement || '', F.email || '', L.rosette.digest, L.micro.digest, L.intaglio.digest, L.latent.digest, L.ring.digest, L.idgrid.digest].join('|')).toUpperCase();
-    L.seal = { value: 'XUN-' + h.slice(0, 4) + '-' + h.slice(4, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) };
-    return L;
-  }
+/* ---------- elevation + contours ---------- */
+let dem = null;
+try {
+  dem = new mlcontour.DemSource({ url: CFG.dem, encoding: 'terrarium', maxzoom: 13, worker: true, cacheSize: 120, timeoutMs: 12000 });
+  dem.setupMaplibre(maplibregl);
+} catch (e) { status('st-contour', 'Contours unavailable: ' + e.message, true); }
 
-  /* ================= drawing ================= */
-  function iris(g, foil) {
-    if (g.createConicGradient) {
-      const gr = g.createConicGradient(-Math.PI / 2, 0, 0);
-      const st = foil ? [[0, '#7fe3f0'], [0.2, '#8fb0ff'], [0.42, '#c99bff'], [0.62, '#ff9bd0'], [0.8, '#ffd08a'], [0.92, '#8fe8c2'], [1, '#7fe3f0']]
-                      : [[0, '#0e6f87'], [0.2, '#2b56b6'], [0.42, '#7b3ab0'], [0.62, '#b5367f'], [0.8, '#c0782c'], [0.92, '#2c8f6a'], [1, '#0e6f87']];
-      st.forEach((s) => gr.addColorStop(s[0], s[1]));
-      return gr;
-    }
-    return foil ? '#8fd8e6' : '#1f5f8f';
+const demTiles = dem ? [dem.sharedDemProtocolUrl] : [CFG.dem];
+const wms = (layer) => P({ src: 'bgs', SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetMap', LAYERS: layer, STYLES: '',
+  CRS: 'EPSG:3857', WIDTH: 256, HEIGHT: 256, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }) + '&BBOX={bbox-epsg-3857}';
+
+const style = {
+  version: 8,
+  glyphs: CFG.glyphs,
+  sources: {
+    osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' },
+    dem: { type: 'raster-dem', tiles: demTiles, encoding: 'terrarium', tileSize: 256, maxzoom: 13 },
+    hs:  { type: 'raster-dem', tiles: demTiles, encoding: 'terrarium', tileSize: 256, maxzoom: 13 },
+    geo: { type: 'raster', tiles: [wms('GBR_BGS_625k_BLS')], tileSize: 256, attribution: 'Geology © <a href="https://www.bgs.ac.uk/">BGS</a>, UKRI' },
+    sam: { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: 'Heritage: Cadw, OGL v3' },
+    lb:  { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    route: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    stamps: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    pods: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
+    pins: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
+  },
+  layers: [
+    { id: 'bg', type: 'background', paint: { 'background-color': '#d9cb9e' } },
+    { id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-opacity': 0.62, 'raster-saturation': -0.85, 'raster-contrast': 0.08 } },
+    { id: 'geo', type: 'raster', source: 'geo', layout: { visibility: 'none' }, paint: { 'raster-opacity': 0.55 } },
+    { id: 'hill', type: 'hillshade', source: 'hs', paint: { 'hillshade-shadow-color': '#1b1a17', 'hillshade-highlight-color': '#f4ecd2',
+      'hillshade-accent-color': '#4a4436', 'hillshade-exaggeration': 0.45, 'hillshade-illumination-direction': 315 } },
+    { id: 'sam-fill', type: 'fill-extrusion', source: 'sam', minzoom: 10,
+      paint: { 'fill-extrusion-color': '#b3261e', 'fill-extrusion-opacity': 0.7, 'fill-extrusion-height': 25, 'fill-extrusion-base': 0 } },
+    { id: 'sam-line', type: 'line', source: 'sam', minzoom: 10, paint: { 'line-color': '#7a1712', 'line-width': 1.2 } },
+    { id: 'lb', type: 'circle', source: 'lb', minzoom: 12, layout: { visibility: 'none' },
+      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 2.5, 16, 6], 'circle-color': '#1b1a17', 'circle-stroke-color': '#e8dcb6', 'circle-stroke-width': 1 } },
+    { id: 'route-glow', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#e0483e', 'line-width': 9, 'line-opacity': 0.25, 'line-blur': 4 } },
+    { id: 'route', type: 'line', source: 'route', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#b3261e', 'line-width': 2.5, 'line-dasharray': [2, 1.5] } },
+    { id: 'pods', type: 'circle', source: 'pods',
+      paint: { 'circle-radius': 7, 'circle-color': '#b3261e', 'circle-stroke-color': '#1b1a17', 'circle-stroke-width': 2 } },
+    { id: 'pods-label', type: 'symbol', source: 'pods',
+      layout: { 'text-field': ['get', 'name'], 'text-font': CFG.font, 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top' },
+      paint: { 'text-color': '#7a1712', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.5 } },
+    { id: 'stamps', type: 'circle', source: 'stamps',
+      paint: { 'circle-radius': 9, 'circle-color': '#e8dcb6', 'circle-stroke-color': '#b3261e', 'circle-stroke-width': 3 } },
+    { id: 'stamps-n', type: 'symbol', source: 'stamps',
+      layout: { 'text-field': ['to-string', ['get', 'n']], 'text-font': CFG.font, 'text-size': 11, 'text-allow-overlap': true },
+      paint: { 'text-color': '#b3261e' } },
+    { id: 'stamps-label', type: 'symbol', source: 'stamps',
+      layout: { 'text-field': ['get', 'place'], 'text-font': CFG.font, 'text-size': 12, 'text-offset': [0, 1.4], 'text-anchor': 'top' },
+      paint: { 'text-color': '#1b1a17', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } },
+    { id: 'pins', type: 'circle', source: 'pins',
+      paint: { 'circle-radius': 6, 'circle-color': '#1b1a17', 'circle-stroke-color': '#e0483e', 'circle-stroke-width': 3 } },
+    { id: 'pins-label', type: 'symbol', source: 'pins',
+      layout: { 'text-field': ['get', 'label'], 'text-font': CFG.font, 'text-size': 12, 'text-offset': [0, -1.3], 'text-anchor': 'bottom' },
+      paint: { 'text-color': '#1b1a17', 'text-halo-color': '#e8dcb6', 'text-halo-width': 2 } }
+  ],
+  terrain: { source: 'dem', exaggeration: 1.6 }
+};
+
+if (dem) {
+  style.sources.contours = { type: 'vector', maxzoom: 15, tiles: [dem.contourProtocolUrl({
+    thresholds: { 10: [100, 500], 11: [50, 250], 12: [20, 100], 13: [10, 50], 14: [10, 50] },
+    contourLayer: 'contours', elevationKey: 'ele', levelKey: 'level', extent: 4096, buffer: 1 })] };
+  const hs = style.layers.findIndex((l) => l.id === 'hill') + 1;
+  style.layers.splice(hs, 0,
+    { id: 'contour', type: 'line', source: 'contours', 'source-layer': 'contours',
+      paint: { 'line-color': '#4a4436', 'line-opacity': 0.55, 'line-width': ['match', ['get', 'level'], 1, 1.1, 0.45] } },
+    { id: 'contour-label', type: 'symbol', source: 'contours', 'source-layer': 'contours', filter: ['>', ['get', 'level'], 0],
+      layout: { 'symbol-placement': 'line', 'text-size': 10, 'text-font': CFG.font, 'text-field': ['concat', ['number-format', ['get', 'ele'], {}], ' m'] },
+      paint: { 'text-color': '#4a4436', 'text-halo-color': '#e8dcb6', 'text-halo-width': 1.2 } });
+}
+
+const map = new maplibregl.Map({ container: 'map', style, center: CFG.centre, zoom: CFG.zoom, pitch: 55, bearing: -20, maxPitch: 80, attributionControl: { compact: true } });
+window.ttgMap = map;
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-left');
+
+map.on('error', (e) => {
+  const src = e.sourceId || (e.source && e.source.id) || '';
+  if (src === 'geo') status('st-geo', 'Geology tiles did not load (check proxy.php).', true);
+  else if (src === 'contours') status('st-contour', 'Contours did not load.', true);
+});
+
+/* ---------- controls ---------- */
+const vis = (ids, on) => ids.forEach((id) => map.getLayer(id) && map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'));
+const exag = () => parseFloat($('exag').value);
+$('l-terrain').onchange = (e) => map.setTerrain(e.target.checked ? { source: 'dem', exaggeration: exag() } : null);
+$('exag').oninput = () => { $('exag-v').textContent = exag().toFixed(1) + '×'; if ($('l-terrain').checked) map.setTerrain({ source: 'dem', exaggeration: exag() }); };
+$('l-hill').onchange = (e) => vis(['hill'], e.target.checked);
+$('l-contour').onchange = (e) => vis(['contour', 'contour-label'], e.target.checked);
+$('l-geo').onchange = (e) => vis(['geo'], e.target.checked);
+$('geo-layer').onchange = (e) => { map.getSource('geo').setTiles([wms(e.target.value)]); };
+$('geo-op').oninput = (e) => { map.setPaintProperty('geo', 'raster-opacity', +e.target.value); $('geo-op-v').textContent = Math.round(e.target.value * 100) + '%'; };
+$('l-sam').onchange = (e) => { vis(['sam-fill', 'sam-line'], e.target.checked); heritage(); };
+$('l-lb').onchange = (e) => { vis(['lb'], e.target.checked); heritage(); };
+$('l-route').onchange = (e) => vis(['route', 'route-glow'], e.target.checked);
+$('l-pods').onchange = (e) => vis(['pods', 'pods-label'], e.target.checked);
+
+const press = (on) => ['b-tilt', 'b-flat'].forEach((id) => $(id).setAttribute('aria-pressed', String(id === on)));
+$('b-tilt').onclick = () => { press('b-tilt'); map.easeTo({ pitch: 60, duration: 900 }); };
+$('b-flat').onclick = () => { press('b-flat'); map.easeTo({ pitch: 0, bearing: 0, duration: 900 }); };
+let spin = 0;
+const orbit = (t0) => { if (!spin) return; map.rotateTo((map.getBearing() + 0.12) % 360, { duration: 0 }); spin = requestAnimationFrame(orbit); };
+$('b-spin').onclick = (e) => { const on = !spin; e.target.setAttribute('aria-pressed', String(on)); if (on) spin = requestAnimationFrame(orbit); else { cancelAnimationFrame(spin); spin = 0; } };
+map.on('dragstart', () => { if (spin) $('b-spin').click(); });
+$('toggle').onclick = () => { const p = $('panel'); const c = p.classList.toggle('closed'); $('toggle').setAttribute('aria-expanded', String(!c)); $('toggle').textContent = c ? 'Layers ▴' : 'Layers ▾'; };
+
+/* ---------- heritage: load in 0.1° cells so the relay can cache them ---------- */
+const CELL = 0.1, loaded = { sam: new Map(), lb: new Map() }, pending = new Set();
+const TYPES = { sam: 'inspire-wg:Cadw_SAM', lb: 'inspire-wg:Cadw_ListedBuildings' };
+const MINZ = { sam: 10, lb: 12 };
+const cellReq = new Map();
+function getCell(kind, cx, cy) {
+  const key = kind + ':' + cx + ':' + cy;
+  if (!cellReq.has(key)) {
+    const b = [cx * CELL, cy * CELL, (cx + 1) * CELL, (cy + 1) * CELL].map((n) => n.toFixed(2));
+    cellReq.set(key, fetch(P({ src: 'cadw', layer: kind, bbox: b.join(',') }))
+      .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then((fc) => fc.features || [])
+      .catch((e) => { cellReq.delete(key); throw e; }));
   }
-  function latentCanvas(D, L, k, rgb) {
-    const m = document.createElement('canvas'); m.width = m.height = D;
-    const mg = m.getContext('2d'); mg.fillStyle = '#000'; mg.fillRect(0, 0, D, D); mg.fillStyle = '#fff';
-    let fs = D * 0.30; const f = (s) => '900 ' + s + 'px "Arial Black",Impact,sans-serif';
-    mg.font = f(fs); mg.textAlign = 'center'; mg.textBaseline = 'middle';
-    while (mg.measureText(L.latent.glyph).width > D * 0.62 && fs > 10) { fs -= 4; mg.font = f(fs); }
-    mg.fillText(L.latent.glyph, D / 2, D * 0.31);
-    const md = mg.getImageData(0, 0, D, D).data;
-    const out = document.createElement('canvas'); out.width = out.height = D;
-    const og = out.getContext('2d'), id = og.createImageData(D, D), px = id.data;
-    const P = Math.max(2.4, L.latent.period * k), A = L.latent.angle * Math.PI / 180, ca = Math.cos(A), sa = Math.sin(A), R2 = (D / 2) * (D / 2);
-    for (let y = 0; y < D; y++) for (let x = 0; x < D; x++) {
-      const dx = x - D / 2, dy = y - D / 2; if (dx * dx + dy * dy > R2) continue;
-      const u = dx * ca + dy * sa, inM = md[(y * D + x) * 4] > 127;
-      if ((((u + (inM ? P / 2 : 0)) % P) + P) % P / P < 0.45) { const i = (y * D + x) * 4; px[i] = rgb[0]; px[i + 1] = rgb[1]; px[i + 2] = rgb[2]; px[i + 3] = 235; }
-    }
-    og.putImageData(id, 0, 0); return out;
+  return cellReq.get(key);
+}
+async function loadCell(kind, cx, cy) {
+  const key = kind + ':' + cx + ':' + cy;
+  if (loaded[kind].has(key) || pending.has(key)) return;
+  pending.add(key);
+  try {
+    loaded[kind].set(key, await getCell(kind, cx, cy));
+    const all = new Map();
+    for (const list of loaded[kind].values()) for (const f of list) all.set(f.id || JSON.stringify(f.properties), f);
+    map.getSource(kind).setData({ type: 'FeatureCollection', features: [...all.values()] });
+    status('st-' + kind, all.size + ' in view so far');
+  } catch (e) {
+    status('st-' + kind, 'Could not load (' + e.message + '). Check proxy.php.', true);
+  } finally { pending.delete(key); }
+}
+function heritage() {
+  const z = map.getZoom(), bb = map.getBounds();
+  for (const kind of ['sam', 'lb']) {
+    if (!$('l-' + kind).checked) continue;
+    if (z < MINZ[kind]) { status('st-' + kind, 'Zoom in to see these (zoom ' + MINZ[kind] + '+).'); continue; }
+    // A tilted view's bounds run to the horizon, so load outward from the centre, capped by zoom.
+    const c = map.getCenter(), R = z >= 13 ? 1 : z >= 11.5 ? 2 : 3;
+    const cx = Math.floor(c.lng / CELL), cy = Math.floor(c.lat / CELL);
+    const x0 = Math.max(cx - R, Math.floor(bb.getWest() / CELL)), x1 = Math.min(cx + R, Math.floor(bb.getEast() / CELL));
+    const y0 = Math.max(cy - R, Math.floor(bb.getSouth() / CELL)), y1 = Math.min(cy + R, Math.floor(bb.getNorth() / CELL));
+    const cells = [];
+    for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) cells.push([x, y]);
+    cells.sort((a, b) => Math.hypot(a[0] - cx, a[1] - cy) - Math.hypot(b[0] - cx, b[1] - cy));
+    cells.forEach(([x, y]) => loadCell(kind, x, y));
   }
-  function drawStamp(g, n, L, o) {
-    const k = n / 2400, Rs = n * 0.46, on = o.layers;
-    g.save(); g.translate(n / 2, n / 2);
-    const sty = iris(g, o.foil);
-    g.strokeStyle = sty; g.fillStyle = sty; g.lineJoin = 'round';
-    const ring = (r, w, a) => { g.globalAlpha = a || 1; g.lineWidth = w * k; g.beginPath(); g.arc(0, 0, r * Rs, 0, TAU); g.stroke(); };
-    ring(1, 6); ring(0.985, 1.6); ring(0.93, 1.6, 0.8); ring(0.795, 1.4, 0.8); ring(0.665, 1.8); ring(0.335, 2.2);
-    if (on.rosette) {
-      g.globalAlpha = 0.8; g.lineWidth = 2.1 * k;
-      L.rosette.curves.forEach((c) => {
-        const R = 100, r = c.r, d = (R - r) * (1 - c.rho) / (1 + c.rho), ext = R - r + d, sc = 0.655 * Rs / ext;
-        const turns = r / gcd(R, r), steps = Math.min(26000, Math.round(turns * TAU / 0.012));
-        g.beginPath();
-        for (let i = 0; i <= steps; i++) {
-          const t = i / steps * turns * TAU;
-          const x = ((R - r) * Math.cos(t) + d * Math.cos((R - r) / r * t + c.ph)) * sc, y = ((R - r) * Math.sin(t) - d * Math.sin((R - r) / r * t + c.ph)) * sc;
-          if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
-        }
-        g.stroke();
-      });
-    }
-    if (on.micro) {
-      g.globalAlpha = 0.92; g.font = '600 ' + (11 * k) + 'px "JetBrains Mono",ui-monospace,Menlo,monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
-      L.micro.rings.forEach((txt, idx) => {
-        const r = [0.69, 0.725, 0.76][idx] * Rs, adv = 6.7 * k;
-        const reps = Math.max(1, Math.round(TAU * r / adv / txt.length)), s = txt.repeat(reps), m = s.length, step = TAU / m, ph = L.micro.phase * (idx + 1);
-        for (let i = 0; i < m; i++) { g.save(); g.rotate(ph + i * step); g.translate(0, -r); g.fillText(s[i], 0, 0); g.restore(); }
-      });
-    }
-    if (on.intaglio) {
-      const I = L.intaglio, M = 900; g.globalAlpha = 0.9; g.lineWidth = 2.6 * k; g.beginPath();
-      for (let i = 0; i < M; i++) {
-        const a = i / M * TAU, w = Math.sin(a * I.k1 + I.p1) * I.a1 + Math.sin(a * I.k2 + I.p2) * I.a2, t = clamp(0.5 + 0.5 * w, 0, 1);
-        const r0 = 0.8 * Rs, r1 = r0 + (0.02 + 0.085 * t) * Rs, ca = Math.cos(a), sa = Math.sin(a);
-        g.moveTo(ca * r0, sa * r0); g.lineTo(ca * r1, sa * r1);
+}
+map.on('moveend', heritage);
+
+/* ---------- info card ---------- */
+const card = (html) => { $('card-b').innerHTML = html; $('card').style.display = 'block'; };
+$('card-x').onclick = () => { $('card').style.display = 'none'; };
+const SKIP = /^(geom|the_geom|shape|objectid|fid|easting|northing|.*_cy)$/i;
+const dl = (props, prefer) => {
+  const keys = prefer.filter((k) => props[k] != null && props[k] !== '').concat(Object.keys(props).filter((k) => !prefer.includes(k) && !SKIP.test(k) && props[k] != null && props[k] !== ''));
+  return '<dl>' + keys.map((k) => '<dt>' + esc(k) + '</dt><dd>' + esc(props[k]) + '</dd>').join('') + '</dl>';
+};
+map.on('click', async (e) => {
+  const hit = map.queryRenderedFeatures(e.point, { layers: ['stamps', 'pods', 'sam-fill', 'lb'].filter((l) => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none') })[0];
+  if (hit) {
+    const p = hit.properties || {};
+    if (hit.layer.id === 'stamps') return card('<h3>' + esc(p.n + '. ' + p.place) + '</h3><dl><dt>Line</dt><dd>' + esc(p.line || '—') + '</dd><dt>Inked</dt><dd>' + esc(p.inked || '—') + '</dd>' + (p.approx ? '<dt>Position</dt><dd>looked up from the place name</dd>' : '') + '</dl>');
+    if (hit.layer.id === 'pods') return card('<h3>TimePod · ' + esc(p.name) + '</h3>' + (p.note ? '<p>' + esc(p.note) + '</p>' : ''));
+    if (hit.layer.id === 'sam-fill') return card('<h3>' + esc(p.Name || 'Scheduled monument') + '</h3>' + dl(p, ['SAMNumber', 'Period', 'SiteType', 'BroadClass', 'Community', 'UnitaryAuthority', 'DesignationDate', 'Report']));
+    if (hit.layer.id === 'lb') return card('<h3>Listed building</h3>' + dl(p, []));
+  }
+  if ($('l-geo').checked) {
+    const layer = $('geo-layer').value;
+    card('<h3>Geology</h3><p>Asking the BGS…</p>');
+    try {
+      const g = await geologyAt(e.lngLat.lng, e.lngLat.lat, layer);
+      if (!g) return card('<h3>Geology</h3><p>Nothing recorded here at 1:625k.</p>');
+      const top = g.LEX_D || g.RCS_D || 'Unit';
+      const rest = Object.fromEntries(Object.entries(g).filter(([k]) => k !== 'LEX_D' && !/^(LEX|LEX_RCS|RCS|RCS_X|BED_EQ|MB_EQ|FM_EQ|SUBGP_EQ|GP_EQ|SUPGP_EQ)$/.test(k)));
+      card('<h3>' + esc(top.charAt(0) + top.slice(1).toLowerCase()) + '</h3>' + dl(rest, ['RCS_D', 'RANK', 'MAX_TIME_D', 'MIN_TIME_D']) +
+        '<p style="font-size:10px;color:var(--ink-2);margin:6px 0 0">BGS 1:625k · ' + esc($('geo-layer').selectedOptions[0].textContent) + ' · regional, not site-level</p>');
+    } catch (err) { card('<h3>Geology</h3><p>Could not reach the BGS (' + esc(err.message) + ').</p>'); }
+  }
+});
+map.on('click', (e) => { lastTap = { lng: +e.lngLat.lng.toFixed(5), lat: +e.lngLat.lat.toFixed(5) }; dropPin(lastTap.lng, lastTap.lat, 'tapped'); });
+
+/* ---------- shared lookups (used by clicks and by the agent) ---------- */
+let lastTap = null;
+const GEO = { bedrock: 'GBR_BGS_625k_BLS', age: 'GBR_BGS_625k_BA', superficial: 'GBR_BGS_625k_SLT' };
+async function geologyAt(lng, lat, layer) {
+  const W = 40075016.68557849, mx = (lng / 360) * W, my = (Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2)) / Math.PI) * (W / 2), h = 500;
+  const r = await fetch(P({ src: 'bgs', SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetFeatureInfo', LAYERS: layer, QUERY_LAYERS: layer, STYLES: '',
+    CRS: 'EPSG:3857', BBOX: [mx - h, my - h, mx + h, my + h].join(','), WIDTH: 101, HEIGHT: 101, I: 50, J: 50, INFO_FORMAT: 'text/plain', FEATURE_COUNT: 1 }));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const t = await r.text(), out = {};
+  for (const m of t.matchAll(/^\s*([A-Z0-9_]+)\s*=\s*'([^']*)'/gm)) if (m[2] !== '' && !(m[1] in out)) out[m[1]] = m[2];
+  return Object.keys(out).length ? out : null;
+}
+const demCache = new Map();
+async function elevationAt(lng, lat) {
+  const z = 12, n = 2 ** z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
+  const tx = Math.floor(xf), ty = Math.floor(yf), key = tx + '/' + ty;
+  if (!demCache.has(key)) demCache.set(key, (async () => {
+    const r = await fetch(CFG.dem.replace('{z}', z).replace('{x}', tx).replace('{y}', ty), { mode: 'cors' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const bmp = await createImageBitmap(await r.blob()), c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(bmp, 0, 0); return g.getImageData(0, 0, c.width, c.height);
+  })().catch((e) => { demCache.delete(key); throw e; }));
+  const img = await demCache.get(key), px = Math.min(img.width - 1, Math.floor((xf - tx) * img.width)), py = Math.min(img.height - 1, Math.floor((yf - ty) * img.height));
+  const i = (py * img.width + px) * 4, d = img.data;
+  return Math.round((d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768) * 10) / 10;
+}
+const kmBetween = (a, b) => { const R = 6371, t = Math.PI / 180, dLat = (b[1] - a[1]) * t, dLng = (b[0] - a[0]) * t;
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(a[1] * t) * Math.cos(b[1] * t) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(s)); };
+const centroid = (g) => { if (!g) return null; if (g.type === 'Point') return g.coordinates;
+  const ring = g.type === 'Polygon' ? g.coordinates[0] : g.type === 'MultiPolygon' ? g.coordinates[0][0] : g.type === 'LineString' ? g.coordinates : g.type === 'MultiLineString' ? g.coordinates[0] : null;
+  if (!ring || !ring.length) return null; let x = 0, y = 0; ring.forEach((c) => { x += c[0]; y += c[1]; }); return [x / ring.length, y / ring.length]; };
+function dropPin(lng, lat, label) {
+  const src = map.getSource('pins'); if (!src) return;
+  src.setData({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: { type: 'Point', coordinates: [lng, lat] }, properties: { label: label || '' } }] });
+}
+['stamps', 'pods', 'sam-fill', 'lb'].forEach((l) => {
+  map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
+});
+
+/* ---------- the member's record ---------- */
+let STAMPS = [];
+async function geocode(name) {
+  const r = await fetch(P({ src: 'place', q: name }));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  return j && j.lng != null ? [j.lng, j.lat] : null;
+}
+function paint(upto) {
+  const shown = STAMPS.slice(0, upto);
+  map.getSource('stamps').setData({ type: 'FeatureCollection', features: shown.map((s) => ({ type: 'Feature',
+    geometry: { type: 'Point', coordinates: s.ll }, properties: { n: s.n, place: s.place, line: s.line, inked: s.inked, approx: s.approx } })) });
+  map.getSource('route').setData({ type: 'FeatureCollection', features: shown.length > 1 ? [{ type: 'Feature',
+    geometry: { type: 'LineString', coordinates: shown.map((s) => s.ll) }, properties: {} }] : [] });
+  [...$('stamps').children].forEach((li, i) => li.classList.toggle('dim', i >= upto));
+  const last = shown[shown.length - 1];
+  $('t-v').textContent = last ? (last.inked || '#' + last.n) : '—';
+}
+function fit(list) {
+  if (!list.length) return;
+  if (list.length === 1) return map.flyTo({ center: list[0].ll, zoom: 13, pitch: 60, duration: 1400 });
+  const b = new maplibregl.LngLatBounds(list[0].ll, list[0].ll); list.forEach((s) => b.extend(s.ll));
+  map.fitBounds(b, { padding: { top: 60, bottom: 60, left: window.innerWidth > 640 ? 360 : 40, right: 60 }, pitch: 55, duration: 1400, maxZoom: 14 });
+}
+async function loadRecord() {
+  let rec;
+  try {
+    const r = await fetch(CFG.record, { credentials: 'same-origin', cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    rec = await r.json();
+  } catch (e) { $('holder').textContent = 'Could not load your record (' + e.message + ').'; return; }
+  $('holder').textContent = [rec.name, rec.number].filter(Boolean).join(' · ') || 'Passport';
+  const places = (rec.places || []).slice().sort((a, b) => String(a.inked || '').localeCompare(String(b.inked || '')));
+  const ul = $('stamps'); ul.innerHTML = '';
+  if (!places.length) { ul.innerHTML = '<li class="empty" style="display:block;cursor:default">No stamps inked yet.</li>'; return; }
+  const out = [];
+  for (const [i, p] of places.entries()) {
+    let ll = (p.lng != null && p.lat != null) ? [+p.lng, +p.lat] : null, approx = false;
+    if (!ll) { try { ll = await geocode(p.name); approx = !!ll; } catch (e) { ll = null; } }
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="n">' + (i + 1) + '</span><span>' + esc(p.name) + '</span><span class="d">' + esc(p.inked || '') + '</span><small>' + esc(p.line || '') + (ll ? '' : ' · place not found on the map') + '</small>';
+    ul.appendChild(li);
+    if (!ll) continue;
+    const s = { n: i + 1, place: p.name, line: p.line || '', inked: p.inked || '', ll, approx };
+    out.push(s);
+    li.onclick = () => { map.flyTo({ center: s.ll, zoom: 14, pitch: 62, duration: 1300 }); };
+  }
+  STAMPS = out;
+  $('t').max = String(out.length); $('t').value = String(out.length);
+  paint(out.length); fit(out);
+}
+$('t').oninput = (e) => paint(+e.target.value);
+let playing = 0;
+$('b-play').onclick = () => {
+  if (playing) { clearInterval(playing); playing = 0; $('b-play').setAttribute('aria-pressed', 'false'); return; }
+  if (!STAMPS.length) return;
+  let i = 1; $('b-play').setAttribute('aria-pressed', 'true'); paint(1); map.flyTo({ center: STAMPS[0].ll, zoom: 13, duration: 1200 });
+  playing = setInterval(() => {
+    i++; if (i > STAMPS.length) { clearInterval(playing); playing = 0; $('b-play').setAttribute('aria-pressed', 'false'); fit(STAMPS); return; }
+    $('t').value = String(i); paint(i); map.flyTo({ center: STAMPS[i - 1].ll, zoom: 13, duration: 1500 });
+  }, 1900);
+};
+
+async function loadPods() {
+  try {
+    const r = await fetch(CFG.pods, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const pods = (await r.json()).filter((p) => p && p.lng != null && p.lat != null);
+    map.getSource('pods').setData({ type: 'FeatureCollection', features: pods.map((p) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+p.lng, +p.lat] }, properties: { name: p.name || 'TimePod', note: p.note || '' } })) });
+    status('st-pods', pods.length ? pods.length + ' on the network' : 'None listed yet (add them to timepods.json).');
+  } catch (e) { status('st-pods', 'No timepods.json found.', true); }
+}
+
+/* ---------- the agent: OpenAI via agent.php, tools run here ---------- */
+const num = (v, lo, hi) => { const n = Number(v); if (!Number.isFinite(n) || n < lo || n > hi) throw new Error('number out of range'); return n; };
+const LNG = (v) => num(v, -11, 3), LAT = (v) => num(v, 49, 61.5);   // Great Britain and Ireland
+const setBox = (id, on) => { const el = $(id); if (el.checked !== on) { el.checked = on; el.dispatchEvent(new Event('change')); } };
+function view() {
+  const b = map.getBounds(), c = map.getCenter(), on = (id) => $(id).checked;
+  return { centre: { lng: +c.lng.toFixed(5), lat: +c.lat.toFixed(5) }, zoom: +map.getZoom().toFixed(2), pitch: Math.round(map.getPitch()), bearing: Math.round(map.getBearing()),
+    bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map((n) => +n.toFixed(4)), last_tapped: lastTap,
+    layers: { terrain: on('l-terrain'), hillshade: on('l-hill'), contours: on('l-contour'), geology: on('l-geo') ? $('geo-layer').selectedOptions[0].textContent : 'off',
+      monuments: on('l-sam'), listed_buildings: on('l-lb'), routes: on('l-route'), timepods: on('l-pods') }, stamps_loaded: STAMPS.length };
+}
+const TOOLS = {
+  get_view: async () => view(),
+  find_place: async (a) => { const r = await fetch(P({ src: 'place', q: String(a.name || '').slice(0, 80) })); if (!r.ok) throw new Error('HTTP ' + r.status); const j = await r.json(); return j.lng == null ? { found: false } : { found: true, lng: j.lng, lat: j.lat, label: j.label || '' }; },
+  geology_at: async (a) => { const g = await geologyAt(LNG(a.lng), LAT(a.lat), GEO[a.layer] || GEO.bedrock); return g ? { source: 'BGS 1:625k ' + (a.layer || 'bedrock'), fields: g } : { source: 'BGS 1:625k', fields: null, note: 'Nothing recorded at this point.' }; },
+  elevation_at: async (a) => ({ metres: await elevationAt(LNG(a.lng), LAT(a.lat)), source: 'AWS/Mapzen terrain tiles, zoom 12 (about 30 m cells)' }),
+  terrain_profile: async (a) => {
+    const A = [LNG(a.from_lng), LAT(a.from_lat)], B = [LNG(a.to_lng), LAT(a.to_lat)], km = kmBetween(A, B);
+    if (km > 60) throw new Error('line longer than 60 km');
+    const n = 40, pts = [];
+    for (let i = 0; i <= n; i++) { const t = i / n, p = [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t]; pts.push({ km: +(km * t).toFixed(2), m: await elevationAt(p[0], p[1]), lng: +p[0].toFixed(5), lat: +p[1].toFixed(5) }); }
+    let climb = 0, descent = 0; for (let i = 1; i < pts.length; i++) { const d = pts[i].m - pts[i - 1].m; if (d > 0) climb += d; else descent -= d; }
+    const hi = pts.reduce((a, b) => (b.m > a.m ? b : a)), lo = pts.reduce((a, b) => (b.m < a.m ? b : a));
+    map.getSource('route') && drawLine([A, B]);
+    return { distance_km: +km.toFixed(2), highest: hi, lowest: lo, total_climb_m: Math.round(climb), total_descent_m: Math.round(descent), samples: pts.map((p) => [p.km, p.m]), source: 'terrain tiles, straight line, 41 samples' };
+  },
+  heritage_near: async (a) => {
+    const kind = a.kind === 'listed_buildings' ? 'lb' : 'sam', P0 = [LNG(a.lng), LAT(a.lat)], R = num(a.radius_km == null ? 1 : a.radius_km, 0.05, 5);
+    const dLat = R / 111.2, dLng = R / (111.2 * Math.cos(P0[1] * Math.PI / 180)), x0 = Math.floor((P0[0] - dLng) / CELL), x1 = Math.floor((P0[0] + dLng) / CELL), y0 = Math.floor((P0[1] - dLat) / CELL), y1 = Math.floor((P0[1] + dLat) / CELL);
+    const lists = []; for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) lists.push(getCell(kind, x, y));
+    const seen = new Map(); (await Promise.all(lists)).flat().forEach((f) => seen.set(f.id || JSON.stringify(f.properties), f));
+    const near = [...seen.values()].map((f) => { const c = centroid(f.geometry); return c ? { f, c, km: kmBetween(P0, c) } : null; }).filter((x) => x && x.km <= R).sort((a, b) => a.km - b.km);
+    setBox(kind === 'lb' ? 'l-lb' : 'l-sam', true);
+    return { source: 'Cadw ' + (kind === 'lb' ? 'listed buildings' : 'scheduled monuments') + ' (OGL)', count: near.length, radius_km: R,
+      nearest: near.slice(0, 15).map((x) => { const p = Object.fromEntries(Object.entries(x.f.properties || {}).filter(([k, v]) => !SKIP.test(k) && v != null && v !== '').map(([k, v]) => [k, String(v).slice(0, 300)])); return { km: +x.km.toFixed(2), lng: +x.c[0].toFixed(5), lat: +x.c[1].toFixed(5), ...p }; }) };
+  },
+  my_stamps: async () => ({ source: "the viewer's passport record", stamps: STAMPS.map((s) => ({ n: s.n, place: s.place, line: s.line, inked: s.inked, lng: +s.ll[0].toFixed(5), lat: +s.ll[1].toFixed(5), position: s.approx ? 'looked up from the name' : 'from the record' })), not_on_map: Math.max(0, $('stamps').children.length - STAMPS.length) }),
+  fly_to: async (a) => { const lng = LNG(a.lng), lat = LAT(a.lat); map.flyTo({ center: [lng, lat], zoom: a.zoom == null ? 13 : num(a.zoom, 5, 17), duration: 1600 }); dropPin(lng, lat, String(a.label || '').slice(0, 60)); return { ok: true }; },
+  set_layers: async (a) => {
+    const m = { terrain: 'l-terrain', hillshade: 'l-hill', contours: 'l-contour', monuments: 'l-sam', listed_buildings: 'l-lb', routes: 'l-route', timepods: 'l-pods' };
+    for (const [k, id] of Object.entries(m)) if (typeof a[k] === 'boolean') setBox(id, a[k]);
+    if (typeof a.geology === 'string') { if (a.geology === 'off') setBox('l-geo', false); else if (GEO[a.geology]) { $('geo-layer').value = GEO[a.geology]; $('geo-layer').dispatchEvent(new Event('change')); setBox('l-geo', true); } }
+    return { ok: true, layers: view().layers };
+  },
+  set_camera: async (a) => { const o = { duration: 1000 }; if (a.pitch != null) o.pitch = num(a.pitch, 0, 75); if (a.bearing != null) o.bearing = Number(a.bearing) % 360; map.easeTo(o); return { ok: true }; }
+};
+function drawLine(coords) {
+  if (!map.getSource('probe')) {
+    map.addSource('probe', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({ id: 'probe', type: 'line', source: 'probe', paint: { 'line-color': '#1b1a17', 'line-width': 3, 'line-dasharray': [1, 1] } });
+  }
+  map.getSource('probe').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords }, properties: {} });
+}
+const LABEL = { get_view: 'read the view', find_place: 'looked up a place', geology_at: 'asked the BGS about the rock', elevation_at: 'read the height',
+  terrain_profile: 'traced a height profile', heritage_near: 'searched Cadw records', my_stamps: 'read your stamps', fly_to: 'moved the map', set_layers: 'switched layers', set_camera: 'turned the camera' };
+let convo = '', busy = false;
+const log = (cls, text) => { const d = document.createElement('div'); d.className = 'msg ' + cls; d.textContent = text; $('log').appendChild(d); $('log').scrollTop = 1e9; return d; };
+async function post(body) {
+  const r = await fetch(CFG.agent, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  let j = null; try { j = await r.json(); } catch (e) { /* not JSON */ }
+  if (!r.ok || !j || j.error) throw new Error((j && j.error) || ('HTTP ' + r.status));
+  return j;
+}
+async function ask(q) {
+  if (busy || !q.trim()) return;
+  busy = true; $('ask-go').disabled = true; log('me', q.trim());
+  const wait = log('tool', '…');
+  try {
+    let res = await post({ question: q.trim(), context: view(), previous_response_id: convo || undefined });
+    for (let round = 0; ; round++) {
+      convo = res.id || convo;
+      const calls = res.items.filter((i) => i.type === 'call');
+      res.items.filter((i) => i.type === 'text').forEach((i) => log('ai', i.text));
+      if (!calls.length) break;
+      if (round >= 8) { log('tool', 'Stopped after several steps.'); break; }
+      const outputs = [];
+      for (const c of calls) {
+        let out;
+        try { const fn = TOOLS[c.name]; if (!fn) throw new Error('unknown tool'); out = await fn(JSON.parse(c.arguments || '{}')); log('tool', '· ' + (LABEL[c.name] || c.name)); }
+        catch (e) { out = { error: String(e.message || e) }; log('tool', '· ' + (LABEL[c.name] || c.name) + ' — failed: ' + (e.message || e)); }
+        outputs.push({ call_id: c.call_id, output: JSON.stringify(out) });
       }
-      g.stroke();
+      res = await post({ outputs, previous_response_id: res.id });
     }
-    if (on.ring) {
-      g.save(); g.globalAlpha = 1; g.rotate(-Math.PI / 2);
-      const v = L.ring.vals, m = v.length;
-      for (let j = 0; j < m; j++) {
-        const a0 = j / m * TAU, a1 = (j + 0.68) / m * TAU, r0 = 0.945 * Rs, r1 = (0.955 + 0.025 * v[j] / 35) * Rs;
-        g.beginPath(); g.arc(0, 0, r1, a0, a1); g.arc(0, 0, r0, a1, a0, true); g.closePath(); g.fill();
-      }
-      g.restore();
-    }
-    if (on.latent) { const D = Math.ceil(0.32 * Rs) * 2; g.globalAlpha = 1; g.drawImage(latentCanvas(D, L, k, [52, 58, 150]), -D / 2, -D / 2); }
-    if (on.idgrid) {
-      /* QR-styled labyrinth: finder squares at three corners, a maze seeded by the grid digest and the place rosette, the 9x9 ID plate in the middle. Not a scannable QR code. */
-      const N = 25, s = 0.28 * Rs, m = s / N, x0 = -s / 2, y0 = 0.12 * Rs - s / 2, cells = L.idgrid.cells, rr = rngFor('maze|' + L.idgrid.digest + '|' + L.rosette.digest);
-      const M = []; for (let y = 0; y < N; y++) M.push(new Array(N).fill(1));
-      const W = 12, seen = new Array(W * W).fill(0), stack = [0]; seen[0] = 1; M[1][1] = 0;
-      while (stack.length) {
-        const c = stack[stack.length - 1], cx = c % W, cy = (c / W) | 0, nb = [];
-        [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach((d) => { const nx = cx + d[0], ny = cy + d[1]; if (nx >= 0 && ny >= 0 && nx < W && ny < W && !seen[ny * W + nx]) nb.push([nx, ny]); });
-        if (!nb.length) { stack.pop(); continue; }
-        const q = nb[Math.floor(rr() * nb.length)]; seen[q[1] * W + q[0]] = 1; M[2 * q[1] + 1][2 * q[0] + 1] = 0; M[cy + q[1] + 1][cx + q[0] + 1] = 0; stack.push(q[1] * W + q[0]);
-      }
-      const fin = (fx, fy) => { for (let j = -1; j <= 7; j++) for (let i = -1; i <= 7; i++) { const X = fx + i, Y = fy + j; if (X < 0 || Y < 0 || X >= N || Y >= N) continue; const inB = i >= 0 && i < 7 && j >= 0 && j < 7; M[Y][X] = inB && (i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4)) ? 2 : 0; } };
-      fin(0, 0); fin(N - 7, 0); fin(0, N - 7);
-      g.globalAlpha = 1; g.fillStyle = '#e8eeea'; g.fillRect(x0 - m * 1.5, y0 - m * 1.5, s + m * 3, s + m * 3);
-      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
-        if (!M[y][x] || (x >= 7 && x <= 17 && y >= 7 && y <= 17)) continue;
-        g.fillStyle = M[y][x] === 2 ? sty : '#10232b'; g.fillRect(x0 + x * m, y0 + y * m, m * 1.04, m * 1.04);
-      }
-      const gx = x0 + 8 * m, gy = y0 + 8 * m;
-      if (cells) for (let i = 0; i < 81; i++) { if (!cells[i]) continue; g.fillStyle = cells[i]; g.fillRect(gx + (i % 9) * m, gy + Math.floor(i / 9) * m, m * 0.94, m * 0.94); }
-      else { g.strokeStyle = sty; g.globalAlpha = 0.3; g.lineWidth = 1 * k; g.beginPath(); for (let i = 0; i <= 9; i++) { g.moveTo(gx + i * m, gy); g.lineTo(gx + i * m, gy + 9 * m); g.moveTo(gx, gy + i * m); g.lineTo(gx + 9 * m, gy + i * m); } g.stroke(); }
-      g.globalAlpha = 1; g.strokeStyle = sty; g.lineWidth = 2 * k; g.strokeRect(x0 - m * 1.5, y0 - m * 1.5, s + m * 3, s + m * 3);
-    }
-    g.restore();
-  }
+  } catch (e) {
+    log('ai err', 'The map agent could not answer: ' + e.message);
+  } finally { wait.remove(); busy = false; $('ask-go').disabled = false; }
+}
+const openAsk = (on) => { $('ask').classList.toggle('open', on); $('askbtn').style.display = on ? 'none' : ''; $('askbtn').setAttribute('aria-expanded', String(on)); if (on) $('ask-q').focus(); };
+$('askbtn').onclick = () => openAsk(true);
+$('ask-x').onclick = () => openAsk(false);
+$('ask-f').onsubmit = (e) => { e.preventDefault(); const q = $('ask-q').value; $('ask-q').value = ''; ask(q); };
+$('ask-q').onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('ask-f').requestSubmit(); } };
+document.querySelectorAll('.ask .sugg button').forEach((b) => { b.onclick = () => ask(b.textContent); });
+window.ttgAsk = ask;
 
-  /* ================= the record ================= */
-  const SAMPLE = { id: '28988e1394ce6783', name: 'Toby Why Godden', number: 'TTG-XIII-918752', issued: '2026-11-04',
-    places: [ { slug: 'brecon', name: 'Brecon', line: 'Schooled', inked: '2026-11-04', tree: 'lodged' }, { slug: 'brecon-2', name: 'Brecon', line: 'Schooled', inked: '2026-11-04', tree: 'lodged' } ] };
-  let HOLDER = null, RECORD = [], STAMPS = [];
-  function normGrid(sig) {
-    if (!sig) return null;
-    let a = sig.cells || sig.grid || sig;
-    if (typeof a === 'string') a = a.trim().split(/[\s,;|]+/).filter(Boolean);
-    if (Array.isArray(a) && a.length === 9 && Array.isArray(a[0])) a = [].concat.apply([], a);
-    if (!Array.isArray(a) || a.length !== 81) return null;
-    return a.map((v) => (typeof v === 'string' && /^(#[0-9a-f]{3,8}|rgba?\([\d\s.,%]+\))$/i.test(v.trim())) ? v.trim() : ((v === 1 || v === true || v === '1') ? '#3a3f9e' : ''));
-  }
-  function buildChain() {
-    STAMPS = []; let chain = 'GENESIS|' + HOLDER.number;
-    RECORD.forEach((s, i) => {
-      const dup = STAMPS.some((t) => t.ok && slugify(t.F.place) === slugify(s.place) && t.F.line === s.line && t.F.date === s.date);
-      const F = { name: HOLDER.name, number: HOLDER.number, place: s.place, line: s.line, date: s.date, town: HOLDER.town, placement: HOLDER.placement, email: HOLDER.email, grid: HOLDER.grid, ordinal: i + 1, prev: chain };
-      const L = derive(F); STAMPS.push({ F, L, ok: !dup }); if (!dup) chain = L.seal.value;
-    });
-  }
-  function loadRecord(rec, label) {
-    if (!rec || typeof rec !== 'object') throw new Error('The record is not a JSON object.');
-    const name = String(rec.name || '').trim(), number = String(rec.number || '').trim();
-    if (!name || !number) throw new Error('The record needs a name and a number.');
-    const places = Array.isArray(rec.places) ? rec.places.filter((p) => p && typeof p === 'object') : [];
-    if (!places.length) throw new Error('The record has no places to stamp.');
-    const j = rec.join && typeof rec.join === 'object' ? rec.join : rec, str = (v) => (v == null ? '' : String(v).trim());
-    HOLDER = { id: str(rec.id), name, number, issued: String(rec.issued || '').slice(0, 10) || '0000-00-00', email: str(j.email), town: str(j.town || j.nearest || j.valley), placement: str(j.placement || j.clerk), grid: normGrid(j.signature || j.grid || j.sig) };
-    RECORD = places.slice(0, 10).map((p) => ({ place: String(p.name || p.slug || 'Unplaced'), line: String(p.line || ''), date: String(p.inked || rec.issued || '').slice(0, 10) }));
-    buildChain();
-    $('note').textContent = (label || 'Record') + ': ' + name + ', ' + number + (places.length > 10 ? ' (first 10 places shown)' : '') + '.' + (HOLDER.grid || HOLDER.email || HOLDER.town ? '' : ' No join-slip data in this record, so the ID grid page is empty.');
-    build();
-  }
+map.on('load', () => { loadRecord(); loadPods(); heritage(); });
 
-  /* ================= building the booklet ================= */
-  const book = $('book'), stage = $('stage'), zoomEl = $('zoom');
-  let pages = [], leaves = [], nLeaves = 0, t = 0, reveal = false, focus = 'R', focusMode = false, fitS = 1, lastVis = [];
-  const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  const maskEmail = (e) => { const i = e.indexOf('@'); return i < 1 ? e.slice(0, 1) + '***' : e.slice(0, 1) + '***' + e.slice(i); };
-  const ALL = { rosette: true, micro: true, intaglio: true, latent: true, ring: true, idgrid: true };
-
-  function coverPage() {
-    const el = h('div', 'page cover'); el.setAttribute('role', 'button'); el.tabIndex = 0; el.setAttribute('aria-label', 'Open the passport');
-    const c = document.createElement('canvas'); el.appendChild(c);
-    el.appendChild(h('div', 't1', 'UNIKIN')); el.appendChild(h('div', 't2', 'Passport')); el.appendChild(h('div', 't3', 'the free future state'));
-    return { el, draw() {
-      c.width = 1000; c.height = 1400; const g = c.getContext('2d');
-      const gr = g.createLinearGradient(0, 0, 1000, 1400); gr.addColorStop(0, '#133a47'); gr.addColorStop(1, '#0a1d25'); g.fillStyle = gr; g.fillRect(0, 0, 1000, 1400);
-      const r = rngFor('cover-grain'); for (let i = 0; i < 9000; i++) { g.fillStyle = r() < 0.5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.08)'; g.fillRect(r() * 1000, r() * 1400, 1 + r() * 2, 1 + r() * 2); }
-      const L = derive({ name: 'UNIKIN', number: 'XUN', place: 'UNIKIN', line: '', date: 'FREE FUTURE STATE', ordinal: 0, prev: '' });
-      g.save(); g.translate(0, 150); drawStamp(g, 1000, L, { layers: { rosette: true, micro: true, intaglio: true, ring: true }, foil: true }); g.restore();
-      g.strokeStyle = 'rgba(143,224,240,.5)'; g.lineWidth = 3; g.strokeRect(36, 36, 928, 1328); g.lineWidth = 1; g.strokeRect(50, 50, 900, 1300);
-    } };
-  }
-  function insidePage() {
-    const el = h('div', 'page');
-    el.appendChild(h('div', 'eyebrow', 'UNIKIN, the free future state'));
-    el.appendChild(h('h2', '', 'This booklet records one person’s places.'));
-    el.appendChild(h('p', '', 'Every stamp inside is drawn from the record it certifies. Change one letter of the record and the geometry moves, layer by layer.'));
-    el.appendChild(h('p', '', 'Rule R4: one stamp per place, line and day. A repeat is refused and never joins the chain.'));
-    el.appendChild(h('div', 'grow'));
-    el.appendChild(h('p', 'small', 'Fictional state. XUN is a made-up issuer code. This is an art and ARG document, not a travel document.'));
-    return { el };
-  }
-  function dataPage() {
-    const el = h('div', 'page'); el.appendChild(h('div', 'eyebrow', 'Holder')); el.appendChild(h('h2', '', HOLDER.name));
-    const dl = h('dl');
-    const rows = [['Passport no.', HOLDER.number], ['Issued', HOLDER.issued], ['Nearest town or valley', HOLDER.town], ['Placed by the clerk', HOLDER.placement], ['Email', HOLDER.email ? (reveal ? HOLDER.email : maskEmail(HOLDER.email)) : ''], ['Record id', HOLDER.id]];
-    rows.forEach((r) => {
-      const dd = h('dd'); if (r[1]) dd.textContent = r[1]; else { dd.textContent = 'Not on record'; dd.className = 'none'; }
-      if (r[0] === 'Email' && HOLDER.email) { const b = h('button', 'mini', reveal ? 'Hide' : 'Show'); b.type = 'button'; b.addEventListener('click', () => { reveal = !reveal; build(true); }); dd.appendChild(b); }
-      dl.appendChild(h('dt', '', r[0])); dl.appendChild(dd);
-    });
-    el.appendChild(dl); el.appendChild(h('div', 'grow'));
-    const mz = mrzLines(); el.appendChild(h('div', 'mrz', mz[0] + '\n' + mz[1]));
-    el.appendChild(h('p', 'small', 'UniKin zone line. Check digits follow the public 7-3-1 scheme. Not a valid machine-readable zone.'));
-    return { el };
-  }
-  function gridPage() {
-    const el = h('div', 'page'); el.appendChild(h('div', 'eyebrow', 'ID grid')); el.appendChild(h('h2', '', '9 x 9 signature'));
-    const box = h('div', 'stampbox'), c = document.createElement('canvas'); box.appendChild(c); el.appendChild(box);
-    el.appendChild(h('p', '', HOLDER.grid ? HOLDER.grid.filter(Boolean).length + ' of 81 cells filled. The grid is printed at the centre of every stamp, and one changed cell breaks the stamp.' : 'No signature on record. The join slip at /join collects it.'));
-    el.appendChild(h('div', 'grow'));
-    return { el, draw() {
-      c.width = c.height = 540; const g = c.getContext('2d'), s = 60;
-      g.fillStyle = '#f6faf8'; g.fillRect(0, 0, 540, 540);
-      if (HOLDER.grid) HOLDER.grid.forEach((v, i) => { if (v) { g.fillStyle = v; g.fillRect((i % 9) * s, Math.floor(i / 9) * s, s, s); } });
-      g.strokeStyle = 'rgba(18,48,58,.35)'; g.lineWidth = 3; g.beginPath();
-      for (let i = 1; i < 9; i++) { g.moveTo(i * s, 0); g.lineTo(i * s, 540); g.moveTo(0, i * s); g.lineTo(540, i * s); }
-      g.stroke(); g.lineWidth = 6; g.strokeStyle = '#12303a'; g.strokeRect(3, 3, 534, 534);
-    } };
-  }
-  function stampPage(st, i) {
-    const el = h('div', 'page'); el.appendChild(h('div', 'eyebrow', 'Stamp ' + (i + 1) + ' · ' + st.F.date)); el.appendChild(h('h2', '', st.F.place));
-    el.appendChild(h('p', '', st.F.line || ' '));
-    const box = h('div', 'stampbox'), c = document.createElement('canvas'); box.appendChild(c); el.appendChild(box);
-    el.appendChild(h('div', 'flag' + (st.ok ? '' : ' bad'), st.ok ? 'Lodged' : 'Refused by rule R4'));
-    el.appendChild(h('p', 'small', (st.ok ? 'Seal ' : 'Would-be seal ') + st.L.seal.value + (st.ok ? '' : '. Not added to the chain.')));
-    return { el, draw() {
-      c.width = c.height = 1400; const g = c.getContext('2d'); drawStamp(g, 1400, st.L, { layers: ALL });
-      if (!st.ok) { g.save(); g.translate(700, 700); g.rotate(-0.5); g.font = '900 260px "Arial Black",Impact,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineWidth = 14; g.strokeStyle = g.fillStyle = 'rgba(210,60,30,.85)'; g.strokeRect(-500, -190, 1000, 380); g.fillText('REPLAY', 0, 12); g.restore(); }
-    } };
-  }
-  function chainPage() {
-    const el = h('div', 'page'); el.appendChild(h('div', 'eyebrow', 'Chain')); el.appendChild(h('h2', '', 'Seals in order'));
-    el.appendChild(h('p', '', 'Each accepted seal hashes the one before it. Deleting or reordering a stamp breaks every later seal.'));
-    const ol = h('ol'); const g0 = h('li'); g0.innerHTML = '<b>Genesis</b> · ' + 'number only'; ol.appendChild(g0);
-    STAMPS.forEach((st, i) => { const li = h('li'); const b = h('b', '', 'Stamp ' + (i + 1) + (st.ok ? '' : ' refused')); li.appendChild(b); li.appendChild(document.createTextNode(' · ' + st.L.seal.value)); if (!st.ok) li.style.opacity = '.5'; ol.appendChild(li); });
-    el.appendChild(ol); el.appendChild(h('div', 'grow'));
-    el.appendChild(h('p', 'small', 'These are visual fingerprints from a fast, non-cryptographic hash. A real issuer would sign the seal with a private key.'));
-    return { el };
-  }
-  function blankPage() { const el = h('div', 'page'); el.appendChild(h('div', 'eyebrow', 'Further places')); el.appendChild(h('div', 'grow')); return { el }; }
-  function backPage() {
-    const el = h('div', 'page backcover'); const c = document.createElement('canvas'); el.appendChild(c);
-    return { el, draw() {
-      c.width = 1000; c.height = 1400; const g = c.getContext('2d');
-      const gr = g.createLinearGradient(1000, 0, 0, 1400); gr.addColorStop(0, '#133a47'); gr.addColorStop(1, '#0a1d25'); g.fillStyle = gr; g.fillRect(0, 0, 1000, 1400);
-      const r = rngFor('back-grain'); for (let i = 0; i < 9000; i++) { g.fillStyle = r() < 0.5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.08)'; g.fillRect(r() * 1000, r() * 1400, 1 + r() * 2, 1 + r() * 2); }
-      g.strokeStyle = 'rgba(143,224,240,.5)'; g.lineWidth = 3; g.strokeRect(36, 36, 928, 1328); g.lineWidth = 1; g.strokeRect(50, 50, 900, 1300);
-    } };
-  }
-
-  function mrzLines() {
-    const parts = HOLDER.name.toUpperCase().split(/\s+/), sur = parts[parts.length - 1], giv = parts.slice(0, -1).join('<');
-    const l1 = ('P<XUN' + sur + '<<' + giv).padEnd(44, '<').slice(0, 44);
-    const doc = clean(HOLDER.number), c1 = check731(doc), iss = HOLDER.issued.replace(/-/g, '').slice(2), c2 = check731(iss);
-    const cnt = String(STAMPS.filter((s) => s.ok).length).padStart(2, '0'), c3 = check731(cnt), comp = check731(doc + c1 + iss + c2 + cnt + c3);
-    const l2 = (doc + c1 + 'XUN' + iss + c2 + cnt + c3 + comp).padEnd(44, '<').slice(0, 44);
-    return [l1, l2];
-  }
-  /* plain-text reading mode: the same content as the booklet, as a flowing document */
-  let readerJobs = [];
-  function buildReader() {
-    const r = $('reader'); r.innerHTML = ''; readerJobs = [];
-    const col = h('div', 'col'); r.appendChild(col);
-    col.appendChild(h('p', 'eyebrow', 'UNIKIN, the free future state'));
-    col.appendChild(h('h2', '', 'Passport of ' + HOLDER.name));
-    col.appendChild(h('p', '', 'The same pages as the booklet, set as plain text. Everything the join slip at /join collects is listed under Holder and ID grid.'));
-    col.appendChild(h('h3', '', 'Holder'));
-    const dl = h('dl');
-    [['Name', HOLDER.name], ['Passport number', HOLDER.number], ['Issued', HOLDER.issued], ['Nearest town or valley', HOLDER.town], ['Placed by the clerk', HOLDER.placement], ['Email', HOLDER.email ? (reveal ? HOLDER.email : maskEmail(HOLDER.email)) : ''], ['Record id', HOLDER.id]].forEach((row) => {
-      const dd = h('dd'); if (row[1]) dd.textContent = row[1]; else { dd.textContent = 'Not on record'; dd.className = 'none'; }
-      if (row[0] === 'Email' && HOLDER.email) { const b = h('button', 'mini', reveal ? 'Hide' : 'Show'); b.type = 'button'; b.addEventListener('click', () => { reveal = !reveal; build(true); }); dd.appendChild(b); }
-      dl.appendChild(h('dt', '', row[0])); dl.appendChild(dd);
-    });
-    col.appendChild(dl);
-    col.appendChild(h('h3', '', 'ID grid'));
-    const gc = document.createElement('canvas'); gc.width = gc.height = 270; gc.setAttribute('role', 'img'); gc.setAttribute('aria-label', 'The holder 9 by 9 signature grid'); gc.style.maxWidth = '270px'; col.appendChild(gc);
-    col.appendChild(h('p', '', HOLDER.grid ? HOLDER.grid.filter(Boolean).length + ' of 81 cells filled. The grid is printed at the centre of every stamp, and one changed cell breaks the stamp.' : 'No signature on record. The join slip at /join collects it.'));
-    readerJobs.push(() => {
-      const g = gc.getContext('2d'), s = 30; g.fillStyle = '#f6faf8'; g.fillRect(0, 0, 270, 270);
-      if (HOLDER.grid) HOLDER.grid.forEach((v, i) => { if (v) { g.fillStyle = v; g.fillRect((i % 9) * s, Math.floor(i / 9) * s, s, s); } });
-      g.strokeStyle = 'rgba(18,48,58,.3)'; g.lineWidth = 1; g.beginPath(); for (let i = 0; i <= 9; i++) { g.moveTo(i * s, 0); g.lineTo(i * s, 270); g.moveTo(0, i * s); g.lineTo(270, i * s); } g.stroke();
-      g.lineWidth = 3; g.strokeStyle = '#12303a'; g.strokeRect(0, 0, 270, 270);
-    });
-    col.appendChild(h('h3', '', 'Stamps'));
-    STAMPS.forEach((st, i) => {
-      col.appendChild(h('h4', '', 'Stamp ' + (i + 1) + ': ' + st.F.place));
-      col.appendChild(h('p', '', [st.F.line, st.F.date, st.ok ? 'Lodged' : 'Refused by rule R4'].filter(Boolean).join(' · ')));
-      col.appendChild(h('p', 'small', (st.ok ? 'Seal ' : 'Would-be seal ') + st.L.seal.value));
-      const c = document.createElement('canvas'); c.width = c.height = 700; c.style.maxWidth = '340px'; c.setAttribute('role', 'img'); c.setAttribute('aria-label', 'Generated stamp for ' + st.F.place); col.appendChild(c);
-      readerJobs.push(() => drawStamp(c.getContext('2d'), 700, st.L, { layers: ALL }));
-    });
-    col.appendChild(h('h3', '', 'Zone line'));
-    const mz = mrzLines(); col.appendChild(h('div', 'mrz', mz[0] + '\n' + mz[1]));
-    col.appendChild(h('h3', '', 'Chain'));
-    const ol = h('ol'); STAMPS.forEach((st, i) => ol.appendChild(h('li', '', 'Stamp ' + (i + 1) + (st.ok ? '' : ' (refused)') + ': ' + st.L.seal.value))); col.appendChild(ol);
-    col.appendChild(h('p', 'small', 'Fictional state. XUN is a made-up issuer code. This is an art and ARG document, not a travel document. Seals are visual fingerprints from a fast, non-cryptographic hash; a real issuer would sign them.'));
-  }
-  function drawReader() { readerJobs.forEach((j) => j()); readerJobs = []; }
-
-  function build(keepTurn) {
-    const keep = keepTurn ? t : 0;
-    book.innerHTML = ''; pages = []; leaves = [];
-    const add = (title, p) => { pages.push({ title, el: p.el, draw: p.draw, done: false }); };
-    add('Cover', coverPage()); add('Inside cover', insidePage()); add('Holder page', dataPage()); add('ID grid', gridPage());
-    STAMPS.forEach((st, i) => add('Stamp ' + (i + 1) + ', ' + st.F.place, stampPage(st, i)));
-    add('Chain', chainPage());
-    if (pages.length % 2 === 0) add('Further places', blankPage());
-    add('Back cover', backPage());
-    nLeaves = pages.length / 2;
-    for (let i = 0; i < nLeaves; i++) {
-      const lf = h('div', 'leaf'), f = h('div', 'face front'), b = h('div', 'face back');
-      pages[2 * i].el.classList.add('right'); pages[2 * i + 1].el.classList.add('left');
-      f.appendChild(pages[2 * i].el); f.appendChild(h('div', 'shade')); b.appendChild(pages[2 * i + 1].el); b.appendChild(h('div', 'shade'));
-      pages[2 * i].el.appendChild(h('div', 'folio', String(2 * i + 1))); pages[2 * i + 1].el.appendChild(h('div', 'folio', String(2 * i + 2)));
-      lf.appendChild(f); lf.appendChild(b); book.appendChild(lf); leaves.push(lf);
-    }
-    layout(); setTurn(keep, true); buildReader(); if (document.body.classList.contains('reading')) drawReader();
-  }
-
-  /* ================= turning ================= */
-  function ensure(i) { const p = pages[i]; if (p && !p.done && p.draw) { p.done = true; p.draw(); } }
-  function setTurn(n, instant) {
-    t = clamp(n, 0, nLeaves);
-    if (instant) book.classList.add('nodrag');
-    leaves.forEach((lf, i) => {
-      const turned = i < t; if (instant) lf.classList.add('drag');
-      lf.style.setProperty('--a', turned ? '-180deg' : '0deg'); lf.style.setProperty('--z', ((turned ? i : nLeaves - i) * 0.6) + 'px'); lf.style.setProperty('--shade', '0');
-    });
-    book.dataset.state = t === 0 ? 'front' : (t === nLeaves ? 'back' : 'open'); applyShift();
-    if (instant) requestAnimationFrame(() => requestAnimationFrame(() => { book.classList.remove('nodrag'); leaves.forEach((lf) => lf.classList.remove('drag')); }));
-    const vis = []; if (t > 0) vis.push(2 * t - 1); if (t < nLeaves) vis.push(2 * t);
-    pages.forEach((p, i) => { const on = vis.indexOf(i) >= 0; p.el.inert = !on; p.el.setAttribute('aria-hidden', on ? 'false' : 'true'); });
-    for (let i = 2 * t - 3; i <= 2 * t + 2; i++) ensure(i);
-    $('prev').disabled = t === 0; $('next').disabled = t === nLeaves;
-    lastVis = vis; updateStatus();
-    const cv0 = pages[0] && pages[0].el; if (cv0) cv0.tabIndex = t === 0 ? 0 : -1;
-    fit(!instant);
-  }
-  function applyShift() { const pw = parseFloat(book.style.getPropertyValue('--pw')) || 300; const s = book.dataset.state; book.style.setProperty('--shift', (s === 'front' ? -pw / 2 : s === 'back' ? pw / 2 : 0) + 'px'); }
-  /* narrow screens: the booklet zooms to one page at a time so the text stays readable */
-  const next = () => {
-    if (focusMode && book.dataset.state === 'open' && focus === 'L') { focus = 'R'; fit(true); updateStatus(); return; }
-    if (t < nLeaves) { focus = 'L'; setTurn(t + 1); }
-  };
-  const prev = () => {
-    if (focusMode && book.dataset.state === 'open' && focus === 'R') { focus = 'L'; fit(true); updateStatus(); return; }
-    if (t > 0) { focus = 'R'; setTurn(t - 1); }
-  };
-  $('next').addEventListener('click', next); $('prev').addEventListener('click', prev);
-
-  function layout() {
-    const w = stage.clientWidth, hh = stage.clientHeight;
-    const pw = Math.floor(clamp(Math.min(w * 0.47, hh * 0.93 / 1.4), 120, 560));
-    book.style.setProperty('--pw', pw + 'px'); book.style.setProperty('--ph', Math.round(pw * 1.4) + 'px'); applyShift();
-    fitS = Math.min(w * 0.96 / pw, hh * 0.98 / (pw * 1.4)); focusMode = pw < 440 && fitS >= 1.3;
-    const sv = (function () { let d = ''; for (let j = 0; j < 70; j++) { const y0 = j * 2.02; let p = 'M0 ' + y0.toFixed(2); for (let x = 2; x <= 100; x += 2) p += 'L' + x + ' ' + (y0 + Math.sin(x / 100 * 14 + j * 0.35) * 0.55).toFixed(2); d += p; }
-      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 141.4" preserveAspectRatio="none"><path d="' + d + '" fill="none" stroke="rgba(30,92,110,.12)" stroke-width=".18"/></svg>'; })();
-    book.style.setProperty('--lines', 'url("data:image/svg+xml,' + encodeURIComponent(sv) + '")');
-  }
-  window.addEventListener('resize', () => { layout(); if (focusMode) fit(false); else { clampPan(); applyZoom(); } });
-
-  /* ================= zoom, pan, drag-to-turn ================= */
-  const Z = { s: 1, x: 0, y: 0 };
-  function applyZoom() { zoomEl.style.transform = 'translate(' + Z.x + 'px,' + Z.y + 'px) scale(' + Z.s + ')'; }
-  function clampPan() { const w = stage.clientWidth, hh = stage.clientHeight; Z.x = clamp(Z.x, w * (1 - Z.s), 0); Z.y = clamp(Z.y, hh * (1 - Z.s), 0); if (Z.s <= 1.001) { Z.s = 1; Z.x = 0; Z.y = 0; } }
-  function zoomAt(cx, cy, f) { const s2 = clamp(Z.s * f, 1, 4); Z.x = cx - (cx - Z.x) * (s2 / Z.s); Z.y = cy - (cy - Z.y) * (s2 / Z.s); Z.s = s2; clampPan(); applyZoom(); }
-  const stageXY = (e) => { const r = stage.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  stage.addEventListener('wheel', (e) => { e.preventDefault(); zoomEl.classList.remove('anim'); const p = stageXY(e); zoomAt(p[0], p[1], Math.exp(-e.deltaY * (e.ctrlKey ? 0.012 : 0.0016))); }, { passive: false });
-  $('reset').addEventListener('click', () => resetZoom());
-
-  const ptr = new Map(); let drag = null, pan = null, pinch = null;
-  stage.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('button, a, input')) return;
-    zoomEl.classList.remove('anim');
-    try { stage.setPointerCapture(e.pointerId); } catch (x) {}
-    ptr.set(e.pointerId, [e.clientX, e.clientY]);
-    if (ptr.size === 2) { const a = Array.from(ptr.values()); pinch = { d: Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]), s: Z.s }; drag = null; pan = null; return; }
-    if (Z.s > 1.02) { pan = { x: e.clientX, y: e.clientY, zx: Z.x, zy: Z.y, moved: false }; return; }
-    const r = stage.getBoundingClientRect(), right = e.clientX - r.left > r.width / 2, st = book.dataset.state;
-    let dir = 0; if (st === 'front') dir = 1; else if (st === 'back') dir = -1; else dir = right ? 1 : -1;
-    if (dir > 0 && t >= nLeaves) dir = 0; if (dir < 0 && t <= 0) dir = 0;
-    drag = { dir, x0: e.clientX, leaf: dir > 0 ? leaves[t] : leaves[t - 1], moved: false, target: e.target };
-  });
-  stage.addEventListener('pointermove', (e) => {
-    if (!ptr.has(e.pointerId)) return; ptr.set(e.pointerId, [e.clientX, e.clientY]);
-    if (pinch && ptr.size >= 2) { const a = Array.from(ptr.values()), d = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]), r = stage.getBoundingClientRect(); const cx = (a[0][0] + a[1][0]) / 2 - r.left, cy = (a[0][1] + a[1][1]) / 2 - r.top; zoomAt(cx, cy, (pinch.s * d / pinch.d) / Z.s); return; }
-    if (pan) { const dx = e.clientX - pan.x, dy = e.clientY - pan.y; if (Math.abs(dx) + Math.abs(dy) > 4) pan.moved = true; Z.x = pan.zx + dx; Z.y = pan.zy + dy; clampPan(); applyZoom(); return; }
-    if (!drag || !drag.dir) return;
-    const dx = e.clientX - drag.x0; if (Math.abs(dx) > 5) drag.moved = true; if (!drag.moved) return;
-    const span = parseFloat(book.style.getPropertyValue('--pw')) * 1.6;
-    const ang = drag.dir > 0 ? -clamp(-dx / span * 180, 0, 180) : -180 + clamp(dx / span * 180, 0, 180);
-    drag.ang = ang; drag.leaf.classList.add('drag'); drag.leaf.style.setProperty('--a', ang + 'deg'); drag.leaf.style.setProperty('--shade', String(Math.sin(Math.abs(ang) * Math.PI / 180) * 0.6));
-    if (book.dataset.state === 'front' || book.dataset.state === 'back') { book.dataset.state = 'open'; applyShift(); }
-  });
-  function endPtr(e) {
-    ptr.delete(e.pointerId); if (ptr.size < 2) pinch = null;
-    if (pan) {
-      const p0 = pan; pan = null;
-      if (!p0.moved && focusMode && Z.s <= fitS * 1.05) { const r = stage.getBoundingClientRect(); if (p0.x - r.left > r.width / 2) next(); else prev(); }
-      return;
-    }
-    if (!drag) return; const d = drag; drag = null; if (!d.dir) return;
-    if (d.leaf) d.leaf.classList.remove('drag');
-    if (!d.moved) { if (window.getSelection && String(window.getSelection())) { setTurn(t); return; } d.dir > 0 ? next() : prev(); return; }
-    const a = d.ang == null ? (d.dir > 0 ? 0 : -180) : d.ang;
-    if (d.dir > 0) setTurn(a < -60 ? t + 1 : t); else setTurn(a > -120 ? t - 1 : t);
-  }
-  stage.addEventListener('pointerup', endPtr); stage.addEventListener('pointercancel', endPtr);
-  stage.addEventListener('dblclick', () => resetZoom());
-
-  document.addEventListener('keydown', (e) => {
-    if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
-    const k = e.key;
-    if ((k === 'Enter' || k === ' ') && t === 0) { e.preventDefault(); next(); }
-    else if (k === 'ArrowRight' || k === 'PageDown') { e.preventDefault(); next(); }
-    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); prev(); }
-    else if (k === 'Home') { setTurn(0); } else if (k === 'End') { setTurn(nLeaves); }
-    else if (k === '+' || k === '=') zoomAt(stage.clientWidth / 2, stage.clientHeight / 2, 1.25);
-    else if (k === '-') zoomAt(stage.clientWidth / 2, stage.clientHeight / 2, 0.8);
-    else if (k === '0' || k === 'Escape') resetZoom();
-  });
-
-  function fit(anim) {
-    if (!focusMode) return;
-    const w = stage.clientWidth, hh = stage.clientHeight, pw = parseFloat(book.style.getPropertyValue('--pw')) || 300, st = book.dataset.state;
-    const side = st === 'front' ? 'R' : st === 'back' ? 'L' : focus, shift = st === 'front' ? -pw / 2 : st === 'back' ? pw / 2 : 0;
-    const xc = shift + (side === 'R' ? pw / 2 : -pw / 2), s = clamp(fitS, 1, 4);
-    Z.s = s; Z.x = w / 2 - s * (w / 2 + xc); Z.y = hh / 2 * (1 - s);
-    zoomEl.classList.toggle('anim', anim !== false); applyZoom();
-  }
-  function resetZoom() { if (focusMode) fit(true); else { Z.s = 1; Z.x = 0; Z.y = 0; zoomEl.classList.remove('anim'); applyZoom(); } }
-  function updateStatus() {
-    let v = lastVis; if (focusMode && book.dataset.state === 'open' && v.length === 2) v = [v[focus === 'L' ? 0 : 1]];
-    $('status').textContent = v.map((i) => pages[i].title).join(' · ');
-  }
-  $('readbtn').addEventListener('click', () => {
-    const on = document.body.classList.toggle('reading');
-    $('readbtn').textContent = on ? 'Show the book' : 'Read as text'; $('readbtn').setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) { drawReader(); $('reader').scrollTop = 0; } else { layout(); fit(false); }
-  });
-
-  /* ================= loading records ================= */
-  $('file').addEventListener('change', (e) => {
-    const f = e.target.files && e.target.files[0]; if (!f) return;
-    const rd = new FileReader();
-    rd.onload = () => { try { loadRecord(JSON.parse(String(rd.result)), f.name); } catch (x) { $('note').textContent = 'Could not load that record. ' + (x && x.message ? x.message : ''); } };
-    rd.readAsText(f);
-  });
-  window.unikinPassport = { load: (rec) => loadRecord(rec, 'Signed-in member') };
-
-  loadRecord(SAMPLE, 'Sample record from ttg-passport-record.json');
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { pages.forEach((p) => { p.done = false; }); const keep = t; setTurn(keep); });
-  /* on a real site, a record next to the page replaces the sample */
-  if (/^https?:$/.test(location.protocol) && !/claude\.(ai|site)|anthropic/i.test(location.hostname)) {
-    fetch(window.UNIKIN_RECORD_URL || 'record.json', { credentials: 'same-origin' }).then((r) => (r.ok ? r.json() : Promise.reject())).then((rec) => loadRecord(rec, 'record.json')).catch(() => {});
-  }
 })();
 </script>
-
 </body>
 </html>

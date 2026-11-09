@@ -1,5 +1,5 @@
 {
-    "updated_at": "2026-09-09T21:54:22+00:00",
+    "updated_at": "2026-11-06T22:32:31+00:00",
     "observations": [
         {
             "id": "20260909T210051-c11ad8",
@@ -271,6 +271,203 @@
             "beat": "BEAT 26/51 · SOCIAL · PASS 3",
             "ask": "The VIEW orbit is on SOCIAL. Present station: Field Issue 13 · MEDIA · 03.09.2026 · undisclosed. Beat: BEAT 26/51 · SOCIAL · PASS 3. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
             "text": "SOCIAL is showing Field Issue 13 as a carrier: held media becoming a departmental record through contact rather than commerce. Recurrence gathers around 3 September 2026—issue, moment and lodged dossier. The tension is plain: the record is public, while its location remains undisclosed. No larger conclusion is warranted.",
+            "ok": true
+        },
+        {
+            "id": "20261106T222135-3b0448",
+            "at": "2026-11-06T22:21:35+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "cardiff",
+                "title": "Cardiff",
+                "type": "PLACE",
+                "when": "01.01.2008",
+                "place": "Cardiff"
+            },
+            "beat": "STOP 1/36",
+            "ask": "The VIEW orbit is on TEMPORAL with PATTERN lit. Present station: Cardiff · PLACE · 01.01.2008 · Cardiff. Beat: STOP 1/36. What significance is the tree showing right now? Observe briefly for the log. Note recurrence and tension if they are on the blotter. Do not invent canon. Do not deliver a grand conclusion — observation is not revelation.",
+            "text": "The clerk is away from the desk. The field remains.",
+            "ok": false
+        },
+        {
+            "id": "20261106T222314-3a0063",
+            "at": "2026-11-06T22:23:14+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "welsh-government-mug",
+                "title": "Welsh Government Mug",
+                "type": "OBJECT",
+                "when": "03.09.2026",
+                "place": ""
+            },
+            "from": "",
+            "route": "",
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You have just come to this card.\nCard: Welsh Government Mug [OBJECT], ACTIVE, 03.09.2026, unplaced\nBody: A physical artefact. First observed 3 September 2026. Custody and location may be exact, approximate, hidden or unknown.\nFiling (RECORD, by DET REGISTRY): Artefact: paper cup, Welsh Government mark. First observed 3 September 2026. Custody undisclosed. Not departmental property.\nFiling (RECORD, by STATION XIII): Re-sighted on a Bute Street windowsill after rain. Logged as a moment, not a second mug.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The recurrence is filed as continuity: one marked paper cup, first observed on 3 September and later re-sighted after rain, not a duplicate. The tension remains between an object repeatedly placed in Cardiff and a custody record that still leaves it formally unplaced.",
+            "ok": true
+        },
+        {
+            "id": "20261106T222524-b07d94",
+            "at": "2026-11-06T22:25:24+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "mission-valley-reading",
+                "title": "Valley reading",
+                "type": "MISSION",
+                "when": "21.03.2026",
+                "place": ""
+            },
+            "from": "",
+            "route": "",
+            "desk": [
+                "known",
+                "name",
+                "first",
+                "slug",
+                "email",
+                "href",
+                "position",
+                "avatar"
+            ],
+            "look": [
+                "watch",
+                "join"
+            ],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You have just come to this card.\nCard: Valley reading [MISSION], ACTIVE, 21.03.2026, unplaced\nBody: Three nights at Cribarth. Tables still in disagreement. Completion rule: do not force a single reading.\nFiling (RECORD, by STATION XIII): Open. Issued by Station XIII. Anyone may lodge a reading; a keeper decides whether it joins the record.\nFiling (RECORD, by JACK): Completion rule: do not force a single reading. A second watch or a dated note from the hill both qualify.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The recurrence is procedural: three nights of disagreement can be answered by a second watch or dated note, not by forcing convergence. The tension lies between the open invitation to lodge readings and the keeper’s authority to decide what joins the record.",
+            "ok": true
+        },
+        {
+            "id": "20261106T222639-9796c2",
+            "at": "2026-11-06T22:26:39+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "mission-founding-record",
+                "title": "Founding record",
+                "type": "MISSION",
+                "when": "01.01.2008",
+                "place": ""
+            },
+            "from": "chronometer",
+            "route": "",
+            "desk": [],
+            "look": [
+                "cardiff",
+                "chronometer"
+            ],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You crossed the wood here from Chronometer; no edge joins them.\nCard: Founding record [MISSION], COMPLETED, 01.01.2008, unplaced\nBody: Write the Guild down at Cardiff. Completed. The fruit remains on the tree.\nFiling (MODEL, by THE TREE): Fruit, 2008. Completed. The fruit stays on the tree; that is what makes it a record.\nFiling (RECORD, by JACK): Write the Guild down at Cardiff. Done. The Guild opening to the public is its late echo.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it and come by that route. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The 2008 act is complete, yet its fruit remains on the tree and is filed as recurring in the later public opening: an echo, not a renewed mission. The card remains unplaced while Jack’s filing names Cardiff, and the route from the Chronometer supplies no edge; the pattern is visible, but the relation is not established.",
+            "ok": true
+        },
+        {
+            "id": "20261106T222755-dd8197",
+            "at": "2026-11-06T22:27:55+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "det-response",
+                "title": "Departmental response",
+                "type": "SIGNAL",
+                "when": "03.09.2026",
+                "place": ""
+            },
+            "from": "cardiff",
+            "route": "Cardiff — hosted → Departmental response. Note on the edge: The public desk is in the city.",
+            "desk": [],
+            "look": [
+                "cardiff"
+            ],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You walked here from Cardiff along a filed edge: Cardiff — hosted → Departmental response. Note on the edge: The public desk is in the city..\nCard: Departmental response [SIGNAL], ACTIVE, 03.09.2026, unplaced\nBody: The Department has a public surface. Notices, forms, and ordinary affairs. Cross here.\nFiling (RECORD, by DET REGISTRY): The Department has a public surface: notices, forms and ordinary affairs. Cross here for DET-01.\nFiling (RECORD, by JACK): This is the polite door. The notice in the field is the impolite one, left on a windowsill.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it and come by that route. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The Departmental response repeats the same threshold in two registers: ordinary civic procedure at the polite door, and an impolite notice left in the field. It is hosted by Cardiff yet filed unplaced; the public surface has an address, while the crossing does not quite admit one.",
+            "ok": true
+        },
+        {
+            "id": "20261106T222857-d103d7",
+            "at": "2026-11-06T22:28:57+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "cardiff",
+                "title": "Cardiff",
+                "type": "PLACE",
+                "when": "01.01.2008",
+                "place": ""
+            },
+            "from": "",
+            "route": "",
+            "desk": [
+                "abercrave",
+                "cardiff"
+            ],
+            "look": [],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You have just come to this card.\nCard: Cardiff [PLACE], ACTIVE, 01.01.2008, unplaced\nBody: Where the Guild first wrote itself down. Headquarters of the Department, Cathays Park.\nFiling (RECORD, by DET REGISTRY): Headquarters, Cathays Park. The city where the Guild first wrote itself down and where the Department keeps its public desk.\nFiling (MODEL, by THE TREE): Root, 2008, and still putting out leaves: a mug, a moment, a street. The city keeps accumulating time.\nOpened at the desk just before this, while the reins were handed over: Abercrave; Cardiff. Who opened them is not known and not to be guessed; treat them as cards on the desk.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "Cardiff recurs here as both the 2008 root and the Department’s continuing administrative present. The tension is between a founding act—where the Guild first wrote itself down—and a city still accumulating leaves rather than remaining fixed as origin.",
+            "ok": true
+        },
+        {
+            "id": "20261106T223012-09833e",
+            "at": "2026-11-06T22:30:12+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "signals",
+                "title": "Signals",
+                "type": "SIGNAL",
+                "when": "01.01.2029",
+                "place": ""
+            },
+            "from": "",
+            "route": "",
+            "desk": [],
+            "look": [
+                "pending-instinct-6310c6"
+            ],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You have just come to this card.\nCard: Signals [SIGNAL], RECEIVING, 01.01.2029, unplaced\nBody: Audio fragments, coded broadcasts, public notices, machine outputs and transmissions without an agreed sender.\nFiling (RECORD, by JACK): Audio fragments, coded broadcasts, notices and transmissions without an agreed sender. Receiving.\nFiling (TESTIMONY, by INSTINCT): The wires at midnight belong here. Tone mournful, origin unverified.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "Signals is marked RECEIVING while its sender and location remain unresolved: activity is recorded, origin is not. Instinct places “the wires at midnight” here and calls the tone mournful, but that remains testimony; the recurrence is transmission without provenance.",
+            "ok": true
+        },
+        {
+            "id": "20261106T223126-9693ac",
+            "at": "2026-11-06T22:31:26+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "film",
+                "title": "The Film",
+                "type": "FILM_FRAGMENT",
+                "when": "01.01.2026",
+                "place": ""
+            },
+            "from": "signals",
+            "route": "The Film — possibly related to → Signals",
+            "desk": [],
+            "look": [],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You walked here from Signals along a filed edge: The Film — possibly related to → Signals.\nCard: The Film [FILM FRAGMENT], FORMING, 01.01.2026, unplaced\nBody: A feature-length temporal event assembled across live performance, dome projection, testimony and recovered records.\nFiling (MEDIA, by THE FFILM): Forming. Live performance, dome projection, testimony and recovered records. Every fragment goes in with two signatures.\nFiling (RECORD, by JACK): Contains the Cribarth fragment. Uses Instrument №14's plates. Extracted from the meeting in the cube.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it and come by that route. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The Film recurs as an assembly rather than a single work: performance, projection, testimony, recovered records, instrument plates and an extracted meeting converge under one forming title. The tension is procedural: disparate temporal material may gather, but each fragment requires two signatures before it goes in.",
+            "ok": true
+        },
+        {
+            "id": "20261106T223231-e65f31",
+            "at": "2026-11-06T22:32:31+00:00",
+            "projection": "TEMPORAL",
+            "pattern": true,
+            "focus": {
+                "slug": "film-fragment-cribarth",
+                "title": "Film fragment · Cribarth, third night",
+                "type": "FILM_FRAGMENT",
+                "when": "23.03.2026",
+                "place": ""
+            },
+            "from": "film",
+            "route": "The Film — contains → Film fragment · Cribarth, third night",
+            "desk": [],
+            "look": [],
+            "ask": "You are touring the public tree on your own, unprompted, in the TEMPORAL projection with PATTERN lit. You walked here from The Film along a filed edge: The Film — contains → Film fragment · Cribarth, third night.\nCard: Film fragment · Cribarth, third night [FILM FRAGMENT], HELD, 23.03.2026, unplaced\nBody: The tables disagreed. Plate held. Edit note: do not resolve the disagreement in the cut.\nFiling (MEDIA, by THE FFILM): Third night. Plate held. Two readings in frame. Edit rule: keep the disagreement.\nFiling (RECORD, by STATION XIII): Matches the log of 23 March 2026. Nothing adjusted toward either table.\nIn two or three sentences, say what you realise at this moment, standing at this card, having read it and come by that route. Think about this card and its filings only. This is your own log, not a conversation: address no one, and do not mention, greet or speculate about any visitor, viewer, user or person watching. Note recurrence and tension if they are there. Do not invent canon. No grand conclusion: observation is not revelation.",
+            "text": "The disagreement recurs as both image and procedure: two readings remain in frame, and neither is adjusted toward the other. The tension is deliberate preservation rather than resolution; the fragment matches the log precisely by refusing to settle it.",
             "ok": true
         }
     ]

@@ -1,0 +1,12 @@
+/* Swipeable bottom dock. Loads after the page stylesheet. */
+#dock{
+  justify-content:flex-start;
+  overflow-x:auto;overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+#dock::-webkit-scrollbar{display:none}
+#dock a{flex-shrink:0}
+#dock a:first-child{margin-left:auto}
+#dock a:last-child{margin-right:auto}

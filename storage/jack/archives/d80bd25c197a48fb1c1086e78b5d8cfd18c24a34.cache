@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
+	<head>
+        
+		<!-- disabled analytics to start with -->
+<script>
+window['ga-disable-GA_MEASUREMENT_ID'] = true;
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q4211BYX1V" nonce="nonce-6aede17af03ad"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    // gtag('config', 'G-Q4211BYX1V'); // disabled - wait for consent
+</script>
+<!-- Facebook Pixel Code -->
+<script nonce="nonce-6aede17af03ad">
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+</script>
+<!-- End Facebook Pixel Code -->
+
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+		<title>City Hall, Cardiff - Collections Online | Museum Wales</title>
+<meta property="og:title" content="City Hall, Cardiff - Collections Online | Museum Wales">
+
+
+
+<meta property="og:site_name" content="Museum Wales">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://museum.wales/collections/online/object/2474ecee-eaa3-3d64-9762-774d904fb472/">
+
+
+
+
+
+
+
+				
+		<!-- inline stylesheets -->
+					<style>#admin_bar{font-family:Arial;background-color:#000;font-size:.8rem;display:flex;color:#fff}.admin_bar_hidden{display:none!important}a#admin_bar_login{color:#fff;padding:.25rem 1rem .25rem 1rem;margin:.25rem .5rem .25rem 0;font-weight:700;background-color:#1c88d5;border-color:#1c88d5}a#admin_bar_login:hover{background-color:#b20034;border-color:#b20034}#admin_bar_main{-ms-flex:1;-moz-flex:1;-webkit-flex:1;flex:1}#admin_bar_close_button{color:#fff;padding:.25rem .2rem 0 .25rem;font-size:18px;font-size:1.2rem}#admin_bar_close_button:hover{cursor:pointer;background-color:#b20034}#admin_bar_show_button{position:absolute;z-index:9999;top:0;left:100%;width:1.5rem;margin:0 0 0 -1.5rem;padding:.1rem 0 0 0;border-bottom-left-radius:.5rem;background-color:rgb(0 0 0 / .6);color:#fff;text-align:center;cursor:pointer}.admin_bar_element{display:inline-block;vertical-align:center;margin:0 1rem 0 1rem;padding:.25rem 0 .25rem 0}.admin_bar_element label::after{content:":"}#admin_bar .admin_bar_title{display:inline-block;color:#fff;font-weight:700;height:1.6rem;padding:.2rem .5rem .2rem .5rem;vertical-align:center}#admin_bar .admin_bar_title:hover{background-color:#b20034;text-decoration:none;border-radius:.2rem}.admin_bar_button{display:inline-block;border:1px #bbb solid;border-radius:2px;padding:.1rem .25rem .1rem .25rem;font-size:.9rem;color:#fff;cursor:pointer}.admin_bar_button.selected{background-color:#0661a2;color:#fff;border-color:#0661a2;font-weight:700}.admin_bar_button:hover{color:#fff}.admin_bar_page_id{display:inline;font-size:.8rem}#developer_bar{display:none;background-color:#222;color:#fff;margin:0;padding:0 1rem 1rem 1rem;border-top:4px #ff0 solid;border-bottom:4px #ff0 solid}#developer_bar.open{display:block!important}#developer_bar h2{color:#fff}ul.used_blocks_list{list-style-type:none}li.block_details{padding:.2rem 0 .2rem 0}.block_detail_setting{text-transform:uppercase;border-radius:.2rem;padding:.2rem;margin:.2rem;font-size:.8rem;background-color:#666;color:#fff}.block_detail_setting.block_detail_js{background-color:#960044}.block_detail_setting.block_detail_css{background-color:#d38900}.block_detail_setting.block_detail_json{background-color:#2b8031}.block_detail_setting.block_detail_templates{background-color:#ff009e}.block_detail_setting.block_detail_media{background-color:#d000ff}.block_detail_setting.block_detail_xml{background-color:#0700ab}.block_detail_setting.block_detail_html{background-color:#0700ab}.block_detail_setting.block_detail_strings{background-color:#69aa00}.block_detail_setting.block_detail_variants{background-color:#979200}#dev_button{cursor:pointer}#dev_button svg path{fill:#fff}#dev_button.open .admin_edit_button_icon{background-color:lime}#dev_button.open .admin_edit_button_text{background-color:#ff0;color:red}#dev_button.open svg path{fill:#f0f}#dev_button:hover svg path{fill:#000}#dev_button:hover .admin_edit_button_icon{background-color:#f0f;color:#fff}#dev_button:hover .admin_edit_button_text{background-color:blue;color:cyan}.page_id{font-size:1.6rem;padding:.2rem .4rem .2rem .4rem;color:#fff;background-color:#777}@media screen and (min-width:800px){ul.used_blocks_list{list-style-type:none;columns:3}}html,body,a,p,span,em,small,strong,sub,sup,mark,del,ins,strike,h1,h2,h3,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,h4,h5,h6,abbr,dfn,blockquote,q,cite,code,pre,ol,ul,li,dl,dt,dd,div,section,article,main,aside,nav,header,hgroup,footer,img,figure,figcaption,address,time,audio,video,canvas,iframe,details,summary,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0}*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}.clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}.clearfix{display:inline-block}* html .clearfix{height:1%}.clearfix{display:block}.hidden{display:none!important}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);border:0}.video-consent-overlay{padding:2rem;background-color:rgb(0 0 0 / .6);text-align:center;backdrop-filter:blur(10px);color:#fff;position:absolute;width:100%;z-index:2;display:flex;flex-direction:column}.video-consent-overlay .spacer{flex:1}@media screen{.speech{display:none}}@media print{.speech{display:none}}:root{--brand-black:#000000;--brand-white:#ffffff;--brand-warm-black:#1b1b1c;--brand-warm-white:#f0f0eb;--brand-sandstone:#f2efeb;--brand-grey:#c4c4bb;--brand-red:#f7432c;--brand-orange:#eb7a29;--brand-green:#40b240;--brand-pink:#f573ad;--brand-slate:#668796;--brand-purple:#551e89;--brand-aqua:#0db0b8;--brand-yellow:#f5ad3b;--brand-stone:#7a716a;--brand-blue:#6699ff;--brand-red-vlight:#fcb4ab;--brand-orange-vlight:#f7caa9;--brand-green-vlight:#b3e0b3;--brand-pink-vlight:#fbc7de;--brand-slate-vlight:#c2cfd5;--brand-purple-vlight:#d6c2ff;--brand-aqua-vlight:#c6e7e9;--brand-yellow-vlight:#fbdeb1;--brand-stone-vlight:#e5e1dd;--brand-blue-vlight:#c2d6ff;--brand-red-light:#f96956;--brand-orange-light:#EF9554;--brand-green-light:#66C166;--brand-pink-light:#F78FBD;--brand-slate-light:#859FAB;--brand-purple-light:#AD85FF;--brand-aqua-light:#3DC0C6;--brand-yellow-light:#F7BD62;--brand-stone-light:#544f4a;--brand-blue-light:#85ADFF;--brand-red-medium:#f7432c;--brand-orange-medium:#f66700;--brand-green-medium:#40b240;--brand-pink-medium:#f573ad;--brand-slate-medium:#668796;--brand-purple-medium:#551e89;--brand-aqua-medium:#0db0b8;--brand-yellow-medium:#f5ad3b;--brand-stone-medium:#7a716a;--brand-blue-medium:#6699ff;--brand-red-dark:#8e290e;--brand-orange-dark:#993f00;--brand-green-dark:#006600;--brand-pink-dark:#e10096;--brand-slate-dark:#2d5560;--brand-purple-dark:#3a0b66;--brand-aqua-dark:#006666;--brand-yellow-dark:#996300;--brand-stone-dark:#57504a;--brand-blue-dark:#1d4d93;--brand-red-vdark:#8e290e;--brand-orange-vdark:#6b2d00;--brand-green-vdark:#004400;--brand-pink-vdark:#ad0073;--brand-slate-vdark:#1d3b43;--brand-purple-vdark:#420f71;--brand-aqua-vdark:#015050;--brand-yellow-vdark:#764d00;--brand-stone-vdark:#3f3933;--brand-blue-vdark:#154183;--brand-red:var(--brand-red-dark);--brand-orange:var(--brand-orange-dark);--brand-green:var(--brand-green-dark);--brand-pink:var(--brand-pink-dark);--brand-slate:var(--brand-slate-dark);--brand-purple:var(--brand-purple-medium);--brand-aqua:var(--brand-aqua-dark);--brand-yellow:var(--brand-yellow-dark);--brand-stone:var(--brand-stone-medium);--brand-blue:var(--brand-blue-dark);--brand-red-shadow:var(--brand-red-vdark);--brand-orange-shadow:var(--brand-orange-vdark);--brand-green-shadow:var(--brand-green-vdark);--brand-pink-shadow:var(--brand-pink-vdark);--brand-slate-shadow:var(--brand-slate-vdark);--brand-purple-shadow:var(--brand-purple-dark);--brand-aqua-shadow:var(--brand-aqua-vdark);--brand-yellow-shadow:var(--brand-yellow-vdark);--brand-stone-shadow:var(--brand-stone-dark);--brand-blue-shadow:var(--brand-blue-vdark);--colour-amgueddfa-cymru:var(--brand-red);--colour-cardiff:var(--brand-stone);--colour-stfagans:var(--brand-orange);--colour-bigpit:var(--brand-green);--colour-roman:var(--brand-aqua);--colour-wool:var(--brand-pink);--colour-slate:var(--brand-slate);--colour-swansea:var(--brand-purple);--brand-text-colour:var(--brand-white);--default-link-colour:var(--brand-red-dark);--default-link-hover-colour:var(--brand-warm-black);--link-hover-colour-light:var(--brand-red-vlight);--link-hover-colour-dark:var(--brand-red-medium);--tint-colour:var(--brand-warm-black)}.container.brand-orange,.container.orange{background-color:var(--brand-orange);color:#fff}.container.brand-orange-light,.container.orange-light{background-color:var(--brand-orange-vlight);color:var(--brand-warm-black)}.container.brand-orange-medium,.container.orange-medium{background-color:var(brand-orange-medium);color:#fff}.container.brand-orange-dark,.container.orange-medium{background-color:var(brand-orange-dark);color:#fff}.button.brand-orange,.button.orange{background-color:var(--brand-orange);border-color:var(--brand-orange-shadow);color:#fff}.button.brand-orange:hover,.button.orange:hover{background-color:var(--brand-orange-shadow);color:#fff}.button.brand-orange-medium{background-color:var(--brand-orange-medium);color:#fff}.button.brand-orange-medium:hover{background-color:var(--brand-orange-dark);color:#fff}.button.brand-orange-light{background-color:var(--brand-orange-vlight);color:var(--brand-warm-black)}.button.brand-orange-light:hover{background-color:var(--brand-orange-light);color:var(--brand-warm-black)}.container.brand-blue,.container.blue{background-color:var(--brand-blue);color:#fff}.container.brand-blue-light,.container.blue-light{background-color:var(--brand-blue-vlight);color:var(--brand-warm-black)}.container.brand-blue-medium,.container.blue-medium{background-color:var(brand-blue-medium);color:#fff}.container.brand-blue-dark,.container.blue-medium{background-color:var(brand-blue-dark);color:#fff}.button.brand-blue,.button.blue{background-color:var(--brand-blue);border-color:var(--brand-blue-shadow);color:#fff}.button.brand-blue:hover,.button.blue:hover{background-color:var(--brand-blue-shadow);color:#fff}.button.brand-blue-medium{background-color:var(--brand-blue-medium);color:#fff}.button.brand-blue-medium:hover{background-color:var(--brand-blue-dark);color:#fff}.button.brand-blue-light{background-color:var(--brand-blue-vlight);color:var(--brand-warm-black)}.button.brand-blue-light:hover{background-color:var(--brand-blue-light);color:var(--brand-warm-black)}.container.brand-green,.container.green{background-color:var(--brand-green);color:#fff}.container.brand-green-light,.container.green-light{background-color:var(--brand-green-vlight);color:var(--brand-warm-black)}.container.brand-green-medium,.container.green-medium{background-color:var(brand-green-medium);color:#fff}.container.brand-green-dark,.container.green-medium{background-color:var(brand-green-dark);color:#fff}.button.brand-green,.button.green{background-color:var(--brand-green);border-color:var(--brand-green-shadow);color:#fff}.button.brand-green:hover,.button.green:hover{background-color:var(--brand-green-shadow);color:#fff}.button.brand-green-medium{background-color:var(--brand-green-medium);color:#fff}.button.brand-green-medium:hover{background-color:var(--brand-green-dark);color:#fff}.button.brand-green-light{background-color:var(--brand-green-vlight);color:var(--brand-warm-black)}.button.brand-green-light:hover{background-color:var(--brand-green-light);color:var(--brand-warm-black)}.container.brand-earth,.container.earth{background-color:var(--brand-earth);color:#fff}.container.brand-earth-light,.container.earth-light{background-color:var(--brand-earth-vlight);color:var(--brand-warm-black)}.container.brand-earth-medium,.container.earth-medium{background-color:var(brand-earth-medium);color:#fff}.container.brand-earth-dark,.container.earth-medium{background-color:var(brand-earth-dark);color:#fff}.button.brand-earth,.button.earth{background-color:var(--brand-earth);border-color:var(--brand-earth-shadow);color:#fff}.button.brand-earth:hover,.button.earth:hover{background-color:var(--brand-earth-shadow);color:#fff}.button.brand-earth-medium{background-color:var(--brand-earth-medium);color:#fff}.button.brand-earth-medium:hover{background-color:var(--brand-earth-dark);color:#fff}.button.brand-earth-light{background-color:var(--brand-earth-vlight);color:var(--brand-warm-black)}.button.brand-earth-light:hover{background-color:var(--brand-earth-light);color:var(--brand-warm-black)}.container.brand-slate,.container.slate{background-color:var(--brand-slate);color:#fff}.container.brand-slate-light,.container.slate-light{background-color:var(--brand-slate-vlight);color:var(--brand-warm-black)}.container.brand-slate-medium,.container.slate-medium{background-color:var(brand-slate-medium);color:#fff}.container.brand-slate-dark,.container.slate-medium{background-color:var(brand-slate-dark);color:#fff}.button.brand-slate,.button.slate{background-color:var(--brand-slate);border-color:var(--brand-slate-shadow);color:#fff}.button.brand-slate:hover,.button.slate:hover{background-color:var(--brand-slate-shadow);color:#fff}.button.brand-slate-medium{background-color:var(--brand-slate-medium);color:#fff}.button.brand-slate-medium:hover{background-color:var(--brand-slate-dark);color:#fff}.button.brand-slate-light{background-color:var(--brand-slate-vlight);color:var(--brand-warm-black)}.button.brand-slate-light:hover{background-color:var(--brand-slate-light);color:var(--brand-warm-black)}.container.brand-pink,.container.pink{background-color:var(--brand-pink);color:#fff}.container.brand-pink-light,.container.pink-light{background-color:var(--brand-pink-vlight);color:var(--brand-warm-black)}.container.brand-pink-medium,.container.pink-medium{background-color:var(brand-pink-medium);color:#fff}.container.brand-pink-dark,.container.pink-medium{background-color:var(brand-pink-dark);color:#fff}.button.brand-pink,.button.pink{background-color:var(--brand-pink);border-color:var(--brand-pink-shadow);color:#fff}.button.brand-pink:hover,.button.pink:hover{background-color:var(--brand-pink-shadow);color:#fff}.button.brand-pink-medium{background-color:var(--brand-pink-medium);color:#fff}.button.brand-pink-medium:hover{background-color:var(--brand-pink-dark);color:#fff}.button.brand-pink-light{background-color:var(--brand-pink-vlight);color:var(--brand-warm-black)}.button.brand-pink-light:hover{background-color:var(--brand-pink-light);color:var(--brand-warm-black)}.container.brand-red,.container.red{background-color:var(--brand-red);color:#fff}.container.brand-red-light,.container.red-light{background-color:var(--brand-red-vlight);color:var(--brand-warm-black)}.container.brand-red-medium,.container.red-medium{background-color:var(brand-red-medium);color:#fff}.container.brand-red-dark,.container.red-medium{background-color:var(brand-red-dark);color:#fff}.button.brand-red,.button.red{background-color:var(--brand-red);border-color:var(--brand-red-shadow);color:#fff}.button.brand-red:hover,.button.red:hover{background-color:var(--brand-red-shadow);color:#fff}.button.brand-red-medium{background-color:var(--brand-red-medium);color:#fff}.button.brand-red-medium:hover{background-color:var(--brand-red-dark);color:#fff}.button.brand-red-light{background-color:var(--brand-red-vlight);color:var(--brand-warm-black)}.button.brand-red-light:hover{background-color:var(--brand-red-light);color:var(--brand-warm-black)}.container.brand-yellow,.container.yellow{background-color:var(--brand-yellow);color:#fff}.container.brand-yellow-light,.container.yellow-light{background-color:var(--brand-yellow-vlight);color:var(--brand-warm-black)}.container.brand-yellow-medium,.container.yellow-medium{background-color:var(brand-yellow-medium);color:#fff}.container.brand-yellow-dark,.container.yellow-medium{background-color:var(brand-yellow-dark);color:#fff}.button.brand-yellow,.button.yellow{background-color:var(--brand-yellow);border-color:var(--brand-yellow-shadow);color:#fff}.button.brand-yellow:hover,.button.yellow:hover{background-color:var(--brand-yellow-shadow);color:#fff}.button.brand-yellow-medium{background-color:var(--brand-yellow-medium);color:#fff}.button.brand-yellow-medium:hover{background-color:var(--brand-yellow-dark);color:#fff}.button.brand-yellow-light{background-color:var(--brand-yellow-vlight);color:var(--brand-warm-black)}.button.brand-yellow-light:hover{background-color:var(--brand-yellow-light);color:var(--brand-warm-black)}.container.brand-stone,.container.stone{background-color:var(--brand-stone);color:#fff}.container.brand-stone-light,.container.stone-light{background-color:var(--brand-stone-vlight);color:var(--brand-warm-black)}.container.brand-stone-medium,.container.stone-medium{background-color:var(brand-stone-medium);color:#fff}.container.brand-stone-dark,.container.stone-medium{background-color:var(brand-stone-dark);color:#fff}.button.brand-stone,.button.stone{background-color:var(--brand-stone);border-color:var(--brand-stone-shadow);color:#fff}.button.brand-stone:hover,.button.stone:hover{background-color:var(--brand-stone-shadow);color:#fff}.button.brand-stone-medium{background-color:var(--brand-stone-medium);color:#fff}.button.brand-stone-medium:hover{background-color:var(--brand-stone-dark);color:#fff}.button.brand-stone-light{background-color:var(--brand-stone-vlight);color:var(--brand-warm-black)}.button.brand-stone-light:hover{background-color:var(--brand-stone-light);color:var(--brand-warm-black)}.container.brand-purple,.container.purple{background-color:var(--brand-purple);color:#fff}.container.brand-purple-light,.container.purple-light{background-color:var(--brand-purple-vlight);color:var(--brand-warm-black)}.container.brand-purple-medium,.container.purple-medium{background-color:var(brand-purple-medium);color:#fff}.container.brand-purple-dark,.container.purple-medium{background-color:var(brand-purple-dark);color:#fff}.button.brand-purple,.button.purple{background-color:var(--brand-purple);border-color:var(--brand-purple-shadow);color:#fff}.button.brand-purple:hover,.button.purple:hover{background-color:var(--brand-purple-shadow);color:#fff}.button.brand-purple-medium{background-color:var(--brand-purple-medium);color:#fff}.button.brand-purple-medium:hover{background-color:var(--brand-purple-dark);color:#fff}.button.brand-purple-light{background-color:var(--brand-purple-vlight);color:var(--brand-warm-black)}.button.brand-purple-light:hover{background-color:var(--brand-purple-light);color:var(--brand-warm-black)}.container.brand-aqua,.container.aqua{background-color:var(--brand-aqua);color:#fff}.container.brand-aqua-light,.container.aqua-light{background-color:var(--brand-aqua-vlight);color:var(--brand-warm-black)}.container.brand-aqua-medium,.container.aqua-medium{background-color:var(brand-aqua-medium);color:#fff}.container.brand-aqua-dark,.container.aqua-medium{background-color:var(brand-aqua-dark);color:#fff}.button.brand-aqua,.button.aqua{background-color:var(--brand-aqua);border-color:var(--brand-aqua-shadow);color:#fff}.button.brand-aqua:hover,.button.aqua:hover{background-color:var(--brand-aqua-shadow);color:#fff}.button.brand-aqua-medium{background-color:var(--brand-aqua-medium);color:#fff}.button.brand-aqua-medium:hover{background-color:var(--brand-aqua-dark);color:#fff}.button.brand-aqua-light{background-color:var(--brand-aqua-vlight);color:var(--brand-warm-black)}.button.brand-aqua-light:hover{background-color:var(--brand-aqua-light);color:var(--brand-warm-black)}.warm-white{color:#f0f0eb}.bg-warm-white{background-color:var(--brand-warm-white)}.bg-warm-black{background-color:var(--brand-warm-black)}.warm-black,#page_header a.logo:hover,header .logo{color:var(--brand-warm-black)}.black{color:#000}.bg_black{background-color:#000}.white{color:#fff}.text-white,.text-white h1,.text-white h2,.text-white h3,.text-white #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content .text-white li.menu_item:first-child{color:#fff}.bg_white{background-color:#fff}.container.light{background-color:#fff;color:#000}.container.light p a:not(.button){background-color:#fff}.container.dark{background-color:#1b1b1c;color:#fff}.container.dark p a:not(.button){background-color:#fff}.container.white{background-color:#fff;color:#000}.container.white p a:not(.button){background-color:#fff}.container.black{background-color:var(--brand-warm-black);color:#fff}.container.black p a:not(.button){background-color:#fff}.container.grey{background-color:var(--brand-warm-white);color:var(--brand-warm-black)}.container.grey p a:not(.button){background-color:#fff}.container.sandstone{background-color:var(--brand-warm-white);color:var(--brand-warm-black)}.container.sandstone p a:not(.button){background-color:#fff}.container.bg-orange{background-color:var(--brand-orange-dark);color:#fff}.container.bg-orange p a:not(.button){background-color:#fff}.container.bg-orange-light{background-color:var(--brand-orange-vlight);color:var(--brand-warm-black)}.container.bg-orange-light p a:not(.button){background-color:#fff}.container.bg-blue{background-color:var(--brand-blue-dark);color:#fff}.container.bg-blue p a:not(.button){background-color:#fff}.container.bg-blue-light{background-color:var(--brand-blue-vlight);color:var(--brand-warm-black)}.container.bg-blue-light p a:not(.button){background-color:#fff}.container.bg-green{background-color:var(--brand-green-dark);color:#fff}.container.bg-green p a:not(.button){background-color:#fff}.container.bg-green-light{background-color:var(--brand-green-vlight);color:var(--brand-warm-black)}.container.bg-green-light p a:not(.button){background-color:#fff}.container.bg-earth{background-color:var(--brand-earth-dark);color:#fff}.container.bg-earth p a:not(.button){background-color:#fff}.container.bg-earth-light{background-color:var(--brand-earth-vlight);color:var(--brand-warm-black)}.container.bg-earth-light p a:not(.button){background-color:#fff}.container.bg-slate{background-color:var(--brand-slate-dark);color:#fff}.container.bg-slate p a:not(.button){background-color:#fff}.container.bg-slate-light{background-color:var(--brand-slate-vlight);color:var(--brand-warm-black)}.container.bg-slate-light p a:not(.button){background-color:#fff}.container.bg-pink{background-color:var(--brand-pink-dark);color:#fff}.container.bg-pink p a:not(.button){background-color:#fff}.container.bg-pink-light{background-color:var(--brand-pink-vlight);color:var(--brand-warm-black)}.container.bg-pink-light p a:not(.button){background-color:#fff}.container.bg-red{background-color:var(--brand-red-dark);color:#fff}.container.bg-red p a:not(.button){background-color:#fff}.container.bg-red-light{background-color:var(--brand-red-vlight);color:var(--brand-warm-black)}.container.bg-red-light p a:not(.button){background-color:#fff}.container.bg-yellow{background-color:var(--brand-yellow-dark);color:#fff}.container.bg-yellow p a:not(.button){background-color:#fff}.container.bg-yellow-light{background-color:var(--brand-yellow-vlight);color:var(--brand-warm-black)}.container.bg-yellow-light p a:not(.button){background-color:#fff}.container.bg-stone{background-color:var(--brand-stone-dark);color:#fff}.container.bg-stone p a:not(.button){background-color:#fff}.container.bg-stone-light{background-color:var(--brand-stone-vlight);color:var(--brand-warm-black)}.container.bg-stone-light p a:not(.button){background-color:#fff}.container.bg-purple{background-color:var(--brand-purple-dark);color:#fff}.container.bg-purple p a:not(.button){background-color:#fff}.container.bg-purple-light{background-color:var(--brand-purple-vlight);color:var(--brand-warm-black)}.container.bg-purple-light p a:not(.button){background-color:#fff}.container.bg-aqua{background-color:var(--brand-aqua-dark);color:#fff}.container.bg-aqua p a:not(.button){background-color:#fff}.container.bg-aqua-light{background-color:var(--brand-aqua-vlight);color:var(--brand-warm-black)}.container.bg-aqua-light p a:not(.button){background-color:#fff}:root{--title-font:Arial, sans-serif;--body-font:Arial, sans-serif}.header-font,html[lang="cy"] .headline-font,html[lang="cy"] #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content html[lang="cy"] li.menu_item:first-child,html[lang="cy"] #site_area_header .site_area_title,#site_area_header html[lang="cy"] .site_area_title,html[lang="cy"] #cookie_preferences h2,#cookie_preferences html[lang="cy"] h2,html[lang="en"] .headline-font-other-lang,.headline-font-cy,html[lang="en"] .headline-font,html[lang="en"] #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content html[lang="en"] li.menu_item:first-child,html[lang="en"] #site_area_header .site_area_title,#site_area_header html[lang="en"] .site_area_title,html[lang="en"] #cookie_preferences h2,#cookie_preferences html[lang="en"] h2,html[lang="cy"] .headline-font-other-lang,.headline-font-en{font-family:var(--title-font)}.body-font{font-family:var(--body-font)}.font-xsmall{font-size:.8rem}.font-small{font-size:.9rem}.font-medium{font-size:1rem}.font-large{font-size:1.2rem}.font-xlarge{font-size:1.4rem}.font-xxlarge{font-size:2rem}.font-xxxlarge{font-size:2.4rem}.font-larger,.larger{font-size:1.2em}.font-smaller .smaller{font-size:.9em}.text-align-left{text-align:left}.text-align-right{text-align:right}.text-align-center,.text-align-centre{text-align:center}@media screen and (min-width:768px){.font-small{font-size:.9rem}.font-large{font-size:1.6rem}.font-xlarge{font-size:2rem}.font-xxlarge{font-size:3rem}.font-xxxlarge{font-size:3.5rem}}@media screen and (min-width:1025px){.font-small{font-size:.9rem}.font-large{font-size:1.7rem}.font-xlarge{font-size:2.2rem}.font-xxlarge{font-size:3.4rem}.font-xxxlarge{font-size:4.2rem}}@media screen and (min-width:1281px){.font-small{font-size:.9rem}.font-large{font-size:1.8rem}.font-xlarge{font-size:2.4rem}.font-xxlarge{font-size:3.6rem}.font-xxlarge{font-size:4.4rem}}:root{--body-font:"Amgueddfa Body", Arial, sans-serif}.body-font{font-family:var(--body-font)}.headline-font,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#site_area_header .site_area_title,#cookie_preferences h2{line-height:.95}html[lang="en"] .headline-font,html[lang="en"] #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content html[lang="en"] li.menu_item:first-child,html[lang="en"] #site_area_header .site_area_title,#site_area_header html[lang="en"] .site_area_title,html[lang="en"] #cookie_preferences h2,#cookie_preferences html[lang="en"] h2,html[lang="cy"] .headline-font-other-lang,.headline-font-en{font-family:"Amgueddfa Headline Wales",Arial,sans-serif;text-transform:uppercase}html[lang="cy"] .headline-font,html[lang="cy"] #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content html[lang="cy"] li.menu_item:first-child,html[lang="cy"] #site_area_header .site_area_title,#site_area_header html[lang="cy"] .site_area_title,html[lang="cy"] #cookie_preferences h2,#cookie_preferences html[lang="cy"] h2,html[lang="en"] .headline-font-other-lang,.headline-font-cy{font-family:"Amgueddfa Headline Cymru",Arial,sans-serif;text-transform:uppercase}@media screen and (min-width:768px){.headline-font,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#site_area_header .site_area_title,#cookie_preferences h2{line-height:.85}}:root{--body-font:"Amgueddfa Body", Arial, sans-serif}.headline-font,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#site_area_header .site_area_title,#cookie_preferences h2{line-height:.95}.button{display:inline-block;padding:.25rem .75rem .25rem .75rem;cursor:pointer;font-size:1rem;font-weight:500;background-color:#444;color:#fff;border:0;border-bottom:8px #222 solid;transition:background-color 0.5s}.button.no-3d{border-bottom:0}.button.no-shadow{border-bottom:0}.button.extra_large{font-size:1.2rem;padding:1rem 1.5rem 1rem 1.5rem;border-bottom-width:8px}.button.large{font-size:1.1rem;padding:.6rem .8rem .6rem .8rem;border-bottom-width:6px}.button.medium{font-size:.9rem;border-bottom-width:4px}.button.smaller{font-size:.9rem;border-bottom-width:3px;padding:.5rem .5rem .5rem .5rem}.button.small{font-size:.8rem;padding:.1rem .4rem .1rem .4rem;border-bottom-width:2px}.button:hover{text-decoration:none;background-color:var(--brand-warm-black);color:#fff}.button.outline{background-color:#fff0}.button.outline:hover{color:#111;background-color:#fff}.button.animated:not(.no-shadow){transition:margin-top 0.2s,border-bottom-width 0.2s}.button.animated:not(.no-shadow):hover{margin-top:4px;border-bottom-width:4px}@media screen and (min-width:768px){.button{padding:1rem}}#cookie_bar_container{position:sticky;float:right;z-index:10;top:-10rem;width:100%;background-color:#222;color:#fff;font-weight:300;padding:.5rem 1rem .5rem 1rem;box-shadow:0 -5px 5px rgb(100 100 100 / .1);margin-bottom:-6rem}#cookie_bar_container .cookie_bar .cookie_bar_body{flex:1}#cookie_bar_container .cookie_bar .preferences{margin-right:1rem;cursor:pointer}#cookie_bar_container .cookie_bar a{color:#bbb;font-weight:500}#cookie_bar_container .cookie_bar a:hover{text-decoration:underline}#cookie_preferences{position:absolute;z-index:20;top:0;left:0;display:none}#cookie_preferences .background{position:relative;z-index:21;display:flex;width:100vw;height:100vh;background-color:rgb(0 0 0 / .7);pointer-events:visible;overflow-y:auto}#cookie_preferences .dialogue{position:relative;z-index:22;width:100%;height:auto;margin:auto;padding:0;background-color:#fff}#cookie_preferences .preferences_body{padding:1rem}#cookie_preferences .header{padding:.5rem;background-color:var(--brand-red-dark);color:#fff}#cookie_preferences h2{text-align:center;font-size:1.8rem}#cookie_preferences .preferences_setting{background-color:#f0f0eb;padding:.5rem .5rem .5rem 1rem}#cookie_preferences input[type=checkbox]{transform:scale(1.4)}#cookie_preferences p{font-size:1rem}#cookie_preferences label{user-select:none;-ms-user-select:none;-moz-user-select:none;-webkit-user-select:none}#cookie_preferences .save_area{padding-top:1rem;text-align:center}#cookie_preferences .footer{text-align:center;border-top:1px #ddd solid;margin:0 0 1rem 0;padding-top:1rem}@media screen and (min-width:768px){#cookie_bar_container .cookie_bar .inner{display:-ms-flexbox;display:-webkit-flex;display:-moz-flex;display:flex;-ms-flex-pack:justify;-ms-justify-content:space-between;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;-ms-flex-align:center;-moz-align-items:center;align-items:center}#cookie_preferences .dialogue{max-width:50vw}#cookie_preferences .preferences_body{padding:2rem}#cookie_preferences .preferences_type{margin:1rem 0 1rem 0}#cookie_preferences .footer{margin:0 0 2rem 0}#cookie_preferences h2{text-align:center;font-size:2.4rem}#cookie_preferences h3,#cookie_preferences #popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child,#popup_menu .contextual_menu_items ul.popup_menu_content #cookie_preferences li.menu_item:first-child{font-size:1.3rem}#cookie_preferences p{font-size:1rem}}@media screen and (min-width:1025px){#cookie_bar_container .cookie_bar{padding:7px 28px 7px 28px;padding:.5rem 2rem .5rem 2rem}}:root{--tint-colour:var(--brand-red-medium);--tint-pale:var(--brand-red-vlight);--tint-dark:var(--brand-red-dark)}html{font-size:87.5%}body{font-weight:400;margin:0;padding:0;font-size:1rem;line-height:1.5;font-family:var(--body-font);color:#1b1b1c}video{max-width:100vw}#page{margin:0 auto 0 auto;max-width:var(--site-width)}#content{display:block;padding:0;margin:0}#breadcrumbs{padding:.5rem}strong{font-weight:700}.clear{clear:both}h1,h2,h3,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child{font-weight:400}h1{font-size:2.4rem;padding:1rem 0 1rem 0}h2{font-size:1.8rem;padding:1rem 0 1rem 0}h3,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child{font-size:1.6rem;padding:.5rem 0 .5rem 0}h4{font-size:1.4rem;padding:.5rem 0 .5rem 0;font-weight:600}h5{font-size:1.2rem;padding:.25rem 0 .25rem 0}h6{font-size:1.1rem;padding:.25rem 0 .25rem 0}h1.page_title{text-align:center;padding:0 0 1rem 0;margin:0}a{color:var(--default-link-colour);text-decoration:none}a:hover{color:var(--default-link-hover-colour)}p{padding:0 0 1rem 0;margin:0}p a:not(.button),#content li a:not(.button){background-color:var(--brand-warm-white);color:var(--brand-warm-black);padding:.2rem .4rem .2rem .4rem;border-bottom:1px rgb(0 0 0 / .6) solid;line-height:1.8;font-weight:400;font-style:normal}p a.link-light:not(.button),#content li a.link-light:not(.button){background-color:#fff}p a:not(.button):hover{color:var(--brand-warm-black);background-color:#fff0;text-decoration:none}#footer .footer_column li a:not(.button){background-color:#fff;color:var(--brand-warm-black);padding:.2rem .4rem .2rem .4rem;border-bottom:1px rgb(0 0 0 / .3) solid;line-height:1.8;font-weight:400;font-style:normal}#footer .footer_column li a:not(.button):hover{background-color:var(--brand-warm-white)}.container.bg-warm-black p a:not(.button):hover{color:#ffffff!important;background-color:#333}ul{padding:0 0 1rem 1rem}.container.narrow,.container .inner{max-width:1280px;margin-left:auto;margin-right:auto}.parent_page_link{display:inline-block;font-size:1.1rem;padding:1rem;margin:0 1rem 1rem 1rem}.parent_page_link_footer{margin:1rem 1rem 0 1rem}.parent_page_link .back_to{font-size:.9em}#skip_links a{position:absolute;z-index:4;top:1rem;transform:translateX(-100%);background-color:#fff;color:#000;display:inline-block;padding:1rem;border:1px #444 solid}#skip_links a:focus,#skip_links a:active{transform:translateX(0%)}@media screen and (min-width:768px){body{overflow-x:hidden;font-size:1.1rem}#breadcrumbs{padding:1rem}h1{font-size:3.2rem;padding:2rem 0 2rem 0}h2{font-size:2.4rem;padding:1rem 0 1rem 0}h3,#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item:first-child{font-size:2rem;padding:.5rem 0 .5rem 0}h4{font-size:1.6rem;padding:1rem 0 1rem 0}h5{font-size:1.4rem;padding:.5rem 0 .5rem 0}h6{font-size:1.2rem;padding:.5rem 0 .5rem 0}.left{float:left}.right{float:right}}@media screen and (min-width:1281px){#breadcrumbs{padding:1rem}.body_narrow{max-width:1000px;margin-left:auto;margin-right:auto}}:root{--header-element-padding:0.5rem}header#page_header{max-width:var(--site-width);margin:0 auto 0 auto;position:relative;z-index:5;background-color:#fff;padding:0}header#page_header button{border:0;background-color:inherit;font-size:inherit}#locations_menu{display:none;background-color:var(--brand-warm-white);color:#000;position:absolute;z-index:99;padding:1rem 0 1rem 0}#page_header a.logo{position:relative;display:block;line-height:1;margin-top:.1rem}#page_header a.logo img{height:60px;max-height:60px;transition:height 0.2s linear;padding:0;margin:0;border:0}#page_header.locations_menu_open a.logo img{height:40px}#page_header .site_area_header_bar{padding:0}#page_header.locations_menu_open .header_navigation{display:none}#page_header.locations_menu_open .site_area_header_bar{display:none}#page_header.with_site_header a.logo{font-size:1.4rem}#page_header a.logo:hover{text-decoration:none}#page_header .locations_button{padding:.5rem 1rem 1rem .4rem;user-select:none;font-weight:700;margin:0;height:100%;vertical-align:middle;cursor:pointer;color:#000}#page_header.with_donate_link .locations_button{padding:var(--header-element-padding);margin:.1rem 0 0 .2rem;vertical-align:top;height:auto}#page_header.with_donate_link .global_header_link.donate_link_left{padding:var(--header-element-padding);height:auto;margin:.1rem 0 0 .2rem}#page_header.with_donate_link .global_header_link.donate_link_right{display:none}#page_header .global_header_link{font-weight:700;padding:.4rem .5rem .4rem 0;margin:0;height:100%;cursor:pointer}#page_header.locations_menu_open .locations_button_column{padding-top:.5rem;padding-bottom:0;height:100%}#page_header.locations_menu_open .locations_button{background-color:var(--brand-warm-white)}#page_header.locations_menu_open .locations_button_column,#page_header.with_site_header .locations_button_column{align-self:center}#page_header.with_donate_link.with_site_header .locations_button_column{align-self:normal}#page_header .global_header_link a{color:#000}#page_header .global_header_link a:hover{color:#b30034}#page_header #global_header_options{display:flex;flex-direction:column;justify-content:space-between;text-align:right}#header_bar .header_navigation{display:flex;align-items:end;height:100%;padding:.2rem 0 0 0}#header_bar .header_navigation .spacer{flex:1}#header_bar .header_button{display:table-cell;cursor:pointer;vertical-align:bottom}#page_header .search_field{border:0;padding:.2rem}#page_header .search_button{border:0;padding:0;font-size:1.6em;height:2rem;background-color:#fff0;color:currentColor;font-family:var(--body-font)}#site_area_header{color:#fff;background-color:var(--brand-warm-black)}#site_area_header .site_area_header_bar{display:flex;height:3rem}#site_area_header .site_area_title{padding-left:.4rem;font-size:1.6rem;align-self:center;flex:1}#site_area_header a{color:inherit}#site_area_header .site_area_top_links{display:none;height:100%}#site_area_header a.site_area_top_link{display:table-cell;vertical-align:middle;height:100%;padding-left:.8rem;padding-right:.8rem}#site_area_header a.site_area_top_link:hover{background-color:#fff;color:#000;text-decoration:none}#site_area_header .site_area_navigation{text-align:right;position:relative;height:100%}#site_area_header .header_button{display:table-cell;vertical-align:middle;height:100%}#site_area_header .header_button:hover{background-color:#fff;color:#000}.breadcrumb a{color:#111}@media screen and (max-width:767px){#page_header .global_header_link.language_switch,#page_header.with_donate_link .global_header_link.donate_link_left{padding-top:.8rem}}@media screen and (min-width:768px){#page_header.with_donate_link .global_header_link.donate_link_left{display:none}#page_header.with_donate_link .global_header_link.donate_link_right{display:inline-block}#page_header.locations_menu_open .locations_button_column{background-color:var(--brand-warm-white)}#page_heder a.logo{margin-top:.2rem}#page_header .locations_button{padding:1rem}#page_header a.logo img{height:60px;transition:height 0.2s linear}#page_header .global_header_link{padding:var(--header-element-padding)}#page_header.with_account_link .language_switch{order:2}#page_header.with_account_link .account_link{order:1}#page_header.locations_menu_open a.logo img{height:50px}#page_header.with_site_header a.logo{font-size:1.6rem}#page_header.locations_menu_open a.logo{font-size:1.6rem}#site_area_header .site_area_title{display:block;font-size:1.8rem;padding:.5rem 1rem .5rem .5rem}}@media screen and (min-width:900px){#site_area_header .site_area_top_links{display:table}}#popup_menu{padding-top:1rem;position:fixed;background-color:#fff;height:auto;z-index:30;width:100%;display:none;overflow-y:auto}#popup_menu .spacer{flex:1}.popup_menu_content .menu_item{font-size:1.1rem}ul.popup_menu_content{height:100%;list-style-type:none;margin:0;padding:0;height:auto}ul.popup_menu_content li.menu_item{display:block;margin:0 auto;width:100%}ul.popup_menu_content li.menu_item a{display:inline-block;width:100%;color:var(--brand-warm-black);padding:1rem}#popup_menu h2.site_area_title{padding-left:2rem}#popup_menu.one-column ul.popup_menu_content li.menu_item{text-align:center}#popup_menu .global_menu_items{background-color:var(--brand-warm-white);padding:1rem 0 0 0rem;margin:1rem}#popup_menu .logo{text-align:center}#popup_menu .global_menu_items .logo img{height:50px}#popup_menu .contextual_menu_items ul.popup_menu_content{padding:1rem}#popup_menu .contextual_menu_items ul.popup_menu_content li.menu_item.selected{font-weight:700}#popup_menu .popup_menu_footer{text-align:left;margin:1rem 0 1rem 0}#popup_menu .popup_menu_footer ul{list-style-type:none}#popup_menu .popup_menu_footer ul li{display:inline-block;padding:0 .25rem 0 .25rem}#popup_menu .popup_menu_footer ul li{padding-right:1rem;border-right:1px currentcolor solid}#popup_menu .popup_menu_footer ul li a{color:currentcolor}#popup_menu .popup_menu_footer ul li:last-child{border-right:0}#page_header #popup_menu_toggle_icon{padding:0}#page_header #popup_menu_toggle_icon.icon-menu{font-size:1.6rem}#page_header #popup_menu_toggle_icon.icon-cancel{font-size:2rem}#page_header .popup_menu_button{border:0;margin:0;padding:0 1rem 0 1rem;background-color:#fff0;font-size:1.6rem;color:inherit}#page_header .header_navigation .popup_menu_button{height:2.3rem}#site_area_header .popup_menu_button{padding:0 .8rem 0 .8rem;margin:0;border:0}#page_header .popup_menu_button.open{background-color:#fff;color:#000}.no-scroll{overflow:hidden}@media screen and (min-width:768px) and (max-height:700px){#popup_menu{height:auto}}@media screen and (min-width:1025px){#popup_menu h2.site_area_title{padding-left:1rem}.global_menu_items .popup_menu_content .menu_item{font-size:1.2rem}#popup_menu .contextual_menu_items ul.popup_menu_content{padding:0}.popup_menu_content .menu_item{font-size:1.3rem}#popup_menu .column-1{order:2}#popup_menu .column-2{order:1}#popup_menu .contextual_menu_items{padding:0 0 0 2rem}#popup_menu .global_menu_items{border-right:3px var(--tint-colour) solid;background-color:#fff0;margin:0}#popup_menu .global_menu_items ul.popup_menu_content li.menu_item a{padding-left:0;padding-right:0;text-align:center}#popup_menu .popup_menu_footer ul li{font-size:1.1rem}}@media screen and (min-width:1025px){#popup_menu{padding-top:2rem}#popup_menu .breadcrumbs{margin-top:-2rem}.popup_menu_content .menu_item{font-size:1.4rem}.popup_menu_content .menu_item{font-size:1.5rem}#popup_menu .popup_menu_footer{margin:1rem 0 1rem 0}}</style>
+		
+		<!-- linked stylesheets -->
+					<link rel="stylesheet" href="/style/3pmr.css" type="text/css">
+		
+		<!-- external stylesheets -->
+		
+		<!-- responsive backgrounds -->
+		
+
+		<!-- other -->
+		<link rel="preload" href="/Resources/fontastic/styles.css" as="style" onload="this.rel='stylesheet'"><noscript>
+                                <link rel="stylesheet" href="/Resources/fontastic/styles.css">
+                        </noscript><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="mask-icon" href="/block-media/Favicons/favicon-mask.svg">
+			<link rel="apple-touch-icon" sizes="57x57" href="/block-media/Favicons/favicon-57px.png">
+			<link rel="apple-touch-icon" sizes="60x60" href="/block-media/Favicons/favicon-60px.png">
+			<link rel="apple-touch-icon" sizes="72x72" href="/block-media/Favicons/favicon-72px.png">
+			<link rel="apple-touch-icon" sizes="76x76" href="/block-media/Favicons/favicon-76px.png">
+			<link rel="apple-touch-icon" sizes="114x114" href="/block-media/Favicons/favicon-114px.png">
+			<link rel="apple-touch-icon" sizes="120x120" href="/block-media/Favicons/favicon-120px.png">
+			<link rel="apple-touch-icon" sizes="144x144" href="/block-media/Favicons/favicon-144px.png">
+			<link rel="apple-touch-icon" sizes="152x152" href="/block-media/Favicons/favicon-152px.png">
+			<link rel="apple-touch-icon" sizes="180x180" href="/block-media/Favicons/favicon-180px.png">
+		
+			<link rel="icon" type="image/png" href="/block-media/Favicons/favicon-32px.png">
+			<link rel="icon" type="image/png" href="/block-media/Favicons/favicon-194px.png" sizes="194x194">
+			<link rel="icon" type="image/png" href="/block-media/Favicons/favicon-96px.png" sizes="96x96">
+			<link rel="icon" type="image/png" href="/block-media/Favicons/favicon-192px.png" sizes="192x192">
+			<link rel="icon" type="image/png" href="/block-media/Favicons/favicon-16px.png" sizes="16x16">
+		
+
+	</head>
+
+	<!-- body -->
+			<body class="layout_wide">
+	
+				<noscript>
+  <img height="1" width="1" style="display:none" alt="" 
+       src="https://www.facebook.com/tr?id=854360927349923&ev=PageView&noscript=1">
+</noscript>
+
+				
+		<!-- skip links -->
+		
+
+		
+				
+<div id="cookie_bar_container">
+    <!-- cookie bar -->
+    <div class="cookie_bar">
+        <div class="inner">
+            <div class="cookie_bar_body">This site uses cookies to improve your experience. View our <a href="/cookies/">Cookie Policy</a></div>
+            <a class="preferences" id="cookie_preferences_link">Preferences</a>
+            <button id="cookie_bar_agree_button" class="button white no-shadow">Accept All Cookies<span
+                    class="sr-only"> </span></button>
+        </div>
+    </div>
+</div>
+
+<!-- cookie preferences -->
+<div id="cookie_preferences">
+    <div id="cookie_preferences_background" class="background">
+        <div id="cookie_preferences_dialogue" class="dialogue">
+            <div class="header">
+                <h2>Cookie Preferences </h2>
+            </div>
+
+            <div class="preferences_body">
+                                <div class="preferences_type">
+                    <h3>Essential</h3>
+                    <p>These cookies are absolutely essential for our website to function properly.</p>
+                    <div class="preferences_setting">
+                        <label for="essential_checkbox">Accept</label>&nbsp;
+                        <input type="checkbox" id="essential_checkbox" 
+                            name="cookie_preference" 
+                            value="essential" disabled checked>
+                    </div>
+                </div>
+                                <div class="preferences_type">
+                    <h3>Cookies that measure website use</h3>
+                    <p>We use Google Analytics to measure how you use the website so we can improve it based on user needs.</p>
+                    <div class="preferences_setting">
+                        <label for="analytics_checkbox">Accept</label>&nbsp;
+                        <input type="checkbox" id="analytics_checkbox" 
+                            name="cookie_preference" 
+                            value="analytics" checked>
+                    </div>
+                </div>
+                                <div class="preferences_type">
+                    <h3>Cookies that help with communications and marketing</h3>
+                    <p>These cookies may be set by third party websites and do things like measure how you view YouTube videos.</p>
+                    <div class="preferences_setting">
+                        <label for="marketing_checkbox">Accept</label>&nbsp;
+                        <input type="checkbox" id="marketing_checkbox" 
+                            name="cookie_preference" 
+                            value="marketing" checked>
+                    </div>
+                </div>
+                
+                <div class="save_area">
+                    <button id="save_preferences_button" class="button no-shadow red large solid">Save Changes</button>&nbsp;
+                    <button id="save_preferences_accept_all_button" class="button no-shadow red large solid">Accept All Cookies</button>
+                </div>
+            </div>
+
+            <div class="footer">
+                View our <a href="/cookies/">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<header id="page_header" class=" with_site_header with_account_link with_donate_link">
+    <div id="global_header">
+        <div id="header_bar" class="container grid site-width three-columns with-mobile">
+            <div class="column-1 align-left locations_button_column">
+                                    <div class="global_header_link donate_link donate_link_left">
+                        <a href="https://my.museum.wales/donate/q/7">Donate</a>
+                    </div>
+                                <button id="header_locations_button" 
+                    class="locations_button">Our Museums&nbsp;<span 
+                    id="locations_button_icon" class="icon-down-open" aria-hidden="true"></span></button>
+            </div>
+            <div class="column-2 padding-top-small valign-center align-center"><a 
+                href="/" class="logo"><img src="/block-media/Themes:Amgueddfa:Resources/ac-logo-black.svg" alt="Amgueddfa Cymru" width="155" height="60"></a></div>
+            
+                        <div class="column-3 align-right valign-center" id="global_header_options">
+                <div class="container two-columns break-ffablet">
+                    <div class="global_header_link language_switch">
+                        <a href="//amgueddfa.cymru/casgliadau/arlein/object/2474ecee-eaa3-3d64-9762-774d904fb472?">Cymraeg</a>
+                    </div>
+                    <div class="global_header_link account_link">
+                        <a href="https://my.museum.wales/account/login?ReturnUrl=%2faccount%2fupcomingevents">My account</a>
+                    </div>
+                                        <div class="global_header_link donate_link donate_link_right">
+                        <a href="https://my.museum.wales/donate/q/7" aria-hidden="true">Donate</a>
+                    </div>
+                                    </div>
+                
+                <div class="header_navigation">
+                    <div class="spacer"></div>
+                    <button id="header_search_toggle" class="header_button icon-search" 
+    aria-haspopup="true" 
+    aria-expanded="false" 
+    aria-controls="header_search_popup"><span id="header_search_toggle_icon" class="sr-only">Search</span></button>
+                </div>
+            </div>
+                    </div>
+    </div>
+
+    <div id="header_search_popup" class="header_search_popup">
+    <form id="header_search" class="header_search" role="search" method="get" action="/search/">
+                <label for="header_search_field" class="sr-only">Search:</label>
+        <input id="header_search_field" name="q" value="" placeholder="Search Collections &amp; Research..."><button
+            type="submit" id="header_search_button"><span class="icon-right-open"
+                aria-hidden="true"></span><span class="sr-only">Search</span></button>
+    </form>
+</div>
+        <div id="site_area_header" class="page_header_colour">
+
+    <div class="site_area_header_bar">
+        <div class="site_area_title "><a href="/collections/">Collections & Research</a></div>
+
+        <div class="site_area_top_links">
+                <a class="site_area_top_link" href="/curatorial/">Departments</a>
+                <a class="site_area_top_link" href="/collections/online/">Collections Online</a>
+                <a class="site_area_top_link" href="/collections-centre/">National Collections Centre</a>
+                </div>
+        <div class="site_area_navigation">
+            <button id="popup_menu_button"
+    class="header_button popup_menu_button"
+    aria-haspopup="true" 
+    aria-expanded="false"
+    aria-controls="popup_menu"><span 
+    id="popup_menu_toggle_icon" class="icon-menu" aria-hidden="true"></span> 
+    <span class="sr-only">Menu</span></button>        </div>
+    </div>
+</div>
+
+
+        <div id="locations_menu">
+        <nav class="museum_links standard locations_menu">
+    <div class="museum_box museum_box_amgueddfa_cymru">
+        <a href="/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="headline-font">Amgueddfa<br>Cymru<br>Family</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_cardiff">
+        <a href="/cardiff/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">National Museum Cardiff</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_stfagans">
+        <a href="/stfagans/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">St Fagans National Museum of History</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_swansea">
+        <a href="/swansea/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">National Waterfront Museum</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_bigpit">
+        <a href="/bigpit/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">Big Pit National Coal Museum</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_slate">
+        <a href="/slate/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">National Slate Museum</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_wool">
+        <a href="/wool/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">National Wool Museum</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+    <div class="museum_box museum_box_roman">
+        <a href="/roman/" class="inner">
+            <div class="spacer arrow"><span class="icon-right-open" aria-hidden="true"></span></div>
+            <h3 class="museum_name">National Roman Legion Museum</h3>
+            <div class="spacer"></div>
+        </a>
+        <div class="border"></div>    </div>
+</nav>
+
+    </div>
+
+    <div id="popup_menu" class="popup_menu ">
+    <nav class="inner">
+                <div class="container two-columns break-tablet">
+
+            <!-- contextual menu -->
+            <div class="container column column-1 width-two-thirds contextual_menu_items">
+                <div class="spacer"></div>
+                                
+                                <ul class="popup_menu_content">
+        <li class="menu_item"><a
+            href="/collections/"><span class="text hover-animate-underline">Collections & Research</span></a></li>
+        <li class="menu_item"><a
+            href="/curatorial/"><span class="text hover-animate-underline">Departments</span></a></li>
+        <li class="menu_item selected"><a
+            href="/collections/online/"><span class="text hover-animate-underline"><span class="sr-only">Current Page: </span>Collections Online</span></a></li>
+        <li class="menu_item"><a
+            href="/collections-centre/"><span class="text hover-animate-underline">National Collections Centre</span></a></li>
+        <li class="menu_item"><a
+            href="/articles/"><span class="text hover-animate-underline">Articles</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/ancient-wales/"><span class="text hover-animate-underline">Ancient Wales</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/art/"><span class="text hover-animate-underline">Art</span></a></li>
+        <li class="menu_item"><a
+            href="/celfarycyd/"><span class="text hover-animate-underline">Celf ar y Cyd</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/history/"><span class="text hover-animate-underline">History</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/natural-history/"><span class="text hover-animate-underline">Natural History</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/museum-at-work/"><span class="text hover-animate-underline">The Museum at Work</span></a></li>
+        <li class="menu_item"><a
+            href="/wellbeing/"><span class="text hover-animate-underline">Health, Wellbeing and Amgueddfa Cymru </span></a></li>
+    
+    </ul>
+                                                <div class="spacer"></div>
+            </div>
+
+            <!-- global menu -->
+            <div class="container column column-2 width-third">
+                <div class="global_menu_items">
+                    <a class="logo" href="/" >
+                        <span class="hover-animate-underline"><img src="/block-media/Themes:Amgueddfa:Resources/ac-logo-black.svg" 
+                            alt="Amgueddfa Cymru"></span>
+                    </a>
+                    <ul class="popup_menu_content">
+        <li class="menu_item"><a
+            href="/about/"><span class="text hover-animate-underline">About Us</span></a></li>
+        <li class="menu_item"><a
+            href="/collections/"><span class="text hover-animate-underline">Collections & Research</span></a></li>
+        <li class="menu_item"><a
+            href="/learn/"><span class="text hover-animate-underline">Learn</span></a></li>
+        <li class="menu_item"><a
+            href="/shop/"><span class="text hover-animate-underline">Shop</span></a></li>
+        <li class="menu_item"><a
+            href="/donate/"><span class="text hover-animate-underline">Support Us</span></a></li>
+        <li class="menu_item"><a
+            href="/whatson/"><span class="text hover-animate-underline">What's On</span></a></li>
+        <li class="menu_item"><a
+            href="/about/get-involved/"><span class="text hover-animate-underline">Get Involved</span></a></li>
+        <li class="menu_item"><a
+            href="/learn/health-and-wellbeing/"><span class="text hover-animate-underline">Health & Wellbeing</span></a></li>
+    
+    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+
+</header>
+
+
+<main id="page">
+
+	
+	<div id="content-area" class="content-layout-wide">
+
+		
+		<div id="content" class="content_wide">
+			
+			<div id="collections_search" class="collections_search">
+
+    <header class="collections_search_header">
+
+        
+
+        <div class="header_spacer"></div>
+
+        <div class="header_content">
+            <div id="page_title_area">
+                <h1 class="page_title">Collections Online</h1>
+                <h2 class="page_subtitle">
+<p>Amgueddfa Cymru &ndash; Museum Wales</p>
+</h2>
+            </div>
+
+            <div id="collections_search_area">
+
+    <div id="collections_basic_search_area"
+        class="open collections_search_with_images">
+        <form id="collections_search_form" class="plain_form white">
+            <div id="collections_search_body">
+                <input id="collections_search_field" class="plain_input large" name="q"
+                    placeholder="Search over half a million objects..." value="" /><button
+                    type="submit"><span class="icon-search" aria-hidden="true"></span><span
+                        class="sr-only">Search</span></button>
+            </div>
+            <div id="collections_search_options">
+                <div class="collecctions_search_option">
+                    <a href="javascript:void(0);" id="advanced_search_link" class="advanced_search_link"><span
+                            class="icon-down-open" aria-hidden="true"></span>
+                        Advanced Search</a>
+                </div>
+                                <div class="collections_search_option collections_search_option_with_images">
+                    <input type="checkbox" type="checkbox" name="with_images" id="with_images"
+                         checked="checked" > <label
+                        for="with_images">Only records with images</label>
+                </div>
+                            </div>
+        </form>
+    </div>
+
+    <div id="collections_advanced_search_area" class="">
+
+        <h3>Advanced Search</h3>
+        <form id="collections_advanced_search_form" class="plain_form white">
+
+            <div class="advanced_search_columns">
+                <div class="advanced_search_column">
+                    <div class="form_field form_field_horizontal">
+                        <label for="free_text">Free Text</label>
+                        <input type="text" name="free_text" id="free_text" value="" />
+                    </div>
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="accession">Item Number</label>
+                        <input type="text" name="accession" id="accession" value="" />
+                    </div>
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="identification">Identification</label>
+                        <input type="text" name="identification" id="identification" value="" />
+                    </div>
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="database">Collection Area</label>
+                        <select name="database" id="database">
+                            <option value="">-</option>
+                                                        <option value="art">Art</option>
+                                                        <option value="archNum">Archaeology &amp; Numismatics</option>
+                                                        <option value="industry">Industry</option>
+                                                        <option value="audio visual">Audio/Visual</option>
+                                                        <option value="mwl">Social &amp; Cultural History</option>
+                                                        <option value="wool">Wool</option>
+                                                    </select>
+                    </div>
+                </div>
+
+                <div class="advanced_search_column">
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="identification">Artist/Creator</label>
+                        <input type="text" name="agent_name" id="agent_name" value="" />
+                    </div>
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="place">Place</label>
+                        <input type="text" name="place" id="place" value="" />
+                    </div>
+
+
+                    <div class="form_field form_field_horizontal">
+                        <label for="category">Category/Subject</label>
+                        <input type="text" name="category" id="category" value="" />
+                    </div>
+
+                    <div class="form_field form_field_one_line">
+                        <legend class="sr-only">Image filter options</legend>
+                        <input type="checkbox" type="checkbox" name="with_images" id="with_images_advanced"
+                             checked /> <label
+                            for="with_images_advanced">Only records with images</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="advanced_search_submit_area">
+                <button id="advanced_search_submit_button" type="button">Search</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+            
+        </div>
+
+        <div class="header_spacer"></div>
+
+    </header>
+
+    <div id="search_page_body">
+        <!-- header -->
+<div class="detail_navigation">
+    <a href="/collections/online/" class="navigation_link back_link"><span
+            class="navigation_icon icon-grid"></span> Back to search results</a>
+
+        </div>
+
+<div id="object_detail_page" class="object_detail_page">
+
+<!-- title -->
+<div class="object_titles">
+
+    <h2>City Hall, Cardiff</h2>
+
+        <div class="object_agents">
+
+                        <div class="object_agent">
+                
+                <a href="/collections/online/agent/a22b5fc9-e99e-36da-8246-46ec016e918b/Doris-MATTHEWS/">Doris MATTHEWS</a>
+
+                                                <span class="role">(Artist)</span>
+                            
+            </div>
+
+            
+            </div>
+    </div>
+
+<!-- description -->
+
+<!-- detail fields -->
+<div class="object_detail object_detail">
+
+        <div class="image_placeholder">
+    (We are not able to provide an image for this item at this time. This is either due to copyright restrictions, or because the item is awaiting digitisation. We apologise for any inconvenience.)
+    </div>
+    
+    <div class="object_detail_fields">
+        <!-- subject area -->
+<div class="object_field">
+    <h4>Collection Area</h4>
+    <div class="object_field_value">Art</div>
+</div>
+
+<!-- accession number -->
+<div class="object_field">
+	<h4>Item Number</h4>
+	<div class="object_field_value">NMW A 29172</div>
+</div>
+
+
+<div class="object_field object_field">
+    <h4>Creation/Production</h4>
+
+	<div class="container padding-bottom object_creation">
+
+                <div class="creation_name"><a href="/collections/online/agent/a22b5fc9-e99e-36da-8246-46ec016e918b/Doris-MATTHEWS/">Doris MATTHEWS</a></div>
+                
+                        <p>1931</p>
+        
+                        <div class="creation_role"><strong>Role:</strong> Artist</div>
+        
+                
+                <div class="creation_period"><strong>Period:</strong> 
+        1931
+        </div>
+                
+
+    </div>
+</div>
+
+<!-- date -->
+
+
+<!-- acquisition -->
+
+<!-- size -->
+
+
+
+<div class="object_field object_materials">
+	<h4>Material</h4>
+		<div class="technique">Paper</div>
+		<div class="technique">Ink</div>
+	</div>
+
+<!-- location -->
+
+<div class="object_field object_categories">
+    <h4>Categories</h4>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Printiau\u0020topograffig\u0020\u007C\u0020Topographical\u0020prints');" class="button tag category">Topographical prints</a>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Printiau\u0020\u007C\u0020Prints');" class="button tag category">Prints</a>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Gweithiau\u0020ar\u0020bapur\u0020\u007C\u0020Works\u0020on\u0020paper');" class="button tag category">Works on paper</a>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Celf\u0020Gain\u0020\u007C\u0020Fine\u0020Art');" class="button tag category">Fine Art</a>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Hanes\u0020Cymru\u0020\u007C\u0020Welsh\u0020history');"
+     class="button tag subject">Welsh history</a>
+        <a href="javascript:void(0);" onclick="Block_Collections_Online_CollectionsApi.add_search_token('category', 'Artist\u0020Benywaidd\u0020\u007C\u0020Woman\u0020Artist');"
+     class="button tag subject">Woman Artist</a>
+    </div>
+
+
+
+            </div>
+
+</div>
+
+<!-- footer -->
+</div>
+
+<div class="container grey">
+    <div class="container content-width padding">
+        <div
+    id="comments_area">
+
+        
+
+                <div class="comments_disabled">Comments are currently unavailable. We apologise for the inconvenience.</div>
+    
+    <div id="comment_submit_result"></div>
+
+    
+
+
+    <div id="current_comments_js-6aede17b0bfd5"></div>
+
+    
+
+
+</div>
+
+    </div>
+</div>
+
+<div class="container grey related_items">
+    <div class="container content-width padding">
+        <h2>Related Items</h2>
+        <div class="result_boxes">
+			<div class="search_result">
+		<div class="result_box">
+
+        <div class="result_box_image_placeholder"></div>
+    
+    <div class="result_box_text">
+
+        <div class="result_type">Art</div>
+        <h3><a href="/collections/online/object/73d2fc74-cd9d-330e-b143-d7148963d25d/Llandaff-Cathedral/">Llandaff Cathedral</a></h3>
+        
+        
+        <div class="result_identifier">NMW A 29173</div>
+
+        <div class="result_more_info">
+            <a class="button" href="/collections/online/object/73d2fc74-cd9d-330e-b143-d7148963d25d/Llandaff-Cathedral/"><span class="icon-right-open" aria-hidden="true">More information</a>
+        </div>
+
+    </div>
+
+</div>
+		</div>
+			<div class="search_result">
+		<div class="result_box">
+
+        <div class="result_box_image_placeholder"></div>
+    
+    <div class="result_box_text">
+
+        <div class="result_type">Art</div>
+        <h3><a href="/collections/online/object/bf102cfb-f1dc-35f0-a420-4053c765dcf0/Castell-Coch-Courtyard/">Castell Coch Courtyard</a></h3>
+        
+        
+        <div class="result_identifier">NMW A 29174</div>
+
+        <div class="result_more_info">
+            <a class="button" href="/collections/online/object/bf102cfb-f1dc-35f0-a420-4053c765dcf0/Castell-Coch-Courtyard/"><span class="icon-right-open" aria-hidden="true">More information</a>
+        </div>
+
+    </div>
+
+</div>
+		</div>
+			<div class="search_result">
+		<div class="result_box">
+
+        <div class="result_box_image_placeholder"></div>
+    
+    <div class="result_box_text">
+
+        <div class="result_type">Art</div>
+        <h3><a href="/collections/online/object/21cf65cb-3d4b-30dc-a6f6-aa5af004859b/Pengwern-Place/">Pengwern Place</a></h3>
+        
+        
+        <div class="result_identifier">NMW A 28037</div>
+
+        <div class="result_more_info">
+            <a class="button" href="/collections/online/object/21cf65cb-3d4b-30dc-a6f6-aa5af004859b/Pengwern-Place/"><span class="icon-right-open" aria-hidden="true">More information</a>
+        </div>
+
+    </div>
+
+</div>
+		</div>
+			<div class="search_result">
+		<div class="result_box">
+
+        <div class="result_box_image_placeholder"></div>
+    
+    <div class="result_box_text">
+
+        <div class="result_type">Art</div>
+        <h3><a href="/collections/online/object/34fca34a-b1ca-3423-9746-d18f8c1279e0/The-Tower-of-Troggy-in-Wentwood-Monmouthshire/">The Tower of Troggy in Wentwood, Monmouthshire</a></h3>
+        
+        
+        <div class="result_identifier">NMW A 28857</div>
+
+        <div class="result_more_info">
+            <a class="button" href="/collections/online/object/34fca34a-b1ca-3423-9746-d18f8c1279e0/The-Tower-of-Troggy-in-Wentwood-Monmouthshire/"><span class="icon-right-open" aria-hidden="true">More information</a>
+        </div>
+
+    </div>
+
+</div>
+		</div>
+	</div>
+
+    </div>
+</div>
+
+
+    </div>
+
+</div>
+
+
+
+
+		</div>
+
+	</div>
+
+	</main>
+
+<footer id="footer">
+    <h3 class="sr-only">Site Map</h3>
+
+    
+    <div class="footer_logo">
+        <h2><a href="/"><img src="/block-media/Themes:Amgueddfa:Resources/ac-logo-black.svg" alt="Amgueddfa Cymru" width="155" height="60"></a></h2>
+    </div>
+
+    <div class="container grid site-width four-columns footer_columns">
+
+                        <div class="column-1 footer_column">
+             
+                <div class="submenu_title">
+                    <h3>Amgueddfa Cymru</h3>
+                    <button class="submenu_expand">+</button>
+                </div>
+                <ul class="body">
+                                        <li><a href="/">Visiting</a></li>
+                                        <li><a href="/collections/">Collections & Research</a></li>
+                                        <li><a href="/learn/">Learn</a></li>
+                                        <li><a href="/blog/">Blog</a></li>
+                                        <li><a href="/support/">Support Us</a></li>
+                                        <li><a href="/shop/">Shop</a></li>
+                                        <li><a href="/hire/">Venue Hire</a></li>
+                                    </ul>
+                    </div>
+                        <div class="column-2 footer_column">
+             
+                <div class="submenu_title">
+                    <h3>Our Museums</h3>
+                    <button class="submenu_expand">+</button>
+                </div>
+                <ul class="body">
+                                        <li><a href="/cardiff/">National Museum Cardiff</a></li>
+                                        <li><a href="/stfagans/">St Fagans National Museum of History</a></li>
+                                        <li><a href="/swansea/">National Waterfront Museum</a></li>
+                                        <li><a href="/bigpit/">Big Pit National Coal Museum</a></li>
+                                        <li><a href="/slate/">National Slate Museum</a></li>
+                                        <li><a href="/wool/">National Wool Museum</a></li>
+                                        <li><a href="/roman/">National Roman Legion Museum</a></li>
+                                    </ul>
+                    </div>
+                        <div class="column-3 footer_column">
+             
+                <div class="submenu_title">
+                    <h3>Connect With Us</h3>
+                    <button class="submenu_expand">+</button>
+                </div>
+                <ul class="body">
+                                        <li><a href="/enquiries/">Contact Us</a></li>
+                                        <li><a href="/about/get-involved/">Get Involved</a></li>
+                                        <li><a href=" https://my.museum.wales/account/create/brief">Join the Mailing List</a></li>
+                                        <li><a href="https://www.facebook.com/amgueddfacymru">Facebook</a></li>
+                                        <li><a href="https://www.instagram.com/museumwales/">Instagram</a></li>
+                                    </ul>
+             
+                <div class="submenu_title">
+                    <h3>The Website</h3>
+                    <button class="submenu_expand">+</button>
+                </div>
+                <ul class="body">
+                                        <li><a href="/website/accessibility/">Accessibility statement</a></li>
+                                        <li><a href="/cookies/">Cookies</a></li>
+                                        <li><a href="/copyright/">Copyright</a></li>
+                                    </ul>
+                    </div>
+                        <div class="column-4 footer_column">
+             
+                <div class="submenu_title">
+                    <h3>Corporate</h3>
+                    <button class="submenu_expand">+</button>
+                </div>
+                <ul class="body">
+                                        <li><a href="/about/">About Us</a></li>
+                                        <li><a href="/jobs/">Jobs</a></li>
+                                        <li><a href="/press/">Press Office</a></li>
+                                        <li><a href="https://images.museumwales.ac.uk">Picture Library</a></li>
+                                        <li><a href="/collections-centre/">National Collections Centre</a></li>
+                                        <li><a href="/partnerships/">Working with Others</a></li>
+                                        <li><a href="/about/policy/photography-and-filming-policy/">Filming & Photography</a></li>
+                                    </ul>
+                    </div>
+                
+    </div>
+
+    <div class="container site-width three-columns footer_base">
+        <div class="column-1 funders">
+            <div class="funder_logo welsh_gov_logo">
+                <img src="/block-media/Themes:Amgueddfa:Footer/wg-sponsored-small.png" alt="Sponsored by Welsh Government" loading="lazy">
+                        </div>
+                    </div>
+        <div class="column-2 align-center social_media">
+            <ul>
+                <li><a href="https://www.facebook.com/amgueddfacymru"><span class="icon-facebook-square"
+                            aria-hidden="true"></span><span class="sr-only">Facebook</span></a></li>
+                <li><a href="https://www.instagram.com/museumwales/"><span class="icon-instagram"
+                            aria-hidden="true"></span><span class="sr-only">Instagram</span></a></li>
+            </ul>
+        </div>
+        <div class="column-3 align-right charity_num">Charity No. 525774</div>
+    </div>
+</footer>
+
+<!-- page javascript -->
+
+<!-- external scripts -->
+<script src="https://unpkg.com/social-likes-next/dist/social-likes.min.js"></script>
+
+<!-- generated js -->
+<script nonce="nonce-6aede17af03ad" src="/javascript-modern/lsb.js" type="module"></script>
+
+<!-- instantiation -->
+<script nonce="nonce-6aede17af03ad">
+
+    // deferred styles
+    
+    window.js_block_config = [{"block_name":"Javascript:JSBlock","js_classname":"Block_Javascript_JSBlock","js_object_name":false,"js_id":"js-6aede17af05b1","args":[],"strings":[]},{"block_name":"Javascript:JSAmgueddfaCms","js_classname":"Block_Javascript_JSAmgueddfaCms","js_object_name":"AmgueddfaCMS","js_id":"js-6aede17af05e8","args":{"host":"museum.wales","alt_host":"amgueddfa.cymru","site_folder":"","site_name":"Museum Wales","lang":"en","protocol":"https","display_mode":false,"live_site":true,"page_id":false,"site_area":0,"use_cookie_preferences":true,"cookie_preference_prefix":"cookie_preferences_"},"strings":{"consent_body":"Update your cookie settings to view YouTube videos.","consent_button":"Cookie Preferences"}},{"block_name":"Admin:Bar","js_classname":"Block_Admin_Bar","js_object_name":"AdminBar","js_id":"js-6aede17af06d9","args":[],"strings":[]},{"block_name":"Analytics:GoogleAnalytics","js_classname":"Block_Analytics_GoogleAnalytics","js_object_name":"CmsGoogleAnalytics","js_id":"js-6aede17af0a52","args":{"analytics_key":"G-Q4211BYX1V"},"strings":[]},{"block_name":"Analytics:MetaPixel","js_classname":"Block_Analytics_MetaPixel","js_object_name":"CmsMetaPixel","js_id":"js-6aede17af0a67","args":{"pixel_id":"854360927349923"},"strings":[]},{"block_name":"Analytics:CookiePreferences","js_classname":"Block_Analytics_CookiePreferences","js_object_name":"CookiePreferences","js_id":"js-6aede17af32da","args":{"settings":{"essential":true,"analytics":true,"marketing":true}},"strings":[]},{"block_name":"Themes:Amgueddfa:Header:HeaderFeature:Search","js_classname":"Block_Themes_Amgueddfa_Header_HeaderFeature_Search","js_object_name":"HeaderSearchMenu","js_id":"js-6aede17b01dba","args":[],"strings":[]},{"block_name":"Themes:Amgueddfa:Header:HeaderFeature:PopupMenu","js_classname":"Block_Themes_Amgueddfa_Header_HeaderFeature_PopupMenu","js_object_name":"Popup_menu","js_id":"js-6aede17b0201a","args":[],"strings":[]},{"block_name":"Themes:Amgueddfa:Header","js_classname":"Block_Themes_Amgueddfa_Header","js_object_name":"SiteHeader","js_id":"js-6aede17b01b92","args":[],"strings":[]},{"block_name":"Themes:Amgueddfa:Footer","js_classname":"Block_Themes_Amgueddfa_Footer","js_object_name":false,"js_id":"js-6aede17b0238f","args":[],"strings":[]},{"block_name":"Breadcrumbs","js_classname":"Block_Breadcrumbs","js_object_name":"Breadcrumbs","js_id":"js-6aede17b04709","args":[],"strings":[]},{"block_name":"Collections:Online:CollectionsApi","js_classname":"Block_Collections_Online_CollectionsApi","js_object_name":"Block_Collections_Online_CollectionsApi","js_id":"js-6aede17b04d6d","args":{"page_alias":"\/collections\/online\/"},"strings":[]},{"block_name":"Collections:Online:SearchForm","js_classname":"Block_Collections_Online_SearchForm","js_object_name":false,"js_id":"js-6aede17b051d9","args":[],"strings":[]},{"block_name":"Collections:Online","js_classname":"Block_Collections_Online","js_object_name":"Block_Collections_Online","js_id":"js-6aede17b04bc4","args":{"search_tokens":[]},"strings":[]},{"block_name":"Comments","js_classname":"Block_Comments","js_object_name":false,"js_id":"js-6aede17b0bfd5","args":{"num_pages":0,"id":2474,"content_type":"collections","str_comments":"Comments","str_required_field":"Required field"},"strings":[]},{"block_name":"Collections:Online:DetailObject","js_classname":"Block_Collections_Online_DetailObject","js_object_name":false,"js_id":"js-6aede17b0544c","args":{"show_json_results":false,"json":[],"show_map":false,"latitude":"","longitude":""},"strings":[]},{"block_name":"Themes:Amgueddfa:Header:HeaderFeature:Search","js_classname":"Block_Themes_Amgueddfa_Header_HeaderFeature_Search","js_object_name":"HeaderSearchMenu","js_id":"js-6aede17b57ea9","args":[],"strings":[]},{"block_name":"Themes:Amgueddfa:Header:HeaderFeature:PopupMenu","js_classname":"Block_Themes_Amgueddfa_Header_HeaderFeature_PopupMenu","js_object_name":"Popup_menu","js_id":"js-6aede17b580f3","args":[],"strings":[]},{"block_name":"Themes:Amgueddfa:Header","js_classname":"Block_Themes_Amgueddfa_Header","js_object_name":"SiteHeader","js_id":"js-6aede17b57c5a","args":[],"strings":[]},{"block_name":"Breadcrumbs","js_classname":"Block_Breadcrumbs","js_object_name":"Breadcrumbs","js_id":"js-6aede17b59744","args":[],"strings":[]}];
+
+</script>
+
+
+</body>
+</html>

@@ -244,11 +244,17 @@ function ttg_machine_build_state(array $query = []): array
 
     $typeCounts = [];
     $timeline = [];
+    $digestItems = [];
     $pool = [];
     foreach ($all as $node) {
         $t = strtoupper((string) ($node['type'] ?? 'UNKNOWN'));
         $typeCounts[$t] = ($typeCounts[$t] ?? 0) + 1;
         if (!empty($node['pending'])) $typeCounts['PENDING'] = ($typeCounts['PENDING'] ?? 0) + 1;
+        $digestItems[] = [
+            'slug' => (string) ($node['slug'] ?? ''),
+            'pending' => !empty($node['pending']),
+            'observed_at' => (string) ($node['observed_at'] ?? ''),
+        ];
         if (isset($exclude[$t]) || (!empty($node['pending']) && isset($exclude['PENDING']))) continue;
         $pool[] = $node;
         $ts = strtotime((string) ($node['observed_at'] ?? ''));
@@ -273,9 +279,24 @@ function ttg_machine_build_state(array $query = []): array
     });
 
     $cards = [];
+    $directory = [];
     $edgeCount = count(ttg_graph_load('edges.json')) + count(ttg_graph_load('pending-edges.json'));
-    foreach (array_slice($pool, 0, $cap) as $node) {
-        $proj = ttg_graph_project_node($node, $viewer, $personEdges);
+    $projs = [];
+    foreach ($pool as $node) {
+        $projs[] = ttg_graph_project_node($node, $viewer, $personEdges);
+    }
+    foreach ($projs as $idx => $proj) {
+        $directory[] = [
+            'slug' => (string) ($proj['slug'] ?? ''),
+            'title' => (string) ($proj['title'] ?? ''),
+            'type' => (string) ($proj['type'] ?? 'UNKNOWN'),
+            'observed_at' => (string) ($proj['observed_at'] ?? ''),
+            'status' => (string) ($proj['status'] ?? ''),
+            'pending' => !empty($proj['pending']),
+            'in_transit' => $idx < $cap,
+        ];
+    }
+    foreach (array_slice($projs, 0, $cap) as $proj) {
         $obs = (string) ($proj['observed_at'] ?? '');
         $obsTs = $obs !== '' ? strtotime($obs) : false;
         $beyond = $obsTs !== false && $obsTs > $tMachine;
@@ -292,6 +313,7 @@ function ttg_machine_build_state(array $query = []): array
             'beyond' => $beyond,
             'href' => (string) ($proj['href'] ?? ''),
             'place' => (string) ($proj['place'] ?? ''),
+            'excerpt' => (string) ($proj['body'] ?? ''),
             'holes' => ttg_machine_encode_holes($pid, (string) ($proj['type'] ?? ''), $obs),
         ];
     }
@@ -339,6 +361,12 @@ function ttg_machine_build_state(array $query = []): array
             'node_count' => count($pool),
             'edge_count' => $edgeCount,
             'active_cards' => count($active),
+            'digest' => (static function (array $items, int $edges): string {
+                usort($items, static function ($a, $b) { return strcmp($a['slug'], $b['slug']); });
+                return substr(sha1(implode('|', array_map(static function ($d) {
+                    return $d['slug'] . ($d['pending'] ? '!' : '') . '@' . $d['observed_at'];
+                }, $items)) . '|' . $edges), 0, 12);
+            })($digestItems, $edgeCount),
             'total_nodes' => count($all),
         ],
         'type_counts' => $typeCounts,
@@ -346,8 +374,61 @@ function ttg_machine_build_state(array $query = []): array
         'timeline' => $timeline,
         'focus' => $focus,
         'cards' => $cards,
+        'directory' => $directory,
         'feed' => $feed,
         'jack_line' => $jackLine,
         'equation' => 'E = M / R^(κ·ΔC)',
     ];
+}
+
+/** Card-shaped subset of a projected node, shared by state and nerves. */
+function ttg_machine_project_card(array $proj): array
+{
+    return [
+        'public_id' => (string) ($proj['id'] ?? $proj['slug'] ?? ''),
+        'slug' => (string) ($proj['slug'] ?? ''),
+        'type' => (string) ($proj['type'] ?? 'UNKNOWN'),
+        'title' => (string) ($proj['title'] ?? ''),
+        'observed_at' => (string) ($proj['observed_at'] ?? ''),
+        'status' => (string) ($proj['status'] ?? ''),
+        'importance' => (float) ($proj['importance'] ?? 0),
+        'pending' => !empty($proj['pending']),
+        'href' => (string) ($proj['href'] ?? ''),
+        'place' => (string) ($proj['place'] ?? ''),
+    ];
+}
+
+/**
+ * Nerves of one record: its real graph relations, projected exactly as the
+ * cards are. Neighbours come through ttg_graph_neighbors (public-only nodes,
+ * canon + pending edges by the graph's own semantics). Read-only.
+ */
+function ttg_machine_nerves_state(string $rawSlug): array
+{
+    $slug = preg_replace('/[^A-Za-z0-9_-]/', '', $rawSlug) ?? '';
+    if ($slug === '') {
+        return ['ok' => false, 'error' => 'No focus.'];
+    }
+    $node = ttg_graph_node($slug);
+    if (!is_array($node) || !ttg_graph_public($node)) {
+        return ['ok' => false, 'error' => 'Card not on file.'];
+    }
+    $viewer = ttg_graph_viewer();
+    $personEdges = ttg_graph_person_edge_set($viewer);
+    $focus = ttg_machine_project_card(ttg_graph_project_node($node, $viewer, $personEdges));
+
+    $nerves = ['outgoing' => [], 'incoming' => []];
+    foreach (ttg_graph_neighbors($slug) as $dirKey => $list) {
+        if (!isset($nerves[$dirKey])) continue;
+        foreach ($list as $rel) {
+            $other = $rel['node'] ?? null;
+            if (!is_array($other)) continue;
+            $card = ttg_machine_project_card(ttg_graph_project_node($other, $viewer, $personEdges));
+            $card['relationship'] = (string) ($rel['relationship'] ?? 'POSSIBLY_RELATED_TO');
+            $conf = $rel['confidence'] ?? null;
+            $card['confidence'] = is_numeric($conf) ? (float) $conf : null;
+            $nerves[$dirKey][] = $card;
+        }
+    }
+    return ['ok' => true, 'focus' => $focus, 'nerves' => $nerves];
 }

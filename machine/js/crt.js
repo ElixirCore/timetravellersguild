@@ -32,11 +32,20 @@
     this.glitch = 0;
     this.state = null;
     this.clock = 0;
+    this.record = null;
+    this.recordHeld = false;
+    this.recordNerves = [];
     this.page = 'STATE';
     this.ledger = [];
     this.transit = null;
     this.fault = '';
+    this.caption = null;
   }
+
+  /** Describe a part on the screen's caption strip (replaces floating tooltips). */
+  CRTDisplay.prototype.setCaption = function (label, text) {
+    this.caption = label || text ? { label: label || '', text: text || '' } : null;
+  };
 
   CRTDisplay.prototype.attach = function (THREE) {
     this.texture = new THREE.CanvasTexture(this.canvas);
@@ -48,6 +57,26 @@
 
   CRTDisplay.prototype.setState = function (state) {
     this.state = state;
+  };
+
+  CRTDisplay.prototype.showRecord = function (rec, held) {
+    this.record = rec || null;
+    this.recordHeld = !!held;
+    this.recordNerves = [];
+  };
+
+  CRTDisplay.prototype.setRecordNerves = function (list) {
+    this.recordNerves = Array.isArray(list) ? list.slice(0, 7) : [];
+  };
+
+  CRTDisplay.prototype.clearRecord = function () {
+    this.record = null;
+    this.recordHeld = false;
+    this.recordNerves = [];
+  };
+
+  CRTDisplay.prototype.flash = function (title, sub) {
+    this.showFeed({ kind: 'CONSEQUENCE', title: title, sub: sub || '' }, 2600);
   };
 
   CRTDisplay.prototype.showFeed = function (frame, ms) {
@@ -109,23 +138,35 @@
       return;
     }
 
-    if (this.feedMode && this.feedFrame && (this.page === 'STATE' || this.page === 'FEED')) {
-      this.drawFeed(c, w, h, this.feedFrame);
-      this.drawFault(c, w, h);
+    if (this.record && this.recordHeld) {
+      this.drawRecord(c, w, h, this.record);
       this.drawScan(c, w, h);
       return;
     }
 
-    if (this.page === 'FIELD' || this.page === 'LEDGER' || this.page === 'FEED') {
-      this.drawPageHeader(c, w, this.page);
-      if (this.page === 'FIELD') this.drawField(c, w, h);
-      else if (this.page === 'LEDGER') this.drawLedger(c, w, h);
+    var page = this.page || 'STATE';
+    if (this.feedMode && this.feedFrame
+      && (page === 'STATE' || page === 'FEED' || this.feedFrame.kind === 'CONSEQUENCE')) {
+      this.drawFeed(c, w, h, this.feedFrame);
+      this.drawScan(c, w, h);
+      return;
+    }
+
+    if (page === 'FIELD' || page === 'LEDGER' || page === 'FEED') {
+      this.drawPageHeader(c, w, page);
+      if (page === 'FIELD') this.drawField(c, w, h);
+      else if (page === 'LEDGER') this.drawLedger(c, w, h);
       else {
         c.fillStyle = PHOS_DIM;
         c.font = 'bold 32px "Courier New", monospace';
-        c.fillText('FEED∞ — AWAITING NEXT SLIP' + (Math.floor(this.clock / 500) % 2 ? ' _' : ''), 48, 150);
+        c.fillText('FEED\u221e \u2014 AWAITING NEXT SLIP' + (Math.floor(this.clock / 500) % 2 ? ' _' : ''), 48, 150);
       }
-      this.drawFault(c, w, h);
+      this.drawScan(c, w, h);
+      return;
+    }
+
+    if (this.record) {
+      this.drawRecord(c, w, h, this.record);
       this.drawScan(c, w, h);
       return;
     }
@@ -175,7 +216,7 @@
       if (mm && mm.destination) {
         c.fillStyle = mm.cost > mm.capacity ? '#ff8a6a' : PHOS;
         c.font = 'bold 26px "Courier New", monospace';
-        wrap(c, 'DEST ' + mm.destination.when + ' · ' + mm.destination.label + ' · COST ' + num(mm.cost) + ' / CHARGE ' + num(mm.capacity), 48, Math.min(y, h - 150), w - 96, 34);
+        wrap(c, 'DEST ' + mm.destination.when + ' \u00b7 ' + mm.destination.label + ' \u00b7 COST ' + num(mm.cost) + ' / CHARGE ' + num(mm.capacity), 48, Math.min(y, h - 150), w - 96, 34);
       }
 
       c.fillStyle = PHOS_DIM;
@@ -191,8 +232,96 @@
       c.fillRect(0, 80 + Math.random() * 600, w, 2 + Math.random() * 10);
     }
 
-    this.drawFault(c, w, h);
     this.drawScan(c, w, h);
+  };
+
+  CRTDisplay.prototype.drawFeed = function (c, w, h, frame) {
+    c.fillStyle = PHOS_DIM;
+    c.font = 'bold 28px "Courier New", monospace';
+    c.fillText('FEED∞', 48, 48);
+    c.fillStyle = PHOS;
+    c.font = 'bold 40px "Courier New", monospace';
+    c.fillText('[' + (frame.kind || 'DATA') + ']', 48, 110);
+    c.font = 'bold 36px "Courier New", monospace';
+    wrap(c, frame.title || frame.caption || 'MISSING CONTEXT', 48, 180, w - 96, 44);
+    if (frame.sub) {
+      c.fillStyle = PHOS_DIM;
+      c.font = 'bold 28px "Courier New", monospace';
+      wrap(c, frame.sub, 48, 320, w - 96, 36);
+    }
+    if (frame.bits) {
+      c.fillStyle = PHOS;
+      c.font = 'bold 26px "Courier New", monospace';
+      c.fillText(frame.bits, 48, 460);
+    }
+    if (frame.jack) {
+      c.fillStyle = AMBER;
+      c.font = 'bold 28px "Courier New", monospace';
+      c.fillText('JACK', 48, 540);
+      wrap(c, frame.jack, 48, 584, w - 96, 36);
+    }
+  };
+
+  CRTDisplay.prototype.drawRecord = function (c, w, h, rec) {
+    var y = 48;
+    c.fillStyle = PHOS_DIM;
+    c.font = 'bold 26px "Courier New", monospace';
+    c.fillText((this.recordHeld ? 'HELD AT READER' : 'READING') + ' \u00b7 [' + (rec.type || 'RECORD') + ']'
+      + (rec.pending ? ' \u00b7 PENDING' : '') + (rec.beyond ? ' \u00b7 BEYOND PRESENT' : ''), 48, y);
+    y += 62;
+
+    c.fillStyle = PHOS;
+    c.font = 'bold 46px "Courier New", monospace';
+    var titleEnd = wrap(c, rec.title || rec.slug || 'UNTITLED', 48, y, w - 96, 52);
+    y = titleEnd + 34;
+
+    c.fillStyle = PHOS_DIM;
+    c.font = 'bold 26px "Courier New", monospace';
+    c.fillText('OBSERVED  ' + String(rec.observed_at || '\u2014').replace('T', ' ').replace('Z', ''), 48, y);
+    y += 40;
+    c.fillText('STATUS    ' + (rec.status || '\u2014') + '    ID ' + (rec.public_id || rec.slug || '\u2014'), 48, y);
+    y += 56;
+
+    if (rec.excerpt) {
+      c.fillStyle = PHOS;
+      c.font = 'bold 30px "Courier New", monospace';
+      var exEnd = wrap(c, rec.excerpt, 48, y, w - 96, 40);
+      y = exEnd + 34;
+    }
+
+    if (this.recordHeld) {
+      if (this.recordNerves.length) {
+        c.fillStyle = PHOS_DIM;
+        c.font = 'bold 26px "Courier New", monospace';
+        c.fillText('NERVES \u00b7 kin laid out on the transport deck', 48, y);
+        y += 42;
+        c.fillStyle = PHOS;
+        c.font = 'bold 24px "Courier New", monospace';
+        for (var i = 0; i < this.recordNerves.length; i++) {
+          var n = this.recordNerves[i];
+          var line = (n.dir === 'in' ? '\u2190 ' : '\u2192 ')
+            + String(n.relationship || 'RELATED').toLowerCase().replace(/_/g, ' ')
+            + '  ' + (n.title || n.slug || '');
+          if (line.length > 58) line = line.slice(0, 57) + '\u2026';
+          c.fillText(line, 48, y);
+          y += 34;
+        }
+        y += 16;
+      }
+      if (rec.holes) {
+        c.fillStyle = PHOS_DIM;
+        c.font = 'bold 24px "Courier New", monospace';
+        c.fillText(String(rec.holes), 48, y);
+        y += 44;
+      }
+      c.fillStyle = AMBER;
+      c.font = 'bold 24px "Courier New", monospace';
+      wrap(c, 'TAP THE CARD AGAIN TO RELEASE IT \u00b7 TAP A GLOWING KIN CARD TO FOLLOW IT \u00b7 RECORD PAGE /n/' + (rec.slug || ''), 48, h - 96, w - 96, 32);
+    } else {
+      c.fillStyle = PHOS_DIM;
+      c.font = 'bold 24px "Courier New", monospace';
+      c.fillText('CARD IN TRANSIT \u00b7 TAP ANY CARD TO HOLD IT AT THE READER', 48, h - 72);
+    }
   };
 
   CRTDisplay.prototype.drawPageHeader = function (c, w, page) {
@@ -309,34 +438,26 @@
     wrap(c, 'FAULT — ' + this.fault, 40, h - 156, w - 80, 34);
   };
 
-  CRTDisplay.prototype.drawFeed = function (c, w, h, frame) {
+  CRTDisplay.prototype.drawCaption = function (c, w, h) {
+    var cap = this.caption;
+    if (!cap || this.fault) return;
+    c.fillStyle = 'rgba(2, 14, 8, 0.9)';
+    c.fillRect(0, h - 132, w, 132);
     c.fillStyle = PHOS_DIM;
-    c.font = 'bold 28px "Courier New", monospace';
-    c.fillText('FEED∞', 48, 48);
+    c.fillRect(0, h - 132, w, 2);
+    c.fillStyle = AMBER;
+    c.font = 'bold 26px "Courier New", monospace';
+    c.fillText(String(cap.label || '').slice(0, 60), 40, h - 118);
     c.fillStyle = PHOS;
-    c.font = 'bold 40px "Courier New", monospace';
-    c.fillText('[' + (frame.kind || 'DATA') + ']', 48, 110);
-    c.font = 'bold 36px "Courier New", monospace';
-    wrap(c, frame.title || frame.caption || 'MISSING CONTEXT', 48, 180, w - 96, 44);
-    if (frame.sub) {
-      c.fillStyle = PHOS_DIM;
-      c.font = 'bold 28px "Courier New", monospace';
-      wrap(c, frame.sub, 48, 320, w - 96, 36);
-    }
-    if (frame.bits) {
-      c.fillStyle = PHOS;
-      c.font = 'bold 26px "Courier New", monospace';
-      c.fillText(frame.bits, 48, 460);
-    }
-    if (frame.jack) {
-      c.fillStyle = AMBER;
-      c.font = 'bold 28px "Courier New", monospace';
-      c.fillText('JACK', 48, 540);
-      wrap(c, frame.jack, 48, 584, w - 96, 36);
-    }
+    c.font = 'bold 22px "Courier New", monospace';
+    var t = String(cap.text || '');
+    if (t.length > 170) t = t.slice(0, 169) + '\u2026';
+    wrap(c, t, 40, h - 84, w - 80, 28);
   };
 
   CRTDisplay.prototype.drawScan = function (c, w, h) {
+    this.drawFault(c, w, h);
+    this.drawCaption(c, w, h);
     // Light scan — readability first
     c.fillStyle = 'rgba(0,0,0,0.07)';
     for (var i = 0; i < h; i += 4) {
@@ -391,7 +512,8 @@
         line = test;
       }
     }
-    if (line) c.fillText(line, x, y);
+    if (line) { c.fillText(line, x, y); y += lh; }
+    return y;
   }
 
   global.TTGMachineCRT = CRTDisplay;

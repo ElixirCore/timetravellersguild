@@ -86,6 +86,5 @@ header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="/ad/assets/ad.js?v=<?= htmlspecialchars($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?>"></script>
 <?= ttg_html_visit_tracker() ?>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

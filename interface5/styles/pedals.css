@@ -1,0 +1,292 @@
+/* ARPBUILDER mk·III — pedalboard, stompboxes, footswitches, cables */
+
+/* ============ board plank ============ */
+
+.pedalboard {
+  position: relative;
+  padding: 26px 22px 20px;
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(91deg,
+      rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 7px,
+      rgba(255, 255, 255, 0.03) 7px 8px, transparent 8px 15px),
+    linear-gradient(180deg, #4a2c15 0%, #38200d 55%, #26150a 100%);
+  border: 1px solid #180c04;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.12),
+    inset 0 -5px 10px rgba(0, 0, 0, 0.55),
+    0 20px 30px rgba(0, 0, 0, 0.55);
+}
+
+.pedal-row {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.board-jacks {
+  position: absolute;
+  top: -11px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.jack-board {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+}
+
+.jack-board em { color: #caa87a; }
+
+/* ============ stompbox ============ */
+
+.pedal {
+  --accent: #e07830;
+  flex: 1 1 140px;
+  min-width: 128px;
+  max-width: 168px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 10px 14px;
+  border-radius: 10px 10px 12px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 26%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--accent) 92%, white 8%) 0%,
+      var(--accent) 45%,
+      color-mix(in srgb, var(--accent) 72%, black 28%) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.35),
+    0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+.pedal-top {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pedal-knobs {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 2px;
+}
+
+.pedal .knob-mini { width: 44px; gap: 4px; }
+
+.pedal .knob-mini .knob-cap {
+  width: 30px;
+  height: 30px;
+  background:
+    repeating-conic-gradient(rgba(0, 0, 0, 0.16) 0deg 5deg, transparent 5deg 14deg),
+    radial-gradient(circle at 32% 26%, #f2f3f5 0%, #c9ccd2 48%, #8b8f96 85%);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.pedal .knob-mini .knob-pointer {
+  background: #2c2e33;
+  box-shadow: none;
+}
+
+.pedal .knob-mini .knob-label {
+  font-size: 0.45rem;
+  letter-spacing: 0.14em;
+  color: rgba(20, 12, 4, 0.75);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.pedal .knob-mini .knob-led {
+  min-width: 34px;
+  padding: 2px 4px;
+  font-size: 0.55rem;
+}
+
+.pedal-name {
+  font: 800 0.78rem/1 'Avenir Next', system-ui, sans-serif;
+  letter-spacing: 0.24em;
+  color: rgba(22, 13, 4, 0.85);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08));
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+/* ============ jewel LED ============ */
+
+.jewel {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.55) 0 18%, transparent 40%),
+    radial-gradient(circle, #4a1416 0%, #2a0c0e 75%);
+  border: 2px solid #26282d;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.pedal.on .jewel {
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.8) 0 16%, transparent 42%),
+    radial-gradient(circle, #ff6a52 0%, #c22413 80%);
+  box-shadow: 0 0 12px rgba(255, 92, 60, 0.9), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.jewel-big {
+  width: 20px;
+  height: 20px;
+  border-color: #8f8672;
+}
+
+.jewel-big.led-armed {
+  background: radial-gradient(circle, #ffc46b 0%, #b07414 80%);
+  box-shadow: 0 0 12px rgba(255, 196, 107, 0.9);
+  animation: blink 0.7s steps(2) infinite;
+}
+
+.jewel-big.led-rec {
+  background: radial-gradient(circle, #ff5c49 0%, #b02010 80%);
+  box-shadow: 0 0 14px rgba(255, 92, 73, 0.95);
+}
+
+.jewel-big.led-loop {
+  background: radial-gradient(circle, #8af07c 0%, #2f9422 80%);
+  box-shadow: 0 0 12px rgba(130, 240, 120, 0.9);
+}
+
+.jewel-big.led-held {
+  background: radial-gradient(circle, #6a9c62 0%, #2c4a28 80%);
+  box-shadow: 0 0 5px rgba(120, 200, 110, 0.4);
+}
+
+/* ============ footswitch ============ */
+
+.footswitch,
+.stomp {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stomp {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, #dfe2e6 0 26%, #9ba0a8 30% 44%, #585d66 48% 62%, #33363c 66% 100%);
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.55),
+    0 6px 9px rgba(0, 0, 0, 0.5),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  transition: transform 0.06s;
+}
+
+.stomp:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.5); }
+
+.stomp-cap { display: none; }
+
+.footswitch {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  position: relative;
+  background:
+    conic-gradient(from 20deg,
+      #6a6f77 0deg 30deg, #4b4f57 30deg 60deg, #6a6f77 60deg 90deg, #4b4f57 90deg 120deg,
+      #6a6f77 120deg 150deg, #4b4f57 150deg 180deg, #6a6f77 180deg 210deg, #4b4f57 210deg 240deg,
+      #6a6f77 240deg 270deg, #4b4f57 270deg 300deg, #6a6f77 300deg 330deg, #4b4f57 330deg 360deg);
+  box-shadow:
+    0 5px 0 rgba(40, 34, 20, 0.7),
+    0 8px 12px rgba(0, 0, 0, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.footswitch::after {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 44% 36%, #e9ecf0 0 18%, #b9bec6 34%, #7c818a 62%, #4a4e56 100%);
+  box-shadow:
+    inset 0 -3px 6px rgba(0, 0, 0, 0.45),
+    inset 0 2px 3px rgba(255, 255, 255, 0.7);
+  transition: transform 0.06s;
+}
+
+.footswitch:active::after { transform: translateY(2px); }
+
+.footswitch.lit {
+  box-shadow:
+    0 5px 0 rgba(40, 34, 20, 0.7),
+    0 0 14px rgba(200, 120, 60, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.footswitch.lit::after {
+  background:
+    radial-gradient(circle at 44% 36%, #fff4e0 0 18%, #e8c080 34%, #b87830 62%, #6a4018 100%);
+}
+
+/* ============ cables ============ */
+
+.cable-shadow {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.45);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform: translateY(4px);
+}
+
+.cable {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.cable-shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transform: translateY(-1.4px);
+}
+
+.plug {
+  fill: #16181c;
+  stroke: #8d939c;
+  stroke-width: 2.5;
+}
+
+/* ============ responsive ============ */
+
+@media (max-width: 860px) {
+  .pedal-row { justify-content: center; }
+  .pedal { flex-basis: 44%; max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .pedalboard { padding: 22px 12px 14px; }
+  .pedal { flex-basis: 46%; min-width: 118px; }
+}

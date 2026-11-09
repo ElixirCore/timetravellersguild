@@ -44,6 +44,12 @@ if ($uri === '/now/jack' || $uri === '/now/jack/') {
     require $root . '/now/jack.php';
     return true;
 }
+// Field Office: a session's stable link (field-office/.htaccess does this on the host)
+if (preg_match('#^/field-office/([a-z0-9-]+)/?$#', $uri, $m) && !in_array($m[1], ['desk', 'quote'], true)) {
+    $_GET['s'] = $m[1];
+    require $root . '/field-office/index.php';
+    return true;
+}
 if ($uri === '/jack/speak' || $uri === '/jack/speak/') {
     require $root . '/jack/speak.php';
     return true;
@@ -193,6 +199,10 @@ if ($uri === '/auction/confirm' || $uri === '/auction/confirm.php' || $uri === '
 if ($uri === '/feed' || $uri === '/feed/') {
     require $root . '/feed/index.php';
     return true;
+}
+if ($uri === '/chat' || $uri === '/chat/') {
+    header('Location: /people/chat/', true, 302);
+    exit;
 }
 if ($uri === '/intro/act' || $uri === '/intro/act.php' || $uri === '/intro/act/') {
     require $root . '/intro/act.php';

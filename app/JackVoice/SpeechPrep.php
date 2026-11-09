@@ -65,6 +65,21 @@ final class SpeechPrep
         return $text;
     }
 
+    /**
+     * Split a prepared slip into its opening sentence and the rest, so he can start
+     * speaking while the rest is being made. [text, ''] when there is nothing worth splitting.
+     *
+     * @return array{0:string,1:string}
+     */
+    public static function opening(string $prepared): array
+    {
+        if (!preg_match('/^(.{24,}?[.!?…]["”’)\\]]*)\s+(.+)$/us', $prepared, $m)) {
+            return [$prepared, ''];
+        }
+        $rest = trim($m[2]);
+        return mb_strlen($rest) < 20 ? [$prepared, ''] : [trim($m[1]), $rest];
+    }
+
     public static function looksLikeJsonDump(string $text): bool
     {
         $t = ltrim($text);

@@ -114,6 +114,5 @@ header('Cache-Control: no-store');
 <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
 <script src="/arianrhod/js/body.js?v=3"></script>
 <script src="/cube/js/cube.js?v=10"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

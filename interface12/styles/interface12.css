@@ -1,0 +1,121 @@
+/* INTERFACE v12 (palette from v7) — the /interface2 palette; the instrument itself is drawn in WebGL */
+:root {
+  --bg: #0d0f0a;
+  --ink: #d8e0c8;
+  --dim: #7a8468;
+  --hot: #e8b93c;
+  --line: #2a2f22;
+  --panel: #14170f;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none;
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.45 "Courier New", ui-monospace, monospace;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+}
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+#gl { position: fixed; inset: 0; display: block; touch-action: none; }
+
+#home {
+  position: fixed; z-index: 3;
+  top: calc(env(safe-area-inset-top, 0px) + 12px); left: calc(env(safe-area-inset-left, 0px) + 12px);
+  width: 52px; height: 52px; padding: 9px; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#info {
+  position: fixed; z-index: 3;
+  top: calc(env(safe-area-inset-top, 0px) + 12px); right: calc(env(safe-area-inset-right, 0px) + 12px);
+  width: 52px; height: 52px; padding: 9px; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#home img, #info img, #edges img { width: 100%; height: 100%; display: block; pointer-events: none; }
+
+#readout {
+  position: fixed; z-index: 3; left: 50%; transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  display: flex; gap: .5rem; align-items: center;
+  padding: .3rem .95rem .3rem .45rem; border-radius: 999px;
+  background: rgba(20, 23, 15, .94); border: 1px solid var(--line);
+  color: var(--hot); font-weight: bold; pointer-events: none; white-space: nowrap;
+}
+#readout img { width: 30px; height: 30px; }
+
+#status {
+  position: fixed; z-index: 2; left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  margin: 0; width: max-content; max-width: 92vw; text-align: center;
+  color: var(--dim); font-size: .85rem; pointer-events: none;
+}
+#status.bad { color: #d66; }
+
+#caption {
+  position: fixed; z-index: 2; margin: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--dim); font-size: .8rem; text-align: center; pointer-events: none;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+#caption:not(:empty) { padding: 0 .6rem; }
+#caption span { background: var(--bg); padding: .1rem .5rem; border-radius: 999px; overflow: hidden; text-overflow: ellipsis; }
+
+#edges button {
+  position: fixed; z-index: 2; width: 46px; height: 46px; margin: -23px 0 0 -23px; padding: 9px;
+  border-radius: 50%; background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#edges button:hover, #home:hover, #info:hover { border-color: var(--hot); }
+
+#library {
+  position: fixed; z-index: 2; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; touch-action: pan-y; padding: .2rem .1rem;
+  mask-image: linear-gradient(transparent, #000 1.2rem, #000 calc(100% - 1.2rem), transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 1.2rem, #000 calc(100% - 1.2rem), transparent);
+}
+#cliplist { list-style: none; margin: 0; padding: .8rem 0; }
+#cliplist li { display: flex; gap: .4rem; align-items: center; margin: .35rem 0; }
+#cliplist .clip {
+  flex: 1; min-width: 0; text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: .55rem .9rem; font-size: .82rem;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+#cliplist .clip:hover { border-color: var(--hot); }
+#cliplist .dl {
+  flex: none; width: 2.5rem; height: 2.5rem; padding: .5rem; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--line); display: inline-flex; cursor: pointer;
+}
+#cliplist .dl.armed { border-color: #d66; background: #3a1414; }
+#cliplist .dl img { width: 100%; height: 100%; pointer-events: none; }
+#cliplist .hiddenrow { justify-content: center; color: var(--dim); font-size: .8rem; }
+
+/* the round guide card for each sephira */
+#guide {
+  position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+  background: rgba(13, 15, 10, .72); cursor: pointer;
+}
+#guide > div {
+  --d: min(96vw, 86vh, 470px);
+  width: var(--d); height: var(--d); border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--hot);
+  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--line);
+  padding: calc(var(--d) * .12); overflow-y: auto; scrollbar-width: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: .45rem;
+  font-size: clamp(.7rem, 3.1vw, .9rem); line-height: 1.3; text-align: center;
+}
+#guide > div::-webkit-scrollbar { display: none; }
+#guide .head { width: 2.6em; height: 2.6em; flex: none; }
+#guide p { margin: 0; }
+#guide p img { width: 1.6em; height: 1.6em; vertical-align: -.5em; margin: 0 .25em 0 .5em; }
+#guide p img:first-child { margin-left: 0; }
+
+/* sound design: the words for a sound, on a pill (v11) */
+#sd { position: fixed; z-index: 3; display: flex; align-items: center; justify-content: center; }
+#sd.off { visibility: hidden; pointer-events: none; }
+#sdtext {
+  width: 100%; max-width: 100%; height: 100%; min-height: 34px; box-sizing: border-box; padding: 0 1rem;
+  background: var(--panel); color: var(--ink); border: 1px solid var(--dim); border-radius: 999px;
+  font: inherit; font-size: .9rem; text-align: center; outline: none;
+}
+#sdtext:focus { border-color: var(--hot); }
+#sdtext::placeholder { color: var(--dim); }

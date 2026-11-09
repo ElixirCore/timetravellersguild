@@ -713,6 +713,7 @@ body:not(.screen-live) #screenBox {
 }
 
 </style>
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 
 <body class="offline">
@@ -1287,6 +1288,7 @@ body:not(.screen-live) #screenBox {
 })();
 </script>
 
-<script src="/assets/ask-jack.js?v=1" defer></script>
+<!-- the little Jack: press the face, he listens and speaks -->
+
 </body>
 </html>

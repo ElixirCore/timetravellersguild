@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>INTERFACE v3 · Time Travellers Guild</title>
+  <link rel="icon" href="https://www.procrastinatrix.net/favicons/arp.ico">
+  <link rel="stylesheet" href="styles/skeuo.css?v=1">
+  <link rel="stylesheet" href="styles/pedals.css?v=1">
+  <link rel="stylesheet" href="styles/solarpunk.css?v=1">
+</head>
+<body>
+  <div class="room">
+    <div class="rig" id="rig">
+      <svg id="cables" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+      <!-- ══════════ MASTER ══════════ -->
+      <div class="unit unit-master">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-master">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+
+          <div class="master-layout">
+            <div
+              class="badge badge-master rig-tip rig-tip-help"
+              data-tip="PLAY starts playback. STOP halts and returns to the start. REC captures the full mix — press again to finish and download an MP3. Tempo knob sets BPM. Spacebar toggles play/stop."
+            >
+              <h1>MASTER</h1>
+              <span>transport · tempo · record</span>
+            </div>
+            <span id="master-status" class="mini-lcd mini-lcd-green master-status">READY</span>
+
+            <div class="btn-col master-btns">
+              <button id="play" class="pbtn pbtn-play" type="button"><span class="led led-green"></span>PLAY</button>
+              <button id="stop" class="pbtn" type="button"><span class="pbtn-glyph">&#9632;</span>STOP</button>
+              <button id="rec" class="pbtn pbtn-rec" type="button"><span class="led led-red"></span>REC</button>
+            </div>
+            <div class="knob-unit knob-small master-tempo" id="tempo-knob"></div>
+          </div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+      <!-- ══════════ SCENE BOX ══════════ -->
+      <div class="unit unit-scene">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-scene">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+
+          <header class="plate plate-slim">
+            <div
+              class="badge badge-steel rig-tip rig-tip-help"
+              data-tip="Six slots for full rig snapshots. Select a card, then SAVE to store the current setup or RECALL to load it. Double-click a name to rename. Looper state is not included."
+            >
+              <h1>SCENE BOX</h1>
+              <span>arrangement memory · save / recall</span>
+            </div>
+            <span id="scene-status" class="mini-lcd scene-status-lcd">INTRO · selected</span>
+          </header>
+
+          <div id="scene-strip" class="scene-strip"></div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+
+      <!-- ══════════ SEEDBED ══════════ -->
+      <div class="unit unit-seed">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-seed">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+          <span class="jack jack-right" data-jack="jack-seed-out" title="OUT"><em>OUT</em></span>
+
+          <header class="plate plate-slim">
+            <div
+              class="badge badge-leaf rig-tip rig-tip-help"
+              data-tip="Type a prompt and GROW a clip (music or fx) - it lands in the shared library. Click a clip to plant it on the selected lane S1-S4, then toggle steps to sequence it. Drag a step vertically to bend speed. EJECT clears the selected lane. Shares the /interface daily cap."
+            >
+              <h1>SEEDBED</h1>
+              <span>prompt-grown clips &middot; 4&times;16 grid</span>
+            </div>
+            <div class="seed-toolbar">
+              <button id="seed-power" class="pbtn pbtn-tiny pbtn-power"><span class="led led-green"></span>ON</button>
+              <button id="seed-mute" class="pbtn pbtn-tiny pbtn-mute" title="Mute seedbed"><span class="led led-amber"></span>MUTE</button>
+              <div class="knob-unit knob-small" id="seed-level"></div>
+              <span id="seed-status" class="mini-lcd seed-status-lcd">READY</span>
+            </div>
+          </header>
+
+          <div class="seed-grow">
+            <textarea id="seed-prompt" rows="2" maxlength="500" placeholder="a brass band falling down a lift shaft"></textarea>
+            <div class="seed-grow-row">
+              <div class="btn-row">
+                <button type="button" id="seed-mode-music" class="pbtn pbtn-tiny mode-opt lit">MUSIC</button>
+                <button type="button" id="seed-mode-sfx" class="pbtn pbtn-tiny mode-opt">FX</button>
+              </div>
+              <select id="seed-seconds" class="lcd-select" aria-label="length"></select>
+              <button type="button" id="seed-go" class="pbtn pbtn-tiny pbtn-grow">GROW</button>
+              <span id="seed-quota" class="mini-lcd seed-quota-lcd">&nbsp;</span>
+            </div>
+          </div>
+
+          <div class="seed-library-wrap">
+            <ul id="seed-cliplist" class="seed-cliplist"></ul>
+          </div>
+
+          <div class="seed-edit">
+            <div class="lgroup">
+              <span class="lgroup-label">STEPS</span>
+              <button id="seed-len-minus" class="pbtn pbtn-tiny">&minus;</button>
+              <span id="seed-steps-led" class="mini-lcd">16</span>
+              <button id="seed-len-plus" class="pbtn pbtn-tiny">+</button>
+            </div>
+            <div class="lgroup lgroup-end">
+              <button id="seed-eject" class="pbtn pbtn-tiny pbtn-init" type="button">EJECT</button>
+            </div>
+          </div>
+
+          <div class="seed-grid-wrap">
+            <div id="seed-grid" class="seed-grid"></div>
+          </div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+      <!-- ══════════ ARPBUILDER ══════════ -->
+      <div class="unit">
+        <div class="cheek cheek-l"></div>
+        <div class="face">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+          <span class="jack jack-right" data-jack="jack-arp-out" title="OUT"><em>OUT</em></span>
+
+          <header class="plate">
+            <a
+              class="badge rig-tip rig-tip-help"
+              href="https://procrastinatrix.net"
+              data-tip="Click steps on the rail to toggle them. Drag vertically to adjust gate length. ORDER sets playback direction. Knobs edit the active sound bank. INIT resets the pattern. Spacebar toggles transport."
+            >
+              <h1>LAB</h1>
+              <span>arpbuilder mk·III &middot; lab tech</span>
+            </a>
+            <div class="lcd" aria-live="polite">
+              <span class="lcd-cell"><em>KEY</em><b id="lcd-key">C MINOR</b></span>
+              <span class="lcd-cell"><em>BPM</em><b id="lcd-bpm">112</b></span>
+              <span class="lcd-cell"><em>BANK</em><b id="lcd-mode">VOICE</b></span>
+              <span class="lcd-cell lcd-wide"><em>POS</em><b id="lcd-pos">READY</b></span>
+            </div>
+          </header>
+
+          <section class="controls">
+            <div class="cluster knob-cluster">
+              <div class="mode-block">
+                <div class="mode-list" id="mode-list"></div>
+                <div class="knob-unit mode-unit" id="mode-knob"></div>
+              </div>
+              <div class="knob-unit" id="knob-a"></div>
+              <div class="knob-unit" id="knob-b"></div>
+              <div class="knob-unit" id="knob-c"></div>
+            </div>
+          </section>
+
+          <section class="rail-wrap">
+            <div class="rail" id="rail"></div>
+          </section>
+
+          <footer class="lower">
+            <div class="lgroup">
+              <span class="lgroup-label">ORDER</span>
+              <div class="btn-row" id="dir"></div>
+            </div>
+            <div class="lgroup">
+              <span class="lgroup-label">STEPS</span>
+              <button id="len-minus" class="pbtn pbtn-tiny">−</button>
+              <span id="steps-led" class="mini-lcd">16</span>
+              <button id="len-plus" class="pbtn pbtn-tiny">+</button>
+            </div>
+            <div class="lgroup">
+              <span class="lgroup-label">KEY</span>
+              <select id="key" class="lcd-select"></select>
+              <select id="scale" class="lcd-select"></select>
+            </div>
+            <div class="lgroup lgroup-end">
+              <button id="arp-mute" class="pbtn pbtn-tiny pbtn-mute" type="button" title="Mute arp output"><span class="led led-amber"></span>MUTE</button>
+              <button id="init" class="pbtn pbtn-tiny pbtn-init" type="button">INIT</button>
+            </div>
+          </footer>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+      <!-- ══════════ BEATBOX ══════════ -->
+      <div class="unit unit-drum">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-drum">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+          <span class="jack jack-right" data-jack="jack-drum-out" title="OUT"><em>OUT</em></span>
+
+          <header class="plate plate-slim">
+            <div
+              class="badge badge-steel rig-tip rig-tip-help"
+              data-tip="Power ON to enable. Choose a voice row, then toggle steps in the grid. SOUND switches the kit piece for that row. ± adjusts pattern length."
+            >
+              <h1>BEATBOX</h1>
+              <span>16-step drum machine</span>
+            </div>
+            <div class="drum-toolbar">
+              <button id="drum-power" class="pbtn pbtn-tiny pbtn-power"><span class="led led-green"></span>ON</button>
+              <button id="drum-mute" class="pbtn pbtn-tiny pbtn-mute" title="Mute drums"><span class="led led-amber"></span>MUTE</button>
+              <div class="knob-unit knob-small" id="drum-level"></div>
+            </div>
+          </header>
+
+          <div class="drum-edit">
+            <div class="lgroup">
+              <span class="lgroup-label">VOICE</span>
+              <div class="btn-row" id="drum-voices"></div>
+            </div>
+            <div class="lgroup">
+              <span class="lgroup-label">SOUND</span>
+              <div class="btn-row" id="drum-sounds"></div>
+            </div>
+            <div class="lgroup">
+              <span class="lgroup-label">STEPS</span>
+              <button id="drum-len-minus" class="pbtn pbtn-tiny">−</button>
+              <span id="drum-steps-led" class="mini-lcd">16</span>
+              <button id="drum-len-plus" class="pbtn pbtn-tiny">+</button>
+            </div>
+          </div>
+
+          <div class="drum-grid-wrap">
+            <div id="drum-grid" class="drum-grid"></div>
+          </div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+      <!-- ══════════ FIELD TAP ══════════ -->
+      <div class="unit unit-field">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-field">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+          <span class="jack jack-right" data-jack="jack-field-out" title="OUT"><em>OUT</em></span>
+
+          <header class="plate plate-slim">
+            <div
+              class="badge badge-steel rig-tip rig-tip-help"
+              data-tip="REC, then exceed the gate threshold to capture a sample. Trim on the waveform. Toggle grid steps to trigger pads in the sequence. Drag a step vertically to change playback speed. P1–P8 selects the row for recording; M mutes that row."
+            >
+              <h1>FIELD TAP</h1>
+              <span>threshold mic sampler · 8×16 grid</span>
+            </div>
+            <div class="field-toolbar">
+              <button id="field-power" class="pbtn pbtn-tiny pbtn-power"><span class="led led-green"></span>ON</button>
+              <button id="field-mute" class="pbtn pbtn-tiny pbtn-mute" title="Mute field"><span class="led led-amber"></span>MUTE</button>
+              <div class="knob-unit knob-small" id="field-level"></div>
+              <span id="field-status" class="mini-lcd field-status-lcd">READY</span>
+            </div>
+          </header>
+
+          <div class="field-capture">
+            <div class="field-capture-left">
+              <button id="field-arm" class="pbtn pbtn-tiny field-arm-btn" type="button">REC</button>
+              <div class="knob-unit knob-small" id="field-threshold"></div>
+              <div class="field-meter">
+                <div id="field-meter-fill" class="field-meter-fill"></div>
+              </div>
+            </div>
+            <div class="field-capture-right">
+              <canvas id="field-wave" class="field-wave" width="280" height="48" title="Drag left edge to trim start · right edge to trim end"></canvas>
+              <div class="field-capture-btns">
+                <button id="field-audition" class="pbtn pbtn-tiny" type="button">PLAY</button>
+                <button id="field-clear" class="pbtn pbtn-tiny" type="button">CLR</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-edit">
+            <div class="lgroup">
+              <span class="lgroup-label">STEPS</span>
+              <button id="field-len-minus" class="pbtn pbtn-tiny">−</button>
+              <span id="field-steps-led" class="mini-lcd">16</span>
+              <button id="field-len-plus" class="pbtn pbtn-tiny">+</button>
+            </div>
+          </div>
+
+          <div class="field-grid-wrap">
+            <div id="field-grid" class="field-grid"></div>
+          </div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+      <!-- ══════════ STYLUS ══════════ -->
+      <div class="unit unit-stylus">
+        <div class="cheek cheek-l"></div>
+        <div class="face face-stylus">
+          <span class="screw screw-tl"></span>
+          <span class="screw screw-tr"></span>
+          <span class="screw screw-bl"></span>
+          <span class="screw screw-br"></span>
+          <span class="jack jack-right" data-jack="jack-stylus-out" title="OUT"><em>OUT</em></span>
+
+          <header class="plate plate-slim">
+            <div
+              class="badge badge-steel rig-tip rig-tip-help"
+              data-tip="MOOD: continuous pitch on the XY pad — range, glide and breath shape the voice. WUB: sub bass with filter wobble — X is pitch, Y is wub depth, rate/reso/chunk on the knobs. WARM and SPACE toggle onboard FX."
+            >
+              <h1>STYLUS</h1>
+              <span>mood theremin · bass wub · xy pad</span>
+            </div>
+            <div class="stylus-toolbar">
+              <button id="stylus-power" class="pbtn pbtn-tiny pbtn-power"><span class="led led-green"></span>ON</button>
+              <button id="stylus-mute" class="pbtn pbtn-tiny pbtn-mute" title="Mute stylus"><span class="led led-amber"></span>MUTE</button>
+              <div class="knob-unit knob-small" id="stylus-level"></div>
+              <span id="stylus-note" class="mini-lcd stylus-note-lcd">—</span>
+            </div>
+          </header>
+
+          <div class="stylus-controls">
+            <div class="stylus-mode-block">
+              <span class="lgroup-label">MODE</span>
+              <div class="btn-row stylus-mode-row">
+                <button id="stylus-mode-mood" class="pbtn pbtn-tiny mode-opt lit" type="button">MOOD</button>
+                <button id="stylus-mode-wub" class="pbtn pbtn-tiny mode-opt" type="button">WUB</button>
+              </div>
+            </div>
+            <div class="knob-unit knob-small" id="stylus-range"></div>
+            <div class="knob-unit knob-small" id="stylus-glide"></div>
+            <div class="knob-unit knob-small" id="stylus-breath"></div>
+          </div>
+
+          <section class="stylus-fx-panel">
+            <span class="fx-panel-label">ONBOARD FX</span>
+            <button id="stylus-warm-toggle" class="pbtn pbtn-tiny fx-toggle" type="button">WARM</button>
+            <button id="stylus-space-toggle" class="pbtn pbtn-tiny fx-toggle" type="button">SPACE</button>
+            <div class="knob-unit knob-small" id="stylus-warm"></div>
+            <div class="knob-unit knob-small" id="stylus-space"></div>
+          </section>
+
+          <div class="stylus-pad-wrap">
+            <div id="stylus-pad"></div>
+          </div>
+        </div>
+        <div class="cheek cheek-r"></div>
+      </div>
+
+      <!-- ══════════ BASS + LOOPER row ══════════ -->
+      <div class="rig-row">
+        <div class="unit unit-bass">
+          <div class="cheek cheek-l"></div>
+          <div class="face face-bass">
+            <span class="screw screw-tl"></span>
+            <span class="screw screw-tr"></span>
+            <span class="screw screw-bl"></span>
+            <span class="screw screw-br"></span>
+            <span class="jack jack-bottom" data-jack="jack-bass-out" title="OUT"><em>OUT</em></span>
+
+            <header class="plate plate-slim">
+              <div
+                class="badge badge-steel rig-tip rig-tip-help"
+                data-tip="Power ON for the bass engine. Mini rail sets pattern steps. Rate, glide, tone, punch and level shape the sound."
+              >
+                <h1>LOWBUILDER</h1>
+                <span>bass engine</span>
+              </div>
+              <button id="bass-power" class="pbtn pbtn-tiny pbtn-power"><span class="led led-green"></span>ON</button>
+            </header>
+
+            <div class="bass-body">
+              <section class="rail-wrap rail-wrap-mini">
+                <div class="rail rail-mini" id="bass-rail"></div>
+              </section>
+              <div class="bass-knobs">
+                <div class="knob-unit knob-small" id="bass-rate"></div>
+                <div class="knob-unit knob-small" id="bass-glide"></div>
+                <div class="knob-unit knob-small" id="bass-tone"></div>
+                <div class="knob-unit knob-small" id="bass-punch"></div>
+                <div class="knob-unit knob-small" id="bass-level"></div>
+              </div>
+            </div>
+          </div>
+          <div class="cheek cheek-r"></div>
+        </div>
+
+        <div class="unit unit-looper">
+          <div class="face face-cream">
+            <span class="screw screw-tl"></span>
+            <span class="screw screw-tr"></span>
+            <span class="screw screw-bl"></span>
+            <span class="screw screw-br"></span>
+            <span class="jack jack-left" data-jack="jack-looper-in" title="IN"><em>IN</em></span>
+
+            <header class="looper-head">
+              <div
+                class="badge badge-cream rig-tip rig-tip-help"
+                data-tip="Left footswitch: record a bar-synced loop, then overdub. Right footswitch: stop and clear. Speed, glitch and crush process the loop. Separate from MASTER REC; not stored in scenes."
+              >
+                <h1>LOOPSMITH</h1>
+                <span>buffer mangler · bar sync</span>
+              </div>
+              <span id="looper-led" class="jewel jewel-big"></span>
+            </header>
+
+            <div class="looper-lcd-row">
+              <span id="looper-lcd" class="mini-lcd mini-lcd-amber">EMPTY</span>
+              <div class="looper-knobs">
+                <div class="knob-unit knob-small" id="looper-level"></div>
+                <div class="looper-speed-wrap">
+                  <div class="knob-unit knob-small" id="looper-speed"></div>
+                  <button id="looper-speed-1x" class="pbtn pbtn-tiny looper-1x-btn" type="button" title="Reset speed to 1×">1×</button>
+                </div>
+                <div class="knob-unit knob-small" id="looper-glitch"></div>
+                <div class="knob-unit knob-small" id="looper-crush"></div>
+              </div>
+            </div>
+
+            <div class="looper-switches">
+              <div class="fs-block">
+                <button id="looper-rec" class="footswitch" aria-label="Record / overdub"></button>
+                <span class="fs-label">REC · DUB</span>
+              </div>
+              <div class="fs-block">
+                <button id="looper-stop" class="footswitch" aria-label="Stop / clear"></button>
+                <span class="fs-label">STOP · CLR</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ PEDALBOARD ══════════ -->
+      <div class="pedalboard">
+        <div class="board-jacks">
+          <span class="jack jack-board" data-jack="jack-board-in-a" title="IN A"><em>IN·A</em></span>
+          <span class="jack jack-board" data-jack="jack-board-in-b" title="IN B"><em>IN·B</em></span>
+          <span class="jack jack-board" data-jack="jack-board-in-c" title="IN C"><em>IN·C</em></span>
+          <span class="jack jack-board" data-jack="jack-board-in-d" title="IN D"><em>IN·D</em></span>
+          <span class="jack jack-board" data-jack="jack-board-in-e" title="IN E"><em>IN·E</em></span>
+          <span class="jack jack-board" data-jack="jack-board-in-f" title="IN F"><em>IN·F</em></span>
+          <span class="jack jack-board jack-board-out" data-jack="jack-board-out" title="OUT"><em>OUT</em></span>
+        </div>
+        <div class="pedal-row" id="pedal-row"></div>
+      </div>
+    </div>
+
+    <p class="hint">SEEDBED: grow clips, plant on S1-S4 · MASTER: play/stop/rec + tempo · space toggles transport</p>
+  </div>
+
+  <script type="module" src="js/app.js?v=3"></script>
+</body>
+</html>

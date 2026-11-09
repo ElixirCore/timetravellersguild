@@ -163,6 +163,12 @@ function ttg_og_catalog(): array
             'image' => $img('map'),
             'url' => TTG_OG_ORIGIN . '/jack/map/',
         ],
+        'puppet' => [
+            'title' => 'JACK / FIELD — Time Travellers Guild',
+            'description' => 'Jack, clerk of the Guild, out in the field: tidying stray cards, filing pounds and dialling the TimePod to other worlds.',
+            'image' => $img('puppet-jack'),
+            'url' => TTG_OG_ORIGIN . '/puppet/jack/',
+        ],
     ];
 }
 
@@ -179,6 +185,7 @@ function ttg_og_routes(): array
         '/jack/office' => 'jack',
         '/jack/ledger' => 'jack',
         '/deck' => 'tarot',
+        '/puppet/jack' => 'puppet',
         '/jack' => 'jack',
         '/feed' => 'feed',
         '/join' => 'join',

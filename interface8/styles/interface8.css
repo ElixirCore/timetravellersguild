@@ -1,0 +1,212 @@
+/* INTERFACE v7 — the /interface2 palette; the instrument itself is drawn in WebGL */
+:root {
+  --bg: #0d0f0a;
+  --ink: #d8e0c8;
+  --dim: #7a8468;
+  --hot: #e8b93c;
+  --line: #2a2f22;
+  --panel: #14170f;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; height: 100%; overflow: hidden; overscroll-behavior: none;
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.45 "Courier New", ui-monospace, monospace;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none;
+}
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+#gl { position: fixed; inset: 0; display: block; touch-action: none; }
+
+#home {
+  position: fixed; z-index: 3;
+  top: calc(env(safe-area-inset-top, 0px) + 12px); left: calc(env(safe-area-inset-left, 0px) + 12px);
+  width: 52px; height: 52px; padding: 9px; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#info {
+  position: fixed; z-index: 3;
+  top: calc(env(safe-area-inset-top, 0px) + 12px); right: calc(env(safe-area-inset-right, 0px) + 12px);
+  width: 52px; height: 52px; padding: 9px; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#home img, #info img, #edges img { width: 100%; height: 100%; display: block; pointer-events: none; }
+
+#readout {
+  position: fixed; z-index: 3; left: 50%; transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+  display: flex; gap: .5rem; align-items: center;
+  padding: .3rem .95rem .3rem .45rem; border-radius: 999px;
+  background: rgba(20, 23, 15, .94); border: 1px solid var(--line);
+  color: var(--hot); font-weight: bold; pointer-events: none; white-space: nowrap;
+}
+#readout img { width: 30px; height: 30px; }
+
+#status {
+  position: fixed; z-index: 2; left: 50%; transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  margin: 0; width: max-content; max-width: 92vw; text-align: center;
+  color: var(--dim); font-size: .85rem; pointer-events: none;
+}
+#status.bad { color: #d66; }
+
+#caption {
+  position: fixed; z-index: 2; margin: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--dim); font-size: .8rem; text-align: center; pointer-events: none;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+#caption:not(:empty) { padding: 0 .6rem; }
+#caption span { background: var(--bg); padding: .1rem .5rem; border-radius: 999px; overflow: hidden; text-overflow: ellipsis; }
+
+#edges button {
+  position: fixed; z-index: 2; width: 46px; height: 46px; margin: -23px 0 0 -23px; padding: 9px;
+  border-radius: 50%; background: var(--panel); border: 1px solid var(--dim); cursor: pointer;
+}
+#edges button:hover, #home:hover, #info:hover { border-color: var(--hot); }
+
+#library {
+  position: fixed; z-index: 2; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; touch-action: pan-y; padding: .2rem .1rem;
+  mask-image: linear-gradient(transparent, #000 1.2rem, #000 calc(100% - 1.2rem), transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 1.2rem, #000 calc(100% - 1.2rem), transparent);
+}
+#cliplist { list-style: none; margin: 0; padding: .8rem 0; }
+#cliplist li { display: flex; gap: .4rem; align-items: center; margin: .35rem 0; }
+#cliplist .clip {
+  flex: 1; min-width: 0; text-align: left; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+  padding: .55rem .9rem; font-size: .82rem;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+#cliplist .clip:hover { border-color: var(--hot); }
+#cliplist .dl {
+  flex: none; width: 2.5rem; height: 2.5rem; padding: .5rem; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--line); display: inline-flex; cursor: pointer;
+}
+#cliplist .dl.armed { border-color: #d66; background: #3a1414; }
+#cliplist .dl img { width: 100%; height: 100%; pointer-events: none; }
+#cliplist .hiddenrow { justify-content: center; color: var(--dim); font-size: .8rem; }
+
+/* the round guide card for each sephira */
+#guide {
+  position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+  background: rgba(13, 15, 10, .72); cursor: pointer;
+}
+#guide > div {
+  --d: min(96vw, 86vh, 470px);
+  width: var(--d); height: var(--d); border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--hot);
+  box-shadow: 0 0 0 6px var(--bg), 0 0 0 7px var(--line);
+  padding: calc(var(--d) * .12); overflow-y: auto; scrollbar-width: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: .45rem;
+  font-size: clamp(.7rem, 3.1vw, .9rem); line-height: 1.3; text-align: center;
+}
+#guide > div::-webkit-scrollbar { display: none; }
+#guide .head { width: 2.6em; height: 2.6em; flex: none; }
+#guide p { margin: 0; }
+#guide p img { width: 1.6em; height: 1.6em; vertical-align: -.5em; margin: 0 .25em 0 .5em; }
+#guide p img:first-child { margin-left: 0; }
+
+/* INTERFACE v8 — the FIELD TAP step grid and transport */
+#seq {
+  position: fixed; z-index: 5;
+  inset: max(10px, env(safe-area-inset-top, 0px)) 10px max(10px, env(safe-area-inset-bottom, 0px)) 10px;
+  margin: auto; max-width: 880px; max-height: 94svh; height: fit-content;
+  overflow-y: auto;
+  background: rgba(8, 8, 10, .96); border: 1px solid var(--hot); border-radius: 18px;
+  padding: .6rem .7rem .7rem;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, .8), 0 0 0 100vmax rgba(0, 0, 0, .45);
+  touch-action: pan-y;
+}
+#seq .seq-cap { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .45rem; }
+#seq .seq-rec, #seq .seq-auto {
+  flex: none; min-width: 3.4rem; height: 2.4rem; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--dim); color: var(--ink);
+  font-size: .8rem; font-weight: bold; letter-spacing: .06em; cursor: pointer;
+}
+#seq .seq-rec { border-color: #d66; color: #d66; }
+#seq .seq-rec.lit { background: #d66; color: #fff; }
+#seq .seq-auto.lit { border-color: var(--hot); color: var(--hot); background: #2a2410; }
+#seq .seq-meter {
+  position: relative; flex: 1; min-width: 5rem; height: .65rem; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--line); overflow: hidden;
+}
+#seq .seq-meter-fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: var(--dim); border-radius: 999px; transition: width .06s linear;
+}
+#seq .seq-meter-fill.hot { background: var(--hot); }
+#seq .seq-meter-gate {
+  position: absolute; left: 45%; top: -1px; bottom: -1px; width: 2px; background: var(--hot);
+}
+#seq .seq-status { color: var(--dim); font-size: .72rem; letter-spacing: .04em; min-width: 9ch; }
+#seq .seq-head { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; margin-bottom: .5rem; }
+#seq .seq-play {
+  flex: none; width: 3rem; height: 3rem; padding: .65rem; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--dim); cursor: pointer;
+}
+#seq .seq-play img, #seq .seq-close img { width: 100%; height: 100%; display: block; pointer-events: none; }
+#seq .seq-play.lit { border-color: var(--hot); background: #2a2410; }
+#seq .seq-stepper { display: flex; align-items: center; gap: .2rem; }
+#seq .seq-stepper .seq-lbl { color: var(--dim); font-size: .66rem; letter-spacing: .06em; }
+#seq .seq-stepper button {
+  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--dim); color: var(--ink);
+  font-size: 1.1rem; line-height: 1; cursor: pointer;
+}
+#seq .seq-stepper button:hover, #seq .seq-close:hover { border-color: var(--hot); }
+#seq .seq-led { color: var(--hot); font-weight: bold; min-width: 3ch; text-align: center; font-size: 1rem; }
+#seq .seq-close {
+  flex: none; width: 2.4rem; height: 2.4rem; padding: .5rem; border-radius: 50%;
+  background: var(--bg); border: 1px solid var(--dim); cursor: pointer; margin-left: auto;
+}
+#seq .seq-nums { display: flex; align-items: center; gap: .3rem; margin: 0 0 .15rem; }
+#seq .seq-num-spacer { flex: none; width: 3.9rem; }
+#seq .seq-num-cells { flex: 1; display: flex; gap: 3px; }
+#seq .seq-num-cells span {
+  flex: 1; text-align: center; color: var(--dim); font-size: .62rem;
+}
+#seq .seq-row { display: flex; align-items: center; gap: .3rem; margin: .28rem 0; }
+#seq .seq-pad {
+  flex: none; width: 2.4rem; height: 2.2rem; padding: 0; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--dim); color: var(--dim);
+  font-size: .78rem; font-weight: bold; cursor: pointer;
+}
+#seq .seq-pad.has-sample { color: var(--ink); }
+#seq .seq-row.active .seq-pad { border-color: var(--hot); color: var(--hot); }
+#seq .seq-mute {
+  flex: none; width: 1.5rem; height: 2.2rem; padding: 0; border-radius: 999px;
+  background: var(--bg); border: 1px solid var(--line); color: var(--dim);
+  font-size: .66rem; cursor: pointer;
+}
+#seq .seq-mute.lit { border-color: #d66; color: #d66; }
+#seq .seq-row.muted .seq-cells { opacity: .38; }
+#seq .seq-cells { flex: 1; display: flex; gap: 3px; }
+#seq .seq-cell {
+  flex: 1; min-width: 0; aspect-ratio: 1; padding: 0; border-radius: 4px;
+  background: var(--bg); border: 1px solid var(--line); cursor: pointer;
+  position: relative; touch-action: none;
+}
+#seq .seq-cell:nth-child(4n+5) { margin-left: 8px; }
+#seq .seq-cell.on { background: hsl(var(--hue) 55% 42%); border-color: hsl(var(--hue) 65% 60%); }
+#seq .seq-cell.empty { opacity: .3; }
+#seq .seq-cell.dragging { border-color: var(--ink); }
+#seq .seq-cell.cur { outline: 2px solid var(--ink); outline-offset: 1px; }
+#seq .seq-cell::after {
+  content: attr(data-rate);
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: .55rem; color: #fff; text-shadow: 0 0 3px rgba(0, 0, 0, .9);
+  pointer-events: none;
+}
+/* narrow screens: each layer wraps to two rows of eight so cells stay tappable */
+@media (max-width: 560px) {
+  #seq .seq-nums { display: none; }
+  #seq .seq-cells { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
+  #seq .seq-cell { aspect-ratio: auto; height: 2.1rem; }
+  #seq .seq-cell:nth-child(4n+5) { margin-left: 0; }
+  #seq .seq-cell:nth-child(8n+9) { margin-top: 2px; }
+  #seq .seq-row { margin: .34rem 0; }
+  #seq .seq-cap { gap: .35rem; }
+}

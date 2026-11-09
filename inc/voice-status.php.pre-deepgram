@@ -1,0 +1,56 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Is Jack's voice line open? Asks ElevenLabs how much of the account's quota is
+ * left, at most every fifteen minutes, and keeps the answer outside the web root.
+ *
+ *   true  = credit left
+ *   false = the quota is spent; the front page sends visitors to /now instead
+ *   null  = unknown (no key, no permission, network trouble): leave Jack up and
+ *           let the browser notice if a call fails
+ */
+
+require_once __DIR__ . '/env.php';
+
+const TTG_VOICE_RECHECK = 900;
+const TTG_VOICE_FLOOR = 1000;
+
+function ttg_voice_cache_file(): string {
+    return dirname(__DIR__, 3) . '/ttg-private/jack-voice/credit.json';
+}
+
+function ttg_voice_credit(): ?bool {
+    $file = ttg_voice_cache_file();
+    $cached = is_file($file) ? json_decode((string) @file_get_contents($file), true) : null;
+    if (is_array($cached) && time() - (int) ($cached['at'] ?? 0) < TTG_VOICE_RECHECK) {
+        return $cached['ok'] ?? null;
+    }
+
+    $ok = null;
+    $used = $limit = null;
+    $key = ttg_env('ELEVENLABS_API_KEY');
+    if ($key !== '' && function_exists('curl_init')) {
+        $ch = curl_init('https://api.elevenlabs.io/v1/user/subscription');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => ['xi-api-key: ' . $key, 'Accept: application/json'],
+            CURLOPT_CONNECTTIMEOUT => 3,
+            CURLOPT_TIMEOUT => 4,
+        ]);
+        $body = curl_exec($ch);
+        $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        $j = $code === 200 ? json_decode((string) $body, true) : null;
+        if (is_array($j) && isset($j['character_count'], $j['character_limit'])) {
+            $used = (int) $j['character_count'];
+            $limit = (int) $j['character_limit'];
+            $ok = ($limit - $used) > TTG_VOICE_FLOOR;
+        }
+    }
+
+    $dir = dirname($file);
+    if (!is_dir($dir)) @mkdir($dir, 0700, true);
+    @file_put_contents($file, json_encode(['at' => time(), 'ok' => $ok, 'used' => $used, 'limit' => $limit]), LOCK_EX);
+    return $ok;
+}

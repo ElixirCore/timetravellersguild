@@ -103,6 +103,5 @@ function cell(array $p, int $i): string
 
 <script type="application/json" id="posts"><?= json_encode($posts, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
 <script src="<?= h($v('feed.js')) ?>" defer></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

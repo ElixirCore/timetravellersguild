@@ -74,6 +74,20 @@ $relWord = static function (string $rel): string {
     return str_replace('_', ' ', strtolower($rel));
 };
 $isRecord = $slug !== '' && $node && ttg_graph_public($node);
+$jackContext = $isRecord ? ttg_graph_inferred_context($slug) : [];
+if ($isRecord && isset($neighbors)) $neighbors = ttg_graph_add_inferences($slug, $neighbors);
+// Filings: the same record in other hands. Labelled by class, kept apart from the body.
+$voices = [];
+if ($isRecord && is_array($node['voices'] ?? null)) {
+    foreach ($node['voices'] as $v) {
+        if (is_array($v) && trim((string) ($v['text'] ?? '')) !== '') $voices[] = $v;
+    }
+}
+$edgeNote = static function (array $row): string {
+    $note = trim((string) ($row['edge']['note'] ?? ''));
+    $by = trim((string) ($row['edge']['noted_by'] ?? ''));
+    return $note === '' ? '' : ($by !== '' ? $by . ': ' : '') . $note;
+};
 ?>
 <!doctype html>
 <html lang="en">
@@ -105,6 +119,16 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
 .actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.8rem 0 0}
 .actions a{display:inline-block;font-family:var(--label);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;border:1px solid var(--brass-faint);color:var(--brass-bright);padding:.5rem .85rem}
 .actions a:hover{border-color:var(--brass);background:rgba(201,169,97,.08)}
+.filings{margin:1.6rem 0;display:grid;gap:.9rem}
+.filings h2{font-weight:400;font-size:.62rem;font-family:var(--label);letter-spacing:.16em;text-transform:uppercase;color:var(--brass-dim);margin:0}
+.filing{margin:0;padding:.1rem 0 .1rem .85rem;border-left:2px solid var(--rule)}
+.filing p{margin:0;font-size:1rem;max-width:46ch}
+.filing footer{font-family:var(--label);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-dim);margin:.3rem 0 0}
+.filing footer b{font-weight:600;color:var(--brass-bright)}
+.filing.INTERPRETATION p,.filing.TESTIMONY p{font-style:italic}
+.filing.INTERPRETATION{border-left-color:var(--navy)}
+.filing.TAPE p{font-family:var(--label);letter-spacing:.08em;text-transform:uppercase;font-size:.82rem}
+.related .why{display:block;font-family:var(--paper-font);font-style:italic;font-size:.88rem;color:var(--parch-dim);margin:.15rem 0 0}
 .related{margin:2.6rem 0 0}
 .related h2{font-weight:400;font-size:.78rem;font-family:var(--label);letter-spacing:.14em;color:var(--brass-dim);margin:0 0 .8rem}
 .related ul,.index{list-style:none;margin:0;padding:0;display:grid;gap:.4rem}
@@ -130,6 +154,18 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
     <p class="status"><?= ttg_h((string) $meta['status']) ?></p>
   <?php endif; ?>
   <p class="copy"><?= ttg_h($body) ?></p>
+
+  <?php if ($voices): ?>
+  <section class="filings" aria-label="Filings">
+    <h2>Filings · the same record, other hands</h2>
+    <?php foreach ($voices as $v): ?>
+      <blockquote class="filing <?= ttg_h(preg_replace('/[^A-Z_]/', '', strtoupper((string) ($v['class'] ?? ''))) ?? '') ?>">
+        <p><?= ttg_h((string) $v['text']) ?></p>
+        <footer><b><?= ttg_h((string) ($v['voice'] ?? '')) ?></b><?= ($v['role'] ?? '') !== '' ? ' · ' . ttg_h((string) $v['role']) : '' ?> · <?= ttg_h(str_replace('_', ' ', (string) ($v['class'] ?? ''))) ?></footer>
+      </blockquote>
+    <?php endforeach; ?>
+  </section>
+  <?php endif; ?>
 
   <?php if ($isRecord && $life): ?>
   <ul class="life">
@@ -161,6 +197,15 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
       <p>No interpretation has been accepted. The evidence stands alone.</p>
     <?php endif; ?>
   </div>
+  <?php endif; ?>
+
+  <?php if ($jackContext): ?>
+  <section class="related" style="border-left:2px dotted currentColor;padding-left:.8rem">
+    <h2>Jack's inference <small style="font-weight:400;opacity:.7">not canon · not on file · his own reading</small></h2>
+    <?php foreach ($jackContext as $c): ?>
+      <p><?= ttg_h((string) $c['text']) ?></p>
+    <?php endforeach; ?>
+  </section>
   <?php endif; ?>
 
   <dl>
@@ -200,7 +245,7 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
         <?php $other = $row['node']; ?>
         <li>
           <a href="<?= ttg_h(ttg_graph_canonical($other)) ?>">
-            <span class="n"><?= ttg_h((string) ($other['title'] ?? '')) ?></span>
+            <span class="n"><?= ttg_h((string) ($other['title'] ?? '')) ?><?php if (($why = $edgeNote($row)) !== ''): ?><span class="why"><?= ttg_h($why) ?></span><?php endif; ?></span>
             <span class="p"><?= ttg_h($relWord((string) $row['relationship'])) ?> → <?= ttg_h((string) ($other['type'] ?? '')) ?></span>
           </a>
         </li>
@@ -209,7 +254,7 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
         <?php $other = $row['node']; ?>
         <li>
           <a href="<?= ttg_h(ttg_graph_canonical($other)) ?>">
-            <span class="n"><?= ttg_h((string) ($other['title'] ?? '')) ?></span>
+            <span class="n"><?= ttg_h((string) ($other['title'] ?? '')) ?><?php if (($why = $edgeNote($row)) !== ''): ?><span class="why"><?= ttg_h($why) ?></span><?php endif; ?></span>
             <span class="p">← <?= ttg_h($relWord((string) $row['relationship'])) ?> · <?= ttg_h((string) ($other['type'] ?? '')) ?></span>
           </a>
         </li>
@@ -232,6 +277,5 @@ dd{margin:.35rem 0 0;font-family:var(--label);font-size:.78rem;color:var(--brass
   <?= ttg_html_navigator_dock() ?>
   <?= ttg_you_dock(ttg_graph_viewer()) ?>
 </nav>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

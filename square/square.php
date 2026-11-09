@@ -154,6 +154,5 @@ header('Cache-Control: no-store');
 <script src="/jack/body/js/sprite.js?v=18"></script>
 <script src="/assets/jack-voice.js?v=1"></script>
 <script src="/square/js/square.js?v=4"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

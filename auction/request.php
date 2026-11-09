@@ -52,6 +52,5 @@ header('Cache-Control: no-store');
   <p class="dev-link"><a href="<?= ttg_h($link) ?>"><?= ttg_h($link) ?></a></p>
   <p class="doors"><a href="/auction/">BACK</a></p>
 </main>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

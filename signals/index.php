@@ -130,6 +130,5 @@ header('Cache-Control: no-store');
 <script>window.TTG_SIGNALS=<?= $json ?>;</script>
 <script src="/signals/js/arianrhod.js?v=3"></script>
 <script src="/signals/js/signals.js?v=3"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -113,7 +113,6 @@ dd{margin:.35rem 0 0;font-family:"Courier Prime",monospace;font-size:.78rem;colo
   <?= ttg_limbs($slug) ?>
 </main>
 <?= ttg_html_visit_tracker() ?>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>
 <?php

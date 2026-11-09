@@ -1,0 +1,1 @@
+Upload the etymology folder to the document root serving ffilm.org. Then open https://ffilm.org/etymology/. No packages, database, API key or build step required. This is a browser adaptation using the original repository dataset, not an unchanged copy of its React/Express application. Original: https://github.com/procrastinatrix/etymology-explorer .

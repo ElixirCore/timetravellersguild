@@ -17,7 +17,8 @@ if ($dossiers === false) $dossiers = '{}';
 <title>JACK / PUNCHCARD TAROT — timetravellersguild.com</title>
 <meta name="theme-color" content="#d9cb9e">
 <meta name="description" content="Jack’s punchcard tarot. Hold a question. Punch the hopper. Inspect each slip.">
-<link rel="stylesheet" href="css/tarot.css?v=desk2">
+<link rel="stylesheet" href="css/tarot.css?v=talk1">
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 <body>
 <noscript>
@@ -63,8 +64,10 @@ if ($dossiers === false) $dossiers = '{}';
     <div id="reading-text" hidden></div>
     <div id="reading-actions" hidden>
       <button type="button" id="copy-btn" class="action-btn">COPY SLIP</button>
+      <button type="button" id="talk-btn" class="action-btn talk-btn" aria-pressed="false">HEAR JACK READ IT</button>
       <button type="button" id="new-reading-btn" class="action-btn">NEW HOPPER</button>
     </div>
+    <p id="talk-status" class="talk-status" aria-live="polite"></p>
   </div>
 </div>
 
@@ -102,6 +105,7 @@ window.TTG_TAROT_DOSSIERS=<?= $dossiers ?>;
 </script>
 <script src="/jack/body/js/sprite.js"></script>
 <script src="js/tarot.js?v=desk2"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
+<script src="https://unpkg.com/@elevenlabs/client@1.28.0/dist/lib.iife.js"></script>
+<script src="js/talk.js?v=talk1"></script>
 </body>
 </html>

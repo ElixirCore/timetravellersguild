@@ -94,6 +94,5 @@ header('Cache-Control: no-store');
 <script src="/arianrhod/js/body.js?v=7"></script>
 <script src="/arianrhod/js/lens.js?v=5"></script>
 <script src="/arianrhod/js/shed.js?v=16"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

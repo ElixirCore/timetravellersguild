@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIELD NOTICE — Time Travellers Guild</title>
+<meta name="description" content="A slip in your name has already been filed. The Time Travellers Guild: instruments, records and doors. timetravellersguild.com">
+<style>
+  :root{
+    --ink:#e8e4d8;
+    --dim:#9a958a;
+    --phos:#8ef0a0;
+    --card:#efe6c8;
+    --card-ink:#2a2418;
+    --bg:#0b0c0a;
+    --line:#2a2c26;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"IBM Plex Mono","Courier New",ui-monospace,Menlo,Consolas,monospace;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  /* faint scanlines */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:28px 0 0}
+  .eyebrow{
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-size:11px;letter-spacing:.18em;color:var(--dim);
+    border-bottom:1px solid var(--line);padding-bottom:12px;
+  }
+  .eyebrow .blink{color:var(--phos)}
+  .blink::before{content:"●";margin-right:.6em;animation:pulse 1.6s steps(2) infinite}
+  @keyframes pulse{50%{opacity:.15}}
+  h1{
+    font-size:clamp(26px,6vw,44px);
+    font-weight:700;letter-spacing:.02em;line-height:1.2;
+    padding:34px 0 10px;min-height:3.6em;
+  }
+  h1 .caret{display:inline-block;width:.6em;background:var(--phos);color:var(--phos);
+    animation:pulse 1s steps(2) infinite;user-select:none}
+  .sub{color:var(--phos);font-size:clamp(14px,2.6vw,17px);letter-spacing:.04em}
+  .lede{color:var(--dim);padding:18px 0 6px;font-size:14px;max-width:56ch}
+  .stage{padding:26px 0 8px}
+  canvas{display:block;width:100%;height:auto;border:1px solid var(--line);background:#101210}
+  .caption{font-size:11px;letter-spacing:.14em;color:var(--dim);padding-top:10px;
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .caption .dt{color:var(--phos);font-variant-numeric:tabular-nums}
+  h2{
+    font-size:12px;letter-spacing:.3em;color:var(--dim);font-weight:400;
+    padding:44px 0 16px;border-bottom:1px solid var(--line);margin-bottom:4px;
+  }
+  ol.stations{list-style:none}
+  ol.stations li{
+    display:grid;grid-template-columns:88px 1fr;gap:16px;
+    padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .st-num{color:var(--phos);font-size:12px;letter-spacing:.12em;padding-top:3px}
+  .st-name{font-size:16px;letter-spacing:.06em}
+  .st-desc{display:block;color:var(--dim);font-size:13px;padding-top:4px;max-width:52ch}
+  .doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    margin-top:4px}
+  .door{
+    background:var(--bg);border:1px solid var(--line);padding:18px 14px 20px;text-decoration:none;color:var(--ink);
+    display:block;position:relative;transition:background .18s;
+  }
+  .door:hover,.door:focus-visible{background:#15170f;outline:none}
+  .door:focus-visible{box-shadow:inset 0 0 0 2px var(--phos)}
+  .door .d-tag{font-size:10px;letter-spacing:.24em;color:var(--dim)}
+  .door .d-name{font-size:15px;letter-spacing:.1em;color:var(--phos);padding:8px 0 6px}
+  .door .d-desc{font-size:12px;color:var(--dim);line-height:1.5}
+  .door::after{content:"→";position:absolute;top:14px;right:14px;color:var(--dim);font-size:12px}
+  .door:hover::after{color:var(--phos)}
+  footer{
+    margin-top:56px;border-top:1px solid var(--line);
+    padding:22px 0 60px;font-size:11px;letter-spacing:.1em;color:var(--dim);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  footer a{color:var(--phos);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+  @media (max-width:480px){
+    ol.stations li{grid-template-columns:64px 1fr;gap:10px}
+    h1{min-height:4.4em}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .blink::before,.caret{animation:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">
+      <span>IBM 5081 · FIELD NOTICE · BATCH 0001</span>
+      <span class="blink">RECEIVING</span>
+    </div>
+    <h1><span id="typed"></span><span class="caret" id="caret">&nbsp;</span></h1>
+    <p class="sub">The record is already open. The Guild keeps no canon.</p>
+    <p class="lede">The Time Travellers Guild keeps instruments, records and doors.
+    Hold a chronometer. Make a film in a day. Speak to the clerk.
+    Move through the public tree.</p>
+  </header>
+
+  <div class="stage">
+    <canvas id="card" role="img" aria-label="An animation of a punch card being punched, column by column, then fed out and replaced."></canvas>
+    <div class="caption">
+      <span>FIG 1. — A SLIP, BEING PUNCHED</span>
+      <span class="dt" id="dt">ΔT 0.00s</span>
+    </div>
+  </div>
+
+  <h2>THE GUILD JOURNEY</h2>
+  <ol class="stations">
+    <li>
+      <span class="st-num">I · ARRIVAL</span>
+      <span><span class="st-name">Try an instrument</span>
+      <span class="st-desc">A drop-in taster. No commitment. Hold a chronometer, hear a story, see what the Guild does.</span></span>
+    </li>
+    <li>
+      <span class="st-num">II · NOW</span>
+      <span><span class="st-name">Make something real</span>
+      <span class="st-desc">A short film, a star-chart, a soundscape, or a small working tool.</span></span>
+    </li>
+    <li>
+      <span class="st-num">III · SIGNAL</span>
+      <span><span class="st-name">Send it forward</span>
+      <span class="st-desc">Publish or share what you made — into the Guild’s open tools, or a local showcase.</span></span>
+    </li>
+    <li>
+      <span class="st-num">IV · GUILD</span>
+      <span><span class="st-name">Bring the next arrival</span>
+      <span class="st-desc">The people who run the Guild started at station one.</span></span>
+    </li>
+  </ol>
+
+  <h2>DOORS</h2>
+  <div class="doors">
+    <a class="door" href="https://timetravellersguild.com/join">
+      <span class="d-tag">DOOR</span>
+      <span class="d-name">JOIN</span>
+      <span class="d-desc">A slip in your name has been filed before arrival. Complete the missing line.</span>
+    </a>
+    <a class="door" href="https://timetravellersguild.com/chat">
+      <span class="d-tag">DOOR</span>
+      <span class="d-name">THE DESK</span>
+      <span class="d-desc">Speak to Jack — a robot of punched card stock. The desk takes statements.</span>
+    </a>
+    <a class="door" href="https://timetravellersguild.com/box">
+      <span class="d-tag">DOOR</span>
+      <span class="d-name">THE BOOTH</span>
+      <span class="d-desc">CHRONOS · Temporal Relay Booth · Mk VI.</span>
+    </a>
+    <a class="door" href="https://timetravellersguild.com/now">
+      <span class="d-tag">DOOR</span>
+      <span class="d-name">THE TREE</span>
+      <span class="d-desc">The same field, listed. Every record, back to 1951.</span>
+    </a>
+    <a class="door" href="https://timetravellersguild.com/grimoire">
+      <span class="d-tag">DOOR</span>
+      <span class="d-name">GRIMOIRE</span>
+      <span class="d-desc">A working text and a register of found things. Convenient. Thorough. Partial.</span>
+    </a>
+  </div>
+
+  <footer>
+    <span><a href="https://timetravellersguild.com">timetravellersguild.com</a></span>
+    <span>THIS PAGE KEEPS NOTHING · NO FORMS · NO TRACKING</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- 1. Typed headline ---- */
+  var line = "A SLIP IN YOUR NAME HAS ALREADY BEEN FILED.";
+  var typedEl = document.getElementById("typed");
+  var caret = document.getElementById("caret");
+  if (reduced) {
+    typedEl.textContent = line;
+    caret.style.display = "none";
+  } else {
+    var i = 0;
+    (function tick(){
+      if (i <= line.length) {
+        typedEl.textContent = line.slice(0, i);
+        i++;
+        setTimeout(tick, line.charAt(i-1) === " " ? 30 : 55);
+      }
+    })();
+  }
+
+  /* ---- 2. ΔT jitter readout ---- */
+  var dtEl = document.getElementById("dt");
+  if (!reduced) {
+    setInterval(function(){
+      var v = (Math.random()*2-1) * 0.09;
+      dtEl.textContent = "ΔT " + (v >= 0 ? "+" : "") + v.toFixed(2) + "s";
+    }, 900);
+  }
+
+  /* ---- 3. Punch-card canvas ---- */
+  var canvas = document.getElementById("card");
+  var ctx = canvas.getContext("2d");
+  var COLS = 80, ROWS = 12;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W = 0, H = 0, card = null, chads = [];
+
+  function resize(){
+    var cssW = canvas.clientWidth || 720;
+    var cssH = Math.max(240, Math.min(340, Math.round(cssW * 0.42)));
+    W = cssW; H = cssH;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.height = cssH + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (card) layoutCard(card);
+    if (reduced) { newCard(true); drawStatic(); }
+  }
+
+  /* deterministic punch pattern per card index */
+  var cardIndex = 0;
+  function patternFor(n){
+    var holes = [];
+    var seed = (n * 2654435761) >>> 0;
+    function rnd(){ seed = (seed * 1103515245 + 12345) >>> 0; return seed / 4294967296; }
+    for (var c = 0; c < COLS; c++){
+      var rows = [];
+      var count = 1 + Math.floor(rnd() * 2); /* 1-2 holes per column */
+      for (var k = 0; k < count; k++) rows.push(Math.floor(rnd() * ROWS));
+      holes.push(rows);
+    }
+    return holes;
+  }
+
+  function newCard(done){
+    cardIndex++;
+    card = { x: 0, y: 0, w: 0, h: 0, holes: patternFor(cardIndex), col: done ? COLS : 0,
+             state: done ? "hold" : "punch", t: 0 };
+    layoutCard(card);
+    if (done) { /* fully punched card, static */ }
+  }
+
+  function layoutCard(cd){
+    var marginX = W * 0.06;
+    cd.w = W - marginX * 2;
+    cd.h = Math.min(H * 0.62, cd.w * 0.42);
+    cd.x = marginX;
+    cd.y = (H - cd.h) / 2;
+    cd.gx = cd.w / COLS;
+    cd.gy = cd.h / (ROWS + 2);
+  }
+
+  function drawCard(cd){
+    ctx.save();
+    ctx.translate(cd.x, cd.y);
+    /* card body */
+    ctx.fillStyle = "#efe6c8";
+    ctx.beginPath();
+    /* clipped corner, like a real 5081 */
+    var clip = Math.min(18, cd.w * 0.03);
+    ctx.moveTo(clip, 0);
+    ctx.lineTo(cd.w, 0);
+    ctx.lineTo(cd.w, cd.h);
+    ctx.lineTo(0, cd.h);
+    ctx.lineTo(0, clip);
+    ctx.closePath();
+    ctx.fill();
+    /* printed rule lines */
+    ctx.strokeStyle = "rgba(120,100,60,.35)";
+    ctx.lineWidth = 1;
+    for (var r = 1; r <= ROWS; r++){
+      var y = r * cd.gy;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cd.w, y); ctx.stroke();
+    }
+    /* holes punched so far */
+    ctx.fillStyle = "#0b0c0a";
+    var hw = Math.max(2, cd.gx * 0.52);
+    var hh = Math.max(2, cd.gy * 0.5);
+    var upto = Math.min(cd.col, COLS);
+    for (var c = 0; c < upto; c++){
+      var rows = cd.holes[c];
+      for (var k = 0; k < rows.length; k++){
+        var hx = c * cd.gx + (cd.gx - hw) / 2;
+        var hy = (rows[k] + 1) * cd.gy - hh / 2;
+        ctx.fillRect(hx, hy, hw, hh);
+      }
+    }
+    /* punch head position */
+    if (cd.state === "punch" && cd.col < COLS){
+      var px = cd.col * cd.gx + cd.gx / 2;
+      ctx.fillStyle = "#8ef0a0";
+      ctx.fillRect(px - 1, -10, 2, 8);
+      ctx.fillRect(px - 4, -3, 8, 2);
+    }
+    /* footer print on card */
+    ctx.fillStyle = "rgba(42,36,24,.7)";
+    ctx.font = "9px 'Courier New', monospace";
+    ctx.fillText("TIME TRAVELLERS GUILD · 5081 · DO NOT FOLD, SPINDLE OR TIME-FRAY", 8, cd.h - 5);
+    ctx.restore();
+  }
+
+  function spawnChads(cd){
+    var rows = cd.holes[cd.col];
+    for (var k = 0; k < rows.length; k++){
+      chads.push({
+        x: cd.x + cd.col * cd.gx + cd.gx / 2,
+        y: cd.y + (rows[k] + 1) * cd.gy,
+        vx: (Math.random() - .5) * 0.6,
+        vy: 0.4 + Math.random() * 0.8,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - .5) * 0.2,
+        life: 1
+      });
+    }
+  }
+
+  function drawChads(){
+    for (var i = chads.length - 1; i >= 0; i--){
+      var p = chads[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.03; p.rot += p.vr; p.life -= 0.012;
+      if (p.life <= 0 || p.y > H + 10) { chads.splice(i, 1); continue; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, p.life) * 0.9;
+      ctx.fillStyle = "#efe6c8";
+      ctx.fillRect(-1.5, -1, 3, 2);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawStatic(){
+    ctx.clearRect(0, 0, W, H);
+    if (card) drawCard(card);
+  }
+
+  var last = 0, punchAcc = 0;
+  function frame(ts){
+    var dt = Math.min(50, ts - last); last = ts;
+    ctx.clearRect(0, 0, W, H);
+
+    if (card.state === "punch"){
+      punchAcc += dt;
+      while (punchAcc > 34 && card.col < COLS){
+        spawnChads(card);
+        card.col++;
+        punchAcc -= 34;
+      }
+      if (card.col >= COLS){ card.state = "hold"; card.t = 0; }
+    } else if (card.state === "hold"){
+      card.t += dt;
+      if (card.t > 900){ card.state = "eject"; }
+    } else if (card.state === "eject"){
+      card.y -= 3.2;
+      if (card.y + card.h < -20){ newCard(false); }
+    }
+
+    drawCard(card);
+    drawChads();
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  if (!reduced){
+    newCard(false);
+    requestAnimationFrame(function(ts){ last = ts; requestAnimationFrame(frame); });
+  }
+  window.addEventListener("resize", resize);
+})();
+</script>
+</body>
+</html>

@@ -29,7 +29,7 @@ header('Cache-Control: no-store');
 <meta name="description" content="Instrument №13. A living computational body for the Guild graph. Operate the machine." />
 <meta name="theme-color" content="#0a0c10" />
 <?= function_exists('ttg_og_head') ? ttg_og_head() : '' ?>
-<link rel="stylesheet" href="/machine/css/machine.css?v=7" />
+<link rel="stylesheet" href="/machine/css/machine.css?v=9" />
 </head>
 <body>
 <noscript>
@@ -44,6 +44,7 @@ header('Cache-Control: no-store');
 
 <nav id="dock" aria-label="Guild">
   <button type="button" id="dockReadout">READOUT</button>
+  <button type="button" id="dockField">FIELD</button>
   <button type="button" id="dockSound" class="dock-quiet">SOUND ON</button>
   <a href="/">HOME</a>
   <a href="/jack">JACK</a>
@@ -80,6 +81,10 @@ header('Cache-Control: no-store');
   <ul id="fbCards"></ul>
 </section>
 
+<p id="intake" hidden>&#9673; RECEIVING NEW RECORDS</p>
+
+<a id="recordLink" href="/n/" hidden>OPEN RECORD &#8599;</a>
+
 <aside id="inspect" hidden>
   <button type="button" id="inspectClose" aria-label="Release card">×</button>
   <p class="kind" id="inspectType"></p>
@@ -87,13 +92,14 @@ header('Cache-Control: no-store');
   <dl>
     <div><dt>OBSERVED</dt><dd id="inspectDate"></dd></div>
     <div><dt>STATUS</dt><dd id="inspectStatus"></dd></div>
-    <div><dt>PLACE</dt><dd id="inspectPlace"></dd></div>
     <div><dt>ID</dt><dd id="inspectId"></dd></div>
   </dl>
+  <p id="inspectBody" class="inspect-body" hidden></p>
+  <div id="inspectNerves" class="nerves" aria-live="polite"></div>
   <a id="inspectLink" href="/n/">OPEN RECORD</a>
-  <button type="button" id="inspectDest">SET AS DESTINATION</button>
   <button type="button" id="inspectRelease">RELEASE INTO MECHANISM</button>
 </aside>
+
 
 <aside id="readout" hidden aria-label="Instrument readout"></aside>
 
@@ -110,19 +116,18 @@ window.TTG_MACHINE = <?= json_encode([
 </script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
-<script src="/machine/js/materials.js?v=20"></script>
-<script src="/machine/js/emergy.js?v=20"></script>
-<script src="/machine/js/crt.js?v=20"></script>
-<script src="/machine/js/readout.js?v=20"></script>
-<script src="/machine/js/feed-infinity.js?v=20"></script>
-<script src="/machine/js/cards.js?v=20"></script>
-<script src="/machine/js/core.js?v=20"></script>
-<script src="/machine/js/sound.js?v=20"></script>
-<script src="/machine/js/journey.js?v=20"></script>
-<script src="/machine/js/actions.js?v=20"></script>
-<script src="/machine/js/components-controls.js?v=20"></script>
-<script src="/machine/js/components-displays.js?v=20"></script>
-<script src="/machine/js/machine.js?v=20"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
+<script src="/machine/js/materials.js?v=21"></script>
+<script src="/machine/js/emergy.js?v=21"></script>
+<script src="/machine/js/crt.js?v=22"></script>
+<script src="/machine/js/readout.js?v=21"></script>
+<script src="/machine/js/feed-infinity.js?v=21"></script>
+<script src="/machine/js/cards.js?v=28"></script>
+<script src="/machine/js/core.js?v=1"></script>
+<script src="/machine/js/sound.js?v=1"></script>
+<script src="/machine/js/journey.js?v=1"></script>
+<script src="/machine/js/actions.js?v=1"></script>
+<script src="/machine/js/components-controls.js?v=1"></script>
+<script src="/machine/js/components-displays.js?v=1"></script>
+<script src="/machine/js/machine.js?v=30"></script>
 </body>
 </html>

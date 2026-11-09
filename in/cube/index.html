@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Context cube - Time Travellers Guild</title>
+<meta name="description" content="The context cube: ffilm.org/rubix abstracted into a nav. Six faces, six doors into the Guild's work, each face dressed in a screencapture of the room it opens. Drag to turn, tap a face to step through.">
+<meta name="theme-color" content="#030207">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="Context cube - Time Travellers Guild">
+<meta property="og:description" content="ffilm.org/rubix abstracted into a nav: six faces, six doors into the Guild's work.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<style>
+:root{--void:#030207;--navy:#1e3a5f;--paper:#d9cb9e;--ink:#161814;--scarlet:#c41e3a;
+  --font:"Courier New", Courier, "Lucida Console", monospace}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--void);overflow:hidden}
+#cubestage{position:fixed;inset:0;cursor:grab}
+#cubestage:active{cursor:grabbing}
+#cubestage canvas{display:block}
+/* titles and context on hover / first tap - no persistent bar */
+#facelabel{position:fixed;z-index:5;pointer-events:none;display:none;max-width:15rem;
+  background:var(--paper);color:var(--ink);border:1.5px solid var(--navy);
+  font-family:var(--font);padding:.45rem .6rem;box-shadow:0 8px 20px rgba(3,2,7,.55)}
+#facelabel b{display:block;font-weight:400;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--scarlet)}
+#facelabel span{font-size:10px;letter-spacing:.06em;line-height:1.5}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.no3d{overflow:auto}
+.no3d .vh{position:static;width:auto;height:auto;clip:auto;white-space:normal;
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-content:center;
+  min-height:100vh;padding:2rem 1rem;font-family:var(--font)}
+.no3d .vh a{color:var(--paper);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--navy);padding:.6rem .8rem;text-decoration:none}
+</style>
+</head>
+<body>
+<div id="cubestage" role="button" tabindex="0" aria-label="Context cube - drag to turn, tap a face to open that door"></div>
+<div id="facelabel" aria-hidden="true"><b></b><span></span></div>
+<nav class="vh" aria-label="Context cube doors">
+  <a href="https://timetravellersguild.com/now">Now - the living archive</a>
+  <a href="https://ffilm.org/mindform/">Mindform - a self-playing toroid</a>
+  <a href="https://timetravellersguild.com/box/">Chronos - the phonebox</a>
+  <a href="https://timetravellersguild.com/grimoire/">Grimoire</a>
+  <a href="https://timetravellersguild.com/house/">House - a visitable 3D map</a>
+  <a href="https://timetravellersguild.com/">Jack - the front door</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<script>
+/* Context cube, fullscreen: ffilm.org/rubix abstracted into a nav.
+   Same cube: LEVEL 3, SPACING 1.05, plastic 0x0d0d0d, hemisphere/key/rim/fill
+   lights, damped orbit. The puzzle is gone; each face is a door, and every
+   sticker of a face carries one ninth of a screencapture of the room it
+   opens, so the whole side reads as that room. No persistent text bar:
+   a face's title and context appear on hover, or on a first tap. */
+(function(){
+  var stage=document.getElementById('cubestage');
+  if(!stage)return;
+  if(!window.THREE){document.body.className='no3d';return;}
+  var DOORS={
+    '0,1,0' :'https://timetravellersguild.com/now',
+    '0,0,1' :'https://ffilm.org/mindform/',
+    '1,0,0' :'https://timetravellersguild.com/box/',
+    '0,0,-1':'https://timetravellersguild.com/grimoire/',
+    '-1,0,0':'https://timetravellersguild.com/house/',
+    '0,-1,0':'https://timetravellersguild.com/'
+  };
+  var NAMES={'0,1,0':'NOW','0,0,1':'MINDFORM','1,0,0':'CHRONOS','0,0,-1':'GRIMOIRE','-1,0,0':'HOUSE','0,-1,0':'JACK'};
+  var ABOUT={
+    '0,1,0' :'The living archive - timetravellersguild.com/now',
+    '0,0,1' :'A self-playing toroid - ffilm.org/mindform',
+    '1,0,0' :'The CHRONOS phonebox - timetravellersguild.com/box',
+    '0,0,-1':'The Grimoire - timetravellersguild.com/grimoire',
+    '-1,0,0':'The house, a visitable 3D map - timetravellersguild.com/house',
+    '0,-1,0':'The front door, Jack on the desk - timetravellersguild.com'
+  };
+  var FACE_IMG={
+    '0,1,0' :'face-now',
+    '0,0,1' :'face-mindform',
+    '1,0,0' :'face-chronos',
+    '0,0,-1':'face-grimoire',
+    '-1,0,0':'face-house',
+    '0,-1,0':'face-jack'
+  };
+  var FACE_BASE='/in/cube/faces/';
+  var COLORS={'0,1,0':0xffffff,'0,-1,0':0xffd500,'1,0,0':0xcc0000,'-1,0,0':0xff7000,'0,0,1':0x009b48,'0,0,-1':0x0046ad};
+  var LEVEL=3, SPACING=1.05, PLASTIC=0x0d0d0d;
+  var FACE_PX=0,FACE_NX=1,FACE_PY=2,FACE_NY=3,FACE_PZ=4,FACE_NZ=5;
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(50,1,0.1,1000);
+  var renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.setClearColor(0x030207,1);
+  renderer.domElement.style.touchAction='none';
+  stage.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xffffff,0x202020,0.55));
+  var key=new THREE.DirectionalLight(0xffffff,0.85); key.position.set(6,10,8); scene.add(key);
+  var rim=new THREE.DirectionalLight(0xffffff,0.35); rim.position.set(-10,6,-8); scene.add(rim);
+  var fill=new THREE.PointLight(0xffffff,0.35); fill.position.set(0,6,0); scene.add(fill);
+
+  var controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true;
+  controls.enableKeys=false;
+  controls.enableZoom=false;
+  controls.enablePan=false;
+  controls.autoRotate=true;
+  controls.autoRotateSpeed=1.1;
+
+  function plasticMat(){return new THREE.MeshStandardMaterial({color:PLASTIC,roughness:0.95,metalness:0});}
+  function stickerMat(hex){return new THREE.MeshStandardMaterial({color:hex,roughness:0.55,metalness:0});}
+
+  /* grid (col,row) of cubie (x,y,z) within face axk, viewed from outside, +y up */
+  function gridPos(axk,x,y,z){
+    if(axk==='0,0,1') return [x,2-y];
+    if(axk==='0,0,-1')return [2-x,2-y];
+    if(axk==='1,0,0') return [2-z,2-y];
+    if(axk==='-1,0,0')return [z,2-y];
+    if(axk==='0,1,0') return [x,z];
+    return [x,2-z];
+  }
+
+  var cubies=[], stickers=[];
+  var offset=((LEVEL-1)*SPACING)/2;
+  for(var x=0;x<LEVEL;x++)for(var y=0;y<LEVEL;y++)for(var z=0;z<LEVEL;z++){
+    var mats=[plasticMat(),plasticMat(),plasticMat(),plasticMat(),plasticMat(),plasticMat()];
+    var mine=[];
+    var onFace=[[x===LEVEL-1,FACE_PX,'1,0,0'],[x===0,FACE_NX,'-1,0,0'],[y===LEVEL-1,FACE_PY,'0,1,0'],[y===0,FACE_NY,'0,-1,0'],[z===LEVEL-1,FACE_PZ,'0,0,1'],[z===0,FACE_NZ,'0,0,-1']];
+    for(var f=0;f<6;f++){
+      if(!onFace[f][0])continue;
+      var mi=onFace[f][1], axk=onFace[f][2];
+      mats[mi]=stickerMat(COLORS[axk]);
+      mine.push({mat:mats[mi],axk:axk,x:x,y:y,z:z});
+    }
+    var m=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),mats);
+    m.position.set(x*SPACING-offset,y*SPACING-offset,z*SPACING-offset);
+    scene.add(m); cubies.push(m);
+    for(var q=0;q<mine.length;q++)stickers.push(mine[q]);
+  }
+
+  function applyFace(axk,img){
+    var sw=img.width/3, sh=img.height/3;
+    for(var i=0;i<stickers.length;i++){
+      var st=stickers[i];
+      if(st.axk!==axk)continue;
+      var gp=gridPos(axk,st.x,st.y,st.z);
+      var c=document.createElement('canvas'); c.width=c.height=256;
+      var g=c.getContext('2d');
+      g.drawImage(img,gp[0]*sw,gp[1]*sh,sw,sh,0,0,256,256);
+      var t=new THREE.CanvasTexture(c);
+      t.encoding=THREE.sRGBEncoding;
+      t.anisotropy=renderer.capabilities.getMaxAnisotropy();
+      st.mat.map=t;
+      st.mat.color.set(0xffffff);
+      st.mat.needsUpdate=true;
+    }
+  }
+  Object.keys(FACE_IMG).forEach(function(axk){
+    var im=new Image();
+    im.onload=function(){applyFace(axk,im);};
+    im.src=FACE_BASE+FACE_IMG[axk]+'.jpg';
+  });
+
+  var ray=new THREE.Raycaster(), ptr=new THREE.Vector2();
+  var label=document.getElementById('facelabel');
+  function axisAt(cx,cy){
+    var r=renderer.domElement.getBoundingClientRect();
+    ptr.x=((cx-r.left)/r.width)*2-1;
+    ptr.y=-((cy-r.top)/r.height)*2+1;
+    ray.setFromCamera(ptr,camera);
+    var hits=ray.intersectObjects(cubies);
+    if(!hits.length)return null;
+    var n=hits[0].face.normal.clone().transformDirection(hits[0].object.matrixWorld);
+    return [Math.round(n.x),Math.round(n.y),Math.round(n.z)].join(',');
+  }
+  function showLabel(ax,cx,cy){
+    if(!ax||!NAMES[ax]){label.style.display='none';return;}
+    label.querySelector('b').textContent=NAMES[ax];
+    label.querySelector('span').textContent=ABOUT[ax];
+    label.style.display='block';
+    var lw=label.offsetWidth, lh=label.offsetHeight;
+    var lx=Math.min(Math.max(8,cx+16),window.innerWidth-lw-8);
+    var ly=Math.min(Math.max(8,cy+16),window.innerHeight-lh-8);
+    label.style.left=lx+'px'; label.style.top=ly+'px';
+  }
+  /* hover: title + context follows the pointer (fine pointers only) */
+  renderer.domElement.addEventListener('pointermove',function(e){
+    if(e.pointerType==='touch')return;
+    showLabel(axisAt(e.clientX,e.clientY),e.clientX,e.clientY);
+  });
+  renderer.domElement.addEventListener('pointerleave',function(){label.style.display='none';});
+
+  /* tap: first tap on a face shows its title + context; a second tap on the
+     same face steps through. A drag still just turns the cube. */
+  var dX=0,dY=0,dT=0,armed=null,armedAt=0;
+  renderer.domElement.addEventListener('pointerdown',function(e){dX=e.clientX;dY=e.clientY;dT=Date.now();});
+  renderer.domElement.addEventListener('pointerup',function(e){
+    if(Math.abs(e.clientX-dX)+Math.abs(e.clientY-dY)>8||Date.now()-dT>700)return;
+    var ax=axisAt(e.clientX,e.clientY);
+    if(!ax){label.style.display='none';armed=null;return;}
+    if(e.pointerType==='touch'){
+      var now=Date.now();
+      if(armed===ax&&now-armedAt<2600){
+        armed=null; label.style.display='none';
+        var u=DOORS[ax]; if(u)window.open(u,'_blank','noopener');
+      }else{
+        armed=ax; armedAt=now;
+        showLabel(ax,e.clientX,e.clientY);
+      }
+      return;
+    }
+    var url=DOORS[ax];
+    if(url)window.open(url,'_blank','noopener');
+  });
+  stage.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();var u=DOORS['0,1,0'];if(u)window.open(u,'_blank','noopener');}});
+
+  function size(){
+    var w=stage.clientWidth||window.innerWidth, h=stage.clientHeight||window.innerHeight;
+    renderer.setSize(w,h);
+    var a=w/h, d=8.7;
+    if(a<1)d=8.7*Math.min(2.4,0.66/a);
+    camera.position.set(4.6,3.6,6.4).setLength(d);
+    camera.aspect=a;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize',size);
+  size();
+  (function loop(){controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);})();
+})();
+</script>
+</body>
+</html>

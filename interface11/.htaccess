@@ -1,0 +1,16 @@
+Options -Indexes
+
+# the modules are imported without version tags: always revalidate them
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+# the ElevenLabs key lives here: never served
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "config.sample.php">
+  Require all denied
+</Files>

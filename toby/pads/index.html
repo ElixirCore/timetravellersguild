@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>pads .;. context window</title>
+<meta name="description" content="a 7 by 7 goðen voice soundboard. touch a pad, bend the sound.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='6' y='6' width='23' height='23' rx='5' fill='%23e0586c'/><rect x='35' y='6' width='23' height='23' rx='5' fill='%23f5a35c'/><rect x='6' y='35' width='23' height='23' rx='5' fill='%235b8ef0'/><rect x='35' y='35' width='23' height='23' rx='5' fill='%239a5bd6'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,100;1,9..144,300..700,100&family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/toby/pads/assets/pads.css?v=1">
+</head>
+<body>
+<header class="top">
+  <a class="crumb" href="/toby/">&#8592; context window</a>
+  <h1>pads <span class="dot">.;&#xFE0E;</span></h1>
+  <p class="sub">49 voices of the digits .;. touch a pad, turn a knob</p>
+</header>
+
+<main class="unit" id="unit" aria-label="7 by 7 voice soundboard">
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+
+  <div class="gridhead" id="gridhead" aria-hidden="true"></div>
+
+  <div class="board">
+    <div class="rowlabels" id="rowlabels" aria-hidden="true"></div>
+    <div class="grid" id="grid" role="group" aria-label="voice pads"></div>
+  </div>
+
+  <div class="console">
+    <div class="knobbank" role="group" aria-label="sound controls">
+      <div class="knobwrap" data-knob="pitch">
+        <div class="knob" role="slider" tabindex="0" aria-label="pitch knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i></i></div>
+        <span class="kname">pitch</span>
+      </div>
+      <div class="knobwrap" data-knob="filter">
+        <div class="knob" role="slider" tabindex="0" aria-label="filter knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i></i></div>
+        <span class="kname">filter</span>
+      </div>
+      <div class="knobwrap" data-knob="space">
+        <div class="knob" role="slider" tabindex="0" aria-label="echo knob" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+        <span class="kname">echo</span>
+      </div>
+    </div>
+    <div class="brand">
+      <span class="lamp" id="lamp" aria-hidden="true"></span>
+      <span class="bname">TTG-49</span>
+      <span class="bsub">go&eth;en voice unit</span>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <p>observation &rarr; relation &rarr; context &rarr; link &rarr; emergence .;. no relation is canon merely because it is audible</p>
+</footer>
+
+<script src="/toby/pads/assets/pads.js?v=1"></script>
+</body>
+</html>

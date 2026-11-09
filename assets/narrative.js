@@ -60,6 +60,19 @@
       if (!box.hidden) load();
     });
     document.body.append(tab, box);
+
+    /* Sit above the page's nav strip, whatever height it is at this screen size. */
+    var dock = document.getElementById('dock');
+    var place = function () {
+      var h = dock && dock.offsetHeight ? Math.max(0, window.innerHeight - dock.getBoundingClientRect().top) : 0;
+      tab.style.bottom = (h + 12) + 'px';
+      box.style.bottom = (h + 56) + 'px';
+    };
+    place();
+    window.addEventListener('resize', place);
+    if (dock && window.ResizeObserver) new ResizeObserver(place).observe(dock);
+    /* The strip appears when the page changes its body class (the interview ending). */
+    new MutationObserver(place).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
   var editing = false, flash = '';

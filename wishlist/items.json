@@ -1,0 +1,85 @@
+{
+  "checked": "2026-10-24",
+  "currency": "gbp",
+  "groups": [
+    {
+      "title": "Raspberry Pi",
+      "items": [
+        {
+          "id": "pi5-4gb",
+          "name": "Raspberry Pi 5, 4GB",
+          "pence": 10560,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/raspberry-pi-5",
+          "note": "The board itself."
+        },
+        {
+          "id": "pi-27w-psu",
+          "name": "Raspberry Pi 27W USB-C power supply (UK plug)",
+          "pence": 1150,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/raspberry-pi-27w-usb-c-power-supply",
+          "note": "Official supply for the Pi 5."
+        },
+        {
+          "id": "pi5-active-cooler",
+          "name": "Active Cooler for Raspberry Pi 5",
+          "pence": 480,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/active-cooler-for-raspberry-pi-5",
+          "note": "Heatsink and fan, fits the Pi 5."
+        },
+        {
+          "id": "pico2",
+          "name": "Raspberry Pi Pico 2 (without headers)",
+          "pence": 480,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/raspberry-pi-pico-2",
+          "note": "A small microcontroller board for reading switches."
+        }
+      ]
+    },
+    {
+      "title": "Tools",
+      "items": [
+        {
+          "id": "antex-xs25-toolkit",
+          "name": "Antex XS25 engineer's toolkit",
+          "pence": 6990,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/antex-xs25-engineers-toolkit-kc8jsz0",
+          "note": "Iron, stand, cutters, pliers, screwdrivers, desoldering pump, solder, and a digital multimeter with leads."
+        }
+      ]
+    },
+    {
+      "title": "Switches and wiring",
+      "items": [
+        {
+          "id": "toggle-spdt",
+          "name": "SPDT ON-ON miniature toggle switch (one)",
+          "pence": 150,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/mini-panel-mount-spdt-toggle-switch",
+          "note": "Panel-mount, latching. Low-voltage use only."
+        },
+        {
+          "id": "sanwa-30mm",
+          "name": "Sanwa 30mm snap-in arcade button (one)",
+          "pence": 225,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/official-sanwa-arcade-button",
+          "note": "Built-in microswitch, snap-in panel fit."
+        },
+        {
+          "id": "jumper-140",
+          "name": "Jumper wire kit, 140 pieces",
+          "pence": 400,
+          "shop": "The Pi Hut",
+          "url": "https://thepihut.com/products/jumper-wire-kit-140-piece",
+          "note": "Pre-stripped solid-core wires for prototyping."
+        }
+      ]
+    }
+  ]
+}

@@ -41,7 +41,8 @@
   var state = {
     projection: 'TEMPORAL',
     selected: null,
-    pattern: false
+    pattern: false,
+    lit: null      // VIEW: cards Jack's current thought touches, and the route he walked
   };
 
   function bySlug(slug) {
@@ -1480,7 +1481,7 @@
       if (!n || !n.mesh) continue;
       n.mesh.position.copy(n.pos);
       var hot = selected && selected === n.def.slug;
-      var linked = !!(selected && nearSel[n.def.slug]);
+      var linked = !!(selected && nearSel[n.def.slug]) || !!(state.lit && state.lit[n.def.slug]);
       var onLimb = !!(selected && componentRoot(n.def.slug) === componentRoot(selected));
       var patterned = !!(inPattern && inPattern[n.def.slug]);
       var dim = selected && !hot && !linked && !onLimb;
@@ -1569,6 +1570,11 @@
       }).sort(function (a, b) { return whenStamp(a) - whenStamp(b); });
       var i;
       for (i = 1; i < limb.length; i++) addSeg(limb[i - 1], limb[i]);
+    }
+    if (selected && state.lit) {
+      Object.keys(state.lit).forEach(function (slug) {
+        addSeg(nodeOfSlug(selected), nodeOfSlug(slug));
+      });
     }
     if (state.pattern) {
       var rec = recurrenceRels();
@@ -2165,6 +2171,18 @@
       document.querySelectorAll('#projections [data-proj]').forEach(function (b) {
         b.setAttribute('aria-selected', b.getAttribute('data-proj') === name ? 'true' : 'false');
       });
+    },
+    /* VIEW: light the cards a thought touches (joined to the selected card); null clears. */
+    light: function (slugs) {
+      var lit = null;
+      (slugs || []).forEach(function (s) { if (s && bySlug(s)) { lit = lit || {}; lit[s] = true; } });
+      state.lit = lit;
+      writeNodes(); writePath();
+    },
+    /* VIEW: the slow idle yaw; off while a visitor holds the reins so the camera stays where they left it. */
+    setDrift: function (on) {
+      idleYaw = !!on;
+      if (!on) { yawV = 0; pitchV = 0; viewSettle = 0; }
     },
     setPattern: function (on) {
       state.pattern = !!on;

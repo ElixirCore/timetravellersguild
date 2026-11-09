@@ -116,7 +116,7 @@ return [
         ['type' => 'key', 'id' => 'sync', 'pos' => [-0.55, 0.5, 0.76], 'label' => 'SYNC', 'action' => 'sync',
             'tip' => 'SYNC — set machine present to local present.'],
         ['type' => 'key', 'id' => 'net', 'pos' => [-0.19, 0.5, 0.76], 'label' => '2033', 'action' => 'setTime',
-            'args' => ['at' => '2033-04-17T00:00:00Z'],
+            'args' => ['at' => '2033-04-17T00:00:00Z', 'say' => 'CLOCK WOUND TO NETWORK PRESENT · 2033', 'sub' => 'the field opens to its later ledger'],
             'tip' => 'NETWORK — set machine present to 17 April 2033 without travelling.'],
         ['type' => 'key', 'id' => 'hold', 'pos' => [0.17, 0.5, 0.76], 'label' => 'HOLD', 'action' => 'toggleHold',
             'latch' => 'held', 'tip' => 'HOLD — freeze the punchcard transport. Press again to release.'],

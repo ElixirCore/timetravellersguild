@@ -32,6 +32,5 @@ $lang = $GLOBALS['DET_LANG'] ?? 'en';
 </div>
 <script src="<?= det_h(DET_WEB) ?>/assets/department.js"></script>
 <?= function_exists('ttg_html_visit_tracker') ? ttg_html_visit_tracker() : '' ?>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

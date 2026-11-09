@@ -176,6 +176,7 @@ nav.scenes span{color:var(--brass-dim);margin-right:.35rem}
     <a href="/hub/">hub</a>
     <a href="/jack/mind/">Jack's mind</a>
     <a href="/n/department/">the Department</a>
+    <a href="/field-office/">If Thursday Fails</a>
   </div>
   <?php if ($related): ?>
   <section class="related">

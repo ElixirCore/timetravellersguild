@@ -72,6 +72,7 @@
     this.onChange = null;
     this.onHold = null;
     this.onHover = null;
+    this.onFlash = null;
     this.values = {
       mind: 0.73,
       matter: 0.68,
@@ -391,13 +392,19 @@
     this.values.machinePresent = d;
   };
 
+  ControlPanel.prototype._flash = function (title, sub) {
+    if (typeof this.onFlash === 'function') this.onFlash(title, sub);
+  };
+
   ControlPanel.prototype._fireKey = function (id) {
     if (!id) return;
     if (id === 'sync') {
       this.values.machinePresent = new Date();
+      this._flash('CLOCK SET TO LOCAL PRESENT', 'cards dated after now fall to OUTPUT as ghosts');
       this._commit();
     } else if (id === 'network') {
       this.values.machinePresent = new Date('2033-04-17T00:00:00Z');
+      this._flash('CLOCK WOUND TO NETWORK PRESENT \u00b7 2033', 'the field opens to its later ledger');
       this._commit();
     } else if (id === 'hold') {
       this.held = !this.held;
@@ -412,7 +419,9 @@
       this.dcAxis = 'TIME';
       this.timeMode = 'YEAR';
       this.held = false;
+      this._flash('INSTRUMENT RESTORED \u00b7 DEFAULT TRIM', 'mind, matter, \u03ba and clock returned to standard');
       if (typeof this.onHold === 'function') this.onHold(false);
+      if (typeof this.onReset === 'function') this.onReset();
       this._applyRotations();
       this._commit({ clearFocus: true });
     }
@@ -427,15 +436,11 @@
         var wi = WIND.indexOf(this.timeMode);
         this.timeMode = WIND[(wi + 1) % WIND.length];
         this._applyRotations();
-        if (typeof this.onHover === 'function') {
-          this.onHover('Wind unit set to ' + this.timeMode + '. Drag PRESENT to turn the clock.', 'PRESENT');
-        }
+        this._flash('WIND UNIT \u00b7 ' + this.timeMode, 'drag PRESENT to turn the clock one ' + this.timeMode.toLowerCase() + ' at a time');
       } else if (key === 'dc') {
         var di = DC_AXES.indexOf(this.dcAxis);
         this.dcAxis = DC_AXES[(di + 1) % DC_AXES.length];
-        if (typeof this.onHover === 'function') {
-          this.onHover('ΔC axis: ' + this.dcAxis + '. Drag to trim contextual distance.', 'ΔC');
-        }
+        this._flash('\u0394C AXIS \u00b7 ' + this.dcAxis, 'the gauge now reads contextual distance on ' + this.dcAxis.toLowerCase());
         this._commit();
       }
     }

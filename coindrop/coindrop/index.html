@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07090a">
+<title>Coindrop · Money-box Jack · Time Travellers Guild</title>
+<meta name="description" content="Money-box Jack: an interactive reference build for the Time Travellers Guild coin box. Drop a pound and Jack, clerk of the Guild, says thank you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Caslon+Text:ital@0;1&display=swap">
+<link rel="stylesheet" href="assets/coindrop.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="brand" href="../" aria-label="Time Travellers Guild home">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 34 11v18l-14 8L6 29V11Z"/><path d="m6 11 14 8 14-8M20 19v18"/></svg>
+      <span>
+        <span class="eyebrow">Time Travellers Guild <b>·</b> Coindrop</span>
+        <span class="title">Money-box Jack</span>
+      </span>
+    </a>
+    <div class="topmeta">
+      <span class="docid"><span>Assembly viewer</span><strong>TTG–MBJ / 02</strong></span>
+      <button class="btn quiet" id="sheetBtn" type="button" aria-haspopup="dialog">Build sheet</button>
+      <button class="btn quiet" id="muteBtn" type="button" aria-pressed="false">Sound on</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="viewer" aria-label="Interactive 3D model of the money box">
+      <div id="stage">
+        <div class="vp-head"><span><i class="dot"></i> Live model</span><span>1 unit = 1 mm</span></div>
+        <div class="views" role="group" aria-label="Camera views">
+          <button type="button" data-view="iso" aria-pressed="true">Iso</button><button type="button" data-view="front" aria-pressed="false">Front</button><button type="button" data-view="side" aria-pressed="false">Side</button><button type="button" data-view="rear" aria-pressed="false">Rear</button>
+        </div>
+        <div id="jackBox" aria-label="Jack, clerk of the Guild">
+          <div id="jackTicket" hidden></div>
+          <div id="jackStage"></div>
+          <div class="jack-name">Jack · clerk</div>
+        </div>
+        <div class="vp-foot">
+          <div class="status" role="status" aria-live="polite"><i class="led" id="led"></i><span id="statusText">Idle · awaiting coin</span></div>
+          <div class="actions">
+            <div class="seg" role="group" aria-label="Enclosure shading">
+              <button type="button" id="mSolid" aria-pressed="true">Solid</button><button type="button" id="mXray" aria-pressed="false">X-ray</button>
+            </div>
+            <button type="button" class="btn coin" id="dropBtn">Drop £1</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Assembly controls">
+      <section class="block">
+        <div class="bhead"><span>Assembly separation</span><output id="exOut" for="explode">0%</output></div>
+        <input id="explode" type="range" min="0" max="100" value="0" aria-label="Exploded view separation">
+        <div class="two"><button type="button" class="btn quiet" id="assembleBtn">Assemble</button><button type="button" class="btn quiet" id="explodeBtn">Explode all</button></div>
+      </section>
+
+      <section class="block">
+        <div class="bhead"><span>Visible layers</span></div>
+        <div class="layers">
+          <label><input type="checkbox" data-layer="shell" checked><span>Enclosure</span></label>
+          <label><input type="checkbox" data-layer="internals" checked><span>Internals</span></label>
+          <label><input type="checkbox" data-layer="wiring" checked><span>Wiring</span></label>
+          <label><input type="checkbox" data-layer="labels" checked><span>Labels</span></label>
+        </div>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Information">
+        <button type="button" role="tab" id="t-parts" aria-selected="true" aria-controls="p-parts">Parts</button>
+        <button type="button" role="tab" id="t-wiring" aria-selected="false" aria-controls="p-wiring" tabindex="-1">Wiring</button>
+        <button type="button" role="tab" id="t-setup" aria-selected="false" aria-controls="p-setup" tabindex="-1">Setup</button>
+        <button type="button" role="tab" id="t-jack" aria-selected="false" aria-controls="p-jack" tabindex="-1">Jack</button>
+      </div>
+
+      <div class="tabpanel" id="p-parts" role="tabpanel" aria-labelledby="t-parts">
+        <div class="plist" id="plist"></div>
+        <article class="detail" aria-live="polite">
+          <div class="kicker" id="dKick">Select a part</div>
+          <h2 id="dTitle">Assembly overview</h2>
+          <p id="dText">Tap a labelled part in the model, or pick one from the list, to see what it does and how it connects.</p>
+          <button type="button" class="btn quiet" id="focusBtn" disabled>Focus this part</button>
+        </article>
+      </div>
+
+      <div class="tabpanel" id="p-wiring" role="tabpanel" aria-labelledby="t-wiring" hidden>
+        <p class="intro">Tap a run to isolate it. Tap it again to show everything.</p>
+        <div class="wlist" id="wlist"></div>
+        <div class="warn"><strong>3.3 V logic only</strong><p>COIN is open-collector: it pulls to ground and never sources voltage. Pull up to 3.3 V, never to 12 V. Power the mech alone first and measure COIN to GND; some clones carry their own pull-up. Clamp with a diode if it reads above 3.3 V.</p></div>
+      </div>
+
+      <div class="tabpanel" id="p-setup" role="tabpanel" aria-labelledby="t-setup" hidden>
+        <ol class="steps">
+          <li><b>Mechanism.</b> Switch to NO, speed slow. Teach £1 as one pulse with real coins.</li>
+          <li><b>Audio.</b> microSD formatted FAT32. Tracks named 0001.mp3 upward: Jack's recorded lines.</li>
+          <li><b>Playback.</b> Count the pulse burst, then play one track while BUSY is low. Coins that land mid-line are counted but don't start a new line.</li>
+          <li><b>Before power.</b> Rail polarity and continuity. COIN voltage as in the warning. Speaker reads about 8 Ω. Nothing mains-voltage inside the box.</li>
+        </ol>
+        <div class="notice">Reference design, unbuilt. The CH-926 body here is a placeholder size: measure your unit before cutting.</div>
+      </div>
+
+      <div class="tabpanel" id="p-jack" role="tabpanel" aria-labelledby="t-jack" hidden>
+        <p class="intro">Jack is a punchcard from the 1950s Department of Excess Time. Cuts cost him that job; he now keeps the Guild's records. Every pound that lands gets a thank-you from him.</p>
+        <div class="lines" id="lineList"></div>
+        <div class="notice" id="voiceNote">Speech uses this device's built-in voice until Jack's recorded lines are added.</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="statusbar">
+    <span class="ref"><i></i> Reference design · unbuilt</span>
+    <span>Enclosure 200 × 260 × 140 mm</span>
+    <span id="tally">£0 received this visit</span>
+  </footer>
+</div>
+
+<dialog id="sheet" aria-labelledby="sheetTitle">
+  <div class="dhead"><div><span>Source document</span><h2 id="sheetTitle">Reference build sheet</h2></div><button type="button" class="btn quiet" id="sheetClose" aria-label="Close build sheet">Close</button></div>
+  <div class="dbody"><img src="assets/build-sheet.svg" alt="Original Money-box Jack build sheet: front panel, internal layout, wiring, firmware and setup."></div>
+  <div class="dfoot">The 3D model departs from this sheet in four places: vertical slot, coin chute and box, a tighter COIN pull-up, and power jacks moved above the hatch.</div>
+</dialog>
+
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/vendor/OrbitControls.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/jack.js"></script>
+<script src="assets/coindrop.js"></script>
+</body>
+</html>

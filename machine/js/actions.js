@@ -14,17 +14,26 @@
     m.store.set({ page: pages[(i + 1) % pages.length] });
   });
 
-  A('sync', function (m) { m.store.set({ present: new Date() }, { commit: true }); });
+  A('sync', function (m) {
+    m.store.set({ present: new Date() }, { commit: true });
+    m.say('CLOCK SET TO LOCAL PRESENT', 'cards dated after now fall to OUTPUT as ghosts');
+  });
   A('setTime', function (m, args) {
     var d = new Date(args.at);
-    if (!isNaN(d.getTime())) m.store.set({ present: d }, { commit: true });
+    if (isNaN(d.getTime())) return;
+    m.store.set({ present: d }, { commit: true });
+    m.say(args.say || ('CLOCK WOUND TO ' + d.toISOString().slice(0, 10)), args.sub || 'the field re-reads at the new present');
   });
   A('wind', function (m, args) {
     var s = m.store.state;
     m.store.set({ present: TTGM.util.step(s.present, s.wind || 'YEAR', args.n || 1) }, { commit: true });
   });
 
-  A('toggleHold', function (m) { m.store.set({ held: !m.store.get('held') }); });
+  A('toggleHold', function (m) {
+    var h = !m.store.get('held');
+    m.store.set({ held: h });
+    m.say(h ? 'TRANSPORT HELD' : 'TRANSPORT RELEASED', h ? 'press HOLD again to run the cards' : 'cards run at the speed of emergy');
+  });
   A('reset', function (m) {
     var d = m.defaults;
     m.store.set({
@@ -32,6 +41,8 @@
       dcAxis: 'TIME', wind: 'YEAR', held: false, excluded: [],
       focus: '', present: new Date(), destIndex: 0, fault: '',
     }, { commit: true });
+    m.bus.emit('reset');
+    m.say('INSTRUMENT RESTORED \u00b7 DEFAULT TRIM', 'mind, matter, \u03ba, selectors and clock returned to standard');
   });
 
   A('destStep', function (m, args) {

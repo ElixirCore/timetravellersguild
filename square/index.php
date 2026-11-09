@@ -1760,6 +1760,5 @@ animate();
 })();
 </script>
 
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

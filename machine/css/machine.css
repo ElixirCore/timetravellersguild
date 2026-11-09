@@ -364,6 +364,158 @@ body.crt-zoom #dock {
   }
 }
 
+/* NERVES — real relations of the frozen record */
+#inspectNerves { margin: 10px 0 12px; max-height: 32vh; overflow-y: auto; }
+#inspectNerves:empty { margin: 0; }
+.nerves-head {
+  margin: 0 0 6px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--phosphor);
+}
+button.nerve {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--steel);
+  border: 1px solid #3a4a5c;
+  border-left: 3px solid var(--amber);
+  color: var(--ink);
+  padding: 7px 9px;
+  margin: 0 0 5px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  border-radius: 3px;
+}
+button.nerve:hover,
+button.nerve:focus-visible { border-left-color: var(--phosphor); background: #223041; outline: none; }
+button.nerve .nerve-rel {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+button.nerve .nerve-title { display: block; font-size: 12px; margin: 2px 0 1px; }
+button.nerve .nerve-meta { display: block; font-size: 9px; letter-spacing: 0.1em; color: #8899aa; }
+
+/* FIELD — the whole field, browsable */
+#field {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(10, 12, 16, 0.97);
+  color: var(--ink);
+  overflow-y: auto;
+  padding: calc(44px + var(--safe-top)) 18px calc(40px + var(--safe-bottom));
+}
+#field h2 {
+  margin: 4px 0 10px;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--phosphor);
+}
+#field h3 {
+  margin: 18px 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--amber);
+}
+#fieldClose {
+  position: fixed;
+  top: calc(10px + var(--safe-top));
+  right: 12px;
+  z-index: 46;
+  background: none;
+  border: 1px solid #3a4a5c;
+  color: var(--ink);
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.field-summary { margin: 0 0 8px; font-size: 11px; color: #8899aa; }
+button.field-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid #1c2630;
+  color: var(--ink);
+  padding: 9px 4px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+button.field-card:hover,
+button.field-card:focus-visible { background: rgba(42, 52, 66, 0.6); outline: none; }
+button.field-card.is-pending { color: #e8c96a; }
+button.field-card.is-beyond { color: #7a8a9a; }
+@media (min-width: 721px) {
+  #field { left: 50%; transform: translateX(-50%); max-width: 560px; border-left: 1px solid #1c2630; border-right: 1px solid #1c2630; }
+}
+
+/* QUERY the field, intake badge, record excerpt */
+#intake {
+  position: fixed;
+  top: 44px;
+  left: 12px;
+  z-index: 45;
+  margin: 0;
+  padding: 4px 10px;
+  border: 1px solid #2f6b3a;
+  border-radius: 3px;
+  background: rgba(10, 16, 12, 0.92);
+  color: #7fd99a;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  animation: intakeBlink 1s steps(2, start) infinite;
+}
+@keyframes intakeBlink { to { visibility: hidden; } }
+#fieldQuery {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  background: #0d1218;
+  border: 1px solid #3a4a5c;
+  border-radius: 4px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+}
+#fieldQuery:focus { outline: none; border-color: #4da06a; }
+button.field-card.is-remote { color: #9aa8b8; }
+.inspect-body {
+  max-height: 120px;
+  overflow-y: auto;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #b8c4d0;
+  white-space: pre-wrap;
+}
+
+/* OPEN RECORD - small persistent chrome while a card is held, never a popup */
+#recordLink {
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 40;
+  font: bold 13px "Courier New", monospace;
+  letter-spacing: 0.12em;
+  color: #d8ffe8;
+  background: rgba(6, 12, 9, 0.82);
+  border: 1px solid #3f6b4a;
+  padding: 8px 12px;
+  text-decoration: none;
+}
+#recordLink:hover { background: rgba(18, 34, 24, 0.92); }
+
 /* ── v2: journey flash, inspect destination, quiet dock, readout keys ── */
 #flash {
   position: fixed;

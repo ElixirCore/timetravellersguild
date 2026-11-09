@@ -27,6 +27,8 @@
     this.speed = 0.7;
     this.frozen = null;
     this.held = false;
+    this.highlight = new Set();
+    this.kinLines = null;
     this.rollers = [];
     this.hopperCards = [];
     this.stackerCards = [];
@@ -39,6 +41,9 @@
     this.matHot = this.matLive.clone();
     this.matHot.emissive = new THREE.Color(0x443300);
     this.matHot.emissiveIntensity = 0.35;
+    this.matKin = this.matLive.clone();
+    this.matKin.emissive = new THREE.Color(0x2f6b3a);
+    this.matKin.emissiveIntensity = 0.85;
 
     this.geom = new THREE.BoxGeometry(0.26, 0.11, 0.008);
 
@@ -175,15 +180,70 @@
     this.group.add(outLabel);
   };
 
+  PunchCardSystem.prototype._cardFace = function (THREE) {
+    var canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 112;
+    var tex = new THREE.CanvasTexture(canvas);
+    tex.generateMipmaps = false;
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    var mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, transparent: true });
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(0.245, 0.104), mat);
+    plane.position.z = 0.0052;
+    return { canvas: canvas, tex: tex, mat: mat, plane: plane };
+  };
+
+  PunchCardSystem.prototype._printCard = function (slot) {
+    var face = slot.face;
+    if (!face) return;
+    var rec = slot.record;
+    var ctx = face.canvas.getContext('2d');
+    var w = face.canvas.width;
+    var h = face.canvas.height;
+    // punched card stock
+    ctx.fillStyle = '#e8dcc0';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#d9caa8';
+    ctx.fillRect(0, h - 26, w, 26);
+    if (!rec) { face.tex.needsUpdate = true; return; }
+    // punch strip
+    ctx.fillStyle = '#2a2318';
+    var holes = String(rec.holes || '');
+    for (var i = 0; i < 24; i++) {
+      var ch = holes.charCodeAt(i % Math.max(holes.length, 1)) || 0;
+      if ((ch >> (i % 4)) & 1) ctx.fillRect(10 + i * 10, h - 20, 5, 12);
+    }
+    // printed record
+    ctx.fillStyle = '#1c1710';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.font = 'bold 17px "Courier New", monospace';
+    var title = String(rec.title || rec.slug || 'UNTITLED').toUpperCase();
+    if (title.length > 22) title = title.slice(0, 21) + '\u2026';
+    ctx.fillText(title, 10, 8);
+    ctx.font = 'bold 13px "Courier New", monospace';
+    ctx.fillStyle = '#4a3f2a';
+    var yr = String(rec.observed_at || '').slice(0, 4);
+    var meta = String(rec.type || 'RECORD') + (yr ? ' \u00b7 ' + yr : '') + (rec.pending ? ' \u00b7 PENDING' : '');
+    ctx.fillText(meta, 10, 34);
+    ctx.fillStyle = '#8a2f22';
+    ctx.fillRect(10, 56, 34, 4);
+    face.tex.needsUpdate = true;
+  };
+
   PunchCardSystem.prototype.spawnSlot = function (i) {
     var mesh = new this.THREE.Mesh(this.geom, this.matLive);
     mesh.castShadow = true;
     mesh.userData.card = true;
     mesh.userData.slot = i;
     mesh.visible = false;
+    var face = this._cardFace(this.THREE);
+    mesh.add(face.plane);
     this.group.add(mesh);
     this.pool.push({
       mesh: mesh,
+      face: face,
       progress: (i / 12) % 1,
       speed: 0.9 + Math.random() * 0.35,
       seed: Math.random() * 100,
@@ -225,6 +285,10 @@
     slot.mesh.visible = true;
     slot.mesh.material = rec.beyond ? this.matBeyond : this.matLive;
     slot.mesh.userData.record = rec;
+    if (slot.face) {
+      this._printCard(slot);
+      slot.face.mat.opacity = rec.beyond ? 0.38 : 1;
+    }
   };
 
   PunchCardSystem.prototype.setSpeed = function (emergyDisplay, mind) {
@@ -233,10 +297,98 @@
 
   PunchCardSystem.prototype.freeze = function (record) {
     this.frozen = record;
+    if (!record) return;
+    for (var i = 0; i < this.pool.length; i++) {
+      var s = this.pool[i];
+      if (s.record && s.record.slug === record.slug) {
+        s.progress = 0.47;
+        var u = Math.max(0, Math.min(0.9999, s.progress));
+        this.path.getPointAt(u, this._tmp);
+        s.mesh.position.copy(this._tmp);
+        s.mesh.rotation.set(0, 0, 0);
+        s.mesh.material = this.matHot;
+        break;
+      }
+    }
   };
 
   PunchCardSystem.prototype.release = function () {
     this.frozen = null;
+  };
+
+  PunchCardSystem.prototype.setHighlight = function (slugs) {
+    this.highlight = new Set(slugs || []);
+  };
+
+  PunchCardSystem.prototype._plainMaterials = function () {
+    for (var i = 0; i < this.pool.length; i++) {
+      var s = this.pool[i];
+      if (s.record && s.mesh.visible) {
+        s.mesh.material = s.record.beyond ? this.matBeyond : this.matLive;
+      }
+    }
+  };
+
+  PunchCardSystem.prototype.setKinLines = function (heldSlug, slugs, extraRecs) {
+    if (this.kinLines) {
+      this.group.remove(this.kinLines);
+      if (this.kinLines.geometry) this.kinLines.geometry.dispose();
+      if (this.kinLines.material) this.kinLines.material.dispose();
+      this.kinLines = null;
+    }
+    this._plainMaterials();
+    if (!heldSlug || !slugs || !slugs.length) return;
+    var i, s;
+    var wanted = {};
+    slugs.forEach(function (sl) { wanted[sl] = true; });
+    var recBySlug = {};
+    for (i = 0; i < this.records.length; i++) {
+      if (this.records[i] && !recBySlug[this.records[i].slug]) recBySlug[this.records[i].slug] = this.records[i];
+    }
+    (extraRecs || []).forEach(function (r) {
+      if (r && r.slug && !recBySlug[r.slug]) recBySlug[r.slug] = r;
+    });
+    var present = {};
+    for (i = 0; i < this.pool.length; i++) {
+      s = this.pool[i];
+      if (s.record && (s.record.slug === heldSlug || wanted[s.record.slug])) present[s.record.slug] = true;
+    }
+    var need = slugs.filter(function (sl) { return !present[sl] && recBySlug[sl]; });
+    if (!present[heldSlug] && recBySlug[heldSlug]) need.unshift(heldSlug);
+    for (i = 0; i < this.pool.length && need.length; i++) {
+      s = this.pool[i];
+      if (!s.record) continue;
+      if (s.record.slug === heldSlug || wanted[s.record.slug]) continue;
+      s.record = recBySlug[need.shift()];
+      this.assignMesh(s);
+    }
+    var bySlug = {};
+    for (i = 0; i < this.pool.length; i++) {
+      s = this.pool[i];
+      if (s.record && s.mesh.visible && !bySlug[s.record.slug]) bySlug[s.record.slug] = s.mesh;
+    }
+    var origin = bySlug[heldSlug];
+    if (!origin) return;
+    for (i = 0; i < this.pool.length; i++) {
+      s = this.pool[i];
+      if (!s.record || !s.mesh.visible) continue;
+      if (wanted[s.record.slug]) s.mesh.material = this.matKin;
+      if (s.record.slug === heldSlug) s.mesh.material = this.matHot;
+    }
+    var pts = [];
+    for (var j = 0; j < slugs.length; j++) {
+      var m = bySlug[slugs[j]];
+      if (!m || m === origin) continue;
+      pts.push(origin.position.x, origin.position.y + 0.085, origin.position.z);
+      pts.push(m.position.x, m.position.y + 0.085, m.position.z);
+    }
+    if (!pts.length) return;
+    var geo = new this.THREE.BufferGeometry();
+    geo.setAttribute('position', new this.THREE.Float32BufferAttribute(pts, 3));
+    var mat = new this.THREE.LineBasicMaterial({ color: 0x86e6ab, transparent: true, opacity: 0.95 });
+    this.kinLines = new this.THREE.LineSegments(geo, mat);
+    this.kinLines.name = 'KinLines';
+    this.group.add(this.kinLines);
   };
 
   PunchCardSystem.prototype._cardInThroat = function () {
@@ -294,11 +446,10 @@
       s.mesh.position.copy(this._tmp);
       s.mesh.rotation.set(0, 0, 0);
 
-      if (u > 0.42 && u < 0.52 && !s.record.beyond) {
-        s.mesh.material = this.matHot;
-      } else if (s.mesh.material === this.matHot) {
-        s.mesh.material = s.record.beyond ? this.matBeyond : this.matLive;
-      }
+      var desired = s.record.beyond ? this.matBeyond : this.matLive;
+      if (this.highlight.has(s.record.slug)) desired = this.matKin;
+      if (u > 0.42 && u < 0.52 && !s.record.beyond) desired = this.matHot;
+      if (s.mesh.material !== desired) s.mesh.material = desired;
     }
   };
 

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Multidimensional Referendum</title>
+<meta name="description" content="The Time Travellers Guild asks every dimension: shall Wales henceforth be Cymru, an independent nation? Cast your vote with one unused postage stamp, posted from within Wales.">
+<style>
+  :root {
+    --paper: #eef0f4;
+    --paper-2: #e2e6ee;
+    --ink: #0d1117;
+    --muted: #566072;
+    --line: #c3cad6;
+    --panel: rgba(255,255,255,.62);
+    --accent: #d1222e;
+    --holo-a: #7de3d4;
+    --holo-b: #b9a4ff;
+    --holo-c: #ffd2a1;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: "Helvetica Neue", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0b0e14;
+      --paper-2: #121722;
+      --ink: #e8ecf4;
+      --muted: #8d98ac;
+      --line: #263042;
+      --panel: rgba(22,28,40,.62);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+    background:
+      radial-gradient(900px 500px at 85% -10%, color-mix(in srgb, var(--holo-b) 28%, transparent), transparent 60%),
+      radial-gradient(700px 480px at -10% 10%, color-mix(in srgb, var(--holo-a) 24%, transparent), transparent 60%),
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 32px,
+      linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 100%,
+      var(--paper);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; opacity: .5;
+    background: linear-gradient(var(--paper) 0, transparent 120px);
+  }
+  .wrap { position: relative; max-width: 760px; margin: 0 auto; padding: 0 16px 56px; }
+
+  .meta {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); padding: 18px 0; border-bottom: 1px solid var(--line);
+  }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 8px; box-shadow: 0 0 10px var(--accent); }
+
+  header { padding: 48px 0 28px; }
+  .bureau {
+    font-family: var(--mono); font-size: .75rem; letter-spacing: .24em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 18px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 8vw, 3.9rem); line-height: 1.02; margin: 0 0 18px;
+    font-weight: 700; letter-spacing: -.03em;
+  }
+  h1 span {
+    background: linear-gradient(100deg, var(--holo-a), var(--holo-b) 45%, var(--holo-c));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    background-size: 200% 100%; animation: shimmer 9s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer { to { background-position: 100% 0; } }
+  .sub { color: var(--muted); font-size: 1.05rem; max-width: 52ch; margin: 0; }
+
+  .card {
+    position: relative;
+    background: var(--panel);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px 22px; margin-top: 18px;
+  }
+  .card::after {
+    content: ""; position: absolute; left: 22px; right: 22px; top: 0; height: 2px;
+    background: linear-gradient(90deg, var(--holo-a), var(--holo-b), var(--holo-c)); opacity: .85;
+  }
+  .label {
+    font-family: var(--mono); font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px; display: flex; justify-content: space-between; gap: 10px;
+  }
+  .label i { font-style: normal; color: var(--accent); }
+
+  .question { font-size: clamp(1.35rem, 5vw, 2rem); line-height: 1.25; font-weight: 600; letter-spacing: -.01em; margin: 0; }
+  .question em { font-style: normal; color: var(--accent); }
+
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 38px 1fr; gap: 12px; align-items: start; }
+  .steps li::before {
+    content: counter(s, decimal-leading-zero);
+    font-family: var(--mono); font-size: .8rem; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 0; text-align: center;
+    background: var(--paper-2);
+  }
+  .steps strong { font-weight: 650; }
+
+  .stamp {
+    margin-top: 16px; padding: 22px 22px 20px;
+    border: 2px dashed var(--ink); border-radius: 6px;
+    background: var(--paper-2);
+    position: relative;
+  }
+  .stamp::before {
+    content: "POST"; position: absolute; top: -11px; right: 18px; padding: 0 8px;
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .2em; background: var(--paper); color: var(--accent);
+  }
+  address { font-style: normal; font-family: var(--mono); font-size: 1.05rem; line-height: 1.75; }
+
+  .tally { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+  .tally div { border: 1px solid var(--line); border-radius: 10px; padding: 14px; background: var(--paper-2); }
+  .tally b { display: block; font-family: var(--mono); font-size: 2rem; font-weight: 500; letter-spacing: -.02em; }
+  .tally span { font-family: var(--mono); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+  .barcode {
+    height: 34px; margin-top: 22px; opacity: .8;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 11px, var(--ink) 11px 14px, transparent 14px 17px);
+    -webkit-mask: linear-gradient(90deg, #000 70%, transparent); mask: linear-gradient(90deg, #000 70%, transparent);
+  }
+
+  footer { margin-top: 30px; font-family: var(--mono); font-size: .72rem; line-height: 1.7; color: var(--muted); }
+  footer a { color: var(--ink); }
+  p { margin: 0 0 12px; }
+  @media (prefers-reduced-motion: reduce) { h1 span { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="meta">
+    <span><i class="dot"></i><b>TTG</b> / Office of the Referendum</span>
+    <span>Form MR-01 &middot; Open to all dimensions</span>
+  </div>
+
+  <header>
+    <p class="bureau">Time Travellers Guild &middot; Bureau of Plebiscite</p>
+    <h1>The <span>Multidimensional</span> Referendum</h1>
+    <p class="sub">By love the King of Powys and Gwynedd was chosen. By post, every dimension may choose again.</p>
+  </header>
+
+  <section class="card">
+    <p class="label"><span>Item 1 &middot; The Question</span><i>Ballot</i></p>
+    <p class="question">Shall Wales henceforth be known as <em>Cymru</em>, an independent nation?</p>
+  </section>
+
+  <section class="card">
+    <p class="label"><span>Item 2 &middot; How to Vote</span><i>Post only</i></p>
+    <ol class="steps">
+      <li><div>Take <strong>one unused postage stamp</strong>. One stamp is one voice.</div></li>
+      <li><div>Place it in an envelope. A note with your name, your dimension and your century is welcome but not required.</div></li>
+      <li><div><strong>This is a Welsh ballot.</strong> Post it from within Wales, and write a return address in Wales on the back of the envelope. Ballots posted from outside Wales will not be counted.</div></li>
+      <li><div>Post it to the Office of the Referendum:</div></li>
+    </ol>
+    <div class="stamp">
+      <address>
+        Tŷ Anfeidredd,<br>
+        8 Tawe,<br>
+        Ystradgynlais, Powys.<br>
+        Cymru 91XR
+      </address>
+    </div>
+  </section>
+
+  <section class="card">
+    <p class="label"><span>Item 3 &middot; The Count</span><i>Live ledger</i></p>
+    <p>Every stamp received is a ballot. Each Welsh ballot is counted and entered into the Guild's ledger, and the tally is published here. Envelopes that arrive from outside Wales are logged but set aside, uncounted.</p>
+    <div class="tally">
+      <div><b>0</b><span>ballots counted</span></div>
+      <div><b>0</b><span>dimensions heard</span></div>
+    </div>
+    <!-- Update the numbers above as ballots arrive. -->
+  </section>
+
+  <section class="card">
+    <p class="label"><span>Item 4 &middot; The Declaration</span><i>Pending</i></p>
+    <p style="margin:0">When the ledger is closed and the stamps are counted, the Time Travellers Guild will proclaim the result in the name of everyone who voted: Wales, henceforth Cymru, an independent nation.</p>
+    <div class="barcode" aria-hidden="true"></div>
+  </section>
+
+  <footer>
+    <p>The Multidimensional Referendum is a creative and mythological project of the Time Travellers Guild. It is a symbolic declaration, is not run by or affiliated with the Welsh Government or the UK Government, and has no legal effect. Voting is free and voluntary, sending a stamp involves no purchase, and stamps are not returned.</p>
+    <p><a href="https://timetravellersguild.com">timetravellersguild.com</a></p>
+  </footer>
+
+</div>
+</body>
+</html>

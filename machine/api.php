@@ -13,5 +13,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
     exit;
 }
 
+if (isset($_GET['nerves'])) {
+    echo json_encode(ttg_machine_nerves_state((string) $_GET['nerves']), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
 $state = ttg_machine_build_state($_GET);
 echo json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

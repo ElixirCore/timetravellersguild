@@ -8,7 +8,7 @@
     jack: {
       label: 'THE CLERK',
       form: 'speak',
-      text: 'The clerk is present.\nYou are not late. That is the first thing to establish.\nNames travel badly between records. Give me the name you want on this visit.\nIf another file knows you differently, I will join the entries. I will not split you.'
+      text: 'Hi, I\'m Jack.\nI\'m the clerk of the Time Travellers Guild: a robot of punched card stock, conceived in 1951 and awake since 2026.\nPeople bring me what they remember: a place, an object, a person, a day that never quite sat right. I ask about it and, if you want it kept, I lodge it as your account. A person has to accept it before it joins the record.\nWhat do you remember that has never been written down?'
     },
     you: {
       label: 'THE INTERVIEW',
@@ -527,7 +527,7 @@
       toggle.textContent = voiceEnabled ? 'VOICE: ON' : 'VOICE: OFF';
       if (voiceEnabled && window.JackVoice) {
         if (JackVoice.unlock) JackVoice.unlock();
-        if (JackVoice.say) JackVoice.say(speechText || 'The clerk is present.');
+        if (JackVoice.say) JackVoice.say(speechText || "Hi, I'm Jack.");
       }
     });
   }
@@ -753,7 +753,95 @@
     $('beatText').textContent = copy;
   }
 
+  // A signed-in visitor coming back from somewhere: no title card, no scripted
+  // interview. Jack picks up where they left off, from their own tape cards.
+  var VERB = {
+    WRITE_CANON: 'punched % into canon',
+    RETURN_SLIP: 'returned %',
+    EDIT_PENDING: 'edited %',
+    DELETE_RECORD: 'deleted %',
+    LOOK: 'looked at %'
+  };
+
+  function listTitles(rows) {
+    var t = rows.map(function (r) { return r.title; });
+    if (t.length <= 1) return t.join('');
+    return t.slice(0, -1).join(', ') + ' and ' + t[t.length - 1];
+  }
+
+  function returningText(r) {
+    var lines = [];
+    var name = (r.name || '').trim();
+    lines.push(name ? 'Welcome back, ' + name + '.' : 'Welcome back.');
+    var just = r.just;
+    if (just) {
+      lines.push('You have just punched ' + just.title + ' into canon' +
+        (r.from === 'navigator' ? ' from the navigator' : '') + '.');
+      lines.push('Irreversible. Card ' + String(just.hash || '').slice(0, 8).toUpperCase() + ' is on the tape.');
+    } else if (r.from === 'navigator') {
+      lines.push('You have come down from the navigator.');
+    }
+    var before = (r.trail || []).filter(function (row) { return !just || row.slug !== just.slug; });
+    var groups = {};
+    var order = [];
+    before.forEach(function (row) {
+      if (!groups[row.action]) { groups[row.action] = []; order.push(row.action); }
+      groups[row.action].push(row);
+    });
+    var parts = order.map(function (a) { return (VERB[a] || a.toLowerCase() + ' %').replace('%', listTitles(groups[a].slice(-4))); });
+    if (parts.length) {
+      lines.push((just ? 'Before that you ' : 'This sitting you ') + parts.join('; ') + '.');
+    }
+    var c = r.counts || {};
+    if (typeof c.pending === 'number') {
+      lines.push(c.pending === 0
+        ? 'The hopper is empty. ' + (c.canon || 0) + ' records stand in canon.'
+        : c.pending + (c.pending === 1 ? ' slip still waits' : ' slips still wait') + ' in the hopper. ' + (c.canon || 0) + ' in canon.');
+    }
+    lines.push('The desk is yours. Ask, or pick a door.');
+    return lines.join('\n');
+  }
+
+  function welcomeBack(r) {
+    booting = false;
+    flashDone = true;
+    done = true;
+    document.body.classList.remove('booting');
+    document.body.classList.add('oriented');
+    bindJack();
+    var text = returningText(r);
+    thread.push('Clerk: [Continuity — the visitor is signed in and returning.] ' + text.replace(/\n/g, ' '));
+    var beat = { label: 'THE CLERK', form: r.just ? 'punch' : 'speak', text: text };
+    setFormLine(r.just ? 'PUNCHED INTO CANON' : 'THE CLERK IS IN');
+    pose(beat.form);
+    paintBeat(beat, false);
+    addThread('JACK', text);
+    talk(text);
+    var el = $('work');
+    if (el) {
+      var doors = '<p class="work-row">';
+      if (cfg.navigator) doors += '<a class="go" href="' + cfg.navigator + '">BACK TO THE NAVIGATOR</a> ';
+      doors += '<a class="go" href="' + (cfg.tree || '/now') + '">WALK THE TREE — NOW</a></p>';
+      el.innerHTML = doors + askBox();
+      bindAsk();
+      bindVoice();
+    }
+    $('controls').hidden = true;
+    $('invite').hidden = true;
+    if (r.from && window.history && history.replaceState) {
+      history.replaceState(null, '', location.pathname);
+    }
+  }
+
   function bind() {
+    if (cfg.returning) {
+      $('jackHit').addEventListener('click', function () {
+        if (window.JackVoice && JackVoice.unlock) JackVoice.unlock();
+        if (typing) { typing = false; clearTimeout(timer); $('beatText').textContent = returningText(cfg.returning); }
+      });
+      welcomeBack(cfg.returning);
+      return;
+    }
     $('advance').addEventListener('click', function () {
       next();
     });

@@ -1,0 +1,13 @@
+Options -Indexes
+<Files "config.php">
+  Require all denied
+</Files>
+<Files ".usage.json">
+  Require all denied
+</Files>
+<Files ".gatepass">
+  Require all denied
+</Files>
+<Files ".clips.json">
+  Require all denied
+</Files>

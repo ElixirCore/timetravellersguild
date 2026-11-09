@@ -516,6 +516,15 @@
     $('slipBody').textContent = n.body || '';
     $('slipWhy').textContent = ((n.why && n.why.reasons) || []).join(' ');
     $('slipOpen').href = n.href || ('/n/' + encodeURIComponent(n.slug || '') + '/');
+    var originA = $('slipOrigin');
+    if (originA) {
+      if (n.origin) {
+        originA.href = '/navigator/origin.php?slug=' + encodeURIComponent(n.slug || '');
+        originA.style.display = '';
+      } else {
+        originA.style.display = 'none';
+      }
+    }
     var confirm = $('btnConfirm');
     var reject = $('btnReject');
     var del = $('btnDelete');
@@ -541,6 +550,25 @@
       lastLook = n.slug;
       punchAction('look', n.slug);
     }
+  }
+
+  // Swipe/arrow stepping through the cards of the current selection (filter + search),
+  // in the tree's own time order (year), so the slip stays open between cards.
+  function stepSlip(dir) {
+    if (!selected) return;
+    var ef = $('slipEditForm');
+    if (ef && !ef.hidden) return;
+    var list = laid.map(function (r, i) { return { r: r, i: i }; })
+      .filter(function (o) { return visible(o.r); })
+      .sort(function (a, b) { return ((a.r.n.year || 0) - (b.r.n.year || 0)) || (a.i - b.i); })
+      .map(function (o) { return o.r; });
+    var at = -1;
+    list.forEach(function (r, i) { if (r.n.slug === selected.n.slug) at = i; });
+    var to = at < 0 ? (dir > 0 ? 0 : list.length - 1) : at + dir;
+    if (to < 0 || to >= list.length) return;
+    showSlip(list[to]);
+    var sl = $('slip');
+    if (sl) sl.scrollTop = 0;
   }
 
   function counts() {
@@ -700,10 +728,15 @@
           });
           layout();
           counts();
-          var row = laid.filter(function (r) { return r.n.slug === slug; })[0];
-          showSlip(row || null);
-          $('slipNote').textContent = 'PUNCHED. IRREVERSIBLE. Observation was not rewritten.';
-          setFormLine('PUNCHED');
+          // The slip leaves the hopper: close it, drop the pending hash, and
+          // let the card sink into the canon field.
+          showSlip(null);
+          history.replaceState(null, '', location.pathname + location.search);
+          lastLook = '';
+          setFormLine('PUNCHED INTO CANON');
+          pose('punch');
+          // Stay on the navigator: the record has left pending, ready for
+          // the next click. (No redirect to the lodge - Toby, 7 Nov 2026.)
         }).catch(function () {
           confirm.disabled = false;
           $('slipNote').textContent = 'The field could not be reached.';
@@ -803,6 +836,23 @@
     var slipClose = $('slipClose');
     if (slipClose) slipClose.addEventListener('click', function (e) { e.stopPropagation(); showSlip(null); });
 
+    var slipEl = $('slip');
+    if (slipEl) {
+      var sw = null;
+      slipEl.addEventListener('touchstart', function (e) {
+        var tg = e.target && e.target.tagName;
+        if (e.touches.length !== 1 || /^(INPUT|TEXTAREA|SELECT)$/.test(tg || '')) { sw = null; return; }
+        sw = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }, { passive: true });
+      slipEl.addEventListener('touchend', function (e) {
+        if (!sw || !e.changedTouches.length) return;
+        var dx = e.changedTouches[0].clientX - sw.x;
+        var dy = e.changedTouches[0].clientY - sw.y;
+        sw = null;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) stepSlip(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
     var btnFs = $('btnFullscreen');
     if (btnFs) {
       btnFs.addEventListener('click', function () {
@@ -846,6 +896,11 @@
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') showSlip(null);
+      var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '');
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && selected && !typing) {
+        stepSlip(e.key === 'ArrowLeft' ? -1 : 1);
+        return;
+      }
       if (e.key === 'ArrowLeft') { cam.yaw -= 0.08; auto = false; }
       if (e.key === 'ArrowRight') { cam.yaw += 0.08; auto = false; }
       if (e.key === 'ArrowUp') cam.dist = Math.max(6.5, cam.dist - 0.4);

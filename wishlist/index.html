@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wishlist: tools and parts - Time Travellers Guild</title>
+<meta name="description" content="Tools and parts Toby Godden needs to learn Raspberry Pi and switch construction for the Time Machine build. ">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root{--paper:#d9cb9e;--well:#cfc19a;--ink:#161814;--navy:#1e3a5f;--scarlet:#c41e3a;--dim:#5f6455;--font:"Courier New",Courier,"Lucida Console",monospace}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55}
+body{padding:28px 16px 4rem}
+main{max-width:42rem;margin:0 auto}
+.site-mark{margin:0 0 22px;letter-spacing:.16em;text-transform:uppercase;color:var(--scarlet);font-size:10px}
+.site-mark a{color:inherit;text-decoration:none}
+a{color:var(--navy)}
+h1{font-size:1.5rem;line-height:1.25;margin:.2rem 0 .4rem}
+h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);margin:2.2rem 0 .6rem;padding-top:.8rem;border-top:1.5px solid var(--navy)}
+p{margin:.6rem 0}
+.sub{color:var(--dim)}
+.slip{background:var(--well);border:1.5px solid var(--navy);padding:.8rem 1rem;margin:1rem 0}
+.item{display:grid;grid-template-columns:1fr auto;gap:.4rem 1rem;align-items:center;border:1px solid rgba(30,58,95,.45);padding:.7rem .8rem;margin:.6rem 0;background:rgba(207,193,154,.45)}
+.item h3{margin:0;font-size:1rem}
+.item .note{grid-column:1;font-size:.85rem;color:var(--dim);margin:0}
+.item .price{font-weight:bold;white-space:nowrap}
+.item .act{grid-column:2;grid-row:1 / span 2;display:flex;flex-direction:column;gap:.4rem;align-items:flex-end}
+button{font:inherit;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;background:var(--navy);color:var(--paper);border:0;padding:.55rem .9rem;min-height:44px;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}
+.src{font-size:.75rem}
+#msg{min-height:1.4em;color:var(--scarlet);font-size:.9rem}
+.thanks{border:1.5px solid var(--navy);padding:.7rem 1rem;margin:1rem 0;background:var(--well)}
+footer{margin-top:2.5rem;padding-top:.8rem;border-top:1.5px solid var(--navy);font-size:.8rem;color:var(--dim)}
+@media (max-width:30rem){.item{grid-template-columns:1fr}.item .act{grid-column:1;grid-row:auto;flex-direction:row;justify-content:space-between;align-items:center}}
+</style>
+</head>
+<body>
+<main>
+<p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a> · WISHLIST</p>
+<h1>Wishlist: tools and parts</h1>
+<p class="sub">Toby Godden is learning Raspberry Pi and switch construction, to build physical controls for the Time Machine in his living room. These are the tools and parts that would help.</p>
+
+<div id="thanks" class="thanks" hidden>Thank you.</div>
+
+<div class="slip">
+<p><strong>Contributions are not open yet.</strong> This is the working list. Prices are in pounds, taken from the shop page linked on each item on 24 October 2026. Shop prices and stock change, so use the link to check.</p>
+</div>
+
+<p id="msg" role="status"></p>
+<div id="list"><noscript><p>This page needs JavaScript to list the items and start a payment.</p></noscript></div>
+
+<footer>Time Travellers Guild · Items and prices are a working list and can change.</footer>
+</main>
+<script>
+(function(){
+  var list=document.getElementById('list'), msg=document.getElementById('msg');
+  if(/[?&]thanks=1/.test(location.search)) document.getElementById('thanks').hidden=false;
+  function gbp(p){return '£'+(p/100).toFixed(p%100?2:0)}
+  function el(t,c,x){var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e}
+  fetch('ENABLED',{method:'HEAD',cache:'no-store'}).then(function(r){return r.ok},function(){return false}).then(function(open){ return fetch('items.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(cat){return [open,cat]}) }).then(function(oc){var open=oc[0],cat=oc[1];
+    cat.groups.forEach(function(g){
+      list.appendChild(el('h2',null,g.title));
+      g.items.forEach(function(it){
+        var box=el('div','item'); box.appendChild(el('h3',null,it.name));
+        var act=el('div','act'); act.appendChild(el('span','price',gbp(it.pence)));
+        if(open){var b=el('button',null,'Contribute'); b.type='button';
+        b.setAttribute('aria-label','Contribute '+gbp(it.pence)+' toward '+it.name);
+        b.onclick=function(){pay(it,b)}; act.appendChild(b);}
+        var a=el('a','src','See on '+it.shop); a.href=it.url; a.target='_blank'; a.rel='noopener'; act.appendChild(a);
+        box.appendChild(act); box.appendChild(el('p','note',it.note)); list.appendChild(box);
+      });
+    });
+  }).catch(function(){msg.textContent='The list could not be loaded. Try again shortly.'});
+  function pay(it,b){
+    msg.textContent=''; b.disabled=true;
+    fetch('checkout.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({item:it.id})})
+      .then(function(r){return r.json().catch(function(){return {}}).then(function(j){return {ok:r.ok,j:j}})})
+      .then(function(x){
+        if(x.ok&&x.j.url){location.href=x.j.url;return}
+        msg.textContent=x.j.message||'Checkout could not be started. Nothing was charged.'; b.disabled=false;
+      }).catch(function(){msg.textContent='Checkout could not be started. Nothing was charged.'; b.disabled=false});
+  }
+})();
+</script>
+</body>
+</html>

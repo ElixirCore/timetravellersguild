@@ -19,8 +19,8 @@ final class VoiceConfig
     public const MAX_AUDIO_BYTES = 5000000;
     public const MAX_CACHE_FILES = 120;
     public const MAX_CACHE_BYTES = 83886080;
-    public const SYNTH_PER_HOUR = 24;
-    public const PLAY_PER_HOUR = 60;
+    public const SYNTH_PER_HOUR = 48; // a spoken reply can be two parts
+    public const PLAY_PER_HOUR = 120;
     public const TIMEOUT_SECONDS = 40;
 
     /**

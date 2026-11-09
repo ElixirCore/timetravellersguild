@@ -616,8 +616,8 @@ function ttg_chat_magic_link(string $email, int $convId): string {
     return ttg_base('auth/consume.php?token=' . rawurlencode($token) . '&next=' . rawurlencode('/people/chat/?c=' . $convId));
 }
 
-/** Send the email for a claimed notice. The message text is not included: DMs stay on the site. */
-function ttg_chat_send_notice(array $recipient, array $sender, int $convId): bool {
+/** Send the email for a claimed notice: the message itself, and a link that signs them in to the conversation. */
+function ttg_chat_send_notice(array $recipient, array $sender, int $convId, string $body): bool {
     require_once __DIR__ . '/mail.php';
     $prefs = ttg_chat_prefs((int) $recipient['id']);
     $link = ttg_chat_magic_link((string) $recipient['email'], $convId);
@@ -625,15 +625,16 @@ function ttg_chat_send_notice(array $recipient, array $sender, int $convId): boo
     $from = trim((string) $sender['display_name']) ?: 'A traveller';
 
     $subject = $from . ' sent you a message';
-    $text = $from . " sent you a private message on the Time Travellers Guild.\n\n"
-        . "Read it (this link signs you in, once, for 24 hours):\n" . $link . "\n\n"
+    $text = $from . " sent you a private message on the Time Travellers Guild:\n\n"
+        . $body . "\n\n"
+        . "Reply in the chat (this link signs you in, once, for 24 hours):\n" . $link . "\n\n"
         . "You won't get another email about this conversation until you've read it.\n"
         . "Stop these emails: " . $quiet . "\n";
     $html = ttg_parchment_html([
         'kicker' => 'GUILD CHAT · A PRIVATE SLIP',
         'title' => $from . ' sent you a message',
-        'lede' => 'It is waiting in the chat. The text stays on the site.',
-        'cta_label' => 'READ IT',
+        'body_html' => '<p style="margin:0 0 18px;font-family:Georgia,\'Times New Roman\',serif;font-size:16px;line-height:1.55;color:#1e1f1a;">' . nl2br(ttg_h($body)) . '</p>',
+        'cta_label' => 'REPLY',
         'cta_url' => $link,
         'fine' => "This link signs you in once and expires in 24 hours. You won't get another email about this conversation until you've read it.",
         'foot' => 'Too many slips? Stop DM emails: ' . $quiet,
@@ -657,7 +658,7 @@ function ttg_chat_maybe_notify(array $conv, array $sender, array $message): void
         if (!ttg_chat_notice_claim($conv, $rid, (int) $message['id'])) return;
         $recipient = ttg_user_by_id($rid);
         if (!$recipient || !filter_var((string) $recipient['email'], FILTER_VALIDATE_EMAIL)) return;
-        if (!ttg_chat_send_notice($recipient, $sender, (int) $conv['id'])) {
+        if (!ttg_chat_send_notice($recipient, $sender, (int) $conv['id'], (string) $message['body'])) {
             error_log('Guild chat: DM notice email was not accepted for delivery.');
         }
     } catch (Throwable $e) {

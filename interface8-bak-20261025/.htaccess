@@ -1,0 +1,9 @@
+# pre-stage backup of interface8 (v8.0) - blocked from public access
+Options -Indexes
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

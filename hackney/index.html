@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Hackney Drawer - fictional correspondence archive</title>
+<style>
+  :root{
+    --ink:#2b2418;
+    --ink-soft:#4a4030;
+    --paper:#f3ecd9;
+    --paper-deep:#e9dfc4;
+    --stamp-red:#8f2f24;
+    --desk:#3a332b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--desk);
+    color:var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height:1.55;
+    padding:28px 14px 60px;
+  }
+  .shelf{max-width:680px; margin:0 auto;}
+
+  h1.sitetitle{
+    color:#e8dfc6;
+    font-family:'Courier New', Courier, monospace;
+    letter-spacing:.35em;
+    font-size:15px;
+    text-align:center;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .subtitle{
+    color:#b7ab8d;
+    text-align:center;
+    font-style:italic;
+    font-size:13px;
+    margin-bottom:34px;
+  }
+
+  /* ---- paper card ---- */
+  .letter{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.5), transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(120,95,50,.18), transparent 60%),
+      var(--paper);
+    border:1px solid #cbbd97;
+    border-radius:3px;
+    box-shadow:0 10px 26px rgba(0,0,0,.45), inset 0 0 60px rgba(150,120,60,.10);
+    padding:34px 30px 42px;
+    margin-bottom:44px;
+    overflow:hidden;
+  }
+  /* crinkle texture via turbulence svg */
+  .letter::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.22 0 0 0 0.05 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
+    pointer-events:none;
+    mix-blend-mode:multiply;
+  }
+  /* dog-eared corner */
+  .letter::after{
+    content:"";
+    position:absolute; right:0; bottom:0;
+    width:44px; height:44px;
+    background:linear-gradient(315deg, var(--desk) 0 48%, transparent 48%),
+               linear-gradient(45deg, #d8ca9f 0 50%, #efe5c8 50%);
+    clip-path:polygon(0 100%, 100% 0, 100% 100%);
+    box-shadow:-3px -3px 6px rgba(0,0,0,.18);
+  }
+  .letter > *{position:relative; z-index:1;}
+
+  /* ---- fiction stamp on every item ---- */
+  .fiction-banner{
+    display:inline-block;
+    font-family:'Courier New', Courier, monospace;
+    font-weight:bold;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--stamp-red);
+    border:2.5px solid var(--stamp-red);
+    border-radius:4px;
+    padding:5px 12px 4px;
+    transform:rotate(-2.2deg);
+    opacity:.88;
+    margin-bottom:18px;
+  }
+
+  .itemhead{
+    font-family:'Courier New', Courier, monospace;
+    font-size:12.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    border-bottom:1px dashed #b3a274;
+    padding-bottom:8px;
+    margin-bottom:16px;
+  }
+
+  /* ---- invented postage stamp + franking ---- */
+  .postzone{
+    float:right;
+    width:150px;
+    margin:0 0 12px 18px;
+    text-align:center;
+  }
+  .stamp{
+    position:relative;
+    width:96px; height:112px;
+    margin:0 auto;
+    background:#f7f2e2;
+    padding:7px;
+    /* perforation */
+    -webkit-mask:radial-gradient(circle 4px at 6px 6px, transparent 4px, #000 4.5px) -6px -6px / 12px 12px;
+            mask:radial-gradient(circle 4px at 6px 6px, transparent 4px, #000 4.5px) -6px -6px / 12px 12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
+  }
+  .stamp-inner{
+    height:100%;
+    border:1.5px solid #5c6e52;
+    background:
+      radial-gradient(circle at 50% 38%, #dce5cf 0 26px, transparent 27px),
+      linear-gradient(#eef0e2, #dfe7d2);
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    padding-top:6px;
+  }
+  .stamp-milk{
+    font-size:26px; line-height:1;
+    margin-top:2px;
+  }
+  .stamp-name{
+    font-family:'Courier New', Courier, monospace;
+    font-size:7.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:#46543e; margin-top:4px; text-align:center;
+  }
+  .stamp-value{
+    font-family:'Courier New', Courier, monospace;
+    font-size:10px; font-weight:bold; color:#46543e;
+    margin-top:auto; margin-bottom:5px;
+  }
+  /* circular franking postmark */
+  .frank{
+    position:relative;
+    width:104px; height:104px;
+    margin:-46px auto 0;
+    left:-34px;
+    border:2px solid rgba(70,60,45,.75);
+    border-radius:50%;
+    color:rgba(70,60,45,.85);
+    font-family:'Courier New', Courier, monospace;
+    transform:rotate(-8deg);
+    opacity:.85;
+    background:transparent;
+  }
+  .frank .ring{
+    position:absolute; inset:6px;
+    border:1px solid rgba(70,60,45,.6);
+    border-radius:50%;
+  }
+  .frank .frank-top, .frank .frank-bottom{
+    position:absolute; left:0; right:0;
+    font-size:7.5px; letter-spacing:.12em; text-transform:uppercase;
+  }
+  .frank .frank-top{top:13px;}
+  .frank .frank-bottom{bottom:13px;}
+  .frank .frank-date{
+    position:absolute; top:50%; left:0; right:0;
+    transform:translateY(-50%);
+    font-size:9.5px; font-weight:bold; letter-spacing:.08em;
+    line-height:1.5;
+  }
+  .frank-waves{
+    height:12px;
+    margin-top:6px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='12'><path d='M0 6 Q 5 0 10 6 T 20 6 T 30 6 T 40 6' fill='none' stroke='rgba(70,60,45,0.75)' stroke-width='1.4'/></svg>") repeat-x left center;
+  }
+
+  .headers{
+    font-family:'Courier New', Courier, monospace;
+    font-size:13px;
+    margin-bottom:14px;
+    color:var(--ink);
+  }
+  .headers div{margin-bottom:2px;}
+  .headers .lbl{color:var(--ink-soft); display:inline-block; min-width:62px;}
+
+  .body p{margin-bottom:12px; font-size:15.5px;}
+  .body .sig{margin-top:16px;}
+
+  hr.rule{border:none; border-top:1px solid #b3a274; margin:14px 0;}
+
+  .notice{
+    border:2.5px solid var(--stamp-red);
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.5), transparent 55%),
+      #f6efdd;
+  }
+  .notice .itemhead{
+    color:var(--stamp-red);
+    border-bottom:1px dashed var(--stamp-red);
+    font-weight:bold;
+    letter-spacing:.2em;
+  }
+  .notice .body p, .archnote .body p{font-size:14.5px;}
+
+
+  /* morse strip under franking - encoding is real, decodable */
+  .morse{
+    margin-top:10px;
+    font-family:'Courier New', Courier, monospace;
+    font-size:10.5px;
+    letter-spacing:.18em;
+    color:rgba(70,60,45,.85);
+    line-height:1.7;
+    word-break:break-word;
+  }
+  .morse-key{
+    font-size:8px; letter-spacing:.1em; text-transform:uppercase;
+    color:rgba(70,60,45,.7); margin-top:2px;
+  }
+  /* the drawer's glyph motif, supplied as found */
+  .glyph{
+    text-align:center;
+    font-family:'Courier New', Courier, monospace;
+    font-size:18px; letter-spacing:.3em;
+    color:var(--ink-soft);
+    margin:18px 0 4px;
+  }
+  .cipher{
+    font-family:'Courier New', Courier, monospace;
+    font-size:13px;
+    border:1px dashed #b3a274;
+    padding:10px 14px;
+    margin:14px 0;
+    background:rgba(255,255,255,.28);
+  }
+
+
+  /* ---- envelope cover ---- */
+  .envelope{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.55), transparent 60%),
+      var(--paper-deep);
+    border:1px solid #c2b48d;
+    border-radius:2px;
+    box-shadow:0 10px 26px rgba(0,0,0,.45), inset 0 0 50px rgba(150,120,60,.12);
+    margin-bottom:44px;
+    padding:0 0 26px;
+    overflow:hidden;
+  }
+  .envelope::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:64px;
+    background:linear-gradient(180deg, #ded0a8, #e9dfc4);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    box-shadow:0 2px 4px rgba(0,0,0,.15);
+  }
+  .envelope::after{
+    content:"";
+    position:absolute; right:0; bottom:0;
+    width:38px; height:38px;
+    background:linear-gradient(315deg, var(--desk) 0 48%, transparent 48%),
+               linear-gradient(45deg, #cfc098 0 50%, #e6dcc0 50%);
+    clip-path:polygon(0 100%, 100% 0, 100% 100%);
+    box-shadow:-3px -3px 6px rgba(0,0,0,.18);
+  }
+  .envelope > *{position:relative; z-index:1;}
+  .env-inner{padding:78px 26px 0;}
+  .env-face{display:flex; justify-content:space-between; align-items:flex-start; gap:14px;}
+  .env-return{
+    font-family:'Courier New', Courier, monospace;
+    font-size:11.5px; line-height:1.6; color:var(--ink-soft);
+    max-width:180px;
+  }
+  .env-address{
+    clear:both;
+    text-align:center;
+    font-family:'Courier New', Courier, monospace;
+    font-size:17px; line-height:1.9; letter-spacing:.05em;
+    margin:26px auto 0;
+    display:inline-block;
+  }
+  .env-address-wrap{text-align:center;}
+  .env-note{
+    text-align:center; font-style:italic; font-size:12.5px;
+    color:var(--ink-soft); margin-top:18px;
+  }
+  .envelope .postzone{float:none; width:150px; margin:0; flex-shrink:0;}
+
+  @media (max-width:520px){
+    .letter{padding:26px 18px 38px;}
+    .postzone{width:132px;}
+    .body p{font-size:15px;}
+  }
+</style>
+</head>
+<body>
+<div class="shelf">
+
+  <h1 class="sitetitle">The Hackney Drawer</h1>
+  <p class="subtitle">A fictional correspondence archive - Time Travellers Guild</p>
+
+  <!-- READER'S NOTICE -->
+  <section class="letter notice">
+    <div class="itemhead">Reader's notice</div>
+    <div class="body">
+      <p>Everything in this drawer is fiction. The council officers, departments, reference numbers, email addresses and records shown here are invented. No real Hackney Council officer, unit or record is represented, and nothing here is a recovered document.</p>
+      <p>The disappearance of the milk float from Gillett Square in the early hours of 25 December 2012 is testimony, not established fact. This drawer imagines what the paperwork might have sounded like if anyone had answered for it.</p>
+    </div>
+  </section>
+
+  <!-- ENVELOPE COVER -->
+  <section class="envelope">
+    <div class="env-inner">
+      <div class="env-face">
+        <div class="env-return">
+          From: M. Fell<br>
+          Flat above the square<br>
+          Gillett Square<br>
+          London N16
+        </div>
+        <div class="postzone">
+          <div class="stamp"><div class="stamp-inner">
+            <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+            <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+            <div class="stamp-value">ONE HOUR</div>
+          </div></div>
+          <div class="frank">
+            <div class="ring"></div>
+            <div class="frank-top">Guild Post</div>
+            <div class="frank-date">27 DEC 2012<br>N16</div>
+            <div class="frank-bottom">Gillett Square</div>
+          </div>
+          <div class="frank-waves"></div>
+          <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+          <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+        </div>
+      </div>
+      <div class="env-address-wrap">
+        <div class="env-address">
+          Street Scene Enquiries<br>
+          The Borough Offices<br>
+          London
+        </div>
+      </div>
+      <p class="env-note">The envelope that starts the drawer. Seven letters inside.</p>
+    </div>
+  </section>
+
+
+  <!-- ITEM 1 -->
+  <section class="letter">
+    <div class="itemhead">Item 1 &middot; First report</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">27 DEC 2012<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">To:</span> Street Scene Enquiries &lt;streetscene@boroughmail.example&gt;</div>
+      <div><span class="lbl">Date:</span> 27 December 2012, 09:41</div>
+      <div><span class="lbl">Subject:</span> Removal of vehicle from Gillett Square, Christmas morning</div>
+    </div>
+    <div class="body">
+      <p>Dear Sir or Madam,</p>
+      <p>I live above the square. At roughly four in the morning on Christmas Day I was woken by a low humming, not a motor, more like a fridge heard through a wall. I looked out. Two figures in dark overalls were winching the old milk float onto a flatbed. The float had been parked there for weeks. The flatbed had no livery I could read.</p>
+      <p>The square was quiet again by half four. I would like to know whether the council authorised this removal, and if so where the float has been taken.</p>
+      <p class="sig">Yours faithfully,<br>Margery Fell</p>
+    </div>
+  </section>
+
+  <!-- ITEM 2 -->
+  <section class="letter">
+    <div class="itemhead">Item 2 &middot; Acknowledgement</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">4 JAN 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Street Scene Enquiries &lt;streetscene@boroughmail.example&gt;</div>
+      <div><span class="lbl">To:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">Date:</span> 4 January 2013, 15:07</div>
+      <div><span class="lbl">Subject:</span> RE: Removal of vehicle (ref SS/2013/0114)</div>
+    </div>
+    <div class="body">
+      <p>Dear Ms Fell,</p>
+      <p>Thank you for your enquiry of 27 December. Your reference number is SS/2013/0114.</p>
+      <p>Under office procedure, this office does not carry out vehicle removals on 25 December. Our diary for Gillett Square shows no removal booked or recorded on that date. I hope this resolves your query.</p>
+      <p>If you believe a vehicle belonging to you has been removed in error, please contact the vehicle pound during opening hours with your V5C.</p>
+      <p class="sig">Kind regards,<br>Grant Tooth<br>Street Scene Enquiries</p>
+    </div>
+  </section>
+
+  <!-- ITEM 3 -->
+  <section class="letter">
+    <div class="itemhead">Item 3 &middot; Follow-up</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">8 JAN 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">To:</span> Street Scene Enquiries &lt;streetscene@boroughmail.example&gt;</div>
+      <div><span class="lbl">Date:</span> 8 January 2013, 11:52</div>
+      <div><span class="lbl">Subject:</span> RE: SS/2013/0114</div>
+    </div>
+    <div class="body">
+      <p>Dear Mr Tooth,</p>
+      <p>Thank you, but you have answered a different question. I did not ask whether removals were scheduled. I asked whether the council authorised this one.</p>
+      <p>The float did not belong to me. It belonged, as far as anyone locally can establish, to no one and to everyone. It had been charging off a lamp post. Some of us had taken to calling it a time machine, half in jest, because of the things left in the back of it and because it never seemed to be in quite the same place two mornings running. That is only what we called it. I would simply like to know where it is.</p>
+      <p class="sig">M. Fell</p>
+    </div>
+  </section>
+
+  <!-- ITEM 4 -->
+  <section class="letter">
+    <div class="itemhead">Item 4 &middot; Second response</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">21 JAN 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Street Scene Enquiries &lt;streetscene@boroughmail.example&gt;</div>
+      <div><span class="lbl">To:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">Date:</span> 21 January 2013, 16:33</div>
+      <div><span class="lbl">Subject:</span> RE: SS/2013/0114</div>
+    </div>
+    <div class="body">
+      <p>Dear Ms Fell,</p>
+      <p>I can confirm that the council holds no record of authorising the removal you describe. Please note that the absence of an authorisation record is not in itself evidence that a removal occurred.</p>
+      <p>I note your description of the vehicle. This office is not able to log enquiries under informal names, and I have filed your reference to a "time machine" as a nickname only. No abandoned-vehicle log entry corresponds to the date and location you give.</p>
+      <p>Regarding the lamp post: unauthorised electrical connection to street lighting is a matter for the lighting contractor. I have no record of a report from the contractor concerning Gillett Square over the period in question.</p>
+      <p>This correspondence is now closed.</p>
+      <p class="sig">Grant Tooth<br>Street Scene Enquiries</p>
+    </div>
+  </section>
+
+  <!-- ITEM 5 -->
+  <section class="letter">
+    <div class="itemhead">Item 5 &middot; Internal memo (invented)</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Internal</div>
+        <div class="stamp-value">NO VALUE</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">22 JAN 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> P. Aubrey, Cleansing and Special Projects</div>
+      <div><span class="lbl">To:</span> G. Tooth, Street Scene Enquiries</div>
+      <div><span class="lbl">Date:</span> 22 January 2013, 08:15</div>
+      <div><span class="lbl">Subject:</span> Gillett Square enquiry (SS/2013/0114)</div>
+    </div>
+    <div class="body">
+      <p>Grant,</p>
+      <p>The Fell enquiry. I have checked with the pound, with lighting, and with the markets team, since the object is described as a former milk delivery vehicle. Nobody has it. Nobody sent a flatbed. Nobody logged a job on Christmas morning, which is what you would expect, since nobody works Christmas morning.</p>
+      <p>One thing, off the record, which I would prefer stayed off the record: the night shift supervisor at the depot remembers a flatbed signing out around 23:40 on 24 December and signing back in at 05:10 on 25 December with no job sheet attached. He does not remember the driver. I have not put this in writing anywhere else and I would ask that you don't either.</p>
+      <p>The correct line remains: no record of authorisation, no record of removal, no record of the vehicle. Which is all true, as far as the records go.</p>
+      <p class="sig">P. A.</p>
+    </div>
+  </section>
+
+  <!-- ITEM 6 -->
+  <section class="letter">
+    <div class="itemhead">Item 6 &middot; Information request response (invented)</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">19 FEB 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Information Governance &lt;infogov@boroughmail.example&gt;</div>
+      <div><span class="lbl">To:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">Date:</span> 19 February 2013</div>
+      <div><span class="lbl">Subject:</span> Your request for information (ref FOI/2013/0089)</div>
+    </div>
+    <div class="body">
+      <p>Dear Ms Fell,</p>
+      <p>Thank you for your request of 28 January 2013, in which you asked for: all records relating to the removal, storage, disposal or current location of an electrically powered milk float stationed at Gillett Square, London, between November 2012 and January 2013.</p>
+      <p>We have conducted searches of the Street Scene, Highways, Markets, Lighting and Fleet records. We can confirm that the council does not hold information falling within the scope of your request.</p>
+      <p>In considering your request we note that the term "stationed" is not one used in council record-keeping, which may account for the difficulty.</p>
+      <p>If you are dissatisfied with this response you may request an internal review.</p>
+      <p class="sig">Yours sincerely,<br>Information Governance Team</p>
+    </div>
+  </section>
+
+  <!-- ITEM 7 -->
+  <section class="letter">
+    <div class="itemhead">Item 7 &middot; Final entry</div>
+    <div class="postzone">
+      <div class="stamp"><div class="stamp-inner">
+        <div class="stamp-milk"><svg viewBox="0 0 40 64" width="26" height="42" aria-hidden="true"><rect x="16" y="2" width="8" height="6" rx="1.5" fill="#46543e"/><path d="M15 9 h10 v7 c7 4 9 8 9 14 v26 a6 6 0 0 1 -6 6 h-16 a6 6 0 0 1 -6 -6 v-26 c0 -6 2 -10 9 -14 z" fill="#46543e"/></svg></div>
+        <div class="stamp-name">Guild Post &middot; Gillett Square</div>
+        <div class="stamp-value">ONE HOUR</div>
+      </div></div>
+      <div class="frank">
+        <div class="ring"></div>
+        <div class="frank-top">Guild Post</div>
+        <div class="frank-date">25 FEB 2013<br>N16</div>
+        <div class="frank-bottom">Gillett Square</div>
+      </div>
+      <div class="frank-waves"></div>
+      <div class="morse">.-.. --- -.-. .- - .. --- -. / ..- -. -.- -. --- .-- -.</div>
+      <div class="morse-key">Morse reads: LOCATION UNKNOWN</div>
+    </div>
+    <div class="headers">
+      <div><span class="lbl">From:</span> Margery Fell &lt;m.fell@postbox.example&gt;</div>
+      <div><span class="lbl">To:</span> Information Governance &lt;infogov@boroughmail.example&gt;</div>
+      <div><span class="lbl">Date:</span> 25 February 2013</div>
+      <div><span class="lbl">Subject:</span> RE: FOI/2013/0089</div>
+    </div>
+    <div class="body">
+      <p>Thank you. I withdraw the word "stationed". The float was, I think, only ever waiting.</p>
+      <p>You will forgive me if I keep the correspondence. Somebody should be able to prove, later, that we asked.</p>
+      <p class="sig">M. Fell</p>
+    </div>
+  </section>
+
+  <!-- ARCHIVIST'S NOTE -->
+  <section class="letter archnote">
+    <div class="itemhead">Archivist's note</div>
+    <div class="body">
+      <p>The drawer ends there. No record of removal, no record of custody, no record of the float. Location unknown.</p>
+      <p>Filed as a fiction built around an unanswered question.</p>
+      <p>In the margin of the last sheet, in pencil:</p>
+      <div class="cipher">7-9-12-12-5-20-20</div>
+      <p>Counted from one through the alphabet, the numbers spell the name of the square.</p>
+      <div class="glyph">.;.</div>
+      <p style="text-align:center; font-size:13px; color:var(--ink-soft);">The drawer's mark.</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

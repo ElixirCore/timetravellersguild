@@ -1,0 +1,38 @@
+/* HUB · Modes face, live: Jack at the console. Tokens from hub.css. */
+.modes-live{margin:1.2rem 0 1.6rem;border:1px solid var(--navy);background:rgba(30,58,95,.04);padding:.9rem 1rem 1rem}
+.modes-live.scarlet{border-color:var(--scarlet)}
+.ml-head{display:flex;align-items:center;gap:.6rem;margin:0 0 .8rem;font-family:var(--label);font-size:.66rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--navy)}
+.ml-who{flex:1}
+#mlPosture{color:var(--scarlet)}
+.ml-led{width:8px;height:8px;border-radius:50%;background:var(--ivy);box-shadow:0 0 8px rgba(47,90,60,.5)}
+.modes-live[data-state="running"] .ml-led{animation:ml-blink 1.4s steps(2,start) infinite}
+.modes-live[data-state="resting"] .ml-led{background:var(--gold);box-shadow:none}
+.modes-live[data-state="stopped"] .ml-led{background:rgba(30,58,95,.3);box-shadow:none}
+@keyframes ml-blink{to{opacity:.25}}
+#mlToggle{font:inherit;font-size:.62rem;letter-spacing:.16em;color:var(--navy);background:transparent;border:1px solid var(--rule);padding:.3rem .6rem;cursor:pointer}
+#mlToggle:hover,#mlToggle:focus-visible{border-color:var(--navy);outline:none}
+.ml-stage{min-height:7.5rem}
+.ml-cap{margin:0 0 .45rem;font-family:var(--label);font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--scarlet)}
+.ml-node{display:flex;justify-content:space-between;gap:1rem;border:1px solid var(--rule);padding:.6rem .75rem;text-decoration:none;color:var(--ink);background:rgba(241,228,196,.7)}
+.ml-node:hover{border-color:var(--navy)}
+.ml-node .n{font-size:1.05rem;overflow-wrap:anywhere}
+.ml-node .p{font-family:var(--label);font-size:.6rem;letter-spacing:.1em;color:var(--navy);text-align:right;white-space:nowrap}
+.ml-counts{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin:0 0 .8rem;font-family:var(--label);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--navy)}
+.ml-count b{font-family:var(--paper-font);font-weight:600;font-size:1.9rem;letter-spacing:0;color:var(--ink);margin-right:.15rem}
+.ml-filing{margin:.6rem 0 0;padding-left:.8rem;border-left:2px solid var(--gold)}
+.ml-filing p{margin:0;font-style:italic}
+.ml-filing.RECORD p,.ml-filing.MODEL p{font-style:normal}
+.ml-filing footer{font-family:var(--label);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);margin-top:.25rem}
+.ml-pattern,.ml-layers,.ml-postures{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.ml-pattern li,.ml-layers li{display:grid;grid-template-columns:9.5rem 1fr 2.2rem;align-items:center;gap:.6rem;font-family:var(--label);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase}
+.ml-pattern i,.ml-layers i{display:block;height:6px;background:var(--navy);transition:width .8s ease}
+.ml-pattern i{background:var(--scarlet)}
+.ml-pattern b,.ml-layers b{text-align:right}
+.ml-postures{grid-template-columns:repeat(auto-fill,minmax(8rem,1fr))}
+.ml-postures li{font-family:var(--label);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--rule);padding:.4rem .55rem;color:rgba(26,36,56,.45)}
+.ml-postures li.on{border-color:var(--scarlet);color:var(--scarlet);box-shadow:inset 3px 0 0 var(--scarlet)}
+.ml-tape{margin:.9rem 0 0;padding-top:.6rem;border-top:1px dashed var(--rule);min-height:2.6em;font-family:var(--label);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.face .slot{transition:box-shadow .4s ease,background .4s ease}
+.face .slot.is-running{box-shadow:inset 3px 0 0 var(--scarlet);background:rgba(196,30,58,.05)}
+@media(max-width:640px){.ml-node{flex-direction:column;gap:.2rem}.ml-node .p{text-align:left}.ml-pattern li,.ml-layers li{grid-template-columns:6.5rem 1fr 2rem}}
+@media(prefers-reduced-motion:reduce){.modes-live .ml-led{animation:none!important}.ml-pattern i,.ml-layers i,.face .slot{transition:none}}

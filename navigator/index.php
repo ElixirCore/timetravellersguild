@@ -87,6 +87,7 @@ header('Cache-Control: no-store');
   <p class="slip-why" id="slipWhy"></p>
   <p class="slip-actions">
     <a id="slipOpen" href="/n/">THE RECORD</a>
+    <a id="slipOrigin" href="/navigator/" target="_blank" rel="noopener" style="display:none">ORIGIN TEXT</a>
     <?php if ($keeper): ?>
       <button type="button" id="btnEdit" hidden>EDIT SLIP</button>
       <button type="button" id="btnConfirm" hidden>PUNCH INTO CANON</button>
@@ -154,7 +155,7 @@ header('Cache-Control: no-store');
 
 <script>window.TTG_TREE=<?= $json ?>;</script>
 <script src="/jack/body/js/sprite.js"></script>
-<script src="/assets/navigator.js?v=6"></script>
+<script src="/assets/navigator.js?v=10"></script>
 <script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -206,6 +206,5 @@ header('Cache-Control: no-store');
   <a href="/jack/office">OFFICE</a>
   <a href="/jack/ledger">LEDGER</a>
 </nav>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

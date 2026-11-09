@@ -62,6 +62,5 @@ header('Cache-Control: no-store');
   <a href="/jack/ledger" aria-current="page">LEDGER</a>
   <a href="/now">NOW</a>
 </nav>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

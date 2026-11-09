@@ -4,10 +4,72 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/inc/graph.php';
 
 $payload = ttg_now_payload();
+// The public tour shows canon only: no pending slips, working slips or lens beads, and no edges to them.
+$tourSlugs = [];
+$payload['field'] = array_values(array_filter((array) ($payload['field'] ?? []), static function ($n) use (&$tourSlugs): bool {
+    if (!is_array($n) || empty($n['slug'])) return false;
+    if (!empty($n['pending']) || !empty($n['play']) || !empty($n['lens'])) return false;
+    $tourSlugs[(string) $n['slug']] = true;
+    return true;
+}));
+$payload['edges'] = array_values(array_filter((array) ($payload['edges'] ?? []), static function ($e) use ($tourSlugs): bool {
+    return is_array($e) && isset($tourSlugs[(string) ($e['source'] ?? '')], $tourSlugs[(string) ($e['target'] ?? '')]);
+}));
+$canonSlugs = [];
+foreach (ttg_graph_unique_nodes() as $cn) {
+    if (!empty($cn['slug']) && ttg_graph_public($cn)) $canonSlugs[(string) $cn['slug']] = true;
+}
+foreach (ttg_graph_pending() as $pn) unset($canonSlugs[(string) ($pn['slug'] ?? '')]);
+foreach ($payload['field'] as &$fn) {
+    if (!empty($fn['why']['evidence']) && is_array($fn['why']['evidence'])) {
+        $fn['why']['evidence'] = array_values(array_filter($fn['why']['evidence'], static fn($ev) => is_array($ev) && isset($canonSlugs[(string) ($ev['slug'] ?? '')])));
+    }
+    if (!empty($fn['links']) && is_array($fn['links'])) {
+        $fn['links'] = array_values(array_filter($fn['links'], static fn($l) => is_array($l) && isset($canonSlugs[(string) ($l['slug'] ?? '')])));
+    }
+}
+unset($fn);
+unset($payload['play']);
 $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 if ($json === false) {
     $json = '{"field":[],"edges":[],"you":{"known":false}}';
 }
+
+// Right-hand context for each bead in the orbit: its filings and its noted edges.
+$fieldSlugs = [];
+foreach ((array) ($payload['field'] ?? []) as $f) {
+    if (is_array($f) && !empty($f['slug'])) $fieldSlugs[(string) $f['slug']] = true;
+}
+$slugOf = [];
+$titleOf = [];
+$context = [];
+foreach (ttg_graph_unique_nodes() as $n) {
+    $slug = (string) ($n['slug'] ?? '');
+    if ($slug === '' || !ttg_graph_public($n)) continue;
+    if (!empty($n['public_id'])) $slugOf[(string) $n['public_id']] = $slug;
+    $slugOf[$slug] = $slug;
+    $titleOf[$slug] = (string) ($n['title'] ?? $slug);
+    if (!isset($fieldSlugs[$slug])) continue;
+    $voices = [];
+    foreach ((array) ($n['voices'] ?? []) as $v) {
+        if (!is_array($v) || trim((string) ($v['text'] ?? '')) === '') continue;
+        $voices[] = ['voice' => (string) ($v['voice'] ?? ''), 'class' => (string) ($v['class'] ?? ''), 'text' => (string) $v['text']];
+    }
+    $context[$slug] = ['voices' => $voices, 'notes' => []];
+}
+foreach (array_merge(ttg_graph_edges(), ttg_graph_inferred_edges()) as $e) {
+    $note = trim((string) ($e['note'] ?? ''));
+    if ($note === '') continue;
+    $s = $slugOf[(string) ($e['source'] ?? '')] ?? '';
+    $t = $slugOf[(string) ($e['target'] ?? '')] ?? '';
+    if ($s === '' || $t === '') continue;
+    $rel = strtolower(str_replace('_', ' ', (string) ($e['relationship'] ?? 'related')));
+    foreach ([[$s, $t], [$t, $s]] as [$a, $b]) {
+        if (!isset($context[$a]) || count($context[$a]['notes']) >= 4) continue;
+        $context[$a]['notes'][] = ['rel' => $rel, 'title' => $titleOf[$b] ?? $b, 'note' => $note, 'by' => (string) ($e['noted_by'] ?? '')];
+    }
+}
+$contextJson = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?: '{}';
 
 $local = new DateTimeImmutable('now');
 $clock = strtoupper($local->format('H:i:s · l d F Y'));
@@ -25,7 +87,7 @@ header('Expires: 0');
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VIEW — timetravellersguild.com</title>
-<meta name="description" content="An autonomous orbit of the NOW tree. Deterministic search through the field.">
+<meta name="description" content="Jack tours the NOW tree on his own: following threads, opening cards and reading them. Take the reins whenever you like.">
 <meta name="theme-color" content="#f1e4c4">
 <link rel="canonical" href="https://timetravellersguild.com/view">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -33,7 +95,7 @@ header('Expires: 0');
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
 <meta property="og:title" content="VIEW — timetravellersguild.com">
-<meta property="og:description" content="An autonomous orbit of the NOW tree. Deterministic search through the field.">
+<meta property="og:description" content="Jack tours the NOW tree on his own: following threads, opening cards and reading them. Take the reins whenever you like.">
 <meta property="og:image" content="https://timetravellersguild.com/assets/og/now.png">
 <meta property="og:url" content="https://timetravellersguild.com/view">
 <meta property="og:type" content="website">
@@ -41,7 +103,7 @@ header('Expires: 0');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/now.css?v=260909v">
-<link rel="stylesheet" href="/assets/view.css?v=260909j">
+<link rel="stylesheet" href="/assets/view.css?v=261106a">
 </head>
 <body class="view">
 <a class="skip" href="#field-list">Field as a list</a>
@@ -85,6 +147,7 @@ header('Expires: 0');
   <p id="viewTitle">The field opens.</p>
   <p id="viewMeta"></p>
   <p id="viewBeat"></p>
+  <p id="viewSay" aria-live="off"></p>
 </section>
 
 <section id="viewLog" aria-label="Jack’s observations">
@@ -101,13 +164,17 @@ header('Expires: 0');
   <p class="view-stance" id="viewStance">TEMPORAL</p>
   <p class="view-epithet" id="viewEpithet">Elevation · time upright</p>
   <p class="view-body" id="viewBody">Time stands in the wood. Roots keep what has been observed; the crown leans toward network present.</p>
+  <blockquote class="view-filing" id="viewFiling" hidden><p id="viewFilingText"></p><footer id="viewFilingBy"></footer></blockquote>
+  <ul class="view-notes" id="viewNotes" hidden></ul>
   <p class="view-sub" id="viewSub">Y12 · X · 0–9 · NOT CANON</p>
 </aside>
 
-<p id="viewWake" hidden>
-  <a href="/now">ENTER THE TREE</a>
-  <button type="button" id="viewResume">RESUME ORBIT</button>
-</p>
+<div id="reins" class="reins" data-who="jack">
+  <span class="reins-dot" aria-hidden="true"></span>
+  <span class="reins-who" id="reinsWho" role="status" aria-live="polite">JACK HAS THE REINS</span>
+  <span class="reins-note" id="reinsNote">Touch anything to take them</span>
+  <button type="button" id="reinsBtn">TAKE THE REINS</button>
+</div>
 
 <section id="field-list">
   <h1 class="sr">VIEW</h1>
@@ -122,11 +189,10 @@ header('Expires: 0');
   <a href="/">HOME</a>
 </nav>
 
-<script>window.TTG_MODE='view';window.TTG_GRAPH=<?= $json ?>;</script>
+<script>window.TTG_MODE='view';window.TTG_GRAPH=<?= $json ?>;window.TTG_VIEW_CONTEXT=<?= $contextJson ?>;</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="/assets/now.js?v=260910b"></script>
-<script src="/assets/view.js?v=260909j"></script>
+<script src="/assets/now.js?v=261106a"></script>
+<script src="/assets/view.js?v=261106a"></script>
 <script src="https://ffilm.org/visitors/visit.js" defer></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

@@ -2035,6 +2035,50 @@ function ttg_graph_punch_who(array $viewer): array {
     ];
 }
 
+/**
+ * What this viewer has just been doing on the tape: their own recent cards,
+ * oldest first. Ambient LOOK/FILTER/ENTER noise is collapsed so each record
+ * appears once with its most decisive action.
+ *
+ * @return list<array{action:string,slug:string,title:string,at:string,hash:string,detail:string}>
+ */
+function ttg_graph_viewer_trail(array $viewer, int $within = 3600, int $limit = 12): array {
+    if (empty($viewer['known'])) return [];
+    $actor = ttg_graph_punch_actor($viewer);
+    if ($actor === '' || str_starts_with($actor, 'unsigned:')) return [];
+    $cut = time() - max(60, $within);
+    $weight = ['WRITE_CANON' => 5, 'DELETE_RECORD' => 4, 'RETURN_SLIP' => 3, 'EDIT_PENDING' => 2, 'LOOK' => 1];
+    $bySlug = [];
+    foreach (ttg_graph_punch_recent(240) as $card) {
+        if ((string) ($card['actor'] ?? '') !== $actor) continue;
+        $action = (string) ($card['action'] ?? '');
+        if (!isset($weight[$action])) continue;
+        $at = strtotime((string) ($card['at'] ?? '')) ?: 0;
+        if ($at < $cut) continue;
+        $slug = (string) ($card['slug'] ?? '');
+        if ($slug === '') continue;
+        $title = trim((string) ($card['title'] ?? ''));
+        if ($title === '' || $title === $slug) {
+            $title = $bySlug[$slug]['title'] ?? $title;
+        }
+        $row = [
+            'action' => $action,
+            'slug' => $slug,
+            'title' => $title !== '' ? $title : $slug,
+            'at' => (string) ($card['at'] ?? ''),
+            'hash' => (string) ($card['hash'] ?? ''),
+            'detail' => (string) ($card['detail'] ?? ''),
+        ];
+        $prev = $bySlug[$slug] ?? null;
+        if ($prev && $weight[$prev['action']] > $weight[$action]) {
+            continue;
+        }
+        unset($bySlug[$slug]);
+        $bySlug[$slug] = $row;
+    }
+    return array_slice(array_values($bySlug), -max(1, $limit));
+}
+
 /** @return list<array{actor:string,name:string,known:bool,keeper:bool,href:string,at:string,hash:string}> */
 function ttg_graph_punch_present(int $within = 1200): array {
     $out = [];

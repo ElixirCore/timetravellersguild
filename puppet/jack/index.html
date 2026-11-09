@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111214">
+<title>Jack · Field · Time Travellers Guild</title>
+<meta name="description" content="Jack, clerk of the Time Travellers Guild, a robot of punched card stock, in a field he projects inside his cube: tidying stray cards, filing pounds and dialling other worlds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/puppet.css?v=20261108-small">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM">
+<meta property="og:title" content="Jack · Field · Time Travellers Guild">
+<meta property="og:description" content="Jack, clerk of the Time Travellers Guild, a robot of punched card stock, in a field he projects inside his cube: tidying stray cards, filing pounds and dialling other worlds.">
+<meta property="og:image" content="https://timetravellersguild.com/assets/og/puppet-jack.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Jack · Field · Time Travellers Guild">
+<meta property="og:locale" content="en_GB">
+<meta property="og:url" content="https://timetravellersguild.com/puppet/jack/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Jack · Field · Time Travellers Guild">
+<meta name="twitter:description" content="Jack, clerk of the Time Travellers Guild, a robot of punched card stock, in a field he projects inside his cube: tidying stray cards, filing pounds and dialling other worlds.">
+<meta name="twitter:image" content="https://timetravellersguild.com/assets/og/puppet-jack.png">
+<meta name="twitter:image:alt" content="Jack · Field · Time Travellers Guild">
+<link rel="canonical" href="https://timetravellersguild.com/puppet/jack/">
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <a class="site" href="/">TIMETRAVELLERSGUILD.COM</a>
+    <h1>JACK <span>/ FIELD</span></h1>
+    <div class="toggles">
+      <button type="button" id="soundBtn" aria-pressed="false">Sound off</button>
+      <button type="button" id="followBtn" aria-pressed="true">Follow</button>
+      <button type="button" id="heldBtn" aria-pressed="true">12 fps</button>
+      <button type="button" id="dialBtn">Dial · Earth</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="field" aria-label="Jack in the field, interactive 3D scene">
+      <div id="stage">
+        <div id="ticket" hidden></div>
+      <section class="field-talk">
+        <div class="lbl">Talk to Jack</div>
+        <form id="talk" autocomplete="off">
+          <input id="talkIn" type="text" maxlength="200" placeholder="Ask him something" aria-label="Message to Jack">
+          <button type="button" id="micBtn" aria-pressed="false">Speak</button>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+        <div class="hud-top"><span class="now" id="nowLine">STANDING BY</span><span class="loc" id="locLine">EARTH · GEOCENTRIC PRESENT</span></div>
+        <div class="hud-hint" id="hint">Tap the field to drop a pound · Tap Jack to say hello</div>
+      </div>
+    </section>
+
+    <aside class="mind" aria-label="Jack's mind">
+      <section class="block">
+        <div class="lbl">Goal</div>
+        <div class="goal" id="goal">Standing by</div>
+        <div class="step" id="step">—</div>
+      </section>
+      <section class="block">
+        <div class="lbl">Needs</div>
+        <div class="needs">
+          <div class="need"><span>Tidiness</span><i><b id="nTidy"></b></i></div>
+          <div class="need"><span>Curiosity</span><i><b id="nCur"></b></i></div>
+          <div class="need"><span>Company</span><i><b id="nSoc"></b></i></div>
+        </div>
+        <div class="counts"><div><b id="cCoins">0</b><span>pounds filed</span></div><div><b id="cCards">0</b><span>cards filed</span></div><div><b id="cLoose">0</b><span>cards loose</span></div></div>
+      </section>
+      <section class="block grow">
+        <div class="lbl">Log</div>
+        <ol class="log" id="log" aria-live="polite"></ol>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+/* Field microphone: one tap on Speak opens the conversation; tapping Jack does not.
+   Jack listens; a second's pause sends the message on its own; he answers
+   aloud; and the ear opens again by itself once he falls quiet, until you tap
+   Stop. He never listens while he is speaking, so his own voice cannot come
+   back in as your next message. */
+(function(){
+  var btn=document.getElementById('micBtn'),input=document.getElementById('talkIn'),form=document.getElementById('talk');
+  if(!btn||!input||!form)return;
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){btn.addEventListener('click',function(){btn.textContent='No mic here';setTimeout(label,3000);});return;}
+  var rec=null,silence=null,maxT=null,restartT=null,convo=false,jackSpeaking=false;
+  function label(){
+    var on=!!rec,talk=btn.closest('.field-talk');
+    btn.setAttribute('aria-pressed',on?'true':'false');
+    btn.textContent=on?(innerWidth<480?'Stop':'Listening · Stop'):(convo?'Stop':'Speak');
+    btn.classList.toggle('is-listening',on);
+    if(talk)talk.classList.toggle('is-listening',on);
+    input.placeholder=on?'Listening…':'Ask him something';
+  }
+  function flash(msg){btn.textContent=msg;setTimeout(function(){if(!rec&&!convo)label();},3000);}
+  /* Join a new fragment without repeating words the ear already wrote down:
+     trims where one fragment's start repeats the other's end. The boundary
+     must fall between words, so "stop" + "stopwatch" can never merge. */
+  function join(base,add){
+    add=add||'';
+    if(!base)return add;
+    if(!add)return base;
+    var b=base.trim().toLowerCase(),a=add.trim().toLowerCase();
+    if(!a)return base;
+    if(b===a)return base;
+    if(a.length>b.length&&a.slice(0,b.length)===b&&/\s/.test(a.charAt(b.length)))return add;
+    if(b.length>a.length&&b.slice(b.length-a.length)===a&&b.charAt(b.length-a.length-1)===' ')return base;
+    var max=Math.min(base.length,add.length);
+    for(var k=max;k>0;k--){
+      if(k<add.length&&!/\s/.test(add.charAt(k)))continue;
+      if(base.slice(base.length-k).toLowerCase()===add.slice(0,k).toLowerCase())return base+add.slice(k);
+    }
+    return base+add;
+  }
+  function stopConvo(){convo=false;clearTimeout(silence);clearTimeout(maxT);clearTimeout(restartT);restartT=null;try{rec&&rec.stop();}catch(e){}rec=null;label();}
+  function scheduleStart(ms){
+    clearTimeout(restartT);
+    restartT=setTimeout(function(){restartT=null;if(convo&&!rec&&!jackSpeaking)startRec();},ms);
+  }
+  function startRec(){
+    if(rec||!convo||jackSpeaking)return;
+    var r=new SR();rec=r;
+    r.lang='en-GB';r.continuous=true;r.interimResults=true;r.maxAlternatives=1;
+    var sent=false,finalTx='';
+    function finish(submit){
+      clearTimeout(silence);clearTimeout(maxT);
+      try{r.stop();}catch(e){}
+      if(rec===r){rec=null;label();}
+      var said=input.value.trim();
+      if(submit&&said&&!sent){sent=true;input.value=said;form.requestSubmit();}
+    }
+    r.onresult=function(ev){
+      /* Build from resultIndex onward and overlap-trim each final. Re-reading
+         the whole result list - or a speech service that re-issues an old
+         fragment - is what made the visitor's own words come back doubled. */
+      var interim='';
+      for(var i=(ev.resultIndex||0);i<ev.results.length;i++){
+        try{var res=ev.results[i];if(res.isFinal)finalTx=join(finalTx,res[0].transcript);else interim=res[0].transcript;}catch(e){}
+      }
+      input.value=join(finalTx,interim).trim();
+      clearTimeout(silence);silence=setTimeout(function(){finish(true);},1000);
+    };
+    r.onerror=function(ev){
+      clearTimeout(silence);clearTimeout(maxT);
+      var hard=ev&&(ev.error==='not-allowed'||ev.error==='service-not-allowed'||ev.error==='audio-capture');
+      if(hard){convo=false;clearTimeout(restartT);restartT=null;rec=null;}
+      label();
+      if(hard)flash(ev.error==='audio-capture'?'No mic found':'Mic refused');
+      else if(!(input.value||'').trim()&&!convo)flash('Mic would not answer');
+    };
+    r.onend=function(){
+      if(rec!==r)return;
+      rec=null;label();
+      if(convo&&!sent&&!jackSpeaking)scheduleStart(400);
+    };
+    label();
+    try{r.start();}catch(e){rec=null;convo=false;label();return;}
+    maxT=setTimeout(function(){finish(true);},20000);
+  }
+  btn.addEventListener('click',function(){
+    /* The button is Stop whenever the conversation is live: while Jack
+       listens, while he thinks, while he talks. A second's pause already
+       sends on its own. */
+    if(rec||convo){stopConvo();return;}
+    convo=true;startRec();
+  });
+  /* Whenever Jack talks - an answer, a greeting, a thought aloud - the ear
+     shuts so he cannot hear himself, and opens again when he is done. */
+  window.addEventListener('jack-speech-start',function(){
+    jackSpeaking=true;
+    clearTimeout(restartT);restartT=null;
+    if(rec){clearTimeout(silence);clearTimeout(maxT);try{rec.stop();}catch(e){}rec=null;label();}
+  });
+  window.addEventListener('jack-speech-end',function(){
+    jackSpeaking=false;
+    if(convo&&!rec)scheduleStart(500);
+  });
+})();
+</script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/vendor/OrbitControls.js"></script>
+<script src="assets/config.js?v=20261108-projected"></script>
+<script src="assets/jack-core.js?v=20261107-planets-b"></script>
+<script src="assets/puppet.js?v=20261108-small"></script>
+<script>
+(function(){
+  function fit(){var v=window.visualViewport;document.documentElement.style.setProperty('--app-height',(v?v.height:window.innerHeight)+'px');}
+  fit(); window.addEventListener('resize',fit); if(window.visualViewport)visualViewport.addEventListener('resize',fit);
+})();
+</script>
+<script src="https://ffilm.org/visitors/visit.js" defer></script>
+</body>
+</html>
+

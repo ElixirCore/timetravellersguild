@@ -93,6 +93,5 @@ header('Cache-Control: no-store');
     </p>
   </section>
 </main>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

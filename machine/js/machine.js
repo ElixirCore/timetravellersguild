@@ -104,6 +104,8 @@
       this.cards.setSpeed(state.emergy_display, state.mind_eff);
     }
     for (var i = 0; i < this.components.length; i++) this.components[i].update(state, changed, meta);
+    if (changed.wind) this.say('WIND UNIT \u00b7 ' + state.wind, 'the PRESENT knob and [ ] now turn the clock one ' + String(state.wind).toLowerCase() + ' at a time');
+    if (changed.dcAxis) this.say('\u0394C AXIS \u00b7 ' + state.dcAxis, 'contextual distance now leans on ' + String(state.dcAxis).toLowerCase());
     if (meta.commit) this.scheduleFetch();
     this.bus.emit('change', state, changed);
   };
@@ -145,9 +147,37 @@
   };
 
   Machine.prototype.applyServer = function (data) {
-    if (this.cards) this.cards.setRecords(data.cards || []);
+    var nd = data && data.field && data.field.digest;
+    if (nd) {
+      if (this._digest && nd !== this._digest) this.bus.emit('intake', data);
+      this._digest = nd;
+    }
+    if (this.cards) this.cards.setRecords(this.deckRecords(data));
     if (this.feed) this.feed.setState(data);
     this.store.set({ server: data });
+    this.bus.emit('server', data);
+  };
+
+  /** Every record in the field (falls back to the cards in transit). */
+  Machine.prototype.directory = function (data) {
+    data = data || this.store.state.server || {};
+    return (data.directory && data.directory.length) ? data.directory : (data.cards || []);
+  };
+
+  /** What goes on the transport deck: live transit, or one dealt record kind. */
+  Machine.prototype.deckRecords = function (data) {
+    data = data || this.store.state.server || {};
+    if (!this.dealtGroup) return data.cards || [];
+    var g = this.dealtGroup;
+    var deal = this.directory(data).filter(function (c) { return String(c.type || 'UNKNOWN').toUpperCase() === g; });
+    var held = this.held;
+    if (held && !deal.some(function (r) { return r && r.slug === held.slug; })) deal.unshift(held);
+    return deal;
+  };
+
+  /** A plain-language consequence on the CRT. */
+  Machine.prototype.say = function (title, sub) {
+    if (this.crt && this.crt.flash) this.crt.flash(title, sub || '');
   };
 
   /* ---------- destinations: presets + every dated record ---------- */
@@ -396,35 +426,26 @@
     machine.controls = controls;
     window.TTGMachine = machine; // operators / tests
 
-    /* ---------- readout + camera moves ---------- */
-    var readoutEl = $('readout');
-    var tipEl = $('hover-tip'), tipTitle = $('hover-tip-title'), tipBody = $('hover-tip-body');
+    /* ---------- readout: zoom to the CRT (the HTML panel stays retired) ---------- */
+    var tipEl = $('hover-tip');
     var camTween = null;
     var home = { pos: null, target: HOME_TARGET.clone() };
     var crtZoom = false;
     var cardFreeze = null;
 
     function tweenTo(pos, target) { camTween = { pos: pos.clone(), target: target.clone(), t: 0 }; }
-
-    function refreshReadout() {
-      if (!readoutEl || !crtZoom) return;
-      TTGMachineReadout.render(readoutEl, machine.viewState());
-      var closeBtn = $('readoutClose');
-      if (closeBtn) closeBtn.onclick = closeReadout;
-    }
     function openReadout() {
       crtZoom = true;
       document.body.classList.add('crt-zoom');
-      readoutEl.hidden = false;
-      refreshReadout();
       controls.enabled = false;
-      tweenTo(new THREE.Vector3(0.05, 1.32, 2.2), new THREE.Vector3(0, 1.28, 0.6));
-      tipEl.hidden = true;
+      caption(null);
+      var dz = camera.aspect < 0.85 ? 3.45 : 2.15;
+      tweenTo(new THREE.Vector3(0.05, 1.32, dz), new THREE.Vector3(0, 1.28, 0.6));
     }
     function closeReadout() {
       crtZoom = false;
       document.body.classList.remove('crt-zoom');
-      readoutEl.hidden = true;
+      if (cardFreeze) machine.crt.showRecord(cardFreeze, true);
       tweenTo(home.pos, home.target);
     }
     machine.ui = {
@@ -433,37 +454,193 @@
       closeReadout: closeReadout,
       syncMute: function () { var b = $('dockSound'); if (b) b.textContent = machine.sound.muted ? 'SOUND OFF' : 'SOUND ON'; },
     };
-    window.TTGMachineUI = { openReadout: openReadout, closeReadout: closeReadout, isReadoutOpen: function () { return crtZoom; } };
-    machine.bus.on('change', function () { if (crtZoom) refreshReadout(); });
     machine.ui.syncMute();
 
-    /* ---------- inspect panel ---------- */
-    function showInspect(rec) {
-      $('inspectType').textContent = (rec.type || 'RECORD') + (rec.pending ? ' · PENDING' : '') + (rec.beyond ? ' · BEYOND PRESENT' : '');
-      $('inspectTitle').textContent = rec.title || rec.slug || 'UNTITLED';
-      $('inspectDate').textContent = (rec.observed_at || '—').replace('T', ' ').replace(/(\+00:00|Z)$/, '');
-      $('inspectStatus').textContent = rec.status || '—';
-      $('inspectId').textContent = rec.public_id || rec.slug || '—';
-      $('inspectPlace').textContent = rec.place || '—';
-      $('inspectLink').href = rec.href || ('/n/' + encodeURIComponent(rec.slug || '') + '/');
-      $('inspectDest').disabled = !rec.observed_at;
-      $('inspect').hidden = false;
+    /** Part descriptions go on the CRT caption strip, not a floating tooltip. */
+    function caption(info) {
+      if (!machine.crt) return;
+      if (!info || (!info.text && !info.label)) machine.crt.setCaption(null);
+      else machine.crt.setCaption(info.label, info.text);
     }
+    if (tipEl) tipEl.hidden = true;
+
+    /* ---------- record link + intake ---------- */
+    var recordLink = $('recordLink');
+    function showRecordLink(rec) {
+      if (!recordLink) return;
+      if (rec && rec.slug) {
+        recordLink.href = rec.href || ('/n/' + encodeURIComponent(rec.slug) + '/');
+        recordLink.hidden = false;
+      } else {
+        recordLink.hidden = true;
+      }
+    }
+    var intakeEl = $('intake'), intakeTimer = null;
+    machine.bus.on('intake', function () {
+      if (!intakeEl) return;
+      intakeEl.hidden = false;
+      clearTimeout(intakeTimer);
+      intakeTimer = setTimeout(function () { intakeEl.hidden = true; }, 6000);
+    });
+
+    /* ---------- held card: reader, nerves, kin ---------- */
+    var nervesBox = $('inspectNerves');
+    var currentKinSlugs = [];
+    var lastThroatSlug = null, throatCheckedAt = 0;
+
+    function holdCard(rec, why) {
+      cardFreeze = rec;
+      machine.held = rec;
+      machine.cards.freeze(rec);
+      machine.crt.showRecord(rec, true);
+      showRecordLink(rec);
+      loadNerves(rec);
+      controls.enabled = false;
+      // A held record becomes the drum destination when it is dated.
+      if (rec.observed_at && machine.act('destTo', { slug: rec.slug })) {
+        machine.say(why || 'RECORD HELD · DESTINATION SET', (rec.title || rec.slug || '') + ' · pull ENGAGE to travel to ' + String(rec.observed_at).slice(0, 10));
+      } else if (why) {
+        machine.say(why, rec.title || rec.slug || '');
+      }
+      machine.store.set({ focus: rec.slug || '' });
+    }
+
     function releaseCard() {
       cardFreeze = null;
+      machine.held = null;
       machine.cards.release();
-      $('inspect').hidden = true;
+      machine.cards.setHighlight([]);
+      machine.cards.setKinLines(null, []);
+      currentKinSlugs = [];
+      if (nervesBox) nervesBox.innerHTML = '';
+      var ib = $('inspect'); if (ib) ib.hidden = true;
+      machine.crt.clearRecord();
+      lastThroatSlug = null;
+      showRecordLink(null);
       controls.enabled = !crtZoom;
     }
     $('inspectClose').addEventListener('click', releaseCard);
     $('inspectRelease').addEventListener('click', releaseCard);
-    $('inspectDest').addEventListener('click', function () {
-      if (cardFreeze && machine.act('destTo', { slug: cardFreeze.slug })) {
-        machine.store.set({ focus: cardFreeze.slug }, { commit: true });
-        if (machine.sound) machine.sound.detent();
-        releaseCard();
+
+    function loadNerves(rec) {
+      machine.cards.setHighlight([]);
+      if (!rec || !rec.slug) return;
+      var slug = rec.slug;
+      fetch((CFG.api || '/api/machine/state') + '?nerves=' + encodeURIComponent(slug), {
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json' },
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data || !data.ok || !cardFreeze || cardFreeze.slug !== slug) return;
+          var outN = (data.nerves && data.nerves.outgoing) || [];
+          var inN = (data.nerves && data.nerves.incoming) || [];
+          var lines = [], kinRecs = [];
+          currentKinSlugs = [];
+          outN.forEach(function (n) { if (n && n.slug) { lines.push({ dir: 'out', relationship: n.relationship, title: n.title, slug: n.slug }); kinRecs.push(n); currentKinSlugs.push(n.slug); } });
+          inN.forEach(function (n) { if (n && n.slug) { lines.push({ dir: 'in', relationship: n.relationship, title: n.title, slug: n.slug }); kinRecs.push(n); currentKinSlugs.push(n.slug); } });
+          machine.crt.setRecordNerves(lines);
+          machine.cards.setHighlight(currentKinSlugs);
+          machine.cards.setKinLines(slug, currentKinSlugs, kinRecs);
+          if (nervesBox) renderNerves(nervesBox, outN, inN);
+        })
+        .catch(function () {});
+    }
+
+    function renderNerves(box, outN, inN) {
+      box.innerHTML = '';
+      var head = document.createElement('p');
+      head.className = 'nerves-head';
+      head.textContent = (outN.length + inN.length) ? ('NERVES · ' + (outN.length + inN.length)) : 'NERVES · NONE ON FILE';
+      box.appendChild(head);
+      function btn(n, dir) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'nerve';
+        var rel = document.createElement('span'); rel.className = 'nerve-rel';
+        rel.textContent = (dir === 'out' ? '→ ' : '← ') + String(n.relationship || 'RELATED').toLowerCase().replace(/_/g, ' ');
+        var title = document.createElement('span'); title.className = 'nerve-title';
+        title.textContent = n.title || n.slug || 'UNTITLED';
+        var meta = document.createElement('span'); meta.className = 'nerve-meta';
+        var yr = String(n.observed_at || '').slice(0, 4);
+        meta.textContent = (n.type || '') + (yr ? ' · ' + yr : '') + (n.pending ? ' · PENDING' : '');
+        b.appendChild(rel); b.appendChild(title); b.appendChild(meta);
+        b.addEventListener('click', function () { jumpTo(n.slug); });
+        return b;
       }
+      outN.forEach(function (n) { box.appendChild(btn(n, 'out')); });
+      inN.forEach(function (n) { box.appendChild(btn(n, 'in')); });
+    }
+
+    /** Bring a record to the reader: refocus the field, then hold it. */
+    var pendingJump = null;
+    function jumpTo(slug) {
+      if (!slug) return;
+      pendingJump = slug;
+      machine.store.set({ focus: slug }, { commit: true });
+    }
+    machine.bus.on('server', function (data) {
+      if (!pendingJump) return;
+      var slug = pendingJump, rec = null;
+      pendingJump = null;
+      (data.cards || []).forEach(function (c) { if (c.slug === slug) rec = c; });
+      if (rec) holdCard(rec, 'RECORD DRAWN TO THE READER');
     });
+
+    /* ---------- FIELD key: deal one record kind onto the transport ---------- */
+    var fieldGroupIdx = -1;
+    machine.dealtGroup = null;
+    function dealFieldGroup() {
+      var groups = {};
+      machine.directory().forEach(function (c) {
+        var t = String(c.type || 'UNKNOWN').toUpperCase();
+        (groups[t] = groups[t] || []).push(c);
+      });
+      var types = Object.keys(groups).sort(function (a, b) { return groups[b].length - groups[a].length; });
+      var cycle = ['LIVE TRANSIT'].concat(types);
+      fieldGroupIdx = (fieldGroupIdx + 1) % cycle.length;
+      var t = cycle[fieldGroupIdx];
+      machine.dealtGroup = t === 'LIVE TRANSIT' ? null : t;
+      var deal = machine.deckRecords();
+      machine.cards.setRecords(deal);
+      machine.say('FIELD DRAWN · ' + t, machine.dealtGroup
+        ? deal.length + ' cards dealt · group pinned until FIELD cycles back or RESET'
+        : deal.length + ' cards · live transit resumed');
+    }
+    var dockField = $('dockField');
+    if (dockField) dockField.addEventListener('click', dealFieldGroup);
+    machine.bus.on('reset', function () { machine.dealtGroup = null; fieldGroupIdx = -1; releaseCard(); });
+
+    window.TTGMachineUI = {
+      openReadout: openReadout,
+      closeReadout: closeReadout,
+      isReadoutOpen: function () { return !!crtZoom; },
+      jumpTo: jumpTo,
+      release: releaseCard,
+      frozenSlug: function () { return cardFreeze ? cardFreeze.slug : null; },
+      deckSlugs: function () { return (machine.cards.records || []).map(function (r) { return r && r.slug; }); },
+      deckTypes: function () {
+        var t = {};
+        (machine.cards.records || []).forEach(function (r) { if (r) { var k = String(r.type || 'UNKNOWN').toUpperCase(); t[k] = (t[k] || 0) + 1; } });
+        return t;
+      },
+      pinnedGroup: function () { return machine.dealtGroup; },
+      frozenScreenPos: function () {
+        if (!cardFreeze) return null;
+        var pool = machine.cards.pool;
+        for (var i = 0; i < pool.length; i++) {
+          var sl = pool[i];
+          if (sl.record && sl.record.slug === cardFreeze.slug && sl.mesh.visible) {
+            var v = new THREE.Vector3();
+            sl.mesh.getWorldPosition(v);
+            v.project(camera);
+            var r = canvas.getBoundingClientRect();
+            return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (-v.y + 1) / 2 * r.height };
+          }
+        }
+        return null;
+      },
+    };
 
     /* ---------- pointer routing → components ---------- */
     var raycaster = new THREE.Raycaster();
@@ -481,14 +658,6 @@
       raycaster.setFromCamera(ndc, camera);
       var hits = raycaster.intersectObjects(machine.pickables(), false);
       return hits.length ? hits[0] : null;
-    }
-    function showTip(info, p) {
-      if (!info || (!info.text && !info.label)) { tipEl.hidden = true; return; }
-      tipTitle.textContent = info.label || '';
-      tipBody.textContent = info.text || '';
-      tipEl.hidden = false;
-      tipEl.style.left = Math.min(window.innerWidth - 300, Math.max(12, p.x + 14)) + 'px';
-      tipEl.style.top = Math.min(window.innerHeight - 140, Math.max(12, p.y + 16)) + 'px';
     }
 
     window.addEventListener('pointerdown', function (e) {
@@ -510,11 +679,10 @@
       }
       var rec = machine.cards.pick(raycaster);
       if (rec) {
-        cardFreeze = rec;
-        machine.cards.freeze(rec);
-        showInspect(rec);
-        controls.enabled = false;
+        if (cardFreeze && rec.slug === cardFreeze.slug) releaseCard();
+        else holdCard(rec);
         e.stopPropagation();
+        e.preventDefault();
       }
     }, true);
 
@@ -525,24 +693,18 @@
         lastPt = p;
         if (Math.abs(p.x - startPt.x) + Math.abs(p.y - startPt.y) > 5) moved = true;
         if (moved && active.drag) active.drag(p, d, activeHit);
-        showTip(active.tip(activeHit), p);
+        caption(active.tip(activeHit));
         e.preventDefault();
         return;
       }
-      if (e.target !== canvas || crtZoom) { if (e.target !== tipEl) tipEl.hidden = true; return; }
+      if (e.target !== canvas || crtZoom) { caption(null); return; }
       var hit = cast(p);
       if (hit && hit.object.userData.component) {
-        showTip(hit.object.userData.component.tip(hit), p);
+        caption(hit.object.userData.component.tip(hit));
         canvas.style.cursor = 'pointer';
       } else {
-        var card = machine.cards.pick(raycaster);
-        if (card) {
-          showTip({ label: card.type + (card.beyond ? ' · BEYOND' : ''), text: card.title + ' — ' + String(card.observed_at || '').slice(0, 10) + '. Click to stop the transport and inspect.' }, p);
-          canvas.style.cursor = 'pointer';
-        } else {
-          tipEl.hidden = true;
-          canvas.style.cursor = '';
-        }
+        caption(null);
+        canvas.style.cursor = machine.cards.pick(raycaster) ? 'pointer' : '';
       }
     });
 
@@ -550,7 +712,6 @@
       if (!active) return;
       var a = active;
       active = null;
-      tipEl.hidden = true;
       try { a.release && a.release(pt(e), moved, activeHit); } finally {
         controls.enabled = !cardFreeze && !crtZoom;
       }
@@ -562,7 +723,7 @@
       var comp = hit && hit.object.userData.component;
       if (comp && comp.wheel) {
         comp.wheel(e.deltaY > 0 ? 1 : -1, hit);
-        showTip(comp.tip(hit), pt(e));
+        caption(comp.tip(hit));
         e.preventDefault();
         e.stopPropagation();
       }
@@ -581,6 +742,7 @@
         't': ['travel'], 'Enter': ['travel'],
         'h': ['toggleHold'], 'm': ['cyclePage'], 'r': ['toggleReadout'], 's': ['sync'],
       };
+      if (k === 'f' || k === 'F') { e.preventDefault(); dealFieldGroup(); return; }
       var a = map[k] || map[k.toLowerCase()];
       if (!a) return;
       e.preventDefault();
@@ -640,8 +802,18 @@
         controls.update();
         machine.tick(reduceMotion ? dt * 0.5 : dt, t);
         machine.cards.tick(reduceMotion ? 0 : dt * (machine.store.state.travelling ? 4 : 1), t);
+        if (!cardFreeze && now - throatCheckedAt > 400) {
+          throatCheckedAt = now;
+          var throatRec = machine.cards._cardInThroat ? machine.cards._cardInThroat() : null;
+          var throatSlug = throatRec ? (throatRec.slug || '') : '';
+          if (throatSlug !== (lastThroatSlug || '')) {
+            lastThroatSlug = throatSlug || null;
+            if (throatRec) machine.crt.showRecord(throatRec, false);
+            else machine.crt.clearRecord();
+          }
+        }
         var page = machine.store.state.page;
-        if (!reduceMotion && machine.crt && (page === 'STATE' || page === 'FEED')) {
+        if (!reduceMotion && !cardFreeze && machine.crt && (page === 'STATE' || page === 'FEED')) {
           machine.feed.maybeShow(machine.crt, now, page === 'FEED' ? 1.6 : machine.store.state.emergy_display);
         }
         var sh = reduceMotion ? 0 : machine.shake;

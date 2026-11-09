@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Spacegirl — a 7D mind palace</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#030207;color:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;touch-action:none}
+  canvas{display:block}
+  #hud{position:fixed;inset:0;pointer-events:none}
+  .ident{position:absolute;left:14px;top:max(14px,env(safe-area-inset-top));width:86px;height:86px;pointer-events:auto;display:block;text-decoration:none}
+  .ident canvas{width:86px;height:86px;display:block}
+  .ident span{display:block;text-align:center;font:8px ui-monospace,monospace;letter-spacing:.22em;color:#43ff89;opacity:.8;margin-top:1px}
+  .title{position:absolute;left:114px;top:max(18px,env(safe-area-inset-top));font-size:13px;line-height:1.7;letter-spacing:.14em;opacity:.85}
+  .title b{font-size:16px;font-weight:normal;color:#e8d2a4}
+  .title i{font-style:normal;opacity:.55;font-size:10px;display:block}
+  .readout{position:absolute;left:18px;bottom:max(76px,env(safe-area-inset-bottom));font-size:11px;line-height:1.55;opacity:.9;color:#cfe6dc;max-width:44vw}
+  .hint{position:absolute;right:16px;bottom:max(76px,env(safe-area-inset-bottom));max-width:190px;text-align:right;font-size:10.5px;line-height:1.55;opacity:.82;color:#cfe6dc}
+  .starmark{position:absolute;right:16px;top:max(18px,env(safe-area-inset-top));font-size:10px;letter-spacing:.2em;color:#c9cfdd;opacity:.85;text-align:right}
+  .hub{position:absolute;left:0;right:0;bottom:0;pointer-events:auto;display:flex;justify-content:center;gap:2px;background:#050916cc;border-top:1px solid #29554d;backdrop-filter:blur(6px);z-index:5}
+  .hub a{flex:1;max-width:220px;text-align:center;color:#cde9df;text-decoration:none;font:10px ui-monospace,monospace;letter-spacing:.12em;padding:12px 4px calc(12px + env(safe-area-inset-bottom));border-right:1px solid #183d3a}
+  .hub a:last-child{border-right:0}
+  .hub a.here{color:#e8d2a4}
+  .hub a small{display:block;font-size:8px;opacity:.5;letter-spacing:.08em;margin-top:3px}
+  .panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(430px,92vw);max-height:min(70vh,560px);overflow:auto;pointer-events:auto;background:#060b14ee;border:1px solid #579e89;padding:18px;display:none;z-index:6}
+  .panel.open{display:block}
+  .panel h2{margin:0 0 2px;font-size:13px;letter-spacing:.18em;color:#a8e1cb;font-weight:normal}
+  .panel .sub{font-size:9px;letter-spacing:.14em;color:#697d7f;margin-bottom:12px}
+  .panel p{font-size:11px;line-height:1.75;color:#c4dfd6;margin:0 0 10px}
+  .panel q{display:block;font-size:11px;line-height:1.75;color:#e8d2a4;border-left:1px solid #d7b25d;padding-left:10px;margin:0 0 10px}
+  .panel a.src{color:#7daaa5;font-size:9px;letter-spacing:.1em;text-decoration:none;border-bottom:1px dotted #356b61}
+  .panel .close{position:absolute;right:10px;top:8px;background:none;border:1px solid #356b61;color:#7daaa5;font:10px ui-monospace,monospace;padding:6px 8px;cursor:pointer}
+  .panel .links{margin-top:12px;border-top:1px solid #183d3a;padding-top:10px;display:grid;gap:8px}
+  .panel .links a{color:#cde9df;font-size:11px;letter-spacing:.1em;text-decoration:none;border:1px solid #29554d;padding:8px 10px;display:block}
+  .panel .links a small{display:block;color:#697d7f;font-size:8px;margin-top:3px;letter-spacing:.08em}
+  .stream{position:absolute;left:50%;bottom:max(76px,env(safe-area-inset-bottom));transform:translateX(-50%);pointer-events:auto;background:#060b14dd;border:1px solid #579e89;color:#e8d2a4;font:10px ui-monospace,monospace;letter-spacing:.14em;padding:8px 14px;cursor:pointer;z-index:6}
+  .stream.blocked{animation:pulse 1.6s ease-in-out infinite;border-color:#d7b25d}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  @media(max-width:600px){.readout{display:none}.hint{display:none}.hint{max-width:130px}.ident{width:64px;height:64px}.ident canvas{width:64px;height:64px}.title{left:88px;font-size:11px}.title b{font-size:13px}.hub a{font-size:8px;letter-spacing:.06em;padding:10px 2px calc(10px + env(safe-area-inset-bottom));min-width:0}.hub a small{font-size:6.5px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.starmark{top:max(110px,env(safe-area-inset-top))}}
+</style>
+</head>
+<body>
+<div id="hud">
+  <a class="ident" id="ident" href="https://ffilm.org/13bc/" target="_blank" rel="noopener" aria-label="13BC"><canvas id="identcv" width="172" height="172"></canvas><span>13BC</span></a>
+  <div class="title"><b>SPACEGIRL</b><br>a 7D mind palace<i>Time Travellers Guild &middot; seven chambers, hyperinterlinked</i></div>
+  <div class="starmark" id="starmark">SPOOLING</div>
+  <div class="readout" id="readout"></div>
+  <div class="hint">drag: spin the toroid<br>pinch: zoom<br>tap a lamp: open its chamber<br>rail below: the four houses</div>
+</div>
+<audio id="tali" preload="auto" src="taliesyn-i-am.mp3"></audio>
+<button class="stream" id="streambtn" type="button">PLAY · TALIESYN I AM</button>
+<nav class="hub" aria-label="Hub">
+  <a href="https://ffilm.org/13BC/" target="_blank" rel="noopener">LIVEROOM<small>ffilm.org/13BC</small></a>
+  <a href="https://chronometer.online/v3/" target="_blank" rel="noopener">CHRONOMETER<small>chronometer.online/v3</small></a>
+  <a href="https://faetime.space" target="_blank" rel="noopener">FAEBOOK<small>faetime.space</small></a>
+  <a href="https://ffilm.org/ripplecam/" target="_blank" rel="noopener">RIPPLECAM<small>ffilm.org/ripplecam</small></a>
+  <a class="here" href="/spacegirl/">SPACEGIRL<small>you are here</small></a>
+</nav>
+<div class="panel" id="panel">
+  <button class="close" id="close" type="button">CLOSE</button>
+  <h2 id="p-title"></h2>
+  <div class="sub" id="p-sub"></div>
+  <div id="p-body"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(()=>{
+// Seven chambers. Sourced creative context only: published listings, festival pages, her own
+// published bio words. The poem 'Taliesyn I am' is Toby's named lead; the recording (taliesyn-i-am.mp3) was shared by Josh Steed and plays in chamber 1.
+// THE GORSEDD holds public gathering context only.
+const CHAMBERS=[
+ {name:'TALIESYN I AM',sub:'the anchor \u00b7 her poem, set to dance music',c:0xe8d2a4,phase:0,
+  body:`<p>The poem this palace is built around: <b>Taliesyn I am</b> \u2014 Spacegirl\u2019s own, set to dance music. Electric, says the Guild\u2019s founder, who named it. The recording plays in this chamber.</p><p style=\'margin:0 0 10px\'><audio id=\'tali2\' controls preload=\'metadata\' src=\'taliesyn-i-am.mp3\' style=\'width:100%;height:34px\'></audio></p><p>Poem and voice: Spacegirl. Recording shared by Josh Steed.</p><p>The lineage is old and public: Taliesin, the shining-browed bard, heads her published list of influences \u2014 and the anonymous medieval poem begins \u201cI am Taliesin. I sing perfect metre, which will last to the end of the world.\u201d The recording bears the connection out: into the old bardic litany she sings her own name \u2014 \u201cborn of Ceridwen, and Spacegirl\u201d \u2014 the first-person current, on a dance floor.</p><p><a class="src" href="https://profilesarchive.com/255107519" target="_blank" rel="noopener">source: Spacegirl\u2019s Poetry Salon profile (influences)</a></p>`},
+ {name:'THE SALON',sub:'Spacegirl\u2019s Poetry Salon \u00b7 est. 1998',c:0xd9e8f7,phase:.9,
+  body:`<p>Since 1998 Spacegirl\u2019s Poetry Salon has appeared at The Warp, Ravelation, Glastonbury, the Healing Fields, Thurrock Music Festival, Earth Spirit, ID Spiral, Green Angels, Small World, the 491 Gallery and private homes across London \u2014 salons held in fields, houses, squats, cafes, warehouses and bandstands.</p><p>Two stated aims: a forum for newcomers to poetry through workshops and smaller salons, and a platform for cutting-edge poets and spoken word artists. From 2004 to 2005 the Salon went live on Sunday lunchtimes through RAMPART RADIO.</p><p><a class="src" href="https://profilesarchive.com/255107519" target="_blank" rel="noopener">source: Spacegirl\u2019s Poetry Salon profile (archived)</a></p>`},
+ {name:'THE IRONICIST',sub:'in her own words',c:0xe87765,phase:1.8,
+  body:`<q>Some years ago a reviewer called Spacegirl \u201ca contemporary ironicist\u201d. That itself is ironic as Spacegirl has never and will never own an iron. Combining cheeky lyrics with an underlying messages about the council estate we\u2019re in and love, Spacegirl\u2019s quirky but accessible and engaging work will make you think and grin.</q><p>Billing for her headline set: \u201cSpoken word cosmonaut Spacegirl\u201d \u2014 work that \u201cranges from the sublime to the everyday, making sure to leave time and room for cake.\u201d</p><p><a class="src" href="https://happeningnext.com/event/holy-moly-featuring-spacegirl-eid1ef0l6cw33da" target="_blank" rel="noopener">source: Holy Moly event listing</a></p>`},
+ {name:'GRAVESEND',sub:'Holy Moly \u00b7 The Mole Hole \u00b7 20 Sept 2026',c:0x9fe6c8,phase:2.7,
+  body:`<p>On Sunday 20 September 2026 Spacegirl headlined Holy Moly, the monthly spoken word night at The Mole Hole Micro Pub, 17 High Street, Gravesend, Kent \u2014 hosted by Zack Davies, with the regular open mic before her set.</p><p><a class="src" href="https://www.eventbrite.co.uk/e/holy-moly-featuring-spacegirl-tickets-1999933655400" target="_blank" rel="noopener">source: Holy Moly event listing</a></p>`},
+ {name:'THE GORSEDD',sub:'Kent Gorsedd \u00b7 Coldrum Stones',c:0xaa78d6,phase:3.6,
+  body:`<p>The Kent Gorsedd is an open bardic gathering at Coldrum Long Barrow, Trottiscliffe, Kent \u2014 solstice and equinox rituals at the Neolithic stones, with an Eisteddfod: bring a song or a poem to share, and a cup for the mead of the Gorsedd horn.</p><p>Gathering context only, from public listings \u2014 her verified credits live in the other chambers.</p><p><a class="src" href="https://allevents.in/west-malling/kent-gorsedd-summer-solstice-2025/200028332873956" target="_blank" rel="noopener">source: Kent Gorsedd event listing</a></p>`},
+ {name:'RIVER LIT',sub:'Medway River Lit \u00b7 Dickens weekend',c:0x7fb5d9,phase:4.5,
+  body:`<p>At Medway River Lit\u2019s Dickens Summer Weekend, the festival\u2019s Q&amp;A with Gerald Dickens \u2014 great-great-grandson of Charles \u2014 was hosted by Si\u00e2n Thomas, aka Spacegirl.</p><p><a class="src" href="https://www.medwayriverlit.co.uk/post/presenting-medway-river-lit" target="_blank" rel="noopener">source: Medway River Lit festival page</a></p>`},
+ {name:'THE GUILD',sub:'the four houses \u00b7 hub',c:0xd7b25d,phase:5.4,
+  body:`<p>This palace sits in the Time Travellers Guild. Doors lead out to the other houses:</p><q>An invitation: use webcams and trickery to record domestic-level time travel scenes.</q><div class="links"><a href="https://ffilm.org/13BC/" target="_blank" rel="noopener">LIVEROOM<small>the live encounter room \u00b7 ffilm.org/13BC</small></a><a href="https://chronometer.online/v3/" target="_blank" rel="noopener">CHRONOMETER<small>the astrological instrument \u00b7 chronometer.online/v3</small></a><a href="https://faetime.space" target="_blank" rel="noopener">FAEBOOK<small>the small commons \u00b7 faetime.space</small></a></div>`}
+];
+
+const R=1.72,r=.62,TAU=Math.PI*2;
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));
+renderer.setSize(innerWidth,innerHeight);
+document.body.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x030207);
+scene.fog=new THREE.FogExp2(0x030207,.055);
+const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);
+camera.position.set(0,0,(innerWidth/innerHeight<0.85?10.8:6.0));
+
+const world=new THREE.Group();scene.add(world);
+
+// starfield
+(()=>{const g=new THREE.BufferGeometry(),n=900,pos=new Float32Array(n*3);
+for(let i=0;i<n;i++){const rad=18+Math.random()*30,th=Math.random()*TAU,ph=Math.acos(2*Math.random()-1);
+pos[i*3]=rad*Math.sin(ph)*Math.cos(th);pos[i*3+1]=rad*Math.cos(ph);pos[i*3+2]=rad*Math.sin(ph)*Math.sin(th)}
+g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+world.add(new THREE.Points(g,new THREE.PointsMaterial({color:0x6d857f,size:.05,transparent:true,opacity:.7})))})();
+
+// the toroid
+const group=new THREE.Group();world.add(group);
+group.add(new THREE.Mesh(new THREE.TorusGeometry(R,r,26,90),new THREE.MeshBasicMaterial({color:0x2a4a44,wireframe:true,transparent:true,opacity:.34})));
+// skin points, golden-angle distribution, seven bands of hue
+(()=>{const g=new THREE.BufferGeometry(),n=2600,pos=new Float32Array(n*3),col=new Float32Array(n*3),c=new THREE.Color();
+for(let i=0;i<n;i++){const u=(i/n)*TAU*13,v=(i*0.61803398875%1)*TAU;
+pos[i*3]=(R+r*Math.cos(v))*Math.cos(u);pos[i*3+1]=(R+r*Math.cos(v))*Math.sin(u);pos[i*3+2]=r*Math.sin(v);
+c.setHSL(((164+(i%7)*9)%360)/360,.6,.5);col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
+g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+group.add(new THREE.Points(g,new THREE.PointsMaterial({size:.022,vertexColors:true,transparent:true,opacity:.85})))})();
+
+// glow sprite texture
+function glowTex(){const cv=document.createElement('canvas');cv.width=cv.height=128;const cx=cv.getContext('2d');
+const gr=cx.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.25,'rgba(255,255,255,.55)');gr.addColorStop(1,'rgba(255,255,255,0)');
+cx.fillStyle=gr;cx.fillRect(0,0,128,128);return new THREE.CanvasTexture(cv)}
+const GLOW=glowTex();
+
+// seven lamps on the torus skin
+const lamps=CHAMBERS.map((ch,i)=>{
+ const holder=new THREE.Group();
+ const core=new THREE.Mesh(new THREE.SphereGeometry(.055,16,16),new THREE.MeshBasicMaterial({color:ch.c}));
+ const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:ch.c,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false}));
+ halo.scale.set(.55,.55,1);
+ holder.add(core,halo);holder.userData.i=i;core.userData.i=i;halo.userData.i=i;
+ group.add(holder);return{holder,core,halo,ch,u:i*TAU/7,v:i*2.4};
+});
+
+// hyperinterlinks: every chamber tied to every other, rebuilt each frame
+const linkMat=new THREE.LineBasicMaterial({color:0x7daaa5,transparent:true,opacity:.22,blending:THREE.AdditiveBlending,depthWrite:false});
+let linkLines=new THREE.LineSegments(new THREE.BufferGeometry(),linkMat);group.add(linkLines);
+const linkPos=new Float32Array(21*2*3);
+linkLines.geometry.setAttribute('position',new THREE.BufferAttribute(linkPos,3));
+
+// electric pulse travelling the links for the anchor poem: bright packets
+const packets=[];
+for(let i=0;i<21;i++){const p=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:0xe8d2a4,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));
+p.scale.set(.16,.16,1);group.add(p);packets.push({sprite:p,edge:i,t:Math.random(),speed:.12+Math.random()*.18})}
+const edges=[];for(let i=0;i<7;i++)for(let j=i+1;j<7;j++)edges.push([i,j]);
+
+// labels
+function labelSprite(text){const cv=document.createElement('canvas');cv.width=512;cv.height=64;const cx=cv.getContext('2d');
+cx.font='bold 34px ui-monospace,monospace';cx.textAlign='center';cx.shadowColor='rgba(160,220,255,.9)';cx.shadowBlur=14;cx.fillStyle='rgba(245,250,248,1)';cx.fillText(text,256,44);
+const tx=new THREE.CanvasTexture(cv);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthWrite:false}));
+sp.scale.set(1.8,.23,1);return sp}
+const labels=CHAMBERS.map(ch=>{const s=labelSprite(ch.name);group.add(s);return s});
+
+// interaction
+let rx=.25,ry=.15,vx=0,vy=0,zoom=(innerWidth/innerHeight<0.85?10.8:6.0),dragging=false,moved=0,lastX=0,lastY=0,lastInteraction=performance.now();
+const el=renderer.domElement;
+const ray=new THREE.Raycaster();ray.params.Sprite={};const ptr=new THREE.Vector2();
+el.addEventListener('pointerdown',e=>{dragging=true;moved=0;lastX=e.clientX;lastY=e.clientY;el.setPointerCapture(e.pointerId);lastInteraction=performance.now()});
+el.addEventListener('pointermove',e=>{if(!dragging)return;
+ if(e.isPrimary===false)return;
+ const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);
+ ry+=dx*.005;rx+=dy*.005;rx=Math.max(-1.4,Math.min(1.4,rx));vx=dx*.0022;vy=dy*.0022;lastInteraction=performance.now()});
+el.addEventListener('pointerup',e=>{dragging=false;lastInteraction=performance.now();
+ if(moved<8){ptr.x=(e.clientX/innerWidth)*2-1;ptr.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(ptr,camera);
+  const hits=ray.intersectObjects(lamps.flatMap(l=>[l.core,l.halo]),false);
+  if(hits.length){const i=hits[0].object.userData.i;openChamber===i?closePanel():openPanel(i)}
+  else if(openChamber>=0)closePanel()}});
+el.addEventListener('wheel',e=>{zoom=Math.max(2.6,Math.min(11,zoom+e.deltaY*.003));lastInteraction=performance.now()},{passive:true});
+// pinch
+let pinchD=0;
+el.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+ if(pinchD)zoom=Math.max(2.6,Math.min(11,zoom-(d-pinchD)*.01));pinchD=d;e.preventDefault()}},{passive:false});
+el.addEventListener('touchend',()=>pinchD=0);
+
+const panel=document.querySelector('#panel'),pTitle=document.querySelector('#p-title'),pSub=document.querySelector('#p-sub'),pBody=document.querySelector('#p-body'),starmark=document.querySelector('#starmark');
+let openChamber=-1;
+function openPanel(i){const ch=CHAMBERS[i];openChamber=i;pTitle.textContent=ch.name;pSub.textContent=ch.sub;pBody.innerHTML=ch.body;panel.classList.add('open');starmark.textContent='CHAMBER '+(i+1)+' / 7'}
+function closePanel(){openChamber=-1;panel.classList.remove('open');starmark.textContent='SEVEN CHAMBERS \u00b7 21 LINKS'}
+document.querySelector('#close').onclick=closePanel;
+starmark.textContent='SEVEN CHAMBERS \u00b7 21 LINKS';
+
+// streaming: try autoplay on arrival; fall back to an obvious pulsing play chip
+const tali=document.querySelector('#tali'),streamBtn=document.querySelector('#streambtn');
+function streamState(){if(tali.paused){streamBtn.innerHTML='\u25b6 TALIESYN I AM'}else{streamBtn.innerHTML='\u275a\u275a TALIESYN I AM \u00b7 playing'}}
+window.__taliToggle=()=>{if(tali.paused){tali.play().catch(()=>{})}else{tali.pause()}};
+streamBtn.addEventListener('click',()=>window.__taliToggle());
+tali.addEventListener('play',()=>{streamBtn.classList.remove('blocked');streamState()});
+tali.addEventListener('pause',streamState);tali.addEventListener('ended',streamState);
+tali.play().then(()=>{streamBtn.classList.remove('blocked');streamState()}).catch(()=>{streamBtn.classList.add('blocked');streamState()});
+// panel player and ambient chip never overlap
+document.addEventListener('play',e=>{const t=e.target;document.querySelectorAll('audio').forEach(a=>{if(a!==t)a.pause()})},true);
+
+const readout=document.querySelector('#readout');
+const clock=new THREE.Clock();let t=0;
+function frame(){
+ const dt=Math.min(.05,clock.getDelta());t+=dt;
+ const idle=(performance.now()-lastInteraction)/1000-5;
+ if(!dragging){ry+=vx+(idle>0?.0018*Math.min(1,idle/3):0);rx+=vy;vx*=.95;vy*=.95;rx=Math.max(-1.4,Math.min(1.4,rx))}
+ group.rotation.x=rx;group.rotation.y=ry;
+ camera.position.z+= (zoom-camera.position.z)*.08;
+ world.rotation.y+=dt*.004;
+
+ // lamps ride the skin
+ for(const L of lamps){const u=L.u+t*.05,v=L.v+Math.sin(t*.11+L.ch.phase)*.6;
+  L.holder.position.set((R+r*Math.cos(v))*Math.cos(u),(R+r*Math.cos(v))*Math.sin(u),r*Math.sin(v));
+  const pulse=1+.28*Math.sin(t*1.3+L.ch.phase);const open=L.ch===CHAMBERS[openChamber]?1.7:1;
+  L.halo.scale.set(.55*pulse*open,.55*pulse*open,1);L.core.scale.setScalar(open);
+  const li=CHAMBERS.indexOf(L.ch);labels[li].position.copy(L.holder.position);labels[li].position.z+=.22;
+ }
+ // links
+ let k=0;
+ for(const[a,b] of edges){const A=lamps[a].holder.position,B=lamps[b].holder.position;
+  linkPos[k++]=A.x;linkPos[k++]=A.y;linkPos[k++]=A.z;linkPos[k++]=B.x;linkPos[k++]=B.y;linkPos[k++]=B.z}
+ linkLines.geometry.attributes.position.needsUpdate=true;
+ linkMat.opacity=.16+.08*Math.sin(t*.9);
+ // electric packets ride the edges
+ for(const p of packets){const[a,b]=edges[p.edge];const A=lamps[a].holder.position,B=lamps[b].holder.position;
+  p.t+=dt*p.speed;if(p.t>1){p.t=0;p.edge=Math.floor(Math.random()*edges.length)}
+  p.sprite.position.lerpVectors(A,B,p.t);p.sprite.material.opacity=.5+.5*Math.sin(t*6+p.edge)}
+ 
+// ---- 13BC hypercube ident (tesseract per ffilm.org/13bc: green space edges, blue time edges) ----
+(function(){
+ const cv=document.getElementById('identcv');if(!cv)return;const g=cv.getContext('2d');
+ const HV=[];for(let i=0;i<16;i++)HV.push([(i&1)?1:-1,(i&2)?1:-1,(i&4)?1:-1,(i&8)?1:-1]);
+ const E3=[],E4=[];for(let a=0;a<16;a++)for(let b=a+1;b<16;b++){const d=a^b;
+  if(d===1||d===2||d===4)E3.push([a,b]);else if(d===8)E4.push([a,b])}
+ let xw=0,yw=0,zw=0;const xy=0,xz=.55,yz=.4;
+ function rot(v){let x=v[0],y=v[1],z=v[2],w=v[3],c,s,t;
+  c=Math.cos(xw);s=Math.sin(xw);t=x*c-w*s;w=x*s+w*c;x=t;
+  c=Math.cos(yw);s=Math.sin(yw);t=y*c-w*s;w=y*s+w*c;y=t;
+  c=Math.cos(zw);s=Math.sin(zw);t=z*c-w*s;w=z*s+w*c;z=t;
+  c=Math.cos(xy);s=Math.sin(xy);t=x*c-y*s;y=x*s+y*c;x=t;
+  c=Math.cos(xz);s=Math.sin(xz);t=x*c-z*s;z=x*s+z*c;x=t;
+  c=Math.cos(yz);s=Math.sin(yz);t=y*c-z*s;z=y*s+z*c;y=t;
+  const k=2.6/(3.4-w*1.15);return[x*k,y*k,z*k]}
+ function draw(){
+  const W=cv.width,H=cv.height;g.clearRect(0,0,W,H);
+  const P=HV.map(v=>{const p=rot(v);const kk=2.2/(4.6-p[2]);return[W/2+p[0]*kk*W*.21,H/2+p[1]*kk*W*.21]});
+  g.lineWidth=1.1;
+  g.strokeStyle='rgba(67,255,137,.92)';g.beginPath();
+  for(const[a,b] of E3){g.moveTo(P[a][0],P[a][1]);g.lineTo(P[b][0],P[b][1])}g.stroke();
+  g.strokeStyle='rgba(117,199,255,.85)';g.beginPath();
+  for(const[a,b] of E4){g.moveTo(P[a][0],P[a][1]);g.lineTo(P[b][0],P[b][1])}g.stroke();
+  g.fillStyle='#f4f1e8';for(const p of P){g.beginPath();g.arc(p[0],p[1],1.6,0,Math.PI*2);g.fill()}
+  xw+=.008;yw+=.0052;zw+=.0037;
+  requestAnimationFrame(draw);
+ }
+ draw();
+})();
+
+readout.innerHTML=`RX ${rx.toFixed(2)} RY ${ry.toFixed(2)}<br>7 chambers \u00b7 21 links \u00b7 toroid holding`;
+ renderer.render(scene,camera);
+ requestAnimationFrame(frame);
+}
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+frame();
+})();
+</script>
+</body>
+</html>

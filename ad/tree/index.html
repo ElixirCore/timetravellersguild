@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THE TREE, in action - Time Travellers Guild</title>
+<meta name="description" content="One field, every record, back to 1951. A short animated look at how the Time Travellers Guild tree works. timetravellersguild.com">
+<style>
+:root{--ink:#e8e4d8;--dim:#9a958a;--phos:#8ef0a0;--card:#efe6c8;--cardink:#2a2418;--bg:#0b0c0a;--line:#2a2c26;--amber:#f0b45a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Mono","Courier New",ui-monospace,Menlo,Consolas,monospace;line-height:1.5;overflow:hidden;display:flex;flex-direction:column;min-height:100dvh}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
+header{display:flex;justify-content:space-between;gap:10px;padding:12px 16px 8px;font-size:10px;letter-spacing:.16em;color:var(--dim);border-bottom:1px solid var(--line)}
+header b{color:var(--phos);font-weight:400}
+header b::before{content:"\25CF";margin-right:.5em;animation:p 1.6s steps(2) infinite}
+@keyframes p{50%{opacity:.15}}
+#tabs{display:flex;gap:4px;padding:8px 12px 0;overflow:hidden;flex-wrap:wrap;justify-content:center}
+#tabs span{font-size:9px;letter-spacing:.12em;padding:4px 7px;border:1px solid var(--line);color:var(--dim);transition:all .4s}
+#tabs span.on{color:var(--bg);background:var(--phos);border-color:var(--phos)}
+#tabs span.dim{opacity:.5}
+#stage{position:relative;flex:1 1 auto;min-height:260px;margin:6px 10px 0;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#edges line{stroke:var(--phos);stroke-width:1.4;opacity:0;transition:opacity .6s}
+#edges line.on{opacity:.75}
+#edges line.maybe{stroke-dasharray:4 4}
+#edges text{fill:var(--amber);font-size:9px;text-anchor:middle;opacity:0;transition:opacity .5s;paint-order:stroke;stroke:var(--bg);stroke-width:3px}
+#edges text.on{opacity:1}
+.hdr{position:absolute;top:0;font-size:9px;letter-spacing:.12em;color:var(--dim);transform:translateX(-50%);white-space:nowrap;opacity:0;transition:opacity .5s}
+.hdr.on{opacity:1}
+.node{position:absolute;left:0;top:0;white-space:nowrap;font-size:11px;padding:4px 8px;border:1px solid var(--line);background:#14160f;color:var(--ink);transition:transform 1.3s cubic-bezier(.4,.1,.2,1),opacity .6s,background .4s,border-color .4s,color .4s;opacity:0;will-change:transform}
+.node.vis{opacity:1}
+.node small{display:block;font-size:8px;letter-spacing:.14em;color:var(--dim)}
+.node .yr{color:var(--amber);margin-right:5px;display:none}
+.showyr .node .yr{display:inline}
+.node.pending{border-style:dashed;border-color:var(--amber);color:var(--amber)}
+.node.focus{background:var(--card);color:var(--cardink);border-color:var(--card);z-index:3}
+.node.focus small{color:#6b6048}
+.node.fade{opacity:.18}
+.t-PLACE{border-color:#4d8f5c}.t-INSTITUTION{border-color:#8f7a4d}.t-MISSION{border-color:#4d6f8f}.t-MEDIA{border-color:#8f4d7a}.t-EVENT{border-color:#8f5a4d}.t-MOMENT{border-color:#6e8f4d}.t-SIGNAL{border-color:#8f8f4d}.t-UNKNOWN{border-color:#777;border-style:dotted}
+#panel{position:absolute;left:50%;top:50%;width:min(86%,340px);transform:translate(-50%,-50%) scale(.92);background:var(--card);color:var(--cardink);padding:14px 16px;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s;z-index:5;font-size:12px;clip-path:polygon(14px 0,100% 0,100% 100%,0 100%,0 14px)}
+#panel.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#panel h3{font-size:15px;margin:2px 0 8px}
+#panel .k{font-size:9px;letter-spacing:.16em;color:#6b6048;margin-top:8px}
+#panel p{margin-top:2px}
+#panel .ok{border-top:1px dashed #b9ad88;margin-top:10px;padding-top:6px}
+#cap{padding:10px 18px 6px;min-height:104px}
+#cap h2{font-size:clamp(17px,4.6vw,26px);line-height:1.2;color:var(--ink);margin-bottom:5px;letter-spacing:.01em}
+#cap h2 em{font-style:normal;color:var(--phos)}
+#cap p{font-size:clamp(12px,3.2vw,14px);color:var(--dim);max-width:640px}
+#cap.swap{animation:in .6s both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#cta{display:flex;gap:10px;flex-wrap:wrap;padding:0 18px 6px;min-height:42px;visibility:hidden}
+#cta.on{visibility:visible}
+#cta a{color:var(--cardink);background:var(--card);text-decoration:none;font-size:12px;padding:9px 14px;letter-spacing:.08em;line-height:1.2}
+#cta a.alt{background:transparent;color:var(--ink);border:1px solid var(--dim)}
+#ctl{display:flex;align-items:center;gap:10px;padding:8px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+#ctl button{background:none;border:1px solid var(--line);color:var(--ink);font:inherit;font-size:12px;padding:7px 12px;cursor:pointer;min-width:44px;min-height:34px}
+#dots{display:flex;gap:6px;flex:1;justify-content:center}
+#dots i{width:22px;height:4px;background:var(--line);position:relative;overflow:hidden;display:block}
+#dots i.done{background:var(--dim)}
+#dots i.cur::after{content:"";position:absolute;inset:0;background:var(--phos);transform-origin:left;transform:scaleX(var(--p,0))}
+@media (min-width:760px){#stage{max-width:880px;margin:6px auto 0;width:calc(100% - 20px)}#cap,#cta{max-width:880px;margin:0 auto;width:100%}#ctl{justify-content:center}#dots{flex:0 1 420px}.node{font-size:13px;padding:5px 10px}#panel{font-size:13px}}
+@media (prefers-reduced-motion:reduce){.node,#panel{transition-duration:.01s}header b::before{animation:none}}
+</style>
+</head>
+<body>
+<header><span>TIMETRAVELLERSGUILD.COM</span><b>THE TREE - IN ACTION</b></header>
+<div id="tabs" aria-label="The five views of the tree on the live page">
+<span data-v="TEMPORAL">TEMPORAL</span><span data-v="SOCIAL">SOCIAL</span><span data-v="SPATIAL">SPATIAL</span><span data-v="INSTITUTIONAL">INSTITUTIONAL</span><span data-v="SYMBOLIC">SYMBOLIC</span>
+</div>
+<div id="stage" role="img" aria-label="Animated diagram of records in the Guild tree being sorted, linked and viewed from different angles">
+<svg id="edges"></svg>
+<div id="panel" aria-live="polite"></div>
+</div>
+<div id="cap"><h2></h2><p></p></div>
+<div id="cta"><a href="/now/tree">CLIMB THE TREE</a><a class="alt" href="/">THE GUILD</a></div>
+<div id="ctl"><button id="prev" aria-label="Back">&lsaquo;</button><div id="dots"></div><button id="play" aria-label="Pause">II</button><button id="next" aria-label="Next">&rsaquo;</button></div>
+<script>
+(function(){
+"use strict";
+/* Every record below is a real public record on timetravellersguild.com/now. Short names for chips, full names in the notes. */
+var N=[
+{id:"dept",s:"Department",full:"Department of Excess Time",t:"INSTITUTION",st:"ACTIVE",yr:"1951"},
+{id:"tipi",s:"Tipi event",full:"Time travel at Tipi Valley",t:"EVENT",st:"ACTIVE",yr:"1981"},
+{id:"cardiff",s:"Cardiff",full:"Cardiff",t:"PLACE",st:"ACTIVE",yr:"2008"},
+{id:"found",s:"Founding",full:"Founding record",t:"MISSION",st:"COMPLETED",yr:"2008"},
+{id:"archive",s:"Archive",full:"Archive",t:"MEDIA",st:"ACTIVE",yr:"2014"},
+{id:"crib",s:"Cribarth",full:"Cribarth",t:"PLACE",st:"ACTIVE",yr:"2026"},
+{id:"swan",s:"Swansea Valley",full:"Swansea Valley",t:"PLACE",st:"ACTIVE",yr:"2026"},
+{id:"valley",s:"Valley reading",full:"Valley reading",t:"MISSION",st:"ACTIVE",yr:"2026"},
+{id:"obs",s:"Tables differ",full:"Observation - the tables disagreed",t:"MOMENT",st:"OBSERVED",yr:"2026"},
+{id:"sched",s:"Transmission",full:"Scheduled transmission",t:"SIGNAL",st:"SCHEDULED",yr:"2029"},
+{id:"else",s:"Elsewhen",full:"Elsewhen",t:"UNKNOWN",st:"UNRESOLVED",yr:"2033"},
+{id:"pend",s:"Dracoraptor",full:"Dracoraptor of Penarth",t:"MOMENT",st:"PENDING",yr:"",pending:1}
+];
+var E=[
+["dept","cardiff","hosted"],["found","cardiff","located at"],["archive","cardiff","possibly related to",1],
+["crib","swan","located at"],["valley","crib","located at"],["obs","crib","observed at"]
+];
+var L={
+cloud:{dept:[.62,.2],tipi:[.2,.35],cardiff:[.45,.6],found:[.8,.72],archive:[.3,.82],crib:[.75,.42],swan:[.15,.12],valley:[.5,.3],obs:[.85,.15],sched:[.25,.55],else:[.6,.88],pend:[.5,.5]},
+TEMPORAL:{dept:[.27,.92],tipi:[.73,.82],cardiff:[.25,.70],found:[.75,.66],archive:[.5,.56],crib:[.2,.46],swan:[.8,.46],valley:[.3,.36],obs:[.7,.36],sched:[.5,.22],else:[.5,.08],pend:[.73,.96]},
+SPATIAL:{cardiff:[.17,.26],dept:[.17,.46],found:[.17,.66],tipi:[.5,.26],archive:[.5,.5],sched:[.5,.68],else:[.5,.86],swan:[.83,.26],crib:[.83,.44],valley:[.83,.62],obs:[.83,.8],pend:[.17,.86]},
+SYMBOLIC:{dept:[.13,.2],tipi:[.38,.2],cardiff:[.6,.14],crib:[.58,.27],swan:[.62,.4],found:[.87,.14],valley:[.85,.31],archive:[.13,.6],obs:[.36,.74],sched:[.64,.6],else:[.87,.74],pend:[.38,.9]}
+};
+var HDR={SPATIAL:[["CARDIFF",.17,0],["TIPI VALLEY",.5,0],["NO PLACE RECORDED",.5,.58],["SWANSEA VALLEY",.83,0]],
+SYMBOLIC:[["INSTITUTION",.13,0],["EVENT",.38,0],["PLACE",.62,0],["MISSION",.87,0],["MEDIA",.13,.5],["MOMENT",.38,.5],["SIGNAL",.62,.5],["UNKNOWN",.87,.5]]};
+var S=[
+{lay:"cloud",show:"all-but-pend",tab:null,h:"Everything is a <em>record</em>.",p:"A place. An object. A moment. A signal. Each one is a node. These are real records from the Guild's public tree, thrown in a heap."},
+{lay:"TEMPORAL",show:"all-but-pend",yr:1,tab:"TEMPORAL",h:"Sort them by time and it becomes a <em>tree</em>.",p:"1951 at the root. 2033 at the top, where \"Elsewhen\" is still unresolved. On the live page you drag to climb it, or tap PAST and FUTURE."},
+{lay:"TEMPORAL",show:"all-but-pend",yr:1,edges:1,labels:1,tab:"TEMPORAL",h:"Records <em>link</em> to each other.",p:"Every link says how: hosted, located at, observed at. Dashed means \"possibly related to\". The tree keeps its doubts."},
+{lay:"SPATIAL",show:"all-but-pend",edges:1,tab:"SPATIAL",hdr:"SPATIAL",h:"Same records. <em>New angle.</em>",p:"Spatial view: places become the lines everything hangs from."},
+{lay:"SYMBOLIC",show:"all-but-pend",edges:1,tab:"SYMBOLIC",hdr:"SYMBOLIC",h:"Five views of <em>one field</em>.",p:"Types become the lines here. The live page also has SOCIAL and INSTITUTIONAL. Nothing is copied. Only the viewpoint moves."},
+{lay:"TEMPORAL",show:"all-but-pend",edges:1,focus:"crib",panel:1,tab:"TEMPORAL",h:"Tap a record. Ask <em>why am I seeing this?</em>",p:"Evidence and interpretation are kept apart. Nothing is guessed on top of the record."},
+{lay:"TEMPORAL",show:"all",edges:1,pend:1,tab:"TEMPORAL",h:"Anyone can <em>add</em> to it.",p:"A person, object, place, moment, photo or signal goes in marked PENDING until a keeper accepts it. Dashed = not accepted yet."},
+{lay:"TEMPORAL",show:"all",edges:1,pend:1,cta:1,tab:"TEMPORAL",h:"Your move. <em>Climb it.</em>",p:"Real records, real links. This drawing is simplified - the live tree is 3D. Go and see what is up there."}
+];
+var stage=document.getElementById("stage"),svg=document.getElementById("edges"),cap=document.getElementById("cap"),panel=document.getElementById("panel"),cta=document.getElementById("cta"),dots=document.getElementById("dots"),tabs=document.querySelectorAll("#tabs span");
+var els={},byId={},lines=[],texts=[],hdrs=[];
+N.forEach(function(n){byId[n.id]=n;var d=document.createElement("div");d.className="node t-"+n.t+(n.pending?" pending":"");d.innerHTML='<small>'+n.t+(n.pending?" - PENDING":"")+'</small><span class="yr">'+n.yr+'</span>'+n.s;stage.appendChild(d);els[n.id]=d});
+E.forEach(function(e){var l=document.createElementNS("http://www.w3.org/2000/svg","line");if(e[3])l.setAttribute("class","maybe");svg.appendChild(l);var t=document.createElementNS("http://www.w3.org/2000/svg","text");t.textContent=e[2];svg.appendChild(t);lines.push(l);texts.push(t)});
+["a","b","c","d","e","f","g","h"].forEach(function(){var h=document.createElement("div");h.className="hdr";stage.appendChild(h);hdrs.push(h)});
+var cur=-1,playing=!window.matchMedia("(prefers-reduced-motion:reduce)").matches,t0=0,DUR=7500,elapsed=0,edgesOn=false,labelsOn=false;
+S.forEach(function(){var i=document.createElement("i");dots.appendChild(i)});
+function pos(n,lay){var p=L[lay][n];var w=stage.clientWidth,h=stage.clientHeight;return [p[0]*w,p[1]*h]}
+function place(lay){
+ N.forEach(function(n){var el=els[n.id];var p=L[lay][n.id];var w=stage.clientWidth,h=stage.clientHeight;
+  var x=Math.max(8+el.offsetWidth/2,Math.min(w-8-el.offsetWidth/2,p[0]*w)),y=Math.max(18+el.offsetHeight/2,Math.min(h-6-el.offsetHeight/2,p[1]*h));
+  el.style.transform="translate("+(x-el.offsetWidth/2)+"px,"+(y-el.offsetHeight/2)+"px)"});
+}
+function draw(){
+ var sr=stage.getBoundingClientRect();
+ E.forEach(function(e,i){var a=els[e[0]].getBoundingClientRect(),b=els[e[1]].getBoundingClientRect();
+  var ax=a.left-sr.left+a.width/2,ay=a.top-sr.top+a.height/2,bx=b.left-sr.left+b.width/2,by=b.top-sr.top+b.height/2;
+  var l=lines[i];l.setAttribute("x1",ax);l.setAttribute("y1",ay);l.setAttribute("x2",bx);l.setAttribute("y2",by);
+  l.classList.toggle("on",edgesOn&&els[e[0]].classList.contains("vis")&&els[e[1]].classList.contains("vis"));
+  var t=texts[i];t.setAttribute("x",(ax+bx)/2);t.setAttribute("y",(ay+by)/2-3);t.classList.toggle("on",labelsOn)});
+}
+function go(i){
+ cur=(i+S.length)%S.length;var s=S[cur];elapsed=0;t0=performance.now();
+ cap.className="";void cap.offsetWidth;cap.className="swap";
+ cap.querySelector("h2").innerHTML=s.h;cap.querySelector("p").textContent=s.p;
+ stage.classList.toggle("showyr",!!s.yr);
+ place(s.lay);
+ N.forEach(function(n){var vis=s.show==="all"||(s.show==="all-but-pend"&&!n.pending);els[n.id].classList.toggle("vis",vis);els[n.id].classList.toggle("focus",s.focus===n.id);els[n.id].classList.toggle("fade",!!s.focus&&s.focus!==n.id)});
+ edgesOn=!!s.edges;labelsOn=!!s.labels;
+ hdrs.forEach(function(h){h.classList.remove("on")});
+ var H=s.hdr&&HDR[s.hdr];if(H)H.forEach(function(x,k){var h=hdrs[k];h.textContent=x[0];h.style.left=(x[1]*100)+"%";h.style.top=(x[2]*100+(x[2]?0:0))+"%";h.style.marginTop=x[2]?"-4px":"0";h.classList.add("on")});
+ if(s.panel){panel.innerHTML='<div class="k">PLACE &middot; ACTIVE</div><h3>Cribarth</h3><div class="k">EVIDENCE</div><p>Swansea Valley (located at); Observation - the tables disagreed (observed at); Valley reading (located at)</p><div class="ok"><div class="k">INTERPRETATION</div><p>No interpretation has been accepted. The evidence stands alone.</p></div>';panel.classList.add("on")}else panel.classList.remove("on");
+ cta.classList.toggle("on",!!s.cta);
+ tabs.forEach(function(t){t.classList.toggle("on",t.dataset.v===s.tab);t.classList.toggle("dim",!!s.tab&&t.dataset.v!==s.tab&&["SOCIAL","INSTITUTIONAL"].indexOf(t.dataset.v)>=0&&s.lay!=="TEMPORAL"&&false)});
+ [].forEach.call(dots.children,function(d,k){d.className=k<cur?"done":k===cur?"cur":""});
+}
+function tick(now){
+ if(playing&&cur>=0){elapsed=now-t0;var p=Math.min(1,elapsed/DUR);dots.children[cur].style.setProperty("--p",p);if(p>=1)go(cur+1)}
+ draw();requestAnimationFrame(tick)}
+function setPlay(v){playing=v;var b=document.getElementById("play");b.textContent=v?"II":"\u25B6";b.setAttribute("aria-label",v?"Pause":"Play");if(v)t0=performance.now()-elapsed}
+document.getElementById("next").onclick=function(e){e.stopPropagation();go(cur+1)};
+document.getElementById("prev").onclick=function(e){e.stopPropagation();go(cur-1)};
+document.getElementById("play").onclick=function(e){e.stopPropagation();setPlay(!playing)};
+stage.addEventListener("click",function(){go(cur+1)});
+window.addEventListener("keydown",function(e){if(e.key==="ArrowRight")go(cur+1);else if(e.key==="ArrowLeft")go(cur-1);else if(e.key===" "){e.preventDefault();setPlay(!playing)}});
+window.addEventListener("resize",function(){if(cur>=0)place(S[cur].lay)});
+setPlay(playing);
+/* start: place nodes in the heap invisibly, then begin */
+place("cloud");
+requestAnimationFrame(function(){requestAnimationFrame(function(){go(0);requestAnimationFrame(tick)})});
+})();
+</script>
+</body>
+</html>

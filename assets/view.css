@@ -142,27 +142,77 @@ body.view #position{color:var(--navy)}
   hyphens:auto;-webkit-hyphens:auto;
   color:var(--ink);opacity:.92;
 }
+#viewContext.is-focus{opacity:.8}
+#viewContext.is-focus .view-body{
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:7;overflow:hidden;
+}
+.view-filing{
+  margin:.7rem 0 0;padding:.45rem 0 .45rem .7rem;border-left:2px solid rgba(30,58,95,.35);
+  font-family:var(--paper-font);font-style:italic;font-size:clamp(.74rem,1.2vw,.86rem);line-height:1.5;
+  color:var(--ink);
+}
+.view-filing.TESTIMONY,.view-filing.JACK_REMEMBERS{border-left-color:var(--scarlet)}
+.view-filing p{margin:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;overflow:hidden}
+.view-filing footer{
+  margin-top:.3rem;font-family:var(--label);font-style:normal;font-size:.5rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;opacity:.7;text-align:right;
+}
+.view-notes{
+  list-style:none;margin:.65rem 0 0;padding:0;
+  font-family:var(--paper-font);font-size:.7rem;line-height:1.4;color:var(--ink);opacity:.85;
+}
+.view-notes li{margin:0 0 .35rem;text-align:right}
+.view-notes b{
+  display:block;font-family:var(--label);font-size:.52rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--navy);
+}
+#viewContext.is-pattern .view-notes b{color:var(--scarlet-deep)}
+.view-filing[hidden],.view-notes[hidden]{display:none}
 .view-sub{
   margin:.7rem 0 0;font-family:var(--label);font-size:.52rem;font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;text-align:right;opacity:.65;
 }
 
-#viewWake{
-  position:fixed;z-index:12;inset:auto 1rem calc(4.6rem + env(safe-area-inset-bottom)) 1rem;
-  display:flex;flex-wrap:wrap;gap:.55rem;align-items:center;
-  max-width:28rem;
+/* Who is driving: Jack, or the visitor */
+.reins{
+  position:fixed;z-index:12;
+  right:max(1rem, env(safe-area-inset-right));bottom:calc(4.6rem + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:auto 1fr;grid-template-areas:"dot who" "dot note" "btn btn";
+  align-items:center;column-gap:.5rem;row-gap:.1rem;
+  max-width:16rem;padding:.5rem .65rem .55rem;
+  background:rgba(241,228,196,.9);border:1px solid var(--navy);
+  font-family:var(--label);font-weight:600;text-transform:uppercase;color:var(--navy);
+  box-shadow:0 2px 0 rgba(30,58,95,.12);
+  transition:border-color .3s ease, color .3s ease;
 }
-#viewWake[hidden]{display:none!important}
-#viewWake a,#viewWake button{
-  font-family:var(--label);font-size:.72rem;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;text-decoration:none;min-height:2.4rem;
-  padding:.45rem .75rem;border:1px solid var(--scarlet);background:rgba(241,228,196,.92);
-  color:var(--scarlet);cursor:pointer;
+.reins-dot{grid-area:dot;width:.6rem;height:.6rem;border-radius:50%;background:var(--navy);align-self:start;margin-top:.2rem}
+.reins[data-who="jack"] .reins-dot{animation:reinsBreathe 2.6s ease-in-out infinite}
+.reins[data-who="you"]{border-color:var(--scarlet);color:var(--scarlet)}
+.reins[data-who="you"] .reins-dot{background:var(--scarlet)}
+@keyframes reinsBreathe{50%{opacity:.25}}
+.reins-who{grid-area:who;font-size:.72rem;letter-spacing:.16em}
+.reins-note{grid-area:note;font-size:.56rem;letter-spacing:.1em;opacity:.75;text-transform:none;font-weight:400;font-family:var(--paper-font);font-style:italic}
+.reins button{
+  grid-area:btn;margin-top:.4rem;min-height:2.2rem;padding:.35rem .6rem;
+  font:inherit;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  border:1px solid currentColor;background:transparent;color:inherit;
 }
-#viewWake a:hover,#viewWake a:focus-visible,
-#viewWake button:hover,#viewWake button:focus-visible{
-  background:var(--scarlet);color:var(--paper);
+.reins button:hover,.reins button:focus-visible{background:var(--navy);color:var(--paper)}
+.reins[data-who="you"] button:hover,.reins[data-who="you"] button:focus-visible{background:var(--scarlet)}
+.reins.flash{animation:reinsFlash .5s ease-out}
+@keyframes reinsFlash{0%{transform:scale(1.06)}100%{transform:none}}
+
+#viewSay{
+  margin:.45rem 0 0;font-family:var(--paper-font);font-style:italic;
+  font-size:clamp(.82rem,2.4vw,.98rem);line-height:1.45;color:var(--ink);
+  max-width:34ch;min-height:1.4em;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;
 }
+#viewSay:empty{display:none}
+#viewContext.is-reading{opacity:.95}
+#viewContext.is-reading .view-body{-webkit-line-clamp:12}
+#viewLogList li.is-local{border-left-style:dotted}
+#viewLogList li.is-local .focus{color:var(--navy)}
 
 body.view #dock{justify-content:center;gap:.2rem}
 body.view.hasgl #field-list{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
@@ -175,15 +225,27 @@ body.view.hasgl #field-list{position:absolute;width:1px;height:1px;overflow:hidd
     top:calc(7.2rem + env(safe-area-inset-top));
   }
   .view-body{font-size:.72rem;line-height:1.45}
+  #viewContext.is-focus .view-body{-webkit-line-clamp:5}
+  .view-notes li:nth-child(n+2){display:none}
   .view-belt{grid-template-rows:repeat(6,2px);min-height:1.1rem}
+}
+@media (max-width:720px){
+  .reins{max-width:none;grid-template-columns:auto 1fr auto;grid-template-areas:"dot who btn" "dot note btn";padding:.4rem .5rem}
+  .reins button{margin:0 0 0 .4rem;min-height:2.4rem;font-size:.56rem;letter-spacing:.1em;max-width:6.5rem;line-height:1.2}
 }
 @media (max-width:420px){
   #viewLog{display:none}
+  .reins{top:calc(6.4rem + env(safe-area-inset-top));bottom:auto;right:1rem;grid-template-columns:auto auto auto}
+  .reins-who{font-size:.64rem;letter-spacing:.12em}
+  #viewSay{-webkit-line-clamp:3;max-width:none}
+  #viewContext.is-reading{opacity:.5}
+  #viewBeat{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
   #viewContext{width:min(12.5rem,48vw);opacity:.34}
-  .view-batch,.view-ruler,.view-belt{display:none}
+  .view-batch,.view-ruler,.view-belt,.view-notes{display:none}
 }
 
 @media (prefers-reduced-motion:reduce){
+  .reins[data-who="jack"] .reins-dot,.reins.flash{animation:none}
   #viewTitle{transition:none}
   #viewContext{transition:none}
 }

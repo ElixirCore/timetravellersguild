@@ -282,6 +282,5 @@ header('Cache-Control: no-store');
   <a href="#solutions">KEY</a>
 </nav>
 <script src="/jack/puzzle/puzzle.js?v=1951q"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
 </body>
 </html>

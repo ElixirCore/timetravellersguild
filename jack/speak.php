@@ -41,7 +41,7 @@ if (function_exists('mb_strlen') ? mb_strlen($clientText) > 2000 : strlen($clien
 }
 
 $engine = new VoiceEngine();
-$result = $engine->speakQueued($clientText);
+$result = $engine->speakQueued($clientText, (int) ($_POST['part'] ?? 0));
 
 if (empty($result['ok']) || !is_string($result['audio']) || $result['audio'] === '') {
     $http = (int) ($result['http'] ?? 503);
@@ -59,4 +59,5 @@ if (empty($result['ok']) || !is_string($result['audio']) || $result['audio'] ===
 header('Content-Type: audio/mpeg');
 header('Content-Length: ' . (string) strlen($result['audio']));
 header('X-Jack-Voice: ' . (!empty($result['cached']) ? 'cached' : 'fresh'));
+if (!empty($result['more'])) header('X-Jack-More: 1');
 echo $result['audio'];

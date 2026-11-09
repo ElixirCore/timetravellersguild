@@ -15,6 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css?v=4" />
+  <!-- 2026-10-25 Toby: hide the floating Talk-to-Jack overlay on /box only.
+       jack-face.js stays loaded, so the DIAL button still gets through to Jack. -->
+  <style>#jack-face{display:none!important}</style>
   <meta property="og:site_name" content="TIMETRAVELLERSGUILD.COM" />
   <meta property="og:title" content="CHRONOS — Red Phonebox" />
   <meta property="og:description" content="Temporal Relay Booth · Mk VI. The Guild's K6 red telephone kiosk." />
@@ -22,6 +25,7 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://timetravellersguild.com/box/" />
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 <body>
   <p class="site-mark"><a href="/">TIMETRAVELLERSGUILD.COM</a> · BOX</p>

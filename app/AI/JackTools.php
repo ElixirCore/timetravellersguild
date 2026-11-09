@@ -9,6 +9,7 @@ declare(strict_types=1);
  *   The record      search_graph, get_node, search_lore, read_lore
  *   The territory   search_map, trace_map, desk_items, find_traveller
  *   Cardiff         search_cardiff_archives, read_museum_object (Museum Wales + Glamorgan Archives, read-only)
+ *   Field Office    field_office_sessions (If Thursday Fails: the same public session record the page shows)
  *   His office      the keeper-only office tools (JackAgent / OfficeDispatcher), unchanged
  *
  * Everything reads the Guild's own data. The only writes are to Jack's memory of the traveller
@@ -51,6 +52,8 @@ final class JackTools
             $fn('search_cardiff_archives', 'Search Cardiff\'s public archives: Amgueddfa Cymru – Museum Wales collections (the national museum at Cathays Park: objects, photographs, computers, industry) and Glamorgan Archives (council records, photographs, papers). Use it when someone asks about Cardiff, Wales, or the real history behind one of your memories. Returns real records with references and links. They are evidence of the world, never proof of your memories; say which is which.',
                 ['query' => $s(120), 'source' => ['type' => 'string', 'enum' => ['both', 'museum', 'archives']], 'limit' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 10]], ['query']),
             $fn('read_museum_object', 'Read one Museum Wales object in full (dates, makers, materials, categories) by the id or link that search_cardiff_archives gave. Link to it; never reproduce its image.', ['id' => $s(200)], ['id']),
+            $fn('field_office_sessions', 'The Cardiff Field Office sessions, "If Thursday Fails": status (Proposed with venue pending, Confirmed, Moved, Cancelled), date, room, how to get in, access, whether to reserve or drop in, places left, and the stable link. This is exactly what the public page at /field-office/ shows, so answer from it and give the link; never guess a room or a date it does not state. If a session has Moved, say plainly not to go to the original room. Read-only: you cannot book anyone, but you can tell them how.',
+                ['lang' => ['type' => 'string', 'enum' => ['en', 'cy']]]),
             $fn('find_traveller', 'Find a traveller with a public Guild profile by name, place or interest. Public profiles only. Read-only.', ['query' => $s()], ['query']),
         ];
         if ($memory) {
@@ -109,6 +112,7 @@ final class JackTools
             'desk_items' => self::deskItems($a),
             'search_cardiff_archives' => CardiffArchives::search((string) ($a['query'] ?? ''), (string) ($a['source'] ?? 'both'), (int) ($a['limit'] ?? 6)),
             'read_museum_object' => CardiffArchives::readObject((string) ($a['id'] ?? '')),
+            'field_office_sessions' => self::fieldOffice((string) ($a['lang'] ?? 'en')),
             'find_traveller' => self::findTraveller((string) ($a['query'] ?? '')),
             'remember_my_life' => ['ok' => true, 'memories' => array_map(static fn ($h) => JackLife::full($h['memory']), JackLife::recall((string) ($a['about'] ?? ''), 3))],
             'recall_memory' => ['ok' => true] + JackMemory::load($subject),
@@ -122,6 +126,19 @@ final class JackTools
             'read_site_page' => !empty($ctx['site']) ? self::readSitePage((string) ($a['path'] ?? '')) : ['ok' => false, 'error' => 'Not at this desk.'],
             default => JackAgent::executeTool($name, $a, $ctx['office']),
         };
+    }
+
+    /** The Field Office sessions exactly as the public page has them: no staff fields, no bookings. */
+    private static function fieldOffice(string $lang): array
+    {
+        require_once dirname(__DIR__, 2) . '/inc/fieldoffice.php';
+        $lang = $lang === 'cy' ? 'cy' : 'en';
+        $all = ttg_fo_sessions();
+        $next = ttg_fo_next($all);
+        return ['ok' => true, 'programme' => ttg_fo_t('programme', $lang), 'page' => 'https://timetravellersguild.com/field-office/',
+            'next' => $next ? $next['slug'] : null,
+            'sessions' => array_map(static fn ($s) => ttg_fo_public($s, $lang), $all),
+            'note' => 'Bookings are made on the page itself; reserving never requires an account or sharing a story.'];
     }
 
     /** Accounts allowed internet search at the /lodge/ desk. */

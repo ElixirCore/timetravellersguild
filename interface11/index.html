@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>INTERFACE v11 · Time Travellers Guild</title>
+  <link rel="stylesheet" href="styles/interface11.css?v=1">
+</head>
+<body>
+  <canvas id="gl" aria-label="INTERFACE v11: a sampler and a Tree of Life of knobs, a tesseract mixer at its heart, and a stack of petal discs that is each track's melody"></canvas>
+
+  <div id="hud">
+    <button id="home" type="button" aria-label="the whole tree" title="the whole tree" hidden><img alt=""></button>
+    <button id="info" type="button" aria-label="how to play this" title="how to play this" hidden><img alt=""></button>
+    <div id="readout" aria-live="polite" hidden><img alt=""><span></span></div>
+    <p id="caption"></p>
+    <div id="sd"><input id="sdtext" type="text" maxlength="300" placeholder="describe a sound…" autocomplete="off" autocapitalize="off" enterkeyhint="go" aria-label="describe a sound to make"></div>
+    <p id="status" aria-live="polite"></p>
+    <div id="edges"></div>
+    <div id="library" hidden><ul id="cliplist"></ul></div>
+  </div>
+  <div id="guide" role="dialog" aria-modal="true" hidden><div></div></div>
+
+  <script type="module" src="js/app.js?v=4"></script>
+</body>
+</html>

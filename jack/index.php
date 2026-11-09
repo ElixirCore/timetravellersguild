@@ -20,6 +20,13 @@ header('Cache-Control: no-store');
 <meta name="description" content="Jack lives inside a Rubik cube. Desk, tap, hopper, Jack. Click a station and he changes state.">
 <meta name="theme-color" content="#111214">
 <link rel="stylesheet" href="/jack/css/one.css?v=jack4">
+<style>
+#jackIntro{margin:.5rem 0 .2rem}
+#jackIntro .intro-line{margin:0 0 .4rem;font-size:.8rem;letter-spacing:.06em;color:var(--dim)}
+#jackIntroStart{background:var(--scarlet);color:var(--well);border:0;border-radius:2px;padding:.55rem 1.2rem;font:inherit;letter-spacing:.14em;cursor:pointer}
+#jackIntroStart:focus-visible{outline:2px solid var(--well);outline-offset:2px}
+</style>
+<script src="/assets/jack-line.js?v=3"></script>
 </head>
 <body data-stance="jack">
 <noscript>
@@ -61,6 +68,14 @@ header('Cache-Control: no-store');
     </div>
   </div>
   <p id="said" aria-live="polite"></p>
+  <div id="jackIntro" hidden>
+    <p class="intro-line">HE LEFT AN INTRODUCTION</p>
+    <button type="button" id="jackIntroStart">START</button>
+    <audio id="jackIntroAudio" preload="auto" playsinline>
+      <source src="/jack/jack-intro.m4a" type="audio/mp4">
+      <source src="/jack/jack-intro.ogg" type="audio/ogg">
+    </audio>
+  </div>
   <div id="talkLog" class="sr" role="log"></div>
   <form id="askForm" class="ask">
     <label class="sr" for="askQ">Speak to Jack</label>
@@ -98,6 +113,7 @@ header('Cache-Control: no-store');
 <script src="/assets/jack-voice.js?v=2"></script>
 <script src="/jack/js/nine.js?v=1"></script>
 <script src="/jack/js/one.js?v=jack5"></script>
-<script src="/assets/ask-jack.js?v=1" defer></script>
+<script src="/jack/js/intro.js?v=2"></script>
+<!-- the little Jack: press the face, he listens and speaks -->
 </body>
 </html>

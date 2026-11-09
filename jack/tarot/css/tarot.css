@@ -84,6 +84,9 @@ h1{margin:0 0 8px;font-size:clamp(1.3rem,4vw,1.7rem);letter-spacing:.14em;font-w
 #reading-actions[hidden]{display:none}
 .action-btn{font-size:10px}
 .action-btn.done{background:var(--navy);color:var(--paper)}
+.talk-btn{border-color:var(--scarlet);color:var(--scarlet)}
+.talk-btn.live{background:var(--scarlet);color:var(--paper)}
+.talk-status{margin:.5rem 0 0;min-height:1em;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--scarlet)}
 .inspect{width:min(40rem,calc(100vw - 16px));max-height:min(92vh,40rem);border:2px solid var(--navy);
   background:var(--paper);color:var(--ink);padding:0;overflow:auto}
 .inspect::backdrop{background:rgba(22,24,20,.5)}

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gesture School · Time Travellers Guild</title>
+<meta name="description" content="Learn the hand language of Procrastinatrix Draw and Morph, one shape at a time, with live feedback from your camera.">
+<meta property="og:title" content="Gesture School">
+<meta property="og:description" content="Learn the hand language of Procrastinatrix Draw and Morph, one shape at a time, with live feedback from your camera.">
+<style>
+:root{--bg:#0a080c;--panel:rgba(14,11,18,.86);--line:#2b2233;--bone:#ede9e0;--dim:#8a8094;--acid:#e8ff3d;--hot:#ff2d7a;--cyan:#3de8ff;--ok:#7cffc4}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--bone);font:500 14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+video#cam{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);opacity:.42;filter:saturate(.5) contrast(1.05)}
+canvas#ov{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+button,a.btn{font:inherit;color:inherit;border:0;background:rgba(36,29,40,.9);border-radius:12px;cursor:pointer;text-decoration:none;
+  letter-spacing:.06em;font-size:11px;font-weight:800;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;min-height:46px}
+button:hover,a.btn:hover{background:#352a3c}
+button:disabled{opacity:.35;cursor:default}
+button:focus-visible,a.btn:focus-visible{outline:2px solid var(--acid);outline-offset:2px}
+.hot{background:var(--hot);color:#1a0009}
+.acid{background:var(--acid);color:#151800}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+
+header{position:fixed;left:20px;right:20px;top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:12px;z-index:5;pointer-events:none}
+header *{pointer-events:auto}
+.mark{font:900 18px/1 ui-monospace,Menlo,monospace;letter-spacing:.02em;color:var(--acid);text-decoration:none}
+.mark small{display:block;font-size:10px;color:var(--dim);letter-spacing:.14em;margin-top:3px;font-weight:700}
+#dots{display:flex;gap:5px;margin-left:auto}
+#dots i{width:9px;height:9px;border-radius:50%;background:#2b2233}
+#dots i.done{background:var(--ok)}
+#dots i.now{background:var(--acid);box-shadow:0 0 10px var(--acid)}
+
+#lesson,#grad{position:fixed;left:20px;top:calc(max(14px,env(safe-area-inset-top)) + 56px);width:min(380px,calc(100vw - 40px));z-index:4;padding:20px 22px;
+  max-height:calc(100vh - 90px);overflow:auto}
+#lesson[hidden],#grad[hidden]{display:none}
+#chapter{font:800 10.5px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--hot)}
+#title{margin:4px 0 8px;font:900 26px/1.1 ui-sans-serif,system-ui,sans-serif;letter-spacing:-.01em}
+#diagram{width:100%;height:190px;display:block;margin:4px 0 10px;background:radial-gradient(circle at 50% 60%,rgba(61,232,255,.08),transparent 70%);border-radius:14px}
+#diagram .palm{fill:rgba(237,233,224,.2);stroke:rgba(237,233,224,.6);stroke-width:.014;stroke-linejoin:round}
+#diagram .f{fill:none;stroke:rgba(237,233,224,.6);stroke-width:.075;stroke-linecap:round;stroke-linejoin:round}
+#diagram .f.key{stroke:var(--acid);filter:drop-shadow(0 0 .02px var(--acid))}
+#diagram .spot{fill:var(--hot)}
+#diagram .trail polyline{fill:none;stroke:var(--hot);stroke-width:.03;stroke-linecap:round}
+#say{margin:0 0 10px;font-size:15.5px}
+#tip{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(232,255,61,.08);border:1px solid rgba(232,255,61,.25);color:#e9ecc9;font-size:13.5px}
+#tip[hidden]{display:none}
+.track{height:8px;border-radius:4px;background:#2b2233;overflow:hidden;margin:6px 0 14px}
+#bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--acid));transition:width .15s}
+#lesson.passed #bar{background:var(--ok)}
+#lesson.passed #title::after{content:"  ✓";color:var(--ok)}
+.nav{display:flex;gap:8px}
+.nav button{flex:1}
+
+#see{position:fixed;right:20px;top:calc(max(14px,env(safe-area-inset-top)) + 56px);width:min(250px,calc(100vw - 40px));z-index:4;padding:14px 16px}
+#see:empty{display:none}
+#see h3{margin:0 0 6px;font:800 10px ui-monospace,Menlo,monospace;letter-spacing:.16em;color:var(--dim)}
+.req{list-style:none;margin:0 0 10px;padding:0;font-size:13.5px}
+.req li{padding:3px 0;color:var(--dim)}
+.req li.ok{color:var(--ok)}
+.seen{border-top:1px solid var(--line);padding-top:8px;margin-top:8px}
+.seen b{font:900 15px ui-monospace,Menlo,monospace;color:var(--acid)}
+.seen em{font-style:normal;font:800 10px ui-monospace,Menlo,monospace;color:var(--hot);margin-left:8px}
+.fingers{display:flex;gap:4px;margin:6px 0}
+.fi{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:800 11px ui-monospace,Menlo,monospace;background:#1b1520;color:var(--dim)}
+.fi.open{background:rgba(124,255,196,.18);color:var(--ok)}
+.depthbar{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,#2b2233,#3de8ff)}
+.depthbar i{position:absolute;top:-4px;width:4px;height:14px;margin-left:-2px;border-radius:2px;background:var(--bone)}
+.seen small{font:600 9.5px ui-monospace,Menlo,monospace;color:var(--dim);letter-spacing:.06em}
+.none{color:var(--dim);margin:0}
+
+/* Practice widgets sit in the open middle of the screen, clear of both panels. */
+#targets,#cube,#padTools{position:fixed;z-index:3;display:none}
+body[data-widget=buttons] #targets{display:flex}
+body[data-widget=cube] #cube{display:block}
+body[data-widget=pad] #padTools{display:flex}
+#targets{left:50%;top:55%;transform:translate(-50%,-50%);gap:22px}
+#targets button{width:130px;height:130px;font-size:16px;border-radius:24px;border:2px solid rgba(237,233,224,.25)}
+#targets button.lit{background:var(--ok);color:#06140d;border-color:var(--ok)}
+#cube{left:50%;top:52%;width:180px;height:180px;margin:-90px 0 0 -90px;perspective:700px}
+#cube .c{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(var(--ry,-25deg))}
+#cube .c div{position:absolute;inset:0;border:2px solid var(--cyan);background:rgba(61,232,255,.07);display:flex;align-items:center;justify-content:center;
+  font:900 30px ui-monospace,Menlo,monospace;color:var(--cyan)}
+#cube .c div:nth-child(1){transform:translateZ(90px)}
+#cube .c div:nth-child(2){transform:rotateY(90deg) translateZ(90px);color:var(--acid);border-color:var(--acid)}
+#cube .c div:nth-child(3){transform:rotateY(180deg) translateZ(90px);color:var(--hot);border-color:var(--hot)}
+#cube .c div:nth-child(4){transform:rotateY(-90deg) translateZ(90px);color:var(--ok);border-color:var(--ok)}
+#padTools{left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);gap:8px}
+
+#grad h2{margin:0 0 6px;font:900 28px/1.1 ui-sans-serif,system-ui,sans-serif}
+#grad p{margin:0 0 12px}
+#grad .go{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+#grad table{width:100%;border-collapse:collapse;font-size:12.5px}
+#grad th{text-align:left;font:800 9.5px ui-monospace,Menlo,monospace;letter-spacing:.12em;color:var(--dim);padding:4px 6px 4px 0}
+#grad td{padding:5px 6px 5px 0;border-top:1px solid var(--line);vertical-align:top}
+#grad td:first-child{font-weight:800;color:var(--acid)}
+
+#msg{position:fixed;left:50%;bottom:calc(max(18px,env(safe-area-inset-bottom)) + 70px);transform:translateX(-50%);z-index:6;background:rgba(10,8,12,.92);
+  border:1px solid var(--line);padding:10px 16px;border-radius:12px;max-width:min(520px,calc(100vw - 32px));text-align:center}
+#msg[hidden]{display:none}
+#cursors{position:fixed;inset:0;pointer-events:none;z-index:9}
+#cursors .hc{position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;border:2px solid rgba(237,233,224,.8);
+  background:conic-gradient(var(--acid) calc(var(--p,0) * 1turn),transparent 0);box-shadow:0 0 12px rgba(0,0,0,.6)}
+#cursors .hc[hidden]{display:none}
+.hand-hover{outline:3px solid var(--acid)!important;outline-offset:3px}
+.hand-click{background:var(--acid)!important;color:#151800!important}
+
+#gate{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:radial-gradient(circle at 50% 35%,rgba(40,28,52,.92),rgba(8,6,10,.98))}
+#gate[hidden]{display:none}
+#gate .in{max-width:560px;text-align:center}
+#gate h1{margin:0 0 12px;font:900 clamp(40px,9vw,76px)/.95 ui-sans-serif,system-ui,sans-serif;letter-spacing:-.03em}
+#gate h1 span{color:var(--acid)}
+#gate p{margin:0 0 20px;color:#c9c2d3;font-size:16px}
+#gate .go{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#gate small{display:block;margin-top:16px;color:var(--dim)}
+#resume:empty{display:none}
+#resume{display:block;margin:-8px 0 16px;color:var(--acid);font-weight:700}
+
+@media (max-width:820px){
+  #see{top:auto;bottom:max(14px,env(safe-area-inset-bottom));right:12px;width:200px;padding:10px 12px}
+  #lesson,#grad{left:12px;width:calc(100vw - 24px);max-height:48vh;padding:14px 16px}
+  #diagram{height:120px}
+  #title{font-size:21px}
+  #targets button{width:90px;height:90px}
+  #dots{display:none}
+}
+</style>
+</head>
+<body data-widget="none">
+<video id="cam" playsinline muted></video>
+<canvas id="ov"></canvas>
+
+<header>
+  <a class="mark" href="/">GESTURE SCHOOL<small>TIME TRAVELLERS GUILD</small></a>
+  <div id="dots" aria-hidden="true"></div>
+</header>
+
+<section id="lesson" class="panel" aria-live="polite">
+  <div id="chapter"></div>
+  <h1 id="title"></h1>
+  <svg id="diagram" viewBox="-0.6 -0.48 1.2 1.0" role="img" aria-label="How to make this hand shape"></svg>
+  <p id="say"></p>
+  <p id="tip" hidden></p>
+  <div class="track" aria-hidden="true"><div id="bar"></div></div>
+  <div class="nav"><button id="back">← Back</button><button id="skip">Skip →</button></div>
+</section>
+
+<section id="grad" class="panel" hidden>
+  <h2>You speak hand.</h2>
+  <p>That's the whole language. The same shapes work in both instruments: Draw makes pictures in space, Morph makes music from the Procrastinatrix catalogue. Keep practising here first if you like: every shape works on this page now.</p>
+  <div class="go"><a class="btn acid" href="https://procrastinatrix.net/draw/">Open Draw</a><a class="btn" href="https://procrastinatrix.net/morph/">Open Morph</a><button id="again">Start over</button></div>
+  <table>
+    <thead><tr><th>Shape</th><th>Hand</th><th>Draw</th><th>Morph</th></tr></thead>
+    <tbody>
+      <tr><td>Tarjani</td><td>point</td><td>press buttons</td><td>press buttons, echo throw</td></tr>
+      <tr><td>Gyan</td><td>pinch</td><td>draw, press</td><td>grab, press</td></tr>
+      <tr><td>Surya</td><td>thumb + ring</td><td>colour</td><td>DJ filter</td></tr>
+      <tr><td>Buddhi</td><td>thumb + little</td><td>brush size</td><td>tempo bend</td></tr>
+      <tr><td>Shuni</td><td>thumb + middle</td><td>symmetry</td><td>beat repeat</td></tr>
+      <tr><td>Kartari</td><td>V</td><td>next brush</td><td>next clip</td></tr>
+      <tr><td>Karana</td><td>horns</td><td>undo</td><td>reverse</td></tr>
+      <tr><td>Trishula</td><td>three up</td><td>redo</td><td>tree swap</td></tr>
+      <tr><td>Abhaya</td><td>open palm</td><td>turn the view</td><td>breakdown</td></tr>
+      <tr><td>Mushti</td><td>fist</td><td>warp</td><td>mangle</td></tr>
+      <tr><td>Shikhara</td><td>thumb up</td><td>save picture</td><td>looper</td></tr>
+      <tr><td>Anjali</td><td>palms together</td><td>clear</td><td>reset</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<aside id="see" class="panel" aria-live="polite"></aside>
+
+<div id="targets"><button data-t="1">One</button><button data-t="2">Two</button><button data-t="3">Three</button></div>
+<div id="cube" aria-hidden="true"><div class="c"><div>1</div><div>2</div><div>3</div><div>4</div></div></div>
+<div id="padTools"><button id="padClear">Clear the pad</button></div>
+<div id="msg" hidden></div>
+<div id="cursors" aria-hidden="true"></div>
+
+<div id="gate">
+  <div class="in">
+    <h1>Learn to speak <span>hand.</span></h1>
+    <p>Twelve hand shapes play Procrastinatrix Draw and Morph. This course teaches them one at a time, watching your hands through the camera and showing you, finger by finger, what it sees.</p>
+    <span id="resume"></span>
+    <div class="go"><button id="start" class="acid">Start with camera</button><button id="watch">Just read through</button></div>
+    <small>The camera image stays on your device. Nothing is recorded or sent anywhere.</small>
+  </div>
+</div>
+
+<script type="module" src="tutor.js"></script>
+</body>
+</html>

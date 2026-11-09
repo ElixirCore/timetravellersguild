@@ -1,11 +1,9 @@
-/* VIEW — deterministic search / orbit / pattern screensaver over the NOW tree */
+/* VIEW — Jack tours the NOW tree on his own; any input hands the visitor the reins, idleness hands them back */
 (function () {
   var G = window.TTG_GRAPH || { field: [], edges: [] };
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (id) { return document.getElementById(id); };
   var PROJS = ['TEMPORAL', 'SOCIAL', 'SPATIAL', 'INSTITUTIONAL', 'SYMBOLIC'];
-  var DWELL = reduce ? 9000 : 7200;
-  var PAUSE_RESUME = 22000;
   var COLS = 40;
   var ROWS = 8;
 
@@ -37,12 +35,8 @@
     }
   };
 
-  var order = [];
-  var idx = 0;
   var projIdx = 0;
-  var paused = false;
   var timer = null;
-  var resumeTimer = null;
   var step = 0;
   var lastProj = '';
   var rulerReady = false;
@@ -57,9 +51,6 @@
     beat: ''
   };
   var seenObs = {};
-  var jackBusy = false;
-  var jackTimer = null;
-  var JACK_EVERY = 60000;
 
   function typeLabel(t) {
     if (String(t || '').toUpperCase() === 'PLAY') return 'WORKING SLIP';
@@ -158,7 +149,7 @@
     var bodyEl = $('viewBody');
     var subEl = $('viewSub');
     if (ctx) {
-      ctx.classList.remove('is-card');
+      ctx.classList.remove('is-card', 'is-focus');
       if (pattern) ctx.classList.add('is-pattern');
       else ctx.classList.remove('is-pattern');
     }
@@ -180,11 +171,53 @@
     if (proj !== lastProj || pattern) paintBelt(proj, pattern, beatIdx);
     lastProj = proj;
   }
-  function cardBody(node) {
+  /* The focused bead's own filings and noted edges, from window.TTG_VIEW_CONTEXT. */
+  function paintExtras(node, beatIdx) {
+    var C = window.TTG_VIEW_CONTEXT || {};
+    var c = (node && C[node.slug]) || { voices: [], notes: [] };
+    var fil = $('viewFiling');
+    var notesEl = $('viewNotes');
+    if (fil) {
+      var v = c.voices.length ? c.voices[(beatIdx + step) % c.voices.length] : null;
+      fil.hidden = !v;
+      if (v) {
+        fil.className = 'view-filing ' + String(v.class || '').replace(/[^A-Z_]/g, '');
+        $('viewFilingText').textContent = v.text;
+        $('viewFilingBy').textContent = v.voice + ' · ' + String(v.class || '').replace(/_/g, ' ');
+      }
+    }
+    if (notesEl) {
+      notesEl.innerHTML = '';
+      c.notes.slice(0, 3).forEach(function (n) {
+        var li = document.createElement('li');
+        var head = document.createElement('b');
+        head.textContent = n.rel + ' → ' + n.title;
+        li.appendChild(head);
+        li.appendChild(document.createTextNode(' ' + n.note));
+        notesEl.appendChild(li);
+      });
+      notesEl.hidden = !c.notes.length;
+    }
+  }
+  function paintFocus(node, proj, pattern, beatIdx) {
+    paintContext(proj, pattern, beatIdx);
+    if (!node) return;
+    $('viewContext').classList.add('is-focus');
+    var stance = STANCE[proj] || STANCE.TEMPORAL;
+    $('viewStance').textContent = proj + ' · ' + typeLabel(node.type);
+    $('viewEpithet').textContent = [node.status || '', whenOf(node), node.place || 'unplaced'].filter(Boolean).join(' · ');
+    $('viewBody').textContent = cardBody(node, true);
+    var bits = [stance.punch];
+    if (node.pending) bits.push('PENDING');
+    bits.push(node.pending || node.play || node.lens ? 'NOT CANON' : 'CANON');
+    $('viewSub').textContent = bits.join(' · ');
+    paintExtras(node, beatIdx);
+  }
+  function cardBody(node, untitled) {
     if (!node) return 'No card on this bead.';
     var parts = [];
     var title = node.title || node.slug || 'Untitled';
-    parts.push(title + '.');
+    if (!untitled) parts.push(title + '.');
     var body = String(node.body || '').replace(/\s+/g, ' ').trim();
     if (body) parts.push(body);
     if (node.opening) parts.push('Opening: ' + node.opening);
@@ -243,6 +276,7 @@
       subEl.textContent = bits.join(' · ');
     }
     paintBelt((node && node.slug) || 'CARD', !!(node && (node.lens || node.pattern)), hashStr((node && node.slug) || '0') % 97);
+    paintExtras(node, 0);
   }
   function linkLine(node) {
     if (!node) return '';
@@ -284,39 +318,10 @@
     if ((i % 11) === 0) return true;
     return false;
   }
-  function beatLabel(i, total, proj, pattern) {
-    var bits = [
-      'BEAT ' + (i + 1) + '/' + total,
-      proj
-    ];
-    if (pattern) bits.push('PATTERN');
-    return bits.join(' · ');
-  }
-  function ensureOrder() {
-    if (order.length) return order;
-    if (window.TTG_FIELD && typeof TTG_FIELD.tourOrder === 'function') {
-      order = TTG_FIELD.tourOrder() || [];
-    }
-    if (!order.length) {
-      order = (Array.isArray(G.field) ? G.field.slice() : []).sort(function (a, b) {
-        var ta = a.observed_at ? Date.parse(a.observed_at) : (Number(a.year) || 0) * 1e10;
-        var tb = b.observed_at ? Date.parse(b.observed_at) : (Number(b.year) || 0) * 1e10;
-        if (ta !== tb) return ta - tb;
-        return String(a.slug || '').localeCompare(String(b.slug || ''));
-      }).map(function (n) { return n.slug; });
-    }
-    return order;
-  }
-  function advanceProjection(i) {
-    if (i > 0 && (i % 4) === 0) {
-      projIdx = (projIdx + 1) % PROJS.length;
-    }
-    return PROJS[projIdx];
-  }
   function applyFocus(slug, proj, pattern, beat) {
     var node = nodeOf(slug);
     paint(node, pattern ? 'PATTERN' : 'SEARCHING', beat);
-    paintContext(proj, pattern, idx);
+    paintFocus(node, proj, pattern, step);
     snap = {
       projection: proj,
       pattern: !!pattern,
@@ -337,53 +342,362 @@
       TTG_FIELD.focusSlug(slug);
     }
   }
-  function tick() {
-    if (paused) return;
-    var list = ensureOrder();
-    if (!list.length) {
-      paint(null, 'EMPTY', 'No public field to orbit.');
+  /* ---------- Jack's tour: he chooses, travels, opens, reads, reflects ---------- */
+  var reins = 'jack';          // 'jack' | 'you'
+  var gen = 0;                 // bumps on every takeover; stale steps check it and stop
+  var here = '';               // slug Jack (or the visitor) is standing at
+  var visits = {};             // slug -> times visited this sitting
+  var trail = [];              // recent slugs, newest last
+  var stops = 0;               // stops since the projection last turned
+  var lastInput = 0;
+  var idleTimer = null;
+  var IDLE_RESUME = reduce ? 30000 : 20000;
+  var T = reduce
+    ? { travel: 900, open: 600, readMin: 9000, readMax: 16000, reflect: 5500, decide: 2600 }
+    : { travel: 2600, open: 900, readMin: 6000, readMax: 12000, reflect: 4200, decide: 1800 };
+
+  function later(fn, ms) {
+    var my = gen;
+    timer = setTimeout(function () { if (my === gen && reins === 'jack') fn(); }, ms);
+  }
+  function pick(list) { return list[Math.floor(Math.random() * list.length)]; }
+  function relWord(r) { return String(r || 'related').replace(/_/g, ' ').toLowerCase(); }
+  function fieldSlugs() {
+    return (Array.isArray(G.field) ? G.field : []).map(function (n) { return n.slug; }).filter(Boolean);
+  }
+  function neighbours(slug) {
+    var out = [];
+    var C = window.TTG_VIEW_CONTEXT || {};
+    var noted = {};
+    ((C[slug] && C[slug].notes) || []).forEach(function (n) { noted[n.title] = n; });
+    (Array.isArray(G.edges) ? G.edges : []).forEach(function (e) {
+      if (!e) return;
+      var other = e.source === slug ? e.target : (e.target === slug ? e.source : '');
+      if (!other || other === slug || !nodeOf(other)) return;
+      var on = nodeOf(other);
+      out.push({ slug: other, rel: e.relationship, out: e.source === slug, note: noted[on.title || other] || null });
+    });
+    return out;
+  }
+  function choose() {
+    var all = fieldSlugs();
+    if (!all.length) return null;
+    var cur = nodeOf(here);
+    var recent = trail.slice(-4);
+    while (thoughtQueue.length) {
+      var th = thoughtQueue.shift();
+      if (th !== here && nodeOf(th) && recent.indexOf(th) < 0) return { slug: th, how: 'thought', edge: null };
+    }
+    var near = here ? neighbours(here) : [];
+    var best = null, bestScore = -1e9;
+    near.forEach(function (c) {
+      var s = 4 - (visits[c.slug] || 0) * 3 + Math.random() * 2.5;
+      if (c.note) s += 2;
+      if (recent.indexOf(c.slug) >= 0) s -= 6;
+      var n = nodeOf(c.slug);
+      if (cur && n && n.place && n.place === cur.place) s += 0.6;
+      if (s > bestScore) { bestScore = s; best = c; }
+    });
+    var wander = !here || !best || bestScore < 0.5 || Math.random() < 0.14;
+    if (!wander) return { slug: best.slug, how: 'follow', edge: best };
+    var least = Math.min.apply(null, all.map(function (s) { return visits[s] || 0; }));
+    var fresh = all.filter(function (s) { return (visits[s] || 0) === least && s !== here && recent.indexOf(s) < 0; });
+    if (!fresh.length) fresh = all.filter(function (s) { return s !== here; });
+    if (!fresh.length) fresh = all;
+    return { slug: pick(fresh), how: here ? 'cross' : 'arrive', edge: null };
+  }
+
+  /* Jack's clerk voice: dry, careful, never settling canon. */
+  function sayIntent(move, from, to) {
+    var t = (to && (to.title || to.slug)) || 'the next bead';
+    var f = (from && (from.title || from.slug)) || '';
+    if (move.how === 'arrive') return pick([
+      'I’ll start where the wood is thickest. ' + t + '.',
+      'Begin anywhere honest. ' + t + ' will do.',
+      'First card of the sitting: ' + t + '.'
+    ]);
+    if (move.how === 'resume') return pick([
+      'You left off at ' + t + '. I’ll carry on from there.',
+      'Back to the desk. We were at ' + t + '.',
+      'Reins returned. Picking up at ' + t + '.'
+    ]);
+    if (move.how === 'thought') return pick([
+      'My thought went to ' + t + '. I’ll go and look at it properly.',
+      'I named ' + t + ' just now. Better read it than quote it.',
+      t + ' came up. Walking over.'
+    ]);
+    if (move.how === 'cross') return pick([
+      'Nothing more on this limb that I haven’t read. Crossing the wood to ' + t + '.',
+      'A different shelf. ' + t + ', which I haven’t opened yet.',
+      'I’ll leave ' + (f || 'this') + ' be and look at ' + t + ' instead.',
+      'No thread worth pulling here. Over to ' + t + '.'
+    ]);
+    var rel = relWord(move.edge && move.edge.rel);
+    var arrow = move.edge && move.edge.out ? (f + ' — ' + rel + ' → ' + t) : (t + ' — ' + rel + ' → ' + f);
+    if (move.edge && move.edge.note) return 'There’s a note on this edge. Following ' + arrow + '.';
+    return pick([
+      'Following the thread: ' + arrow + '.',
+      'The record says ' + arrow + '. I’ll go and look.',
+      'One edge leads off ' + (f || 'here') + ' — ' + rel + '. Taking it to ' + t + '.'
+    ]);
+  }
+  /* What the card itself records, said plainly while he thinks. Facts from the record, not thoughts. */
+  function sayReflect(node) {
+    var C = window.TTG_VIEW_CONTEXT || {};
+    var c = (node && C[node.slug]) || { voices: [], notes: [] };
+    var t = node.title || node.slug;
+    var lines = [];
+    if (c.voices.length) {
+      var v = c.voices[0];
+      lines.push('Filed by ' + (v.voice || 'an unsigned hand') + ' as ' + String(v.class || 'a note').replace(/_/g, ' ').toLowerCase() + '.');
+    }
+    if (c.notes.length) {
+      var n = c.notes[0];
+      lines.push('A note on the edge between ' + t + ' and ' + n.title + ': “' + String(n.note).slice(0, 140) + (String(n.note).length > 140 ? '…' : '') + '”');
+    }
+    if (node.unresolved) lines.push(node.unresolved + ' unresolved relationship' + (node.unresolved === 1 ? '' : 's') + ' on this card.');
+    if (node.opening) lines.push('Opening condition: ' + String(node.opening).replace(/\.$/, '') + '.');
+    if (node.place) lines.push('Stamped at ' + node.place + ', ' + whenOf(node) + '.');
+    if (!lines.length) lines.push(t + ': ' + whenOf(node) + ', unplaced.');
+    return pick(lines);
+  }
+  function sayTurn(proj) {
+    var s = STANCE[proj] || STANCE.TEMPORAL;
+    return 'Turning the wood: ' + proj.toLowerCase() + '. ' + s.epithet + '.';
+  }
+
+  var sayGen = 0;
+  function say(text, opts) {
+    opts = opts || {};
+    var el = $('viewSay');
+    if (el) {
+      var my = ++sayGen;
+      if (reduce) el.textContent = text;
+      else {
+        el.textContent = '';
+        var i = 0;
+        (function typeOn() {
+          if (my !== sayGen) return;
+          if (i >= text.length) return;
+          el.textContent = text.slice(0, i += 2);
+          setTimeout(typeOn, 16);
+        })();
+      }
+    }
+    if (opts.log !== false) logLocal(text);
+  }
+  var localN = 0;
+  function logLocal(text) {
+    appendObservation({
+      id: 'tour-' + (++localN) + '-' + Date.now(),
+      at: new Date().toISOString(),
+      projection: '',
+      focus: { title: reins === 'jack' ? 'ON THE TOUR' : 'AT THE DESK' },
+      text: text,
+      local: true
+    }, true);
+  }
+  function readCard(node, ms) {
+    var bodyEl = $('viewBody');
+    if (!bodyEl) return;
+    var text = cardBody(node, true);
+    if (reduce || !text) { bodyEl.textContent = text; return; }
+    var my = gen;
+    var per = Math.max(10, Math.min(40, ms * 0.7 / Math.max(1, text.length)));
+    var i = 0;
+    bodyEl.textContent = '';
+    (function more() {
+      if (my !== gen) { bodyEl.textContent = text; return; }
+      i = Math.min(text.length, i + 3);
+      bodyEl.textContent = text.slice(0, i);
+      if (i < text.length) setTimeout(more, per * 3);
+    })();
+  }
+
+  function stepDecide(forced) {
+    var list = fieldSlugs();
+    if (!list.length) { paint(null, 'EMPTY', 'No public field to tour.'); return; }
+    stops += 1;
+    if (!forced && stops > 4 && Math.random() < 0.45) {
+      stops = 0;
+      projIdx = (projIdx + 1) % PROJS.length;
+      var proj = PROJS[projIdx];
+      setMode('TURNING');
+      say(sayTurn(proj));
+      if (window.TTG_FIELD && TTG_FIELD.setProjection) TTG_FIELD.setProjection(proj, patternFor(step++, proj));
+      paintContext(proj, snap.pattern, step);
+      later(function () { stepDecide(true); }, T.decide + 1200);
       return;
     }
-    if (idx >= list.length) {
-      idx = 0;
-      projIdx = 0;
-      step += 1;
+    var move = forced && forced.slug ? forced : choose();
+    if (!move) return;
+    var from = nodeOf(here);
+    var to = nodeOf(move.slug);
+    setMode(move.how === 'follow' ? 'FOLLOWING' : (move.how === 'resume' ? 'RESUMING' : (move.how === 'thought' ? 'FOLLOWING A THOUGHT' : 'CHOOSING')));
+    light([]);
+    say(sayIntent(move, from, to));
+    later(function () { stepTravel(move); }, T.decide);
+  }
+  var cameFrom = '';
+  var deskTrail = [];          // cards the visitor opened while holding the reins (slugs only)
+  var thoughtQueue = [];       // cards Jack's last thought named, to walk to next
+  function light(slugs) {
+    if (window.TTG_FIELD && typeof TTG_FIELD.light === 'function') TTG_FIELD.light(slugs);
+  }
+  /* Turn the tree to show the thought: light what it touches, look at each named card, come back. */
+  function showThought(obs, done) {
+    var look = (obs.look || []).filter(function (s) { return nodeOf(s) && s !== here; });
+    light((cameFrom ? [cameFrom] : []).concat(look));
+    thoughtQueue = look.filter(function (s) { return trail.slice(-4).indexOf(s) < 0; });
+    if (reduce || !look.length || !window.TTG_FIELD || !TTG_FIELD.focusSlug) { done(); return; }
+    var at = here, i = 0;
+    (function next() {
+      if (i >= look.length) { TTG_FIELD.focusSlug(at); later(done, 1800); return; }
+      TTG_FIELD.focusSlug(look[i++]);
+      later(next, 2600);
+    })();
+  }
+  function stepTravel(move) {
+    var proj = PROJS[projIdx];
+    cameFrom = move.how === 'resume' || move.how === 'arrive' ? '' : (here || '');
+    var pattern = patternFor(step, proj);
+    here = move.slug;
+    visits[here] = (visits[here] || 0) + 1;
+    trail.push(here);
+    if (trail.length > 12) trail.shift();
+    var beat = move.edge ? (relWord(move.edge.rel) + ' · STOP ' + trail.length) : ('STOP ' + Object.keys(visits).length + '/' + fieldSlugs().length);
+    applyFocus(here, proj, pattern, beat);
+    setMode('TRAVELLING');
+    later(stepOpen, T.travel);
+  }
+  function stepOpen() {
+    var node = nodeOf(here);
+    if (!node) { later(stepDecide, T.decide); return; }
+    setMode('OPENING THE CARD');
+    paintCard(node);
+    var ctx = $('viewContext');
+    if (ctx) ctx.classList.add('is-reading');
+    var text = cardBody(node, true);
+    var ms = Math.max(T.readMin, Math.min(T.readMax, text.length * (reduce ? 70 : 45)));
+    later(function () {
+      setMode('READING');
+      readCard(node, ms);
+      say('Reading ' + (node.title || node.slug) + '. ' + firstSentence(text), { log: false });
+      later(stepReflect, ms);
+    }, T.open);
+  }
+  function stepReflect() {
+    var node = nodeOf(here);
+    var ctx = $('viewContext');
+    if (ctx) ctx.classList.remove('is-reading');
+    if (!node) { later(stepDecide, T.decide); return; }
+    setMode('NOTING');
+    say(sayReflect(node));
+    var at = here;
+    var t0 = Date.now();
+    var my = gen;
+    var desk = deskTrail.splice(0);
+    var tries = 0;
+    later(function () { setMode('THINKING'); }, T.reflect);
+    function ask() {
+      think(at, cameFrom, 'arrived', function (r) {
+        if (my !== gen || reins !== 'jack' || here !== at) { deskTrail = desk.concat(deskTrail); return; }
+        clearTimers();
+        if (r && r.busy && tries < 1 && r.retry <= 25) {
+          // Still on his previous thought; stay at the card a little longer rather than leave it unthought.
+          tries += 1;
+          setMode('THINKING');
+          later(ask, r.retry * 1000 + 400);
+          return;
+        }
+        if (!r || r.busy) {
+          deskTrail = desk.concat(deskTrail);
+          later(stepDecide, Math.max(0, T.reflect - (Date.now() - t0)));
+          return;
+        }
+        var wait = Math.max(0, T.reflect - (Date.now() - t0));
+        later(function () {
+          setMode(r.cached ? 'REMEMBERING' : 'REALISING');
+          say(r.obs.text, { log: false });
+          appendObservation(r.obs, true);
+          var dwell = Math.max(reduce ? 12000 : 8000, Math.min(22000, String(r.obs.text).length * (reduce ? 75 : 55)));
+          var t1 = Date.now();
+          showThought(r.obs, function () {
+            later(stepDecide, Math.max(2500, dwell - (Date.now() - t1)));
+          });
+        }, wait);
+      }, desk);
     }
-    var slug = list[idx];
-    var proj = advanceProjection(idx);
-    var pattern = patternFor(idx, proj);
-    var beat = beatLabel(idx, list.length, proj, pattern);
-    if (step > 0) beat += ' · PASS ' + (step + 1);
-    applyFocus(slug, proj, pattern, beat);
-    idx += 1;
-    timer = setTimeout(tick, DWELL);
+    ask();
+  }
+  function firstSentence(t) {
+    var m = String(t || '').match(/^.{12,200}?[.!?](\s|$)/);
+    return m ? m[0].trim() : String(t || '').slice(0, 160);
+  }
+  function setMode(m) {
+    var el = $('viewMode');
+    if (el) el.textContent = (reins === 'jack' ? 'JACK · ' : 'YOU · ') + m;
+  }
+
+  /* ---------- the reins ---------- */
+  function paintReins() {
+    var box = $('reins');
+    if (!box) return;
+    if (box.getAttribute('data-who') !== reins) {
+      box.classList.remove('flash');
+      void box.offsetWidth;
+      box.classList.add('flash');
+    }
+    box.setAttribute('data-who', reins);
+    $('reinsWho').textContent = reins === 'jack' ? 'JACK HAS THE REINS' : 'YOU HAVE THE REINS';
+    $('reinsBtn').textContent = reins === 'jack' ? 'TAKE THE REINS' : 'HAND BACK';
+    paintIdle();
+  }
+  function paintIdle() {
+    var note = $('reinsNote');
+    if (!note) return;
+    if (reins === 'jack') { note.textContent = 'Touch anything to take them'; return; }
+    var left = Math.ceil((IDLE_RESUME - (Date.now() - lastInput)) / 1000);
+    note.textContent = left <= 10 && left > 0 ? 'Jack resumes in ' + left + 's' : 'Drag, scroll, tap a bead · Esc hands back';
+  }
+  function takeover() {
+    lastInput = Date.now();
+    if (reins === 'you') { paintIdle(); return; }
+    reins = 'you';
+    gen += 1;
+    sayGen += 1;
+    clearTimers();
+    if (window.TTG_FIELD && typeof TTG_FIELD.setDrift === 'function') TTG_FIELD.setDrift(false);
+    var ctx = $('viewContext');
+    if (ctx) ctx.classList.remove('is-reading');
+    var node = nodeOf(here);
+    if (node) $('viewBody').textContent = cardBody(node, true);
+    setMode('LOOKING');
+    var s = $('viewSay');
+    if (s) s.textContent = 'Reins handed over. Hands off the desk.';
+    paintReins();
+    if (idleTimer) clearInterval(idleTimer);
+    idleTimer = setInterval(function () {
+      if (reins !== 'you') return;
+      if (!tabWatched()) { lastInput = Date.now(); return; }
+      paintIdle();
+      if (Date.now() - lastInput >= IDLE_RESUME) handBack();
+    }, 500);
+  }
+  function handBack() {
+    if (reins === 'jack') return;
+    reins = 'jack';
+    gen += 1;
+    clearTimers();
+    if (idleTimer) { clearInterval(idleTimer); idleTimer = null; }
+    if (window.TTG_FIELD && typeof TTG_FIELD.setDrift === 'function') TTG_FIELD.setDrift(!reduce);
+    paintReins();
+    stops = 0;
+    if (here) stepDecide({ slug: here, how: 'resume', edge: null });
+    else stepDecide();
   }
   function clearTimers() {
     if (timer) { clearTimeout(timer); timer = null; }
-    if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
-  }
-  function showWake(on) {
-    var wake = $('viewWake');
-    if (!wake) return;
-    wake.hidden = !on;
-  }
-  function pause() {
-    if (paused) return;
-    paused = true;
-    clearTimers();
-    var modeEl = $('viewMode');
-    var ctx = $('viewContext');
-    if (modeEl) {
-      modeEl.textContent = (ctx && ctx.classList.contains('is-card')) ? 'CARD' : 'PAUSED';
-    }
-    showWake(true);
-    resumeTimer = setTimeout(resume, PAUSE_RESUME);
-  }
-  function resume() {
-    paused = false;
-    showWake(false);
-    clearTimers();
-    tick();
   }
 
   function clockStamp(iso) {
@@ -456,6 +770,7 @@
     if (!list) return;
     var li = document.createElement('li');
     if (obs.ok === false) li.classList.add('is-away');
+    if (obs.local) li.classList.add('is-local');
     if (fresh) li.classList.add('is-fresh');
     var when = document.createElement('span');
     when.className = 'when';
@@ -519,21 +834,24 @@
     }
     return true;
   }
-  function askJack() {
-    if (jackBusy) return;
-    if (!tabWatched()) return;
-    jackBusy = true;
+  /* Jack's realisation at this card, this moment: the server reads the card and the edge he walked
+     from canon and asks him with no visitor attached. Returns null when he is still on another thought. */
+  var thinkSeq = 0;
+  function think(slug, fromSlug, moment, cb, desk) {
+    if (!slug || !tabWatched()) { cb(null); return; }
+    var my = ++thinkSeq;
+    var done = false;
+    var finish = function (r) { if (done) return; done = true; cb(my === thinkSeq ? r : null); };
+    setTimeout(function () { finish(null); }, reduce ? 30000 : 25000);
     var data = new FormData();
     data.set('csrf', G.csrf || '');
     data.set('watching', '1');
     data.set('projection', snap.projection || 'TEMPORAL');
     data.set('pattern', snap.pattern ? '1' : '0');
-    data.set('slug', snap.slug || '');
-    data.set('title', snap.title || '');
-    data.set('type', snap.type || '');
-    data.set('when', snap.when || '');
-    data.set('place', snap.place || '');
-    data.set('beat', snap.beat || '');
+    data.set('slug', slug);
+    data.set('from', fromSlug || '');
+    data.set('moment', moment || 'arrived');
+    data.set('desk', (desk || []).join(','));
     fetch('/view/observe', {
       method: 'POST',
       body: data,
@@ -541,102 +859,102 @@
       headers: { Accept: 'application/json' }
     }).then(function (res) { return res.json(); })
       .then(function (j) {
-        jackBusy = false;
-        if (!j || !j.ok) return;
-        if (j.observation) appendObservation(j.observation, !j.cached);
-        else if (j.observations) paintObservations(j.observations);
+        if (j && j.ok && j.busy) { finish({ busy: true, retry: Number(j.retry_in) || 60 }); return; }
+        if (!j || !j.ok || !j.observation || j.observation.ok === false) { finish(null); return; }
+        if (!j.observation.focus || j.observation.focus.slug !== slug) { finish(null); return; }
+        finish({ obs: j.observation, cached: !!j.cached });
       })
-      .catch(function () { jackBusy = false; });
+      .catch(function () { finish(null); });
   }
   function armJack() {
     loadLog();
-    var first = null;
-    function scheduleFirst() {
-      if (first) clearTimeout(first);
-      first = setTimeout(function () {
-        first = null;
-        askJack();
-      }, reduce ? 2500 : 9000);
-    }
-    if (tabWatched()) scheduleFirst();
-    jackTimer = setInterval(askJack, JACK_EVERY);
-    document.addEventListener('visibilitychange', function () {
-      if (!tabWatched()) return;
-      /* Tab opened again: ask once if the minute tick may have been skipped. */
-      setTimeout(askJack, reduce ? 600 : 1800);
-    });
   }
 
   window.TTG_VIEW_ON_FOCUS = function (node) {
-    if (!node) return;
-    if (node.slug) {
-      snap.slug = node.slug;
-      snap.title = node.title || node.slug;
-      snap.type = node.type || '';
-      snap.when = whenOf(node);
-      snap.place = node.place || '';
-    }
-    if (paused) return;
-    var modeEl = $('viewMode');
-    var patternOn = modeEl && modeEl.textContent === 'PATTERN';
-    paint(node, patternOn ? 'PATTERN' : 'SEARCHING', $('viewBeat') && $('viewBeat').textContent);
+    if (!node || reins !== 'you') return;
+    here = node.slug || here;
+    snap.slug = node.slug || '';
+    snap.title = node.title || node.slug || '';
+    snap.type = node.type || '';
+    snap.when = whenOf(node);
+    snap.place = node.place || '';
+    paint(node, 'YOU · LOOKING', 'BEAD · ' + (node.slug || 'record'));
   };
 
   window.TTG_VIEW_ON_PICK = function (node) {
     if (!node) return;
+    takeover();
+    here = node.slug || here;
+    visits[here] = (visits[here] || 0) + 1;
     snap.slug = node.slug || '';
     snap.title = node.title || node.slug || '';
     snap.type = node.type || '';
     snap.when = whenOf(node);
     snap.place = node.place || '';
     paintCard(node);
-    pause();
-    paint(node, 'CARD', 'BEAD · ' + (node.slug || 'record'));
+    paint(node, 'YOU · CARD OPEN', 'BEAD · ' + (node.slug || 'record'));
+    var s = $('viewSay');
+    if (s) s.textContent = (node.title || node.slug) + ' is open on the desk.';
+    if (deskTrail[deskTrail.length - 1] !== here) deskTrail.push(here);
+    if (deskTrail.length > 6) deskTrail.shift();
+    light([]);
+    var at = here;
+    think(at, '', 'opened', function (r) {
+      if (!r || r.busy || reins !== 'you' || here !== at) return;
+      var el = $('viewSay');
+      if (el) el.textContent = r.obs.text;
+      appendObservation(r.obs, true);
+      light(r.obs.look || []);   // show what he sees in it, but leave the camera to the visitor
+    }, deskTrail.slice(0, -1));
   };
 
-  window.TTG_VIEW_ON_MISS = function () {
-    pause();
-  };
+  window.TTG_VIEW_ON_MISS = function () { takeover(); };
 
-  function armWake() {
-    var arm = function (e) {
-      if (e && e.target) {
-        if (e.target.closest && e.target.closest('#viewWake, #dock, #mast .site')) return;
-        if (e.target.tagName === 'CANVAS' || (e.target.closest && e.target.closest('canvas'))) return;
-      }
-      pause();
+  function armReins() {
+    var inReins = function (e) {
+      return e && e.target && e.target.closest && e.target.closest('#reins');
     };
-    addEventListener('pointerdown', arm, { passive: true });
+    var take = function (e) { if (!inReins(e)) takeover(); };
+    addEventListener('pointerdown', take, { capture: true, passive: true });
+    addEventListener('touchstart', take, { capture: true, passive: true });
+    addEventListener('wheel', take, { capture: true, passive: true });
+    var mx = null, my = null;
+    addEventListener('pointermove', function (e) {
+      if (inReins(e)) return;
+      if (reins === 'you') { lastInput = Date.now(); return; }
+      if (e.pointerType !== 'mouse') return;
+      if (mx === null) { mx = e.clientX; my = e.clientY; return; }
+      if (Math.abs(e.clientX - mx) + Math.abs(e.clientY - my) > 40) { mx = my = null; takeover(); }
+    }, { capture: true, passive: true });
     addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        if (paused) resume();
-        else pause();
+        if (reins === 'you') handBack(); else takeover();
         return;
       }
-      if (e.key === ' ' || e.key === 'Enter') {
-        e.preventDefault();
-        if (paused) resume();
-        else pause();
-        return;
-      }
-      arm(e);
+      if (inReins(e)) return;
+      if (e.key === 'Tab' || e.key === 'Shift' || e.metaKey || e.ctrlKey || e.altKey) { if (reins === 'you') lastInput = Date.now(); return; }
+      takeover();
+    }, true);
+    var btn = $('reinsBtn');
+    if (btn) btn.addEventListener('click', function () {
+      if (reins === 'jack') takeover(); else handBack();
     });
-    var btn = $('viewResume');
-    if (btn) btn.addEventListener('click', function () { resume(); });
   }
 
   function boot() {
-    ensureOrder();
     ensureRuler();
-    armWake();
+    armReins();
     armJack();
     paintContext('TEMPORAL', false, 0);
-    if (!order.length) {
-      paint(null, 'EMPTY', 'No public field to orbit.');
+    paintReins();
+    if (window.TTG_FIELD && typeof TTG_FIELD.setDrift === 'function') TTG_FIELD.setDrift(!reduce);
+    if (!fieldSlugs().length) {
+      paint(null, 'EMPTY', 'No public field to tour.');
       return;
     }
-    paint(nodeOf(order[0]), 'SEARCHING', 'ORBIT ARMED · ' + order.length + ' STATIONS');
-    timer = setTimeout(tick, reduce ? 400 : 1200);
+    paint(null, 'JACK · AT THE DESK', fieldSlugs().length + ' CARDS IN THE PUBLIC FIELD');
+    $('viewTitle').textContent = 'The field opens.';
+    later(stepDecide, reduce ? 600 : 1600);
   }
 
   if (document.readyState === 'complete') boot();

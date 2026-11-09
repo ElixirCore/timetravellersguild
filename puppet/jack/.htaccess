@@ -1,0 +1,4 @@
+DirectoryIndex index.php index.html
+<Files "README.md">
+Require all denied
+</Files>

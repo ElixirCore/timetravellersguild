@@ -84,6 +84,13 @@ require __DIR__ . '/inc/header.php';
           <p class="epithet"><?= ttg_h((string) ($face['epithet'] ?? '')) ?></p>
           <p class="lede"><?= ttg_h((string) ($face['lede'] ?? '')) ?></p>
         </header>
+        <?php if (($face['id'] ?? '') === 'modes'): ?>
+          <div class="modes-live" id="modesLive" data-state="loading" hidden>
+            <p class="ml-head"><span class="ml-led" aria-hidden="true"></span><span class="ml-who">JACK AT THE CONSOLE · <span id="mlPosture">—</span></span><button type="button" id="mlToggle" aria-pressed="false" aria-controls="mlStage">PAUSE</button></p>
+            <div class="ml-stage" id="mlStage"></div>
+            <p class="ml-tape" id="mlTape"></p>
+          </div>
+        <?php endif; ?>
         <div class="face-body">
           <?php foreach (($face['sections'] ?? []) as $sec): ?>
             <section class="slot">
@@ -143,4 +150,6 @@ require __DIR__ . '/inc/header.php';
   <a href="/signals/">SIGNALS</a>
 </nav>
 
+<link rel="stylesheet" href="<?= ttg_h(ttg_asset('css/modes.css')) ?>">
+<script src="<?= ttg_h(ttg_asset('js/modes.js')) ?>" defer></script>
 <?php require __DIR__ . '/inc/footer.php'; ?>
